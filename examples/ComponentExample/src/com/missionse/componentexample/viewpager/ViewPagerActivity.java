@@ -5,7 +5,10 @@ import com.missionse.componentexample.R;
 import com.missionse.drawersafeviewpager.DrawerSafeViewPager;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,21 +30,36 @@ public class ViewPagerActivity extends FragmentActivity {
      */
     private DrawerSafeViewPager viewPager;
     
+    private SlidingMenu navigationDrawer;
+    
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
-
+        
         pagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
 
         viewPager = (DrawerSafeViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
         
-        SlidingMenu menu = new SlidingMenu(this);
-        menu.setMode(SlidingMenu.LEFT);
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        menu.setMenu(R.layout.drawer);
+        navigationDrawer = new SlidingMenu(this);
+        navigationDrawer.setMode(SlidingMenu.LEFT);
+        navigationDrawer.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        navigationDrawer.setShadowWidthRes(R.dimen.drawer_shadow_width);
+        navigationDrawer.setShadowDrawable(R.drawable.shadow);
+        navigationDrawer.setBehindOffsetRes(R.dimen.drawer_offset);
+        navigationDrawer.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+        navigationDrawer.setMenu(R.layout.drawer);
+        
+        Fragment drawerFragment;
+        if (savedInstanceState == null) {
+			FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
+			drawerFragment = new DrawerFragment();
+			transaction.replace(R.id.menu_frame, drawerFragment);
+			transaction.commit();
+		} else {
+			drawerFragment = (ListFragment)this.getSupportFragmentManager().findFragmentById(R.id.menu_frame);
+		}
     }
 
     @Override
@@ -60,4 +78,20 @@ public class ViewPagerActivity extends FragmentActivity {
     		return super.onOptionsItemSelected(item);
     	}
     }
+    
+    @Override
+    public void onBackPressed() {
+    	if (navigationDrawer.isMenuShowing()) {
+    		navigationDrawer.showContent(true);
+    	}
+    	else {
+    		super.onBackPressed();
+    	}
+    }
+    
+    public void switchContent(int position) {
+    	navigationDrawer.showContent();
+    	viewPager.setCurrentItem(position);
+    }
+    
 }
