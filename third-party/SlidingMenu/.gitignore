@@ -1,0 +1,5 @@
+#Ignore everything...
+*
+#...but the archived zip file for SlidingMenu and this gitignore
+!.gitignore
+!SlidingMenu-master.zip
