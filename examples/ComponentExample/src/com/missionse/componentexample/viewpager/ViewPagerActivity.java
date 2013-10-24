@@ -4,16 +4,12 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.missionse.componentexample.R;
 import com.missionse.drawersafeviewpager.DrawerSafeViewPager;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class ViewPagerActivity extends FragmentActivity {
+public class ViewPagerActivity extends Activity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -37,7 +33,7 @@ public class ViewPagerActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
         
-        pagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        pagerAdapter = new SectionsPagerAdapter(this, getFragmentManager());
 
         viewPager = (DrawerSafeViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
@@ -51,15 +47,17 @@ public class ViewPagerActivity extends FragmentActivity {
         navigationDrawer.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
         navigationDrawer.setMenu(R.layout.drawer);
         
-        Fragment drawerFragment;
+        //The following is for state restore, but given the use of different fragments for
+        //the pages, currently unnecessary.
+        /*Fragment drawerFragment;
         if (savedInstanceState == null) {
-			FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
+			FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
 			drawerFragment = new DrawerFragment();
 			transaction.replace(R.id.menu_frame, drawerFragment);
 			transaction.commit();
 		} else {
-			drawerFragment = (ListFragment)this.getSupportFragmentManager().findFragmentById(R.id.menu_frame);
-		}
+			drawerFragment = (ListFragment)this.getFragmentManager().findFragmentById(R.id.menu_frame);
+		}*/
     }
 
     @Override
