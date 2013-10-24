@@ -3,6 +3,8 @@ package com.missionse.modelviewer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.missionse.rotationgesturedetector.RotationGestureDetector;
+
 import rajawali.RajawaliFragment;
 import rajawali.renderer.RajawaliRenderer;
 import android.content.Context;
@@ -22,6 +24,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	private ModelViewerGestureListener gestureListener;
 	private GestureDetector gestureDetector;
 	private ScaleGestureDetector scaleGestureDetector;
+	private RotationGestureDetector rotationGestureDetector;
 
 	public static final String ARG_MODEL_ID = "model_id";
 
@@ -42,6 +45,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		gestureListener = new ModelViewerGestureListener(renderer);
 		gestureDetector = new GestureDetector(getActivity(), gestureListener);
 		scaleGestureDetector = new ScaleGestureDetector(getActivity(), gestureListener);
+		rotationGestureDetector = new RotationGestureDetector(gestureListener);
 
 		mSurfaceView.setOnTouchListener(this);
 	}
@@ -50,11 +54,11 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
 			final Bundle savedInstanceState) {
 		mLayout = (FrameLayout) inflater.inflate(R.layout.fragment_model_viewer, container, false);
-		
+
 		if (mSurfaceView.getParent() != null) {
 			((ViewGroup) mSurfaceView.getParent()).removeView(mSurfaceView);
 		}
-		
+
 		mSurfaceView.setId(R.id.content_frame);
 		mLayout.addView(mSurfaceView);
 
@@ -71,6 +75,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	public boolean onTouch(final View v, final MotionEvent event) {
 
 		boolean touchConsumed = scaleGestureDetector.onTouchEvent(event);
+		rotationGestureDetector.onTouchEvent(event);
 		if (!scaleGestureDetector.isInProgress())
 			touchConsumed = gestureDetector.onTouchEvent(event);
 
@@ -95,7 +100,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 		public abstract boolean isCameraAnimating();
 
-		public abstract void rotate(final float xOffset, final float yOffset);
+		public abstract void rotate(final float xAngle, final float yAngle, final float zAngle);
 
 		public abstract void scale(final float scaleFactor);
 	}
