@@ -13,19 +13,13 @@ public class ModelViewerGestureListener implements
 		RotationGestureDetector.OnRotationGestureListener {
 
 	private ModelViewerRenderer renderer;
-	private float lastRotation;
-	private boolean isRotating;
 
 	public ModelViewerGestureListener(final ModelViewerRenderer modelRenderer) {
 		renderer = modelRenderer;
-		lastRotation = 0.0f;
-		isRotating = false;
 	}
 
 	@Override
 	public boolean onDown(final MotionEvent e) {
-		isRotating = false;
-		lastRotation = 0.0f;
 		return true;
 	}
 
@@ -71,15 +65,17 @@ public class ModelViewerGestureListener implements
 	}
 
 	@Override
-	public void onRotate(final RotationGestureDetector detector) {
+	public boolean onRotate(final RotationGestureDetector detector) {
+		renderer.rotate(0f, 0f, -detector.getAngle());
+		return true;
+	}
 
-		if (!isRotating) {
-			lastRotation = detector.getAngle();
-			isRotating = true;
-		}
+	@Override
+	public boolean onRotateStart(final RotationGestureDetector detector) {
+		return true;
+	}
 
-		float rotationDifference = lastRotation - detector.getAngle();
-		lastRotation = detector.getAngle();
-		renderer.rotate(0f, 0f, rotationDifference);
+	@Override
+	public void onRotateEnd() {
 	}
 }
