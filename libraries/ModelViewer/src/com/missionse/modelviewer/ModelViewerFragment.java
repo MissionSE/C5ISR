@@ -51,7 +51,8 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 			final Bundle savedInstanceState) {
 
 		mLayout = (FrameLayout) inflater.inflate(R.layout.fragment_model_viewer, container, false);
-		mLayout.addView(mSurfaceView);
+		FrameLayout surfaceView = (FrameLayout) mLayout.findViewById(R.id.content_frame);
+		surfaceView.addView(mSurfaceView);
 
 		return mLayout;
 	}
