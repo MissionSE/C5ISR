@@ -1,16 +1,28 @@
 package com.missionse.modelviewer;
 
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
 import rajawali.RajawaliFragment;
+import rajawali.renderer.RajawaliRenderer;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-public class ModelViewerFragment extends RajawaliFragment implements OnTouchListener {
+public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener {
 	protected ModelViewerRenderer renderer;
+
+	private ModelViewerGestureListener gestureListener;
+	private GestureDetector gestureDetector;
+	private ScaleGestureDetector scaleGestureDetector;
+
 	public static final String ARG_MODEL_ID = "model_id";
 
 	@Override
@@ -23,9 +35,13 @@ public class ModelViewerFragment extends RajawaliFragment implements OnTouchList
 			throw new RuntimeException("ModelViewerFragment passed invalid model id.");
 		}
 
-		renderer = new ModelViewerRenderer(getActivity(), modelID);
+		renderer = createRenderer(modelID);
 		renderer.setSurfaceView(mSurfaceView);
 		setRenderer(renderer);
+
+		gestureListener = new ModelViewerGestureListener(renderer);
+		gestureDetector = new GestureDetector(getActivity(), gestureListener);
+		scaleGestureDetector = new ScaleGestureDetector(getActivity(), gestureListener);
 
 		mSurfaceView.setOnTouchListener(this);
 	}
@@ -33,6 +49,7 @@ public class ModelViewerFragment extends RajawaliFragment implements OnTouchList
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
 			final Bundle savedInstanceState) {
+
 		mLayout = (FrameLayout) inflater.inflate(R.layout.fragment_model_viewer, container, false);
 		mLayout.addView(mSurfaceView);
 
@@ -47,12 +64,34 @@ public class ModelViewerFragment extends RajawaliFragment implements OnTouchList
 
 	@Override
 	public boolean onTouch(final View v, final MotionEvent event) {
-		boolean touchConsumed = false;
 
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			renderer.setCameraAnimation(!renderer.isCameraAnimating());
-			touchConsumed = true;
-		}
+		boolean touchConsumed = scaleGestureDetector.onTouchEvent(event);
+		if (!scaleGestureDetector.isInProgress())
+			touchConsumed = gestureDetector.onTouchEvent(event);
+
 		return touchConsumed;
+	}
+
+	protected abstract ModelViewerRenderer createRenderer(final int modelID);
+
+	public abstract class ModelViewerRenderer extends RajawaliRenderer {
+		public ModelViewerRenderer(final Context context) {
+			super(context);
+			setFrameRate(60);
+		}
+
+		public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
+			//showLoader();
+			super.onSurfaceCreated(gl, config);
+			//hideLoader();
+		}
+
+		public abstract void setCameraAnimation(final boolean animating);
+
+		public abstract boolean isCameraAnimating();
+
+		public abstract void rotate(final float xOffset, final float yOffset);
+
+		public abstract void scale(final float scaleFactor);
 	}
 }

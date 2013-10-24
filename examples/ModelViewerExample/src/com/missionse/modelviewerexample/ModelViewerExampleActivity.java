@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import com.missionse.modelviewer.ModelViewerFragment;
+import com.missionse.modelviewer.ModelViewerFragmentFactory;
 
 public class ModelViewerExampleActivity extends Activity
 {
@@ -14,13 +15,7 @@ public class ModelViewerExampleActivity extends Activity
 		setContentView(R.layout.activity_model_viewer_example);
 
 		if (savedInstanceState == null)	{
-			// Create the detail fragment and add it to the activity
-			// using a fragment transaction.
-			Bundle arguments = new Bundle();
-			arguments.putInt(ModelViewerFragment.ARG_MODEL_ID, R.raw.multiobjects_obj);
-
-			ModelViewerFragment fragment = new ModelViewerFragment();
-			fragment.setArguments(arguments);
+			ModelViewerFragment fragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
 			getFragmentManager().beginTransaction().add(R.id.content_frame, fragment).commit();
 		}
 	}
