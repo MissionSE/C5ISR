@@ -3,12 +3,13 @@ package com.missionse.componentexample.viewpager;
 import java.util.Locale;
 
 import com.missionse.componentexample.R;
+import com.missionse.modelviewer.ModelViewerFragmentFactory;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -24,14 +25,17 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(final int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a DummySectionFragment (defined as a static inner class
-        // below) with the page number as its lone argument.
-        Fragment fragment = new DummySectionFragment();
-        Bundle args = new Bundle();
-        args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-        fragment.setArguments(args);
+    public Fragment getItem(final int position) { 
+    	Fragment fragment;
+    	if (position == 2) {
+    		fragment = (Fragment) ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
+    	}
+    	else {
+    		fragment = new DummySectionFragment();
+            Bundle args = new Bundle();
+            args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+            fragment.setArguments(args);
+    	}
         return fragment;
     }
 

@@ -12,6 +12,7 @@
     <string name="view_pager">View Pager</string>
     <string name="view_pager_summary">This spawns a View Pager with a Sliding Menu.</string>
     <string name="model_viewer">Model Viewer</string>
+    <string name="model_viewer_summary">This spawns a Model Viewer, displaying a 3D object.</string>
     
     <!-- View Pager section names -->
     <string name="title_section1">Section 1</string>

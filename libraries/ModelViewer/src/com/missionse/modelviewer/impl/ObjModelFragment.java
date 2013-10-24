@@ -79,11 +79,10 @@ public class ObjModelFragment extends ModelViewerFragment {
 		}
 
 		@Override
-		public void rotate(final float xOffset, final float yOffset) {
-			double xAngle = xOffset / 6.0;
-			double yAngle = yOffset / 6.0;
+		public void rotate(final float xAngle, final float yAngle, final float zAngle) {
 			objectGroup.rotateAround(Vector3.Y, xAngle);
 			objectGroup.rotateAround(Vector3.X, yAngle);
+			objectGroup.rotateAround(Vector3.Z, zAngle);
 		}
 
 		@Override

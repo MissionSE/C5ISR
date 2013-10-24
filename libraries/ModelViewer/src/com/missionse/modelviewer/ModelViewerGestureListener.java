@@ -5,8 +5,12 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
 import com.missionse.modelviewer.ModelViewerFragment.ModelViewerRenderer;
+import com.missionse.rotationgesturedetector.RotationGestureDetector;
 
-public class ModelViewerGestureListener implements GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener {
+public class ModelViewerGestureListener implements
+		GestureDetector.OnGestureListener,
+		ScaleGestureDetector.OnScaleGestureListener,
+		RotationGestureDetector.OnRotationGestureListener {
 
 	private ModelViewerRenderer renderer;
 
@@ -21,7 +25,7 @@ public class ModelViewerGestureListener implements GestureDetector.OnGestureList
 
 	@Override
 	public boolean onScroll(final MotionEvent e1, final MotionEvent e2, final float distanceX, final float distanceY) {
-		renderer.rotate(distanceX, distanceY);
+		renderer.rotate(distanceX / 6.0f, distanceY / 6.0f, 0);
 		return true;
 	}
 
@@ -58,5 +62,20 @@ public class ModelViewerGestureListener implements GestureDetector.OnGestureList
 	@Override
 	public boolean onSingleTapUp(final MotionEvent e) {
 		return false;
+	}
+
+	@Override
+	public boolean onRotate(final RotationGestureDetector detector) {
+		renderer.rotate(0f, 0f, -detector.getAngle());
+		return true;
+	}
+
+	@Override
+	public boolean onRotateStart(final RotationGestureDetector detector) {
+		return true;
+	}
+
+	@Override
+	public void onRotateEnd() {
 	}
 }
