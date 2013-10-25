@@ -4,13 +4,13 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
+import com.missionse.gesturedetector.RotationGestureDetector;
 import com.missionse.modelviewer.ModelViewerFragment.ModelViewerRenderer;
-import com.missionse.rotationgesturedetector.RotationGestureDetector;
 
 public class ModelViewerGestureListener implements
-GestureDetector.OnGestureListener,
-ScaleGestureDetector.OnScaleGestureListener,
-RotationGestureDetector.OnRotationGestureListener {
+		GestureDetector.OnGestureListener,
+		ScaleGestureDetector.OnScaleGestureListener,
+		RotationGestureDetector.OnRotationGestureListener {
 
 	private ModelViewerRenderer renderer;
 

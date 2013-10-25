@@ -1,4 +1,4 @@
-package com.missionse.rotationgesturedetector;
+package com.missionse.gesturedetector;
 
 import android.view.MotionEvent;
 

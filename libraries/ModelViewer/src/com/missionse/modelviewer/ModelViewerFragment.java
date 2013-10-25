@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import com.missionse.rotationgesturedetector.RotationGestureDetector;
+import com.missionse.gesturedetector.RotationGestureDetector;
 
 public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener {
 	protected ModelViewerRenderer renderer;
