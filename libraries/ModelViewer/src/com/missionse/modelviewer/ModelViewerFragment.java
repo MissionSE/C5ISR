@@ -112,9 +112,18 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		return touchConsumed;
 	}
 
+	public void setAutoRotation(final boolean autoRotate) {
+		renderer.setAutoRotation(autoRotate);
+	}
+
+	public boolean isAutoRotating() {
+		return renderer.isAutoRotating();
+	}
+
+
 	protected abstract ModelViewerRenderer createRenderer(final int modelID);
 
-	public abstract class ModelViewerRenderer extends RajawaliRenderer {
+	protected abstract class ModelViewerRenderer extends RajawaliRenderer {
 		public ModelViewerRenderer(final Context context) {
 			super(context);
 			setFrameRate(60);
@@ -132,12 +141,12 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 				hideLoader();
 		}
 
-		public abstract void setCameraAnimation(final boolean animating);
+		protected abstract void setAutoRotation(final boolean autoRotate);
 
-		public abstract boolean isCameraAnimating();
+		protected abstract boolean isAutoRotating();
 
-		public abstract void rotate(final float xAngle, final float yAngle, final float zAngle);
+		protected abstract void rotate(final float xAngle, final float yAngle, final float zAngle);
 
-		public abstract void scale(final float scaleFactor);
+		protected abstract void scale(final float scaleFactor);
 	}
 }

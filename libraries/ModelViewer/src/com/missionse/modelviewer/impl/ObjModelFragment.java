@@ -26,7 +26,7 @@ public class ObjModelFragment extends ModelViewerFragment {
 
 		private DirectionalLight directionalLight;
 		private Object3D objectGroup;
-		private Animation3D cameraAnim;
+		private Animation3D rotationAnim;
 
 		public ObjModelRenderer(final Context context, final int model) {
 			super(context);
@@ -49,44 +49,44 @@ public class ObjModelFragment extends ModelViewerFragment {
 				objectGroup = objParser.getParsedObject();
 				addChild(objectGroup);
 
-				cameraAnim = new RotateAnimation3D(Axis.Y, 360);
-				cameraAnim.setDuration(8000);
-				cameraAnim.setRepeatMode(RepeatMode.INFINITE);
-				cameraAnim.setTransformable3D(objectGroup);
+				rotationAnim = new RotateAnimation3D(Axis.Y, 360);
+				rotationAnim.setDuration(8000);
+				rotationAnim.setRepeatMode(RepeatMode.INFINITE);
+				rotationAnim.setTransformable3D(objectGroup);
 
 			} catch (ParsingException e) {
 				e.printStackTrace();
 			}
 
-			registerAnimation(cameraAnim);
+			registerAnimation(rotationAnim);
 		}
 
 		@Override
-		public void setCameraAnimation(final boolean animating) {
-			if (!isCameraAnimating()) {
-				if (animating) {
-					cameraAnim.reset();
-					cameraAnim.play();
+		protected void setAutoRotation(final boolean autoRotate) {
+			if (!isAutoRotating()) {
+				if (autoRotate) {
+					rotationAnim.reset();
+					rotationAnim.play();
 				}
-			} else if (!animating) {
-				cameraAnim.pause();
+			} else if (!autoRotate) {
+				rotationAnim.pause();
 			}
 		}
 
 		@Override
-		public boolean isCameraAnimating() {
-			return cameraAnim.isPlaying();
+		protected boolean isAutoRotating() {
+			return rotationAnim.isPlaying();
 		}
 
 		@Override
-		public void rotate(final float xAngle, final float yAngle, final float zAngle) {
+		protected void rotate(final float xAngle, final float yAngle, final float zAngle) {
 			objectGroup.rotateAround(Vector3.Y, xAngle);
 			objectGroup.rotateAround(Vector3.X, yAngle);
 			objectGroup.rotateAround(Vector3.Z, zAngle);
 		}
 
 		@Override
-		public void scale(final float scaleFactor) {
+		protected void scale(final float scaleFactor) {
 			Vector3 scale = objectGroup.getScale();
 			objectGroup.setScaleX(scale.x * scaleFactor);
 			objectGroup.setScaleY(scale.y * scaleFactor);

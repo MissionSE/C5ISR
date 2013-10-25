@@ -8,9 +8,9 @@ import com.missionse.modelviewer.ModelViewerFragment.ModelViewerRenderer;
 import com.missionse.rotationgesturedetector.RotationGestureDetector;
 
 public class ModelViewerGestureListener implements
-		GestureDetector.OnGestureListener,
-		ScaleGestureDetector.OnScaleGestureListener,
-		RotationGestureDetector.OnRotationGestureListener {
+GestureDetector.OnGestureListener,
+ScaleGestureDetector.OnScaleGestureListener,
+RotationGestureDetector.OnRotationGestureListener {
 
 	private ModelViewerRenderer renderer;
 
@@ -52,7 +52,6 @@ public class ModelViewerGestureListener implements
 
 	@Override
 	public void onLongPress(final MotionEvent e) {
-		renderer.setCameraAnimation(!renderer.isCameraAnimating());
 	}
 
 	@Override
