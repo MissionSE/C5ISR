@@ -2,14 +2,23 @@ package com.missionse.gesturedetector;
 
 import android.view.MotionEvent;
 
+import com.missionse.gesturedetector.util.Line;
+
 public class RotationGestureDetector {
 	private static final int INVALID_POINTER_ID = -1;
-	private float lastX1, lastY1, lastX2, lastY2;
+	private Line previousLine;
 	private int ptrID1, ptrID2;
 	private float rotationAngle;
 	private boolean isRotating;
 
 	private OnRotationGestureListener gestureListener;
+
+	public RotationGestureDetector(final OnRotationGestureListener listener) {
+		gestureListener = listener;
+		ptrID1 = INVALID_POINTER_ID;
+		ptrID2 = INVALID_POINTER_ID;
+		previousLine = new Line();
+	}
 
 	public float getAngle() {
 		return rotationAngle;
@@ -17,12 +26,6 @@ public class RotationGestureDetector {
 
 	public boolean isRotating() {
 		return isRotating;
-	}
-
-	public RotationGestureDetector(final OnRotationGestureListener listener) {
-		gestureListener = listener;
-		ptrID1 = INVALID_POINTER_ID;
-		ptrID2 = INVALID_POINTER_ID;
 	}
 
 	public boolean onTouchEvent(final MotionEvent event) {
@@ -37,22 +40,16 @@ public class RotationGestureDetector {
 					ptrID2 = event.getPointerId(event.getActionIndex());
 
 				if (ptrID1 != INVALID_POINTER_ID && ptrID2 != INVALID_POINTER_ID) {
-					lastX1 = event.getX(event.findPointerIndex(ptrID1));
-					lastY1 = event.getY(event.findPointerIndex(ptrID1));
-					lastX2 = event.getX(event.findPointerIndex(ptrID2));
-					lastY2 = event.getY(event.findPointerIndex(ptrID2));
+					unpackLinePosition(event, previousLine);
 				}
 				break;
 			case MotionEvent.ACTION_MOVE:
 				if(ptrID1 != INVALID_POINTER_ID && ptrID2 != INVALID_POINTER_ID) {
-					float currentX1, currentY1, currentX2, currentY2;
 
-					currentX1 = event.getX(event.findPointerIndex(ptrID1));
-					currentY1 = event.getY(event.findPointerIndex(ptrID1));
-					currentX2 = event.getX(event.findPointerIndex(ptrID2));
-					currentY2 = event.getY(event.findPointerIndex(ptrID2));
+					Line currentLine = new Line();
+					unpackLinePosition(event, currentLine);
 
-					rotationAngle = angleBetweenLines(lastX2, lastY2, lastX1, lastY1, currentX2, currentY2, currentX1, currentY1);
+					rotationAngle = angleBetweenLines(previousLine, currentLine);
 
 					if (!isRotating) {
 						startRotation();
@@ -61,10 +58,7 @@ public class RotationGestureDetector {
 						gestureListener.onRotate(this);
 					}
 
-					lastX1 = currentX1;
-					lastY1 = currentY1;
-					lastX2 = currentX2;
-					lastY2 = currentY2;
+					previousLine = currentLine;
 				}
 				break;
 			case MotionEvent.ACTION_UP:
@@ -77,9 +71,16 @@ public class RotationGestureDetector {
 		return true;
 	}
 
-	private float angleBetweenLines (final float fX, final float fY, final float sX, final float sY, final float nfX, final float nfY, final float nsX, final float nsY) {
-		float angle1 = (float) Math.atan2( (fY - sY), (fX - sX) );
-		float angle2 = (float) Math.atan2( (nfY - nsY), (nfX - nsX) );
+	private void unpackLinePosition(final MotionEvent event, final Line line) {
+		line.setX1(event.getX(event.findPointerIndex(ptrID1)));
+		line.setY1(event.getY(event.findPointerIndex(ptrID1)));
+		line.setX2(event.getX(event.findPointerIndex(ptrID2)));
+		line.setY2(event.getY(event.findPointerIndex(ptrID2)));
+	}
+
+	private float angleBetweenLines (final Line line1, final Line line2) {
+		float angle1 = (float) Math.atan2((line1.getY2() - line1.getY1()), (line1.getX2() - line1.getX1()));
+		float angle2 = (float) Math.atan2((line2.getY2() - line2.getY1()), (line2.getX2() - line2.getX1()));
 
 		float angle = ((float)Math.toDegrees(angle1 - angle2)) % 360;
 		if (angle < -180.f) angle += 360.0f;
