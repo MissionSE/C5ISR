@@ -3,8 +3,6 @@ package com.missionse.modelviewer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.missionse.rotationgesturedetector.RotationGestureDetector;
-
 import rajawali.RajawaliFragment;
 import rajawali.renderer.RajawaliRenderer;
 import android.content.Context;
@@ -17,9 +15,13 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
+
+import com.missionse.rotationgesturedetector.RotationGestureDetector;
 
 public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener {
 	protected ModelViewerRenderer renderer;
+	protected ProgressBar progressBar;
 
 	private ModelViewerGestureListener gestureListener;
 	private GestureDetector gestureDetector;
@@ -37,6 +39,9 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		if (0 == modelID) {
 			throw new RuntimeException("ModelViewerFragment passed invalid model id.");
 		}
+
+		if (isTransparentSurfaceView())
+			setGLBackgroundTransparent(true);
 
 		renderer = createRenderer(modelID);
 		renderer.setSurfaceView(mSurfaceView);
@@ -62,6 +67,9 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		mSurfaceView.setId(R.id.content_frame);
 		mLayout.addView(mSurfaceView);
 
+		mLayout.findViewById(R.id.progress_bar_container).bringToFront();
+		progressBar = (ProgressBar) mLayout.findViewById(R.id.progress_bar);
+
 		return mLayout;
 	}
 
@@ -69,6 +77,28 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	public void onDestroy() {
 		super.onDestroy();
 		renderer.onSurfaceDestroyed();
+	}
+
+	protected void hideLoader() {
+		progressBar.post(new Runnable() {
+			@Override
+			public void run() {
+				progressBar.setVisibility(View.GONE);
+			}
+		});
+	}
+
+	protected boolean isTransparentSurfaceView() {
+		return false;
+	}
+
+	protected void showLoader() {
+		progressBar.post(new Runnable() {
+			@Override
+			public void run() {
+				progressBar.setVisibility(View.VISIBLE);
+			}
+		});
 	}
 
 	@Override
@@ -91,9 +121,15 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		}
 
 		public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
-			//showLoader();
+			showLoader();
 			super.onSurfaceCreated(gl, config);
-			//hideLoader();
+		}
+
+		@Override
+		public void onDrawFrame(final GL10 glUnused) {
+			super.onDrawFrame(glUnused);
+			if (progressBar.isShown())
+				hideLoader();
 		}
 
 		public abstract void setCameraAnimation(final boolean animating);

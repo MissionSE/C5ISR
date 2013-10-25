@@ -44,7 +44,7 @@ public class RotationGestureDetector {
 				}
 				break;
 			case MotionEvent.ACTION_MOVE:
-				if(ptrID1 != INVALID_POINTER_ID && ptrID2 != INVALID_POINTER_ID){
+				if(ptrID1 != INVALID_POINTER_ID && ptrID2 != INVALID_POINTER_ID) {
 					float currentX1, currentY1, currentX2, currentY2;
 
 					currentX1 = event.getX(event.findPointerIndex(ptrID1));
@@ -99,7 +99,6 @@ public class RotationGestureDetector {
 			if (isRotating) {
 				endRotation();
 			}
-
 		}
 	}
 
