@@ -5,6 +5,7 @@ import rajawali.animation.Animation3D;
 import rajawali.animation.Animation3D.RepeatMode;
 import rajawali.animation.RotateAnimation3D;
 import rajawali.lights.DirectionalLight;
+import rajawali.materials.Material;
 import rajawali.math.vector.Vector3;
 import rajawali.math.vector.Vector3.Axis;
 import android.content.Context;
@@ -92,6 +93,35 @@ public class ModelSceneController extends ModelViewerFragment {
 			objectGroup.setX(objectGroup.getX() + xDistance);
 			objectGroup.setY(objectGroup.getY() + yDistance);
 			objectGroup.setZ(objectGroup.getZ() + zDistance);
+		}
+
+		@Override
+		public boolean setAmbientColor(final String objectName, final int color) {
+			boolean successful = false;
+			Object3D object = objectGroup.getChildByName(objectName);
+			if (null != object) {
+				Material material = object.getMaterial();
+				if (null != material) {
+					material.setAmbientColor(color);
+					successful = true;
+				}
+			}
+
+			return successful;
+		}
+
+		@Override
+		public int getAmbientColor(final String objectName) {
+			int color = -1;
+			Object3D object = objectGroup.getChildByName(objectName);
+			if (null != object) {
+				Material material = object.getMaterial();
+				if (null != material) {
+					color = material.getAmbientColor();
+				}
+			}
+
+			return color;
 		}
 	}
 }

@@ -32,10 +32,13 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	private RotationGestureDetector rotationGestureDetector;
 	private PanGestureDetector panGestureDetector;
 
+	private boolean translationLocked;
+
 	public static final String ARG_MODEL_ID = "model_id";
 
 	public void setModelParser(final ModelParser modelParser) {
 		parser = modelParser;
+		translationLocked = false;
 	}
 
 	@Override
@@ -120,9 +123,20 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		scaleGestureDetector.onTouchEvent(event);
 		rotationGestureDetector.onTouchEvent(event);
 		panGestureDetector.onTouchEvent(event);
-		gestureDetector.onTouchEvent(event);
+
+		if (!translationLocked) {
+			gestureDetector.onTouchEvent(event);
+		}
 
 		return true;
+	}
+
+	public void setTranslationLocked(final boolean lock) {
+		translationLocked = lock;
+	}
+
+	public boolean isTranslationLocked() {
+		return translationLocked;
 	}
 
 	public void setAutoRotation(final boolean autoRotate) {
@@ -133,6 +147,13 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		return renderer.isAutoRotating();
 	}
 
+	public int getAmbientColor(final String objectName) {
+		return renderer.getAmbientColor(objectName);
+	}
+
+	public boolean setAmbientColor(final String objectName, final int color) {
+		return renderer.setAmbientColor(objectName, color);
+	}
 
 	protected abstract ModelViewerRenderer createRenderer(final int modelID, final ModelParser parser);
 

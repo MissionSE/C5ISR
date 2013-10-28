@@ -1,6 +1,7 @@
 package com.missionse.modelviewerexample;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +12,9 @@ import com.missionse.modelviewer.ModelViewerFragmentFactory;
 public class ModelViewerExampleActivity extends Activity
 {
 	private ModelViewerFragment fragment = null;
+
+	private static final String highlightedObject = "Monkey";
+	private int defaultColor = 0;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -32,14 +36,27 @@ public class ModelViewerExampleActivity extends Activity
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_rotate:
-				if (fragment != null)
+		if (fragment != null) {
+			switch (item.getItemId()) {
+				case R.id.action_rotate:
 					fragment.setAutoRotation(!item.isChecked());
-				item.setChecked(fragment.isAutoRotating());
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+					item.setChecked(fragment.isAutoRotating());
+					return true;
+				case R.id.action_highlight:
+					if (item.isChecked()) {
+						fragment.setAmbientColor(highlightedObject, defaultColor);
+					} else {
+						defaultColor = fragment.getAmbientColor(highlightedObject);
+						fragment.setAmbientColor(highlightedObject, Color.BLUE);
+					}
+					item.setChecked(!item.isChecked());
+					return true;
+				case R.id.action_lock:
+					fragment.setTranslationLocked(!fragment.isTranslationLocked());
+					item.setChecked(fragment.isTranslationLocked());
+			}
 		}
+
+		return super.onOptionsItemSelected(item);
 	}
 }
