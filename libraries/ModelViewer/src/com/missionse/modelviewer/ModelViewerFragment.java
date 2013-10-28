@@ -152,5 +152,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		protected abstract void rotate(final float xAngle, final float yAngle, final float zAngle);
 
 		protected abstract void scale(final float scaleFactor);
+
+		protected abstract void translate(final float xDistance, final float yDistance, final float zDistance);
 	}
 }

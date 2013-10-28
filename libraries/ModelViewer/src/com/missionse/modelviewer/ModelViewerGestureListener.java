@@ -27,6 +27,9 @@ public class ModelViewerGestureListener implements
 
 	@Override
 	public boolean onScroll(final MotionEvent e1, final MotionEvent e2, final float distanceX, final float distanceY) {
+		if (e2.getPointerCount() == 1) {
+			renderer.translate(-distanceX / 100.0f, distanceY / 100.0f, 0);
+		}
 		return true;
 	}
 

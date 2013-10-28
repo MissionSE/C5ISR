@@ -91,5 +91,12 @@ public class ObjModelFragment extends ModelViewerFragment {
 			objectGroup.setScaleY(scale.y * scaleFactor);
 			objectGroup.setScaleZ(scale.z * scaleFactor);
 		}
+
+		@Override
+		protected void translate(final float xDistance, final float yDistance, final float zDistance) {
+			objectGroup.setX(objectGroup.getX() + xDistance);
+			objectGroup.setY(objectGroup.getY() + yDistance);
+			objectGroup.setZ(objectGroup.getZ() + zDistance);
+		}
 	}
 }
