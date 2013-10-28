@@ -3,29 +3,36 @@ package com.missionse.gesturedetector;
 import android.view.MotionEvent;
 
 import com.missionse.gesturedetector.util.Line;
+import com.missionse.gesturedetector.util.Point;
 
-public class RotationGestureDetector {
+public class PanGestureDetector {
 	private static final int INVALID_POINTER_ID = -1;
 	private Line previousLine;
 	private int ptrID1, ptrID2;
-	private float rotationAngle;
-	private boolean isRotating;
+	private float xDistance, yDistance;
+	private boolean isPanning;
 
-	private OnRotationGestureListener gestureListener;
+	private OnPanGestureListener gestureListener;
 
-	public RotationGestureDetector(final OnRotationGestureListener listener) {
+	public PanGestureDetector(final OnPanGestureListener listener) {
 		gestureListener = listener;
 		ptrID1 = INVALID_POINTER_ID;
 		ptrID2 = INVALID_POINTER_ID;
+		xDistance = 0f;
+		yDistance = 0f;
 		previousLine = new Line();
 	}
 
-	public float getAngle() {
-		return rotationAngle;
+	public float getDistanceX() {
+		return xDistance;
 	}
 
-	public boolean isRotating() {
-		return isRotating;
+	public float getDistanceY() {
+		return yDistance;
+	}
+
+	public boolean isPanning() {
+		return isPanning;
 	}
 
 	public boolean onTouchEvent(final MotionEvent event) {
@@ -49,13 +56,13 @@ public class RotationGestureDetector {
 					Line currentLine = new Line();
 					unpackLinePosition(event, currentLine);
 
-					rotationAngle = angleBetweenLines(previousLine, currentLine);
+					calculateDistanceBetweenLines(previousLine, currentLine);
 
-					if (!isRotating) {
-						startRotation();
+					if (!isPanning) {
+						startPan();
 					}
 					if (gestureListener != null) {
-						gestureListener.onRotate(this, rotationAngle);
+						gestureListener.onPan(this, getDistanceX(), getDistanceY());
 					}
 
 					previousLine = currentLine;
@@ -78,48 +85,46 @@ public class RotationGestureDetector {
 		line.setY2(event.getY(event.findPointerIndex(ptrID2)));
 	}
 
-	private float angleBetweenLines (final Line line1, final Line line2) {
-		float angle1 = (float) Math.atan2((line1.getY2() - line1.getY1()), (line1.getX2() - line1.getX1()));
-		float angle2 = (float) Math.atan2((line2.getY2() - line2.getY1()), (line2.getX2() - line2.getX1()));
+	private void calculateDistanceBetweenLines (final Line line1, final Line line2) {
+		Point center1 = line1.getCenter();
+		Point center2 = line2.getCenter();
 
-		float angle = ((float)Math.toDegrees(angle1 - angle2)) % 360;
-		if (angle < -180.f) angle += 360.0f;
-		if (angle > 180.f) angle -= 360.0f;
-		return angle;
+		xDistance = center2.getX() - center1.getX();
+		yDistance = center2.getY() - center1.getY();
 	}
 
 	private void clearPointerIndex(final int pointerIndex) {
 		if (ptrID1 == pointerIndex) {
 			ptrID1 = INVALID_POINTER_ID;
-			if (isRotating) {
-				endRotation();
+			if (isPanning) {
+				endPan();
 			}
 		}
 		else if (ptrID2 == pointerIndex) {
 			ptrID2 = INVALID_POINTER_ID;
-			if (isRotating) {
-				endRotation();
+			if (isPanning) {
+				endPan();
 			}
 		}
 	}
 
-	private void startRotation() {
-		isRotating = true;
+	private void startPan() {
+		isPanning = true;
 		if (gestureListener != null) {
-			gestureListener.onRotateStart(this, getAngle());
+			gestureListener.onPanStart(this, getDistanceX(), getDistanceY());
 		}
 	}
 
-	private void endRotation() {
-		isRotating = false;
+	private void endPan() {
+		isPanning = false;
 		if (gestureListener != null) {
-			gestureListener.onRotateEnd();
+			gestureListener.onPanEnd();
 		}
 	}
 
-	public static interface OnRotationGestureListener {
-		public boolean onRotate(RotationGestureDetector detector, float angle);
-		public boolean onRotateStart(RotationGestureDetector detector, float angle);
-		public void onRotateEnd();
+	public static interface OnPanGestureListener {
+		public boolean onPan(PanGestureDetector detector, float distanceX, float distanceY);
+		public boolean onPanStart(PanGestureDetector detector, float distanceX, float distanceY);
+		public void onPanEnd();
 	}
 }

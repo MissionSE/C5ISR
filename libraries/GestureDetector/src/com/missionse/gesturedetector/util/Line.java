@@ -16,6 +16,10 @@ public class Line {
 		setPoint2 (secondPoint);
 	}
 
+	public Point getCenter() {
+		return new Point((getX1() + getX2()) / 2, (getY1() + getY2()) / 2);
+	}
+
 	public Point getPoint1() {
 		return point1;
 	}

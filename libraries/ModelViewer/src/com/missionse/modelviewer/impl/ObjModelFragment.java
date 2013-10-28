@@ -53,12 +53,11 @@ public class ObjModelFragment extends ModelViewerFragment {
 				rotationAnim.setDuration(8000);
 				rotationAnim.setRepeatMode(RepeatMode.INFINITE);
 				rotationAnim.setTransformable3D(objectGroup);
+				registerAnimation(rotationAnim);
 
 			} catch (ParsingException e) {
 				e.printStackTrace();
 			}
-
-			registerAnimation(rotationAnim);
 		}
 
 		@Override

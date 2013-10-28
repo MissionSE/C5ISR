@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
 
 public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener {
@@ -27,6 +28,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	private GestureDetector gestureDetector;
 	private ScaleGestureDetector scaleGestureDetector;
 	private RotationGestureDetector rotationGestureDetector;
+	private PanGestureDetector panGestureDetector;
 
 	public static final String ARG_MODEL_ID = "model_id";
 
@@ -51,6 +53,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		gestureDetector = new GestureDetector(getActivity(), gestureListener);
 		scaleGestureDetector = new ScaleGestureDetector(getActivity(), gestureListener);
 		rotationGestureDetector = new RotationGestureDetector(gestureListener);
+		panGestureDetector = new PanGestureDetector(gestureListener);
 
 		mSurfaceView.setOnTouchListener(this);
 	}
@@ -106,6 +109,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 		boolean touchConsumed = scaleGestureDetector.onTouchEvent(event);
 		rotationGestureDetector.onTouchEvent(event);
+		panGestureDetector.onTouchEvent(event);
 		if (!scaleGestureDetector.isInProgress())
 			touchConsumed = gestureDetector.onTouchEvent(event);
 

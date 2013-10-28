@@ -4,13 +4,15 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
+import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
 import com.missionse.modelviewer.ModelViewerFragment.ModelViewerRenderer;
 
 public class ModelViewerGestureListener implements
 		GestureDetector.OnGestureListener,
 		ScaleGestureDetector.OnScaleGestureListener,
-		RotationGestureDetector.OnRotationGestureListener {
+		RotationGestureDetector.OnRotationGestureListener,
+		PanGestureDetector.OnPanGestureListener {
 
 	private ModelViewerRenderer renderer;
 
@@ -25,7 +27,6 @@ public class ModelViewerGestureListener implements
 
 	@Override
 	public boolean onScroll(final MotionEvent e1, final MotionEvent e2, final float distanceX, final float distanceY) {
-		renderer.rotate(distanceX / 6.0f, distanceY / 6.0f, 0);
 		return true;
 	}
 
@@ -64,17 +65,32 @@ public class ModelViewerGestureListener implements
 	}
 
 	@Override
-	public boolean onRotate(final RotationGestureDetector detector) {
+	public boolean onRotate(final RotationGestureDetector detector, final float angle) {
 		renderer.rotate(0f, 0f, -detector.getAngle());
 		return true;
 	}
 
 	@Override
-	public boolean onRotateStart(final RotationGestureDetector detector) {
+	public boolean onRotateStart(final RotationGestureDetector detector, final float angle) {
 		return true;
 	}
 
 	@Override
 	public void onRotateEnd() {
+	}
+
+	@Override
+	public boolean onPan(final PanGestureDetector detector, final float distanceX, final float distanceY) {
+		renderer.rotate(-distanceX / 4.5f, -distanceY / 4.5f, 0);
+		return true;
+	}
+
+	@Override
+	public boolean onPanStart(final PanGestureDetector detector, final float distanceX, final float distanceY) {
+		return true;
+	}
+
+	@Override
+	public void onPanEnd() {
 	}
 }
