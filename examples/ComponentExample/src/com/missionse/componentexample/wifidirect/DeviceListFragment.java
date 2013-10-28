@@ -6,11 +6,9 @@ import java.util.List;
 import com.missionse.componentexample.R;
 
 import android.app.ListFragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -19,18 +17,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class DeviceListFragment extends ListFragment implements PeerListListener{
+public class DeviceListFragment extends ListFragment {
 
-	private ProgressDialog progressDialog = null;
 	private View contentView;
 	
 	private final List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
 	private final SparseArray<String> deviceStatuses = new SparseArray<String>();
-
-	public DeviceListFragment() {
-	}
 	
 	@Override
 	public void onActivityCreated(final Bundle savedInstanceState) {
@@ -44,7 +37,6 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 		
 		setListAdapter(new WiFiPeerListAdapter(getActivity(),
 				R.layout.wifi_direct_device_entry, peers));
-
 	}
 
 	@Override
@@ -54,45 +46,25 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 		return contentView;
 	}
 	
-	@Override
-	public void onPeersAvailable(WifiP2pDeviceList peerList) {
-		if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-        peers.clear();
-        peers.addAll(peerList.getDeviceList());
-        ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
-        if (peers.size() == 0) {
-            Toast.makeText(getActivity(), "No peers found.", Toast.LENGTH_SHORT).show();
-        }
-	}
-	
-	/**
-     * Initiate a connection with the peer.
-     */
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
-        ((WifiDirectActivity) getActivity()).showDetails(device);
-    }
-    
-    public void onInitiateDiscovery() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-        progressDialog = ProgressDialog.show(getActivity(), "Press back to cancel", "finding peers", true, true);
+        ((WifiDirectActivity) getActivity()).showDeviceDetails(device);
     }
 	
-    public void updateThisDevice(WifiP2pDevice device) {
+	public void displayAvailablePeers(WifiP2pDeviceList peerList) {
+        peers.clear();
+        peers.addAll(peerList.getDeviceList());
+        ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+	}
+    
+    public void displayDeviceInfo(WifiP2pDevice device) {
         TextView view = (TextView) contentView.findViewById(R.id.my_name);
         view.setText(device.deviceName);
         view = (TextView) contentView.findViewById(R.id.my_status);
         view.setText(deviceStatuses.get(device.status));
     }
     
-	/**
-     * Array adapter for ListFragment that maintains WifiP2pDevice list.
-     */
     private class WiFiPeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
         private List<WifiP2pDevice> p2pDevices;
@@ -124,5 +96,4 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             return convertView;
         }
     }
-	
 }

@@ -2,47 +2,49 @@ package com.missionse.componentexample.wifidirect;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.missionse.componentexample.R;
+import com.missionse.wifidirect.ConnectionInitiationListener;
+import com.missionse.wifidirect.DisconnectionListener;
+import com.missionse.wifidirect.P2pStateChangeHandler;
+import com.missionse.wifidirect.WifiDirectConnector;
+import com.missionse.wifidirect.DiscoverPeersListener;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.ActionListener;
-import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
+//import android.util.Log;
 import android.widget.Toast;
 
 public class WifiDirectActivity extends Activity {
 	
-	private WifiP2pManager wifiManager;
-	private Channel wifiChannel;
+	//private static final String TAG = "WifiDirectActivity";
 	
-	private WifiDirectBroadcastReceiver broadcastReceiver;
-	
-	private final IntentFilter intentFilter = new IntentFilter();
-	
+	private final WifiDirectConnector wifiDirectConnector = new WifiDirectConnector();
+		
 	private SlidingMenu navigationDrawer;
 	
+	private ProgressDialog progressDialog;
+	private boolean findingPeers = false;
+	private boolean wasConnected = false;
+		
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTitle("Wi-Fi Direct");
 		setContentView(R.layout.activity_wifi_direct);
 		
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-		
-		wifiManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-		wifiChannel = wifiManager.initialize(this, getMainLooper(), null);
-		
+		wifiDirectConnector.onCreate(this);
+		createNavigationDrawer(savedInstanceState);
+	}
+	
+	private void createNavigationDrawer(final Bundle savedInstanceState) {
 		navigationDrawer = new SlidingMenu(this);
         navigationDrawer.setMode(SlidingMenu.LEFT);
         navigationDrawer.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
@@ -60,18 +62,59 @@ public class WifiDirectActivity extends Activity {
 			transaction.commit();
         }
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		broadcastReceiver = new WifiDirectBroadcastReceiver(wifiManager, wifiChannel, getFragmentManager());
-		registerReceiver(broadcastReceiver, intentFilter);
+		wifiDirectConnector.onResume(this);
+		wifiDirectConnector.addStateChangeHandler(new P2pStateChangeHandler() {
+			@Override
+			public void onPeersAvailable(WifiP2pDeviceList peers) {
+				if (progressDialog != null && progressDialog.isShowing() && findingPeers) {
+		            progressDialog.dismiss();
+		            findingPeers = false;
+		        }
+				
+				if (peers.getDeviceList().size() == 0) {
+					if (wasConnected) {
+						showToast("Disconnected.");
+						
+					}
+					else {
+						showToast("No peers found.");
+					}
+					wasConnected = false;
+		        }
+				
+				((DeviceDetailFragment) getFragmentManager().findFragmentById(R.id.frag_detail))
+					.clearForDisconnect();
+				
+				((DeviceListFragment) getFragmentManager().findFragmentById(R.id.frag_list))
+					.displayAvailablePeers(peers);
+			}
+
+			@Override
+			public void onConnectionInfoAvailable(WifiP2pInfo connectionInfo) {
+				if (progressDialog != null && progressDialog.isShowing()) {
+		            progressDialog.dismiss();
+			    }
+				wasConnected = true;
+				((DeviceDetailFragment) getFragmentManager().findFragmentById(R.id.frag_detail))
+					.displayConnectionSuccessInfo(connectionInfo);
+			}
+
+			@Override
+			public void onDeviceChanged(WifiP2pDevice thisDevice) {
+				((DeviceListFragment) getFragmentManager().findFragmentById(R.id.frag_list))
+					.displayDeviceInfo(thisDevice);
+			}
+		});
 	}
 	
 	@Override
     public void onPause() {
         super.onPause();
-        unregisterReceiver(broadcastReceiver);
+        wifiDirectConnector.onPause(this);
     }
 	
 	@Override
@@ -84,72 +127,85 @@ public class WifiDirectActivity extends Activity {
     	}
     }
 	
+	private void showToast(final String message) {
+		Toast.makeText(WifiDirectActivity.this, message, Toast.LENGTH_SHORT).show();
+	}
+	
 	public void enableP2P() {
 		//We can't actually enable it ourselves, but we can direct the user to do so.
 		startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 	}
 	
 	public void discoverPeers() {
-		if (!broadcastReceiver.isP2PEnabled()) {
-			Toast.makeText(this, "You must enable P2P first!", Toast.LENGTH_SHORT).show();
-		}
-		else {
-			final DeviceListFragment fragment = (DeviceListFragment) getFragmentManager()
-					.findFragmentById(R.id.frag_list);
-			fragment.onInitiateDiscovery();
-			navigationDrawer.showContent();
-			wifiManager.discoverPeers(wifiChannel, new WifiP2pManager.ActionListener() {
-				@Override
-				public void onSuccess() {
-					Toast.makeText(WifiDirectActivity.this, "Discovery Initiated", Toast.LENGTH_SHORT).show();
-				}
+		wifiDirectConnector.discoverPeers(new DiscoverPeersListener() {
+			@Override
+			public void onP2pNotEnabled() {
+				showToast("You must enable P2P first!");
+			}
 
-				@Override
-				public void onFailure(int reasonCode) {
-					Toast.makeText(WifiDirectActivity.this, "Discovery Failed : " + reasonCode, Toast.LENGTH_SHORT).show();
-				}
-			});
-		}
+			@Override
+			public void onDiscoverPeersSuccess() {
+				showToast("Discovery Initiated");
+				
+				navigationDrawer.showContent();
+				
+		        if (progressDialog != null && progressDialog.isShowing()) {
+		            progressDialog.dismiss();
+		        }
+		        progressDialog = ProgressDialog.show(WifiDirectActivity.this,
+		        		"Press back to cancel", "Finding peers...", true, true);
+		        findingPeers = true;
+			}
+
+			@Override
+			public void onDiscoverPeersFailure(int reasonCode) {
+				showToast("Discovery Failed");
+			}
+		});
 	}
 	
-	public void showDetails(WifiP2pDevice device) {
+	public void showDeviceDetails(WifiP2pDevice device) {
         DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager()
                 .findFragmentById(R.id.frag_detail);
-        fragment.showDetails(device);
-
+        fragment.showDeviceDetails(device);
     }
 	
 	public void connect(WifiP2pConfig config) {
-        wifiManager.connect(wifiChannel, config, new ActionListener() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(WifiDirectActivity.this, "Initiating connection...", Toast.LENGTH_SHORT).show();
-            }
+		if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+	    }
+	    progressDialog = ProgressDialog.show(this, "Press back to cancel", "Connecting to: " +
+	    		config.deviceAddress, true, true);
+		wifiDirectConnector.connect(config, new ConnectionInitiationListener() {
+			@Override
+			public void onConnectionInitiationSuccess() {
+				showToast("Initiating connection...");
+			}
 
-            @Override
-            public void onFailure(int reason) {
-                Toast.makeText(WifiDirectActivity.this, "Connection failed. Retry.", Toast.LENGTH_SHORT).show();
-                final DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager()
-                		.findFragmentById(R.id.frag_detail);
-                fragment.endProgressBar();
-            }
-        });
+			@Override
+			public void onConnectionInitiationFailure() {
+				showToast("Connection failed. Retry.");
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+        	    }
+			}
+		});
     }
 	
 	public void disconnect() {
-        final DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager()
-                .findFragmentById(R.id.frag_detail);
-        fragment.resetViews();
-        wifiManager.removeGroup(wifiChannel, new ActionListener() {
-            @Override
-            public void onFailure(int reasonCode) {
-            	//Nothing to do for now.
-            }
+		wasConnected = false;
+        wifiDirectConnector.disconnect(new DisconnectionListener() {
+			@Override
+			public void onDisconnectionSuccess() {
+				final DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager()
+		                .findFragmentById(R.id.frag_detail);
+		        fragment.clearForDisconnect();
+			}
 
-            @Override
-            public void onSuccess() {
-                fragment.getView().setVisibility(View.GONE);
-            }
+			@Override
+			public void onDisconnectionFailure() {
+				showToast("Disconnection failed. Try again.");
+			}
         });
     }
 }

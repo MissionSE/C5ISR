@@ -3,12 +3,10 @@ package com.missionse.componentexample.wifidirect;
 import com.missionse.componentexample.R;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
-import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +15,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DeviceDetailFragment extends Fragment implements ConnectionInfoListener {
-
-	private View contentView;
-	private ProgressDialog progressDialog = null;
+public class DeviceDetailFragment extends Fragment {
 	
+	private View contentView;	
 	private WifiP2pDevice targetDevice;
+	private WifiP2pDevice connectedDevice;
 	
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -34,11 +31,6 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 config.deviceAddress = targetDevice.deviceAddress;
                 config.wps.setup = WpsInfo.PBC;
                 config.groupOwnerIntent = 0;
-                if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                }
-                progressDialog = ProgressDialog.show(getActivity(), "Press back to cancel",
-                		"Connecting to :" + targetDevice.deviceAddress, true, true);
                 ((WifiDirectActivity) getActivity()).connect(config);
 			}
 		});
@@ -59,72 +51,70 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 		return contentView;
 	}
 	
-	@Override
-	public void onConnectionInfoAvailable(final WifiP2pInfo p2pInfo) {
-//		// InetAddress from WifiP2pInfo struct.
-//        InetAddress groupOwnerAddress = info.groupOwnerAddress.getHostAddress());
-//
-//        // After the group negotiation, we can determine the group owner.
-//        if (info.groupFormed && info.isGroupOwner) {
-//            // Do whatever tasks are specific to the group owner.
-//            // One common case is creating a server thread and accepting
-//            // incoming connections.
-//        } else if (info.groupFormed) {
-//            // The other device acts as the client. In this case,
-//            // you'll want to create a client thread that connects to the group
-//            // owner.
-//        }
-		
-		if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-	    }
-	    getView().setVisibility(View.VISIBLE);
-	
-	    // The owner IP is now known.
+	public void displayConnectionSuccessInfo(final WifiP2pInfo p2pInfo) {
+		connectedDevice = targetDevice;
+        String groupOwnerAddress = p2pInfo.groupOwnerAddress.getHostAddress();
+
+        // The owner IP is now known.
 	    TextView view = (TextView) contentView.findViewById(R.id.group_owner);
 	    view.setText("Group owner: " + ((p2pInfo.isGroupOwner == true) ? "yes" : "no"));
 	
 	    // InetAddress from WifiP2pInfo.
 	    view = (TextView) contentView.findViewById(R.id.device_info);
-	    view.setText("Group Owner IP: " + p2pInfo.groupOwnerAddress.getHostAddress());
-	
-	    contentView.findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
-	
-	    //if (!server_running){
-	    //        new ServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text)).execute();
-	    //        server_running = true;
-	    //}
-	
-	    // hide the connect button
+	    view.setText("Group Owner IP: " + groupOwnerAddress);
+        
+	    getView().setVisibility(View.VISIBLE);
 	    contentView.findViewById(R.id.btn_connect).setVisibility(View.GONE);
+	    contentView.findViewById(R.id.btn_disconnect).setVisibility(View.VISIBLE);
+	    contentView.findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
+	    
+        // After the group negotiation, we can determine the group owner.
+        /*if (info.groupFormed && info.isGroupOwner) {
+            // Do whatever tasks are specific to the group owner.
+            // One common case is creating a server thread and accepting
+            // incoming connections.
+            if (!server_running){
+	            new ServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text)).execute();
+	            server_running = true;
+	    	}	    
+        } else if (info.groupFormed) {
+            // The other device acts as the client. In this case,
+            // you'll want to create a client thread that connects to the group
+            // owner.
+        }*/
 	}
 	
-	public void showDetails(WifiP2pDevice device) {
+	public void showDeviceDetails(WifiP2pDevice device) {
 		targetDevice = device;
-        getView().setVisibility(View.VISIBLE);
-        TextView view = (TextView) contentView.findViewById(R.id.device_address);
+		
+		TextView view = (TextView) contentView.findViewById(R.id.device_address);
         view.setText(device.deviceAddress);
-        view = (TextView) contentView.findViewById(R.id.device_info);
-        view.setText(device.toString());
+		
+		if (connectedDevice != null && connectedDevice == targetDevice) {
+			setButtonStates(View.GONE, View.VISIBLE, View.GONE);
+		}
+		else {
+			setButtonStates(View.VISIBLE, View.GONE, View.GONE);
+		}
+		
+        getView().setVisibility(View.VISIBLE);
 	}
 
-	public void resetViews() {
-        contentView.findViewById(R.id.btn_connect).setVisibility(View.VISIBLE);
-        TextView view = (TextView) contentView.findViewById(R.id.device_address);
-        view.setText("");
-        view = (TextView) contentView.findViewById(R.id.device_info);
+	public void clearForDisconnect() {
+		connectedDevice = null;
+	    setButtonStates(View.GONE, View.GONE, View.GONE);
+	    getView().setVisibility(View.GONE);
+        /*TextView view = (TextView) contentView.findViewById(R.id.device_address);
         view.setText("");
         view = (TextView) contentView.findViewById(R.id.group_owner);
         view.setText("");
         view = (TextView) contentView.findViewById(R.id.status_text);
-        view.setText("");
-        //contentView.findViewById(R.id.btn_start_client).setVisibility(View.GONE);
-        //getView().setVisibility(View.GONE);
+        view.setText("");*/
 	}
 	
-	public void endProgressBar() {
-		if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-	    }
+	private void setButtonStates(int connectState, int disconnectState, int actionState) {
+		contentView.findViewById(R.id.btn_connect).setVisibility(connectState);
+	    contentView.findViewById(R.id.btn_disconnect).setVisibility(disconnectState);
+	    contentView.findViewById(R.id.btn_start_client).setVisibility(actionState);
 	}
 }

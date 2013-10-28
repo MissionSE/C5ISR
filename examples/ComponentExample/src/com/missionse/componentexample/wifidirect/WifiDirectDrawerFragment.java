@@ -23,6 +23,10 @@ public class WifiDirectDrawerFragment extends ListFragment {
 	public void onActivityCreated(final Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
+		createMenu();
+	}
+	
+	private void createMenu() {
 		final List<String> menuItems = new ArrayList<String>();
 		menuItems.add("Enable P2P");
 		menuItems.add("Discover Peers");
