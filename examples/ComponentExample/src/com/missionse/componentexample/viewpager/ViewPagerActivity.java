@@ -5,6 +5,8 @@ import com.missionse.componentexample.R;
 import com.missionse.drawersafeviewpager.DrawerSafeViewPager;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +38,7 @@ public class ViewPagerActivity extends Activity {
         pagerAdapter = new SectionsPagerAdapter(this, getFragmentManager());
 
         viewPager = (DrawerSafeViewPager) findViewById(R.id.pager);
+        viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(pagerAdapter);
         
         navigationDrawer = new SlidingMenu(this);
@@ -43,21 +46,17 @@ public class ViewPagerActivity extends Activity {
         navigationDrawer.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         navigationDrawer.setShadowWidthRes(R.dimen.drawer_shadow_width);
         navigationDrawer.setShadowDrawable(R.drawable.shadow);
-        navigationDrawer.setBehindOffsetRes(R.dimen.drawer_offset);
+        navigationDrawer.setBehindWidthRes(R.dimen.drawer_width);
         navigationDrawer.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        navigationDrawer.setMenu(R.layout.drawer);
+        navigationDrawer.setMenu(R.layout.nav_drawer);
         
-        //The following is for state restore, but given the use of different fragments for
-        //the pages, currently unnecessary.
-        /*Fragment drawerFragment;
+        Fragment drawerFragment;
         if (savedInstanceState == null) {
 			FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
-			drawerFragment = new DrawerFragment();
+			drawerFragment = new ViewPagerDrawerFragment();
 			transaction.replace(R.id.menu_frame, drawerFragment);
 			transaction.commit();
-		} else {
-			drawerFragment = (ListFragment)this.getFragmentManager().findFragmentById(R.id.menu_frame);
-		}*/
+        }
     }
 
     @Override
