@@ -106,7 +106,7 @@ public class RotationGestureDetector {
 	private void startRotation() {
 		isRotating = true;
 		if (gestureListener != null) {
-			gestureListener.onRotateStart(this, getAngle());
+			gestureListener.onRotateBegin(this, getAngle());
 		}
 	}
 
@@ -119,7 +119,7 @@ public class RotationGestureDetector {
 
 	public static interface OnRotationGestureListener {
 		public boolean onRotate(RotationGestureDetector detector, float angle);
-		public boolean onRotateStart(RotationGestureDetector detector, float angle);
+		public boolean onRotateBegin(RotationGestureDetector detector, float angle);
 		public void onRotateEnd();
 	}
 }

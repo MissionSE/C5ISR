@@ -19,8 +19,10 @@ import android.widget.ProgressBar;
 
 import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
+import com.missionse.modelviewer.impl.ModelControlListener;
 
 public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener {
+	protected ModelParser parser;
 	protected ModelViewerRenderer renderer;
 	protected ProgressBar progressBar;
 
@@ -32,6 +34,10 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 	public static final String ARG_MODEL_ID = "model_id";
 
+	public void setModelParser(final ModelParser modelParser) {
+		parser = modelParser;
+	}
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,14 +48,18 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 			throw new RuntimeException("ModelViewerFragment passed invalid model id.");
 		}
 
+		if (null == parser) {
+			throw new RuntimeException("No valid model parser set.");
+		}
+
 		if (isTransparentSurfaceView())
 			setGLBackgroundTransparent(true);
 
-		renderer = createRenderer(modelID);
+		renderer = createRenderer(modelID, parser);
 		renderer.setSurfaceView(mSurfaceView);
 		setRenderer(renderer);
 
-		gestureListener = new ModelViewerGestureListener(renderer);
+		gestureListener = new ModelControlListener(renderer);
 		gestureDetector = new GestureDetector(getActivity(), gestureListener);
 		scaleGestureDetector = new ScaleGestureDetector(getActivity(), gestureListener);
 		rotationGestureDetector = new RotationGestureDetector(gestureListener);
@@ -107,13 +117,12 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	@Override
 	public boolean onTouch(final View v, final MotionEvent event) {
 
-		boolean touchConsumed = scaleGestureDetector.onTouchEvent(event);
+		scaleGestureDetector.onTouchEvent(event);
 		rotationGestureDetector.onTouchEvent(event);
 		panGestureDetector.onTouchEvent(event);
-		if (!scaleGestureDetector.isInProgress())
-			touchConsumed = gestureDetector.onTouchEvent(event);
+		gestureDetector.onTouchEvent(event);
 
-		return touchConsumed;
+		return true;
 	}
 
 	public void setAutoRotation(final boolean autoRotate) {
@@ -125,10 +134,10 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	}
 
 
-	protected abstract ModelViewerRenderer createRenderer(final int modelID);
+	protected abstract ModelViewerRenderer createRenderer(final int modelID, final ModelParser parser);
 
-	protected abstract class ModelViewerRenderer extends RajawaliRenderer {
-		public ModelViewerRenderer(final Context context) {
+	protected abstract class ModelViewerRenderer extends RajawaliRenderer implements ModelController {
+		public ModelViewerRenderer(final Context context, final ModelParser parser) {
 			super(context);
 			setFrameRate(60);
 		}
@@ -144,15 +153,5 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 			if (progressBar.isShown())
 				hideLoader();
 		}
-
-		protected abstract void setAutoRotation(final boolean autoRotate);
-
-		protected abstract boolean isAutoRotating();
-
-		protected abstract void rotate(final float xAngle, final float yAngle, final float zAngle);
-
-		protected abstract void scale(final float scaleFactor);
-
-		protected abstract void translate(final float xDistance, final float yDistance, final float zDistance);
 	}
 }

@@ -7,30 +7,31 @@ import rajawali.animation.RotateAnimation3D;
 import rajawali.lights.DirectionalLight;
 import rajawali.math.vector.Vector3;
 import rajawali.math.vector.Vector3.Axis;
-import rajawali.parser.LoaderOBJ;
-import rajawali.parser.ParsingException;
 import android.content.Context;
 
+import com.missionse.modelviewer.ModelParser;
 import com.missionse.modelviewer.ModelViewerFragment;
 
-public class ObjModelFragment extends ModelViewerFragment {
+public class ModelSceneController extends ModelViewerFragment {
 
 	@Override
-	protected ModelViewerRenderer createRenderer(final int modelID) {
-		return new ObjModelRenderer(getActivity(), modelID);
+	protected ModelViewerRenderer createRenderer(final int modelID, final ModelParser parser) {
+		return new ModelSceneRenderer(getActivity(), modelID, parser);
 	}
 
-	private final class ObjModelRenderer extends ModelViewerRenderer {
+	private final class ModelSceneRenderer extends ModelViewerRenderer {
 
 		private final int modelID;
+		private final ModelParser modelParser;
 
 		private DirectionalLight directionalLight;
 		private Object3D objectGroup;
 		private Animation3D rotationAnim;
 
-		public ObjModelRenderer(final Context context, final int model) {
-			super(context);
+		public ModelSceneRenderer(final Context context, final int model, final ModelParser parser) {
+			super(context, parser);
 			modelID = model;
+			modelParser = parser;
 		}
 
 		@Override
@@ -42,11 +43,8 @@ public class ObjModelFragment extends ModelViewerFragment {
 			getCurrentScene().addLight(directionalLight);
 			getCurrentCamera().setZ(16);
 
-			LoaderOBJ objParser = new LoaderOBJ(getContext().getResources(),
-					getTextureManager(), modelID);
-			try	{
-				objParser.parse();
-				objectGroup = objParser.getParsedObject();
+			objectGroup = modelParser.parse(this, modelID);
+			if (null != objectGroup) {
 				addChild(objectGroup);
 
 				rotationAnim = new RotateAnimation3D(Axis.Y, 360);
@@ -54,14 +52,11 @@ public class ObjModelFragment extends ModelViewerFragment {
 				rotationAnim.setRepeatMode(RepeatMode.INFINITE);
 				rotationAnim.setTransformable3D(objectGroup);
 				registerAnimation(rotationAnim);
-
-			} catch (ParsingException e) {
-				e.printStackTrace();
 			}
 		}
 
 		@Override
-		protected void setAutoRotation(final boolean autoRotate) {
+		public void setAutoRotation(final boolean autoRotate) {
 			if (!isAutoRotating()) {
 				if (autoRotate) {
 					rotationAnim.reset();
@@ -73,19 +68,19 @@ public class ObjModelFragment extends ModelViewerFragment {
 		}
 
 		@Override
-		protected boolean isAutoRotating() {
+		public boolean isAutoRotating() {
 			return rotationAnim.isPlaying();
 		}
 
 		@Override
-		protected void rotate(final float xAngle, final float yAngle, final float zAngle) {
+		public void rotate(final float xAngle, final float yAngle, final float zAngle) {
 			objectGroup.rotateAround(Vector3.Y, xAngle);
 			objectGroup.rotateAround(Vector3.X, yAngle);
 			objectGroup.rotateAround(Vector3.Z, zAngle);
 		}
 
 		@Override
-		protected void scale(final float scaleFactor) {
+		public void scale(final float scaleFactor) {
 			Vector3 scale = objectGroup.getScale();
 			objectGroup.setScaleX(scale.x * scaleFactor);
 			objectGroup.setScaleY(scale.y * scaleFactor);
@@ -93,7 +88,7 @@ public class ObjModelFragment extends ModelViewerFragment {
 		}
 
 		@Override
-		protected void translate(final float xDistance, final float yDistance, final float zDistance) {
+		public void translate(final float xDistance, final float yDistance, final float zDistance) {
 			objectGroup.setX(objectGroup.getX() + xDistance);
 			objectGroup.setY(objectGroup.getY() + yDistance);
 			objectGroup.setZ(objectGroup.getZ() + zDistance);

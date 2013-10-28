@@ -111,7 +111,7 @@ public class PanGestureDetector {
 	private void startPan() {
 		isPanning = true;
 		if (gestureListener != null) {
-			gestureListener.onPanStart(this, getDistanceX(), getDistanceY());
+			gestureListener.onPanBegin(this, getDistanceX(), getDistanceY());
 		}
 	}
 
@@ -124,7 +124,7 @@ public class PanGestureDetector {
 
 	public static interface OnPanGestureListener {
 		public boolean onPan(PanGestureDetector detector, float distanceX, float distanceY);
-		public boolean onPanStart(PanGestureDetector detector, float distanceX, float distanceY);
+		public boolean onPanBegin(PanGestureDetector detector, float distanceX, float distanceY);
 		public void onPanEnd();
 	}
 }
