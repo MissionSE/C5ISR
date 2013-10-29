@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.example.databaseexample.R;
 import com.missionse.databaseexample.Model.Student;
 
 
@@ -24,7 +23,6 @@ public class CreateNew extends ListFragment {
 	
 	private Button mButtonStudent;
 	private Button mButtonClassRoom;
-	private ListView mListView;
 	private List<Student> students;
 
 	@Override
