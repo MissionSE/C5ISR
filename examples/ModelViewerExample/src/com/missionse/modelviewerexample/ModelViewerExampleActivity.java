@@ -16,11 +16,10 @@ public class ModelViewerExampleActivity extends Activity implements ObjectSelect
 	private ModelViewerFragment fragment = null;
 
 	private HashMap<String, Integer> defaultColors;
-	private int highlightColor;
+	private static final int HIGHLIGHT_COLOR = Color.BLUE;
 
 	public ModelViewerExampleActivity() {
 		defaultColors = new HashMap<String, Integer>();
-		highlightColor = Color.BLUE;
 	}
 
 	@Override
@@ -48,12 +47,17 @@ public class ModelViewerExampleActivity extends Activity implements ObjectSelect
 		if (fragment != null) {
 			switch (item.getItemId()) {
 				case R.id.action_rotate:
-					fragment.setAutoRotation(!item.isChecked());
-					item.setChecked(fragment.isAutoRotating());
+					fragment.getController().setAutoRotation(!item.isChecked());
+					item.setChecked(fragment.getController().isAutoRotating());
 					return true;
 				case R.id.action_lock:
-					fragment.setTranslationLocked(!fragment.isTranslationLocked());
-					item.setChecked(fragment.isTranslationLocked());
+					if (fragment.getController().isTranslationLocked()) {
+						fragment.getController().unlockTranslation();
+					} else {
+						fragment.getController().lockTranslation();
+					}
+					item.setChecked(fragment.getController().isTranslationLocked());
+					return true;
 			}
 		}
 
@@ -62,13 +66,13 @@ public class ModelViewerExampleActivity extends Activity implements ObjectSelect
 
 	@Override
 	public void objectSelected(final String objectName) {
-		int objectColor = fragment.getAmbientColor(objectName);
+		int objectColor = fragment.getController().getAmbientColor(objectName);
 
 		if (!defaultColors.containsKey(objectName)) {
 			defaultColors.put(objectName, objectColor);
-			fragment.setAmbientColor(objectName, highlightColor);
+			fragment.getController().setAmbientColor(objectName, HIGHLIGHT_COLOR);
 		} else {
-			fragment.setAmbientColor(objectName, defaultColors.get(objectName));
+			fragment.getController().setAmbientColor(objectName, defaultColors.get(objectName));
 			defaultColors.remove(objectName);
 		}
 	}

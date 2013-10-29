@@ -1,5 +1,7 @@
 package com.missionse.modelviewer;
 
+import java.util.ArrayList;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -31,15 +33,16 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	private ScaleGestureDetector scaleGestureDetector;
 	private RotationGestureDetector rotationGestureDetector;
 	private PanGestureDetector panGestureDetector;
-	private ObjectSelectedListener objectSelectedListener;
-
-	private boolean translationLocked;
+	protected ArrayList<ObjectSelectedListener> objectSelectedListeners;
 
 	public static final String ARG_MODEL_ID = "model_id";
 
 	public void setModelParser(final ModelParser modelParser) {
 		parser = modelParser;
-		translationLocked = false;
+	}
+
+	public ModelViewerFragment() {
+		objectSelectedListeners = new ArrayList<ObjectSelectedListener>();
 	}
 
 	@Override
@@ -61,7 +64,6 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 		renderer = createRenderer(modelID, parser);
 		renderer.setSurfaceView(mSurfaceView);
-		renderer.registerObjectSelectedListener(objectSelectedListener);
 		setRenderer(renderer);
 
 		gestureListener = new ModelControlListener(renderer);
@@ -74,8 +76,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	}
 
 	@Override
-	public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-			final Bundle savedInstanceState) {
+	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		mLayout = (FrameLayout) inflater.inflate(R.layout.fragment_model_viewer, container, false);
 
 		if (mSurfaceView.getParent() != null) {
@@ -121,47 +122,20 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 	@Override
 	public boolean onTouch(final View v, final MotionEvent event) {
-
 		scaleGestureDetector.onTouchEvent(event);
 		rotationGestureDetector.onTouchEvent(event);
 		panGestureDetector.onTouchEvent(event);
-
-		if (!translationLocked) {
-			gestureDetector.onTouchEvent(event);
-		}
+		gestureDetector.onTouchEvent(event);
 
 		return true;
 	}
 
-	public void setTranslationLocked(final boolean lock) {
-		translationLocked = lock;
-	}
-
-	public boolean isTranslationLocked() {
-		return translationLocked;
-	}
-
-	public void setAutoRotation(final boolean autoRotate) {
-		renderer.setAutoRotation(autoRotate);
-	}
-
-	public boolean isAutoRotating() {
-		return renderer.isAutoRotating();
-	}
-
-	public int getAmbientColor(final String objectName) {
-		return renderer.getAmbientColor(objectName);
-	}
-
-	public boolean setAmbientColor(final String objectName, final int color) {
-		return renderer.setAmbientColor(objectName, color);
-	}
-
 	public void registerObjectSelectedListener(final ObjectSelectedListener listener) {
-		objectSelectedListener = listener;
-		if (renderer != null) {
-			renderer.registerObjectSelectedListener(listener);
-		}
+		objectSelectedListeners.add(listener);
+	}
+
+	public ModelController getController() {
+		return renderer;
 	}
 
 	protected abstract ModelViewerRenderer createRenderer(final int modelID, final ModelParser parser);
@@ -180,8 +154,9 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		@Override
 		public void onDrawFrame(final GL10 glUnused) {
 			super.onDrawFrame(glUnused);
-			if (progressBar.isShown())
+			if (progressBar.isShown()) {
 				hideLoader();
+			}
 		}
 	}
 }

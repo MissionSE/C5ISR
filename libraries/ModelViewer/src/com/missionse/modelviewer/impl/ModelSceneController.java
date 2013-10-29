@@ -1,5 +1,7 @@
 package com.missionse.modelviewer.impl;
 
+import java.util.ArrayList;
+
 import rajawali.Object3D;
 import rajawali.animation.Animation3D;
 import rajawali.animation.Animation3D.RepeatMode;
@@ -32,12 +34,16 @@ public class ModelSceneController extends ModelViewerFragment {
 		private Object3D objectGroup;
 		private Animation3D rotationAnim;
 		private ObjectColorPicker objectPicker;
-		private ObjectSelectedListener listener = null;
+
+		private boolean rotationLocked, scaleLocked, translationLocked;
 
 		public ModelSceneRenderer(final Context context, final int model, final ModelParser parser) {
 			super(context, parser);
 			modelID = model;
 			modelParser = parser;
+			rotationLocked = false;
+			scaleLocked = false;
+			translationLocked = false;
 		}
 
 		@Override
@@ -55,10 +61,9 @@ public class ModelSceneController extends ModelViewerFragment {
 			objectGroup = modelParser.parse(this, modelID);
 			if (null != objectGroup) {
 				addChild(objectGroup);
-				objectPicker.registerObject(objectGroup.getChildAt(0));
-				objectPicker.registerObject(objectGroup.getChildAt(1));
-				objectPicker.registerObject(objectGroup.getChildAt(2));
-				objectPicker.registerObject(objectGroup.getChildAt(3));
+				for (Object3D object : getObjects()) {
+					objectPicker.registerObject(object);
+				}
 
 				rotationAnim = new RotateAnimation3D(Axis.Y, 360);
 				rotationAnim.setDuration(8000);
@@ -66,6 +71,26 @@ public class ModelSceneController extends ModelViewerFragment {
 				rotationAnim.setTransformable3D(objectGroup);
 				registerAnimation(rotationAnim);
 			}
+		}
+
+		protected ArrayList<Object3D> getObjects() {
+			ArrayList<Object3D> objects = new ArrayList<Object3D>();
+			for (int index = 0; index < objectGroup.getNumObjects(); ++index) {
+				objects.add(objectGroup.getChildAt(index));
+			}
+
+			return objects;
+		}
+
+		@Override
+		public ArrayList<String> getObjectList() {
+			ArrayList<String> objectNames = new ArrayList<String>();
+			for (Object3D object : getObjects()) {
+				if (object.getName() != null) {
+					objectNames.add(object.getName());
+				}
+			}
+			return objectNames;
 		}
 
 		@Override
@@ -87,24 +112,30 @@ public class ModelSceneController extends ModelViewerFragment {
 
 		@Override
 		public void rotate(final float xAngle, final float yAngle, final float zAngle) {
-			objectGroup.rotateAround(Vector3.Y, xAngle);
-			objectGroup.rotateAround(Vector3.X, yAngle);
-			objectGroup.rotateAround(Vector3.Z, zAngle);
+			if (!rotationLocked) {
+				objectGroup.rotateAround(Vector3.Y, xAngle);
+				objectGroup.rotateAround(Vector3.X, yAngle);
+				objectGroup.rotateAround(Vector3.Z, zAngle);
+			}
 		}
 
 		@Override
 		public void scale(final float scaleFactor) {
-			Vector3 scale = objectGroup.getScale();
-			objectGroup.setScaleX(scale.x * scaleFactor);
-			objectGroup.setScaleY(scale.y * scaleFactor);
-			objectGroup.setScaleZ(scale.z * scaleFactor);
+			if (!scaleLocked) {
+				Vector3 scale = objectGroup.getScale();
+				objectGroup.setScaleX(scale.x * scaleFactor);
+				objectGroup.setScaleY(scale.y * scaleFactor);
+				objectGroup.setScaleZ(scale.z * scaleFactor);
+			}
 		}
 
 		@Override
 		public void translate(final float xDistance, final float yDistance, final float zDistance) {
-			objectGroup.setX(objectGroup.getX() + xDistance);
-			objectGroup.setY(objectGroup.getY() + yDistance);
-			objectGroup.setZ(objectGroup.getZ() + zDistance);
+			if (!translationLocked) {
+				objectGroup.setX(objectGroup.getX() + xDistance);
+				objectGroup.setY(objectGroup.getY() + yDistance);
+				objectGroup.setZ(objectGroup.getZ() + zDistance);
+			}
 		}
 
 		@Override
@@ -138,19 +169,79 @@ public class ModelSceneController extends ModelViewerFragment {
 
 		@Override
 		public void getObjectAt(final float x, final float y) {
-			objectPicker.getObjectAt(x, y);
-		}
-
-		@Override
-		public void onObjectPicked(final Object3D object) {
-			if (listener != null && object != null && object.getName() != null) {
-				listener.objectSelected(object.getName());
+			if (objectPicker != null) {
+				objectPicker.getObjectAt(x, y);
 			}
 		}
 
 		@Override
-		public void registerObjectSelectedListener(final ObjectSelectedListener objectSelectedListener) {
-			listener = objectSelectedListener;
+		public void onObjectPicked(final Object3D object) {
+			if (object != null && object.getName() != null) {
+				for (ObjectSelectedListener listener : objectSelectedListeners) {
+					listener.objectSelected(object.getName());
+				}
+			}
+		}
+
+		@Override
+		public void lockRotation() {
+			rotationLocked = true;
+		}
+
+		@Override
+		public void unlockRotation() {
+			rotationLocked = false;
+		}
+
+		@Override
+		public boolean isRotationLocked() {
+			return rotationLocked;
+		}
+
+		@Override
+		public void lockScale() {
+			scaleLocked = true;
+		}
+
+		@Override
+		public void unlockScale() {
+			scaleLocked = false;
+		}
+
+		@Override
+		public boolean isScaleLocked() {
+			return scaleLocked;
+		}
+
+		@Override
+		public void lockTranslation() {
+			translationLocked = true;
+		}
+
+		@Override
+		public void unlockTranslation() {
+			translationLocked = false;
+		}
+
+		@Override
+		public boolean isTranslationLocked() {
+			return translationLocked;
+		}
+
+		@Override
+		public void reset() {
+			if (objectGroup != null) {
+				objectGroup.setPosition(new Vector3());
+				objectGroup.setRotation(new Vector3());
+				objectGroup.setScale(1);
+			}
+		}
+
+		@Override
+		public void center() {
+			if (objectGroup != null) {
+				objectGroup.setPosition(new Vector3());
+			}
 		}
 	}
 }
