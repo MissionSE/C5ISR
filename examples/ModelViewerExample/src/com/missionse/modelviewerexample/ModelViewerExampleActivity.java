@@ -44,7 +44,7 @@ public class ModelViewerExampleActivity extends Activity implements ObjectSelect
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		if (fragment != null) {
+		if (fragment != null && fragment.getController() != null) {
 			switch (item.getItemId()) {
 				case R.id.action_rotate:
 					fragment.getController().setAutoRotation(!item.isChecked());
@@ -57,6 +57,12 @@ public class ModelViewerExampleActivity extends Activity implements ObjectSelect
 						fragment.getController().lockTranslation();
 					}
 					item.setChecked(fragment.getController().isTranslationLocked());
+					return true;
+				case R.id.action_center:
+					fragment.getController().center();
+					return true;
+				case R.id.action_reset:
+					fragment.getController().reset();
 					return true;
 			}
 		}
