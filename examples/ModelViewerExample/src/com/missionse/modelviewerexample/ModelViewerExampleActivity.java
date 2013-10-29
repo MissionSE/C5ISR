@@ -1,5 +1,7 @@
 package com.missionse.modelviewerexample;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,13 +10,18 @@ import android.view.MenuItem;
 
 import com.missionse.modelviewer.ModelViewerFragment;
 import com.missionse.modelviewer.ModelViewerFragmentFactory;
+import com.missionse.modelviewer.ObjectSelectedListener;
 
-public class ModelViewerExampleActivity extends Activity
-{
+public class ModelViewerExampleActivity extends Activity implements ObjectSelectedListener {
 	private ModelViewerFragment fragment = null;
 
-	private static final String highlightedObject = "Monkey";
-	private int defaultColor = 0;
+	private HashMap<String, Integer> defaultColors;
+	private int highlightColor;
+
+	public ModelViewerExampleActivity() {
+		defaultColors = new HashMap<String, Integer>();
+		highlightColor = Color.BLUE;
+	}
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -23,6 +30,8 @@ public class ModelViewerExampleActivity extends Activity
 
 		if (savedInstanceState == null)	{
 			fragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
+			fragment.registerObjectSelectedListener(this);
+
 			getFragmentManager().beginTransaction().add(R.id.content_frame, fragment).commit();
 		}
 	}
@@ -42,15 +51,6 @@ public class ModelViewerExampleActivity extends Activity
 					fragment.setAutoRotation(!item.isChecked());
 					item.setChecked(fragment.isAutoRotating());
 					return true;
-				case R.id.action_highlight:
-					if (item.isChecked()) {
-						fragment.setAmbientColor(highlightedObject, defaultColor);
-					} else {
-						defaultColor = fragment.getAmbientColor(highlightedObject);
-						fragment.setAmbientColor(highlightedObject, Color.BLUE);
-					}
-					item.setChecked(!item.isChecked());
-					return true;
 				case R.id.action_lock:
 					fragment.setTranslationLocked(!fragment.isTranslationLocked());
 					item.setChecked(fragment.isTranslationLocked());
@@ -58,5 +58,18 @@ public class ModelViewerExampleActivity extends Activity
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void objectSelected(final String objectName) {
+		int objectColor = fragment.getAmbientColor(objectName);
+
+		if (!defaultColors.containsKey(objectName)) {
+			defaultColors.put(objectName, objectColor);
+			fragment.setAmbientColor(objectName, highlightColor);
+		} else {
+			fragment.setAmbientColor(objectName, defaultColors.get(objectName));
+			defaultColors.remove(objectName);
+		}
 	}
 }

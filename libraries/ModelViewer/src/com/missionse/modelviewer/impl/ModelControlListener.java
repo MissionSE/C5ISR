@@ -41,4 +41,10 @@ public class ModelControlListener extends ModelViewerGestureListener {
 		controller.rotate(-distanceX / 4.5f, -distanceY / 4.5f, 0);
 		return true;
 	}
+
+	@Override
+	public boolean onSingleTapUp(final MotionEvent e) {
+		controller.getObjectAt(e.getX(), e.getY());
+		return true;
+	}
 }

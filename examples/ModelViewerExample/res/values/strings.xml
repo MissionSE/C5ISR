@@ -4,6 +4,5 @@
     <string name="app_name">ModelViewerExample</string>
     <string name="action_rotate">Auto-Rotation</string>
     <string name="action_lock">Lock</string>
-    <string name="action_highlight">Highlight</string>
 
 </resources>

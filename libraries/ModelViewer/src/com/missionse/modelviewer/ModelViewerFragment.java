@@ -31,6 +31,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	private ScaleGestureDetector scaleGestureDetector;
 	private RotationGestureDetector rotationGestureDetector;
 	private PanGestureDetector panGestureDetector;
+	private ObjectSelectedListener objectSelectedListener;
 
 	private boolean translationLocked;
 
@@ -60,6 +61,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 		renderer = createRenderer(modelID, parser);
 		renderer.setSurfaceView(mSurfaceView);
+		renderer.registerObjectSelectedListener(objectSelectedListener);
 		setRenderer(renderer);
 
 		gestureListener = new ModelControlListener(renderer);
@@ -153,6 +155,13 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 	public boolean setAmbientColor(final String objectName, final int color) {
 		return renderer.setAmbientColor(objectName, color);
+	}
+
+	public void registerObjectSelectedListener(final ObjectSelectedListener listener) {
+		objectSelectedListener = listener;
+		if (renderer != null) {
+			renderer.registerObjectSelectedListener(listener);
+		}
 	}
 
 	protected abstract ModelViewerRenderer createRenderer(final int modelID, final ModelParser parser);

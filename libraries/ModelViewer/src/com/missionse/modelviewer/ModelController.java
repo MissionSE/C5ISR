@@ -10,4 +10,7 @@ public interface ModelController {
 
 	int getAmbientColor(final String objectName);
 	boolean setAmbientColor(final String objectName, final int color);
+
+	void getObjectAt(final float x, final float y);
+	void registerObjectSelectedListener(final ObjectSelectedListener listener);
 }

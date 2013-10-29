@@ -8,10 +8,13 @@ import rajawali.lights.DirectionalLight;
 import rajawali.materials.Material;
 import rajawali.math.vector.Vector3;
 import rajawali.math.vector.Vector3.Axis;
+import rajawali.util.ObjectColorPicker;
+import rajawali.util.OnObjectPickedListener;
 import android.content.Context;
 
 import com.missionse.modelviewer.ModelParser;
 import com.missionse.modelviewer.ModelViewerFragment;
+import com.missionse.modelviewer.ObjectSelectedListener;
 
 public class ModelSceneController extends ModelViewerFragment {
 
@@ -20,7 +23,7 @@ public class ModelSceneController extends ModelViewerFragment {
 		return new ModelSceneRenderer(getActivity(), modelID, parser);
 	}
 
-	private final class ModelSceneRenderer extends ModelViewerRenderer {
+	private final class ModelSceneRenderer extends ModelViewerRenderer implements OnObjectPickedListener {
 
 		private final int modelID;
 		private final ModelParser modelParser;
@@ -28,6 +31,8 @@ public class ModelSceneController extends ModelViewerFragment {
 		private DirectionalLight directionalLight;
 		private Object3D objectGroup;
 		private Animation3D rotationAnim;
+		private ObjectColorPicker objectPicker;
+		private ObjectSelectedListener listener = null;
 
 		public ModelSceneRenderer(final Context context, final int model, final ModelParser parser) {
 			super(context, parser);
@@ -37,6 +42,9 @@ public class ModelSceneController extends ModelViewerFragment {
 
 		@Override
 		protected void initScene() {
+			objectPicker = new ObjectColorPicker(this);
+			objectPicker.setOnObjectPickedListener(this);
+
 			directionalLight = new DirectionalLight();
 			directionalLight.setPosition(0, 0, 4);
 			directionalLight.setPower(1);
@@ -47,6 +55,10 @@ public class ModelSceneController extends ModelViewerFragment {
 			objectGroup = modelParser.parse(this, modelID);
 			if (null != objectGroup) {
 				addChild(objectGroup);
+				objectPicker.registerObject(objectGroup.getChildAt(0));
+				objectPicker.registerObject(objectGroup.getChildAt(1));
+				objectPicker.registerObject(objectGroup.getChildAt(2));
+				objectPicker.registerObject(objectGroup.getChildAt(3));
 
 				rotationAnim = new RotateAnimation3D(Axis.Y, 360);
 				rotationAnim.setDuration(8000);
@@ -122,6 +134,23 @@ public class ModelSceneController extends ModelViewerFragment {
 			}
 
 			return color;
+		}
+
+		@Override
+		public void getObjectAt(final float x, final float y) {
+			objectPicker.getObjectAt(x, y);
+		}
+
+		@Override
+		public void onObjectPicked(final Object3D object) {
+			if (listener != null && object != null && object.getName() != null) {
+				listener.objectSelected(object.getName());
+			}
+		}
+
+		@Override
+		public void registerObjectSelectedListener(final ObjectSelectedListener objectSelectedListener) {
+			listener = objectSelectedListener;
 		}
 	}
 }
