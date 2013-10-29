@@ -16,7 +16,7 @@ import android.content.Context;
 
 import com.missionse.modelviewer.ModelParser;
 import com.missionse.modelviewer.ModelViewerFragment;
-import com.missionse.modelviewer.ObjectSelectedListener;
+import com.missionse.modelviewer.ObjectPickedListener;
 
 public class ModelSceneController extends ModelViewerFragment {
 
@@ -177,8 +177,8 @@ public class ModelSceneController extends ModelViewerFragment {
 		@Override
 		public void onObjectPicked(final Object3D object) {
 			if (object != null && object.getName() != null) {
-				for (ObjectSelectedListener listener : objectSelectedListeners) {
-					listener.objectSelected(object.getName());
+				for (ObjectPickedListener listener : objectPickedListeners) {
+					listener.objectPicked(object.getName());
 				}
 			}
 		}

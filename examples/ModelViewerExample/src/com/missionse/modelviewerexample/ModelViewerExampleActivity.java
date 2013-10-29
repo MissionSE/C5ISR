@@ -10,9 +10,9 @@ import android.view.MenuItem;
 
 import com.missionse.modelviewer.ModelViewerFragment;
 import com.missionse.modelviewer.ModelViewerFragmentFactory;
-import com.missionse.modelviewer.ObjectSelectedListener;
+import com.missionse.modelviewer.ObjectPickedListener;
 
-public class ModelViewerExampleActivity extends Activity implements ObjectSelectedListener {
+public class ModelViewerExampleActivity extends Activity implements ObjectPickedListener {
 	private ModelViewerFragment fragment = null;
 
 	private HashMap<String, Integer> defaultColors;
@@ -29,7 +29,7 @@ public class ModelViewerExampleActivity extends Activity implements ObjectSelect
 
 		if (savedInstanceState == null)	{
 			fragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
-			fragment.registerObjectSelectedListener(this);
+			fragment.registerObjectPickedListener(this);
 
 			getFragmentManager().beginTransaction().add(R.id.content_frame, fragment).commit();
 		}
@@ -71,7 +71,7 @@ public class ModelViewerExampleActivity extends Activity implements ObjectSelect
 	}
 
 	@Override
-	public void objectSelected(final String objectName) {
+	public void objectPicked(final String objectName) {
 		int objectColor = fragment.getController().getAmbientColor(objectName);
 
 		if (!defaultColors.containsKey(objectName)) {

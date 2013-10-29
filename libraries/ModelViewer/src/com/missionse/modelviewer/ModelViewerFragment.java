@@ -33,7 +33,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	private ScaleGestureDetector scaleGestureDetector;
 	private RotationGestureDetector rotationGestureDetector;
 	private PanGestureDetector panGestureDetector;
-	protected ArrayList<ObjectSelectedListener> objectSelectedListeners;
+	protected ArrayList<ObjectPickedListener> objectPickedListeners;
 
 	public static final String ARG_MODEL_ID = "model_id";
 
@@ -42,7 +42,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	}
 
 	public ModelViewerFragment() {
-		objectSelectedListeners = new ArrayList<ObjectSelectedListener>();
+		objectPickedListeners = new ArrayList<ObjectPickedListener>();
 	}
 
 	@Override
@@ -130,8 +130,8 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		return true;
 	}
 
-	public void registerObjectSelectedListener(final ObjectSelectedListener listener) {
-		objectSelectedListeners.add(listener);
+	public void registerObjectPickedListener(final ObjectPickedListener listener) {
+		objectPickedListeners.add(listener);
 	}
 
 	public ModelController getController() {
