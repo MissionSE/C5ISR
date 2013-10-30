@@ -2,12 +2,9 @@ package com.missionse.modelviewer;
 
 import java.util.ArrayList;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
+import rajawali.Object3D;
 import rajawali.RajawaliFragment;
-import rajawali.renderer.RajawaliRenderer;
-import android.content.Context;
+import rajawali.util.OnObjectPickedListener;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -22,22 +19,22 @@ import android.widget.ProgressBar;
 import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
 
-public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener {
-	protected ModelParser parser;
-	protected ModelViewerRenderer renderer;
-	protected ProgressBar progressBar;
+public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener, OnObjectPickedListener {
+	private ModelParser modelParser;
+	private ModelViewerRenderer renderer;
+	private ProgressBar progressBar;
 
 	private ModelViewerGestureListener gestureListener;
 	private GestureDetector gestureDetector;
 	private ScaleGestureDetector scaleGestureDetector;
 	private RotationGestureDetector rotationGestureDetector;
 	private PanGestureDetector panGestureDetector;
-	protected ArrayList<ObjectPickedListener> objectPickedListeners;
+	private ArrayList<ObjectPickedListener> objectPickedListeners;
 
 	public static final String ARG_MODEL_ID = "model_id";
 
-	public void setModelParser(final ModelParser modelParser) {
-		parser = modelParser;
+	public void setModelParser(final ModelParser parser) {
+		modelParser = parser;
 	}
 
 	public void setGestureListener(final ModelViewerGestureListener modelViewerGestureListener) {
@@ -58,19 +55,20 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 			throw new RuntimeException("ModelViewerFragment passed invalid model id.");
 		}
 
-		if (null == parser) {
+		if (null == modelParser) {
 			throw new RuntimeException("No valid model parser set.");
 		}
 
-		if (isTransparentSurfaceView())
+		if (isTransparentSurfaceView()) {
 			setGLBackgroundTransparent(true);
+		}
 
-		renderer = createRenderer(modelID, parser);
+		renderer = createRenderer(modelID, modelParser);
 		renderer.setSurfaceView(mSurfaceView);
 		setRenderer(renderer);
 
 		if (gestureListener != null) {
-			gestureListener.setController(renderer);
+			gestureListener.setController(getController());
 			gestureDetector = new GestureDetector(getActivity(), gestureListener);
 			scaleGestureDetector = new ScaleGestureDetector(getActivity(), gestureListener);
 			rotationGestureDetector = new RotationGestureDetector(gestureListener);
@@ -103,26 +101,30 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		renderer.onSurfaceDestroyed();
 	}
 
+	protected void showLoader() {
+		if (!progressBar.isShown()) {
+			progressBar.post(new Runnable() {
+				@Override
+				public void run() {
+					progressBar.setVisibility(View.VISIBLE);
+				}
+			});
+		}
+	}
+
 	protected void hideLoader() {
-		progressBar.post(new Runnable() {
-			@Override
-			public void run() {
-				progressBar.setVisibility(View.GONE);
-			}
-		});
+		if (progressBar.isShown()) {
+			progressBar.post(new Runnable() {
+				@Override
+				public void run() {
+					progressBar.setVisibility(View.GONE);
+				}
+			});
+		}
 	}
 
 	protected boolean isTransparentSurfaceView() {
 		return false;
-	}
-
-	protected void showLoader() {
-		progressBar.post(new Runnable() {
-			@Override
-			public void run() {
-				progressBar.setVisibility(View.VISIBLE);
-			}
-		});
 	}
 
 	@Override
@@ -139,33 +141,22 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		return touchConsumed;
 	}
 
+	@Override
+	public void onObjectPicked(final Object3D object) {
+		if (object != null && object.getName() != null) {
+			for (ObjectPickedListener listener : objectPickedListeners) {
+				listener.objectPicked(object.getName());
+			}
+		}
+	}
+
 	public void registerObjectPickedListener(final ObjectPickedListener listener) {
 		objectPickedListeners.add(listener);
 	}
 
 	public ModelController getController() {
-		return renderer;
+		return renderer.getController();
 	}
 
 	protected abstract ModelViewerRenderer createRenderer(final int modelID, final ModelParser parser);
-
-	protected abstract class ModelViewerRenderer extends RajawaliRenderer implements ModelController {
-		public ModelViewerRenderer(final Context context, final ModelParser parser) {
-			super(context);
-			setFrameRate(60);
-		}
-
-		public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
-			showLoader();
-			super.onSurfaceCreated(gl, config);
-		}
-
-		@Override
-		public void onDrawFrame(final GL10 glUnused) {
-			super.onDrawFrame(glUnused);
-			if (progressBar.isShown()) {
-				hideLoader();
-			}
-		}
-	}
 }

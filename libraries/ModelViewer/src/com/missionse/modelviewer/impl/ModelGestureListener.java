@@ -7,7 +7,7 @@ import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
 import com.missionse.modelviewer.ModelViewerGestureListener;
 
-public class ModelControlListener extends ModelViewerGestureListener {
+public class ModelGestureListener extends ModelViewerGestureListener {
 	@Override
 	public boolean onScroll(final MotionEvent e1, final MotionEvent e2, final float distanceX, final float distanceY) {
 		if (e2.getPointerCount() == 1) {

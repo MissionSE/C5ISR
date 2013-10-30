@@ -31,7 +31,7 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 			fragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
 			fragment.registerObjectPickedListener(this);
 
-			getFragmentManager().beginTransaction().add(R.id.content_frame, fragment).commit();
+			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
 		}
 	}
 
