@@ -17,4 +17,49 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <!-- Text Themes -->
+    <style name="CodeFont" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+    
+    <style name="Header2" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    
+    <style name="Header4" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    
+    <style name="Header4Faded" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ccc</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    
+    <!-- Wi-Fi Direct Themes -->
+    <style name="WiFiDirectTheme" parent="AppBaseTheme">
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+    </style>
+
+	<style name="ActionBarStyle" parent="android:style/Widget.Holo.Light.ActionBar">     
+	    <item name="android:colorBackground">@android:color/holo_blue_light</item>
+	    <item name="android:background">@android:color/holo_blue_light</item>
+	    <item name="android:textColor">@android:color/white</item>
+	    <item name="android:textStyle">bold</item>
+	    <item name="android:textSize">16sp</item>
+	</style>
+	
 </resources>

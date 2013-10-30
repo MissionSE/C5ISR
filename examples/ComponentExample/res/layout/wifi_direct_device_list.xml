@@ -1,73 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.missionse.uiextensions.SlidingLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="3dp">
-
+    android:layout_height="match_parent" >
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="Me" />
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:gravity="center_vertical"
-        android:background="@android:color/holo_blue_light" />
-
-    <!-- Self information -->
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="?android:attr/listPreferredItemHeight"
-        android:background="?android:attr/activatedBackgroundIndicator"
-        android:padding="3dip">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="fill_parent">
-            <TextView
-                android:id="@+id/my_name"
-                android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical" />
-            <TextView
-                android:id="@+id/my_status"
-                android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:ellipsize="marquee" />
-        </LinearLayout>
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/Header2"
+        android:text="@string/peer_list_title"
+        android:paddingTop="10dp"
+        android:paddingBottom="7dp"/>
+    
+    <ProgressBar
+        android:id="@+id/peer_discovery_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:indeterminate="true"
+        android:indeterminateOnly="true"
+        android:visibility="gone" />
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <!-- Available peers -->
+	    <ListView
+	        android:id="@id/android:list"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="Peers" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:gravity="center_vertical"
-        android:background="@android:color/holo_blue_light" />
-
-    <!-- Available peers -->
-    <ListView
-        android:id="@id/android:list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:drawSelectorOnTop="false" />
-
-    <TextView
-        android:id="@id/android:empty"
-        android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:layout_height="match_parent"
-        android:text=" " />
-</LinearLayout>
+</com.missionse.uiextensions.SlidingLinearLayout>

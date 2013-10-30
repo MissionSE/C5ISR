@@ -8,22 +8,40 @@ import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Bundle;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class DeviceDetailFragment extends Fragment {
 	
-	private View contentView;	
+	//private static final String TAG = DeviceDetailFragment.class.getSimpleName();
+	
+	private View contentView;
+	
+	private WifiP2pInfo connectionInfo;
 	private WifiP2pDevice targetDevice;
-	private WifiP2pDevice connectedDevice;
 	
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		contentView = inflater.inflate(R.layout.wifi_direct_device_details, null);
+		
+		contentView.findViewById(R.id.peer_connection_progress).setVisibility(View.GONE);
+		
+		TextView view = (TextView) contentView.findViewById(R.id.target_peer_name);
+        view.setText(targetDevice.deviceName);
+		
+        view = (TextView) contentView.findViewById(R.id.device_detail_status);
+        view.setText("Status: " + ((WifiDirectActivity)getActivity()).deviceStatuses.get(targetDevice.status));
+        
+        view = (TextView) contentView.findViewById(R.id.device_detail_primarytype);
+        view.setText("Primary type: " + targetDevice.primaryDeviceType);
+        
+		view = (TextView) contentView.findViewById(R.id.device_detail_address);
+        view.setText("Address: " + targetDevice.deviceAddress);
+		
 		contentView.findViewById(R.id.btn_connect).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -32,6 +50,8 @@ public class DeviceDetailFragment extends Fragment {
                 config.wps.setup = WpsInfo.PBC;
                 config.groupOwnerIntent = 0;
                 ((WifiDirectActivity) getActivity()).connect(config);
+                
+                contentView.findViewById(R.id.peer_connection_progress).setVisibility(View.VISIBLE);
 			}
 		});
 		contentView.findViewById(R.id.btn_disconnect).setOnClickListener(new OnClickListener() {
@@ -40,34 +60,37 @@ public class DeviceDetailFragment extends Fragment {
 				((WifiDirectActivity) getActivity()).disconnect();
 			}
 		});
-
-		contentView.findViewById(R.id.btn_start_client).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(getActivity(), "Starting client...", Toast.LENGTH_SHORT).show();
-			}
-		});
+		
+		showConnectionInfo();
 
 		return contentView;
 	}
 	
-	public void displayConnectionSuccessInfo(final WifiP2pInfo p2pInfo) {
-		connectedDevice = targetDevice;
-        String groupOwnerAddress = p2pInfo.groupOwnerAddress.getHostAddress();
-
-        // The owner IP is now known.
-	    TextView view = (TextView) contentView.findViewById(R.id.group_owner);
-	    view.setText("Group owner: " + ((p2pInfo.isGroupOwner == true) ? "yes" : "no"));
+	public void setConnectionSuccessInfo(final WifiP2pInfo p2pInfo) {
+		connectionInfo = p2pInfo;
+		
+		if (isVisible()) {
+			contentView.findViewById(R.id.peer_connection_progress).setVisibility(View.GONE);
+		}
+	}
 	
-	    // InetAddress from WifiP2pInfo.
-	    view = (TextView) contentView.findViewById(R.id.device_info);
-	    view.setText("Group Owner IP: " + groupOwnerAddress);
-        
-	    getView().setVisibility(View.VISIBLE);
-	    contentView.findViewById(R.id.btn_connect).setVisibility(View.GONE);
-	    contentView.findViewById(R.id.btn_disconnect).setVisibility(View.VISIBLE);
-	    contentView.findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
-	    
+	public void showConnectionInfo() {
+		if (targetDevice.status == WifiP2pDevice.CONNECTED || connectionInfo != null) {
+			contentView.findViewById(R.id.device_detail_success_info).setVisibility(View.VISIBLE);
+			
+			TextView view = (TextView) contentView.findViewById(R.id.host_address);
+		    view.setText("Host address: " + connectionInfo.groupOwnerAddress.getHostAddress());
+			
+		    view = (TextView) contentView.findViewById(R.id.group_owner);
+		    view.setText("Group owner: " + ((connectionInfo.isGroupOwner == true) ? "yes" : "no"));
+
+		    setButtonStates(false, true);
+		}
+		else {
+			contentView.findViewById(R.id.device_detail_success_info).setVisibility(View.INVISIBLE);
+			setButtonStates(true, false);
+		}
+    
         // After the group negotiation, we can determine the group owner.
         /*if (info.groupFormed && info.isGroupOwner) {
             // Do whatever tasks are specific to the group owner.
@@ -84,37 +107,17 @@ public class DeviceDetailFragment extends Fragment {
         }*/
 	}
 	
-	public void showDeviceDetails(WifiP2pDevice device) {
-		targetDevice = device;
-		
-		TextView view = (TextView) contentView.findViewById(R.id.device_address);
-        view.setText(device.deviceAddress);
-		
-		if (connectedDevice != null && connectedDevice == targetDevice) {
-			setButtonStates(View.GONE, View.VISIBLE, View.GONE);
-		}
-		else {
-			setButtonStates(View.VISIBLE, View.GONE, View.GONE);
-		}
-		
-        getView().setVisibility(View.VISIBLE);
+	public void setTargetPeer(WifiP2pDevice device) {
+		targetDevice = device;	
 	}
 
 	public void clearForDisconnect() {
-		connectedDevice = null;
-	    setButtonStates(View.GONE, View.GONE, View.GONE);
-	    getView().setVisibility(View.GONE);
-        /*TextView view = (TextView) contentView.findViewById(R.id.device_address);
-        view.setText("");
-        view = (TextView) contentView.findViewById(R.id.group_owner);
-        view.setText("");
-        view = (TextView) contentView.findViewById(R.id.status_text);
-        view.setText("");*/
+		connectionInfo = null;
+	    setButtonStates(false, false);
 	}
 	
-	private void setButtonStates(int connectState, int disconnectState, int actionState) {
-		contentView.findViewById(R.id.btn_connect).setVisibility(connectState);
-	    contentView.findViewById(R.id.btn_disconnect).setVisibility(disconnectState);
-	    contentView.findViewById(R.id.btn_start_client).setVisibility(actionState);
+	private void setButtonStates(boolean connectState, boolean disconnectState) {
+		contentView.findViewById(R.id.btn_connect).setEnabled(connectState);
+	    contentView.findViewById(R.id.btn_disconnect).setEnabled(disconnectState);
 	}
 }

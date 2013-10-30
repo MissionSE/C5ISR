@@ -2,7 +2,7 @@ package com.missionse.componentexample.viewpager;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.missionse.componentexample.R;
-import com.missionse.drawersafeviewpager.DrawerSafeViewPager;
+import com.missionse.uiextensions.DrawerSafeViewPager;
 
 import android.app.Activity;
 import android.app.Fragment;

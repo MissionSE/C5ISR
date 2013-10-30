@@ -43,7 +43,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".wifidirect.WifiDirectActivity" >
+            android:name=".wifidirect.WifiDirectActivity"
+            android:theme="@style/WiFiDirectTheme" >
             <intent-filter>
                 <action android:name=".wifidirect.WifiDirectActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

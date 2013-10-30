@@ -16,9 +16,18 @@
     <string name="wifi_direct">Wifi Direct</string>
     <string name="wifi_direct_summary">This spawns a Wifi Direct example.</string>
     
-    <!-- View Pager section names -->
+    <!-- Content Description -->
+    <string name="right_arrow">This is a right arrow.</string>
+    
+    <!-- View Pager section -->
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
+    
+    <!-- Wi-Fi Direct section -->
+    <string name="peer_list_title">Peers</string>
+    <string name="target_peer_header">Peer Information</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
 
 </resources>
