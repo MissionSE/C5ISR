@@ -9,7 +9,7 @@ import com.missionse.modelviewer.ModelParser;
 import com.missionse.modelviewer.ModelViewerFragment;
 import com.missionse.modelviewer.ModelViewerRenderer;
 
-public class ModelSceneRenderer extends ModelViewerRenderer {
+public class ModelRenderer extends ModelViewerRenderer {
 	private final int modelID;
 	private final ModelParser modelParser;
 
@@ -18,7 +18,7 @@ public class ModelSceneRenderer extends ModelViewerRenderer {
 
 	private ObjectGroupController objectController;
 
-	public ModelSceneRenderer(final Context context, final ModelViewerFragment fragment, final int model, final ModelParser parser) {
+	public ModelRenderer(final Context context, final ModelViewerFragment fragment, final int model, final ModelParser parser) {
 		super(context, fragment);
 		modelID = model;
 		modelParser = parser;
