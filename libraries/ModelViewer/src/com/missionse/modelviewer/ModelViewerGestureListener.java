@@ -13,6 +13,12 @@ public abstract class ModelViewerGestureListener implements
 		RotationGestureDetector.OnRotationGestureListener,
 		PanGestureDetector.OnPanGestureListener {
 
+	protected ModelController controller;
+
+	public void setController(final ModelController modelController) {
+		controller = modelController;
+	}
+
 	@Override
 	public boolean onDown(final MotionEvent e) {
 		return true;

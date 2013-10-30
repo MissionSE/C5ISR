@@ -5,17 +5,9 @@ import android.view.ScaleGestureDetector;
 
 import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
-import com.missionse.modelviewer.ModelController;
 import com.missionse.modelviewer.ModelViewerGestureListener;
 
 public class ModelControlListener extends ModelViewerGestureListener {
-
-	private ModelController controller;
-
-	public ModelControlListener(final ModelController modelController) {
-		controller = modelController;
-	}
-
 	@Override
 	public boolean onScroll(final MotionEvent e1, final MotionEvent e2, final float distanceX, final float distanceY) {
 		if (e2.getPointerCount() == 1) {
@@ -38,7 +30,7 @@ public class ModelControlListener extends ModelViewerGestureListener {
 
 	@Override
 	public boolean onPan(final PanGestureDetector detector, final float distanceX, final float distanceY) {
-		controller.rotate(-distanceX / 4.5f, -distanceY / 4.5f, 0);
+		controller.rotate(-distanceX / 3f, -distanceY / 3f, 0);
 		return true;
 	}
 

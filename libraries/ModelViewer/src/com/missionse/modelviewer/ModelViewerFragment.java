@@ -21,7 +21,6 @@ import android.widget.ProgressBar;
 
 import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
-import com.missionse.modelviewer.impl.ModelControlListener;
 
 public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener {
 	protected ModelParser parser;
@@ -39,6 +38,10 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 	public void setModelParser(final ModelParser modelParser) {
 		parser = modelParser;
+	}
+
+	public void setGestureListener(final ModelViewerGestureListener modelViewerGestureListener) {
+		gestureListener = modelViewerGestureListener;
 	}
 
 	public ModelViewerFragment() {
@@ -66,13 +69,15 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		renderer.setSurfaceView(mSurfaceView);
 		setRenderer(renderer);
 
-		gestureListener = new ModelControlListener(renderer);
-		gestureDetector = new GestureDetector(getActivity(), gestureListener);
-		scaleGestureDetector = new ScaleGestureDetector(getActivity(), gestureListener);
-		rotationGestureDetector = new RotationGestureDetector(gestureListener);
-		panGestureDetector = new PanGestureDetector(gestureListener);
+		if (gestureListener != null) {
+			gestureListener.setController(renderer);
+			gestureDetector = new GestureDetector(getActivity(), gestureListener);
+			scaleGestureDetector = new ScaleGestureDetector(getActivity(), gestureListener);
+			rotationGestureDetector = new RotationGestureDetector(gestureListener);
+			panGestureDetector = new PanGestureDetector(gestureListener);
 
-		mSurfaceView.setOnTouchListener(this);
+			mSurfaceView.setOnTouchListener(this);
+		}
 	}
 
 	@Override
@@ -122,12 +127,16 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 	@Override
 	public boolean onTouch(final View v, final MotionEvent event) {
-		scaleGestureDetector.onTouchEvent(event);
-		rotationGestureDetector.onTouchEvent(event);
-		panGestureDetector.onTouchEvent(event);
-		gestureDetector.onTouchEvent(event);
+		boolean touchConsumed = false;
+		if (gestureListener != null) {
+			scaleGestureDetector.onTouchEvent(event);
+			rotationGestureDetector.onTouchEvent(event);
+			panGestureDetector.onTouchEvent(event);
+			gestureDetector.onTouchEvent(event);
+			touchConsumed = true;
+		}
 
-		return true;
+		return touchConsumed;
 	}
 
 	public void registerObjectPickedListener(final ObjectPickedListener listener) {
