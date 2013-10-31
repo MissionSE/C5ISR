@@ -112,6 +112,17 @@ public class WifiDirectActivity extends Activity {
 					
 					wasConnected = false;
 		        }
+				else {
+					boolean connectedToAPeer = false;
+					for (WifiP2pDevice peer : peers.getDeviceList()) {
+						if (peer.status == WifiP2pDevice.CONNECTED) {
+							connectedToAPeer = true;
+						}
+					}
+					if (!connectedToAPeer) {
+						deviceDetailFragment.clearForDisconnect();
+					}
+				}
 
 				deviceListFragment.setAvailablePeers(peers);
 			}
