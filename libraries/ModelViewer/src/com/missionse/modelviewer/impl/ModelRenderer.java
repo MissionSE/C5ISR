@@ -4,6 +4,7 @@ import rajawali.Object3D;
 import rajawali.lights.DirectionalLight;
 import android.content.Context;
 
+import com.missionse.modelviewer.ModelAnimationController;
 import com.missionse.modelviewer.ModelController;
 import com.missionse.modelviewer.ModelParser;
 import com.missionse.modelviewer.ModelViewerFragment;
@@ -17,12 +18,14 @@ public class ModelRenderer extends ModelViewerRenderer {
 	private Object3D objectGroup;
 
 	private ObjectGroupController objectController;
+	private AnimationController animationController;
 
 	public ModelRenderer(final Context context, final ModelViewerFragment fragment, final int model, final ModelParser parser) {
 		super(context, fragment);
 		modelID = model;
 		modelParser = parser;
 		objectController = new ObjectGroupController(this, fragment);
+		animationController = new AnimationController(this);
 	}
 
 	@Override
@@ -39,11 +42,17 @@ public class ModelRenderer extends ModelViewerRenderer {
 		if (null != objectGroup) {
 			addChild(objectGroup);
 			objectController.setObjectGroup(objectGroup);
+			animationController.setObject(objectGroup);
 		}
 	}
 
 	@Override
 	public ModelController getController() {
 		return objectController;
+	}
+
+	@Override
+	public ModelAnimationController getAnimator() {
+		return animationController;
 	}
 }

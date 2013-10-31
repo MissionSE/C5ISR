@@ -13,7 +13,8 @@ import com.missionse.modelviewer.ModelViewerFragmentFactory;
 import com.missionse.modelviewer.ObjectPickedListener;
 
 public class ModelViewerExampleActivity extends Activity implements ObjectPickedListener {
-	private ModelViewerFragment fragment = null;
+	private ModelViewerFragment fragment;
+	private Menu optionsMenu;
 
 	private HashMap<String, Integer> defaultColors;
 	private static final int HIGHLIGHT_COLOR = Color.BLUE;
@@ -37,18 +38,22 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.model_viewer_example, menu);
+		optionsMenu = menu;
+		getMenuInflater().inflate(R.menu.model_viewer_example, optionsMenu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		if (fragment != null && fragment.getController() != null) {
+		if (fragment != null && fragment.getController() != null && fragment.getAnimator() != null) {
 			switch (item.getItemId()) {
 				case R.id.action_rotate:
-					fragment.getController().setAutoRotation(!item.isChecked());
-					item.setChecked(fragment.getController().isAutoRotating());
+					if (fragment.getAnimator().isRotating()) {
+						fragment.getAnimator().stopRotation();
+					} else {
+						fragment.getAnimator().startXRotation(4000);
+					}
+					item.setChecked(fragment.getAnimator().isRotating());
 					return true;
 				case R.id.action_lock:
 					if (fragment.getController().isTranslationLocked()) {
@@ -59,10 +64,13 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 					item.setChecked(fragment.getController().isTranslationLocked());
 					return true;
 				case R.id.action_center:
-					fragment.getController().center();
+					fragment.getAnimator().translateTo(0f, 0f, 0f, 500);
 					return true;
 				case R.id.action_reset:
-					fragment.getController().reset();
+					fragment.getAnimator().rotateTo(0f, 0f, 0f, 500);
+					fragment.getAnimator().scaleTo(1f, 500);
+					fragment.getAnimator().translateTo(0f, 0f, 0f, 500);
+					optionsMenu.findItem(R.id.action_rotate).setChecked(false);
 					return true;
 			}
 		}

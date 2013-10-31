@@ -28,4 +28,5 @@ public abstract class ModelViewerRenderer extends RajawaliRenderer {
 	}
 
 	public abstract ModelController getController();
+	public abstract ModelAnimationController getAnimator();
 }

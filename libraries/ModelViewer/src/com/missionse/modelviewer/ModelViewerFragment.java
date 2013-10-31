@@ -158,5 +158,9 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		return renderer.getController();
 	}
 
+	public ModelAnimationController getAnimator() {
+		return renderer.getAnimator();
+	}
+
 	protected abstract ModelViewerRenderer createRenderer(final int modelID, final ModelParser parser);
 }

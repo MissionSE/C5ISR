@@ -5,9 +5,6 @@ import java.util.ArrayList;
 
 public interface ModelController {
 
-	void setAutoRotation(final boolean autoRotate);
-	boolean isAutoRotating();
-
 	void lockRotation();
 	void unlockRotation();
 	boolean isRotationLocked();

@@ -3,31 +3,26 @@ package com.missionse.modelviewer.impl;
 import java.util.ArrayList;
 
 import rajawali.Object3D;
-import rajawali.animation.Animation3D;
-import rajawali.animation.Animation3D.RepeatMode;
-import rajawali.animation.RotateAnimation3D;
 import rajawali.materials.Material;
 import rajawali.math.vector.Vector3;
-import rajawali.math.vector.Vector3.Axis;
-import rajawali.renderer.RajawaliRenderer;
 import rajawali.util.ObjectColorPicker;
 import rajawali.util.OnObjectPickedListener;
 
 import com.missionse.modelviewer.ModelController;
+import com.missionse.modelviewer.ModelViewerRenderer;
 
 public class ObjectGroupController implements ModelController {
 
-	private RajawaliRenderer renderer;
+	private ModelViewerRenderer renderer;
 	private OnObjectPickedListener objectPickedListener;
 	private Object3D objectGroup;
 	private ArrayList<Object3D> objectList;
 
 	private ObjectColorPicker objectPicker;
 	private boolean rotationLocked, scaleLocked, translationLocked;
-	private Animation3D rotationAnim;
 
-	public ObjectGroupController(final RajawaliRenderer rajawaliRenderer, final OnObjectPickedListener listener) {
-		renderer = rajawaliRenderer;
+	public ObjectGroupController(final ModelViewerRenderer modelRenderer, final OnObjectPickedListener listener) {
+		renderer = modelRenderer;
 		objectPickedListener = listener;
 	}
 
@@ -41,12 +36,6 @@ public class ObjectGroupController implements ModelController {
 		for (Object3D object : objectList) {
 			objectPicker.registerObject(object);
 		}
-
-		rotationAnim = new RotateAnimation3D(Axis.Y, 360);
-		rotationAnim.setDuration(8000);
-		rotationAnim.setRepeatMode(RepeatMode.INFINITE);
-		rotationAnim.setTransformable3D(objectGroup);
-		renderer.registerAnimation(rotationAnim);
 	}
 
 	private ArrayList<Object3D> getObjects() {
@@ -56,25 +45,6 @@ public class ObjectGroupController implements ModelController {
 		}
 
 		return objects;
-	}
-
-	@Override
-	public void setAutoRotation(final boolean autoRotate) {
-		if (rotationAnim != null) {
-			if (!isAutoRotating()) {
-				if (autoRotate) {
-					rotationAnim.reset();
-					rotationAnim.play();
-				}
-			} else if (!autoRotate) {
-				rotationAnim.pause();
-			}
-		}
-	}
-
-	@Override
-	public boolean isAutoRotating() {
-		return (rotationAnim != null && rotationAnim.isPlaying());
 	}
 
 	@Override
