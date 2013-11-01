@@ -1,5 +1,7 @@
 package com.missionse.commandablemodel;
 
+import com.missionse.modelviewer.ModelViewerFragment;
+import com.missionse.modelviewer.ModelViewerFragmentFactory;
 import com.missionse.wifidirect.ConnectionInitiationListener;
 import com.missionse.wifidirect.DisconnectionListener;
 import com.missionse.wifidirect.DiscoverPeersListener;
@@ -31,6 +33,12 @@ public class CommandableModelActivity extends Activity {
 	private PeersListFragment peersListFragment;
 	private PeerDetailFragment peerDetailFragment;
 	
+	private ModelViewerFragment modelFragment;
+	private WifiDirectModelNotifier modelNotifier;
+	private ModelStatus modelStatus;
+	private ModelControllerServer modelControllerServer;
+	private WifiModelGestureListener modelGestureListener;
+	
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,6 +50,11 @@ public class CommandableModelActivity extends Activity {
 		
 		peersListFragment = new PeersListFragment();
 		peerDetailFragment = new PeerDetailFragment();
+		
+		
+		modelGestureListener = new WifiModelGestureListener();
+		
+		modelFragment = ModelViewerFragmentFactory.createObjModelFragment(modelID, modelGestureListener)
 		
 		pagerAdapter = new SectionFragmentPagerAdapter(getFragmentManager());
 		pagerAdapter.setPage(0, peersListFragment);

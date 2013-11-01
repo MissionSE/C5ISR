@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 import com.missionse.modelviewer.ModelController;
 
 public class ModelStatus {
-	private final ModelController controller;
+	private ModelController controller;
 	private static final int POSITION_X = 0;
 	private static final int POSITION_Y = 1;
 	private static final int POSITION_Z = 2;
@@ -19,10 +19,13 @@ public class ModelStatus {
 	private static final int ROTATION_Y = 7;
 	private static final int ROTATION_Z = 8;
 
-	public ModelStatus(final ModelController modelController) {
-		controller = modelController;
+	public ModelStatus() {
 	}
 
+	public void setController(final ModelController modelController) {
+		controller = modelController;
+	}
+	
 	public String toString() {
 		String modelStatus = "";
 		modelStatus += controller.getXPosition() + " " + controller.getYPosition() + " " + controller.getZPosition();

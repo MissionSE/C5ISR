@@ -55,6 +55,8 @@ public class PeerDetailFragment extends Fragment {
 	
 	public void setConnectionSuccessfulInformation(WifiP2pInfo info) {
 		connectionSuccessfulInfo = info;
+		
+		//start server
 	}
 	
 	public void refresh() {
