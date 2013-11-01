@@ -31,6 +31,8 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	private PanGestureDetector panGestureDetector;
 	private ArrayList<ObjectPickedListener> objectPickedListeners;
 
+	private boolean transparentSurfaceView;
+
 	public static final String ARG_MODEL_ID = "model_id";
 
 	public void setModelParser(final ModelParser parser) {
@@ -43,6 +45,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 	public ModelViewerFragment() {
 		objectPickedListeners = new ArrayList<ObjectPickedListener>();
+		transparentSurfaceView = false;
 	}
 
 	@Override
@@ -123,8 +126,12 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		}
 	}
 
+	public void setTransparentSurfaceView(final boolean transparent) {
+		transparentSurfaceView = transparent;
+	}
+
 	protected boolean isTransparentSurfaceView() {
-		return false;
+		return transparentSurfaceView;
 	}
 
 	@Override

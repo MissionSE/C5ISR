@@ -31,6 +31,7 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 		if (savedInstanceState == null)	{
 			fragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
 			fragment.registerObjectPickedListener(this);
+			fragment.setTransparentSurfaceView(true);
 
 			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
 		}

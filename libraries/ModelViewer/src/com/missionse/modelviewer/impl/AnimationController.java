@@ -15,7 +15,7 @@ import com.missionse.modelviewer.ModelViewerRenderer;
 public class AnimationController implements ModelAnimationController {
 
 	private ModelViewerRenderer renderer;
-	private Object3D object;
+	private Object3D objectGroup;
 	private Animation3D rotationAnim, scaleAnim, translationAnim;
 
 	public AnimationController(final ModelViewerRenderer modelRenderer) {
@@ -23,18 +23,18 @@ public class AnimationController implements ModelAnimationController {
 	}
 
 	public void setObject(final Object3D object3D) {
-		object = object3D;
+		objectGroup = object3D;
 	}
 
 	@Override
-	public void startXRotation(final long duration) {
+	public void startXRotation(final long durationMS) {
 		stopRotation();
 
-		if (object != null) {
+		if (objectGroup != null) {
 			rotationAnim = new RotateAnimation3D(Axis.Y, 360);
 			rotationAnim.setDuration(8000);
 			rotationAnim.setRepeatMode(RepeatMode.INFINITE);
-			rotationAnim.setTransformable3D(object);
+			rotationAnim.setTransformable3D(objectGroup);
 			renderer.registerAnimation(rotationAnim);
 
 			rotationAnim.play();
@@ -42,14 +42,14 @@ public class AnimationController implements ModelAnimationController {
 	}
 
 	@Override
-	public void startYRotation(final long duration) {
+	public void startYRotation(final long durationMS) {
 		stopRotation();
 
-		if (object != null) {
+		if (objectGroup != null) {
 			rotationAnim = new RotateAnimation3D(Axis.X, 360);
-			rotationAnim.setDuration(duration);
+			rotationAnim.setDuration(durationMS);
 			rotationAnim.setRepeatMode(RepeatMode.INFINITE);
-			rotationAnim.setTransformable3D(object);
+			rotationAnim.setTransformable3D(objectGroup);
 			renderer.registerAnimation(rotationAnim);
 
 			rotationAnim.play();
@@ -57,14 +57,14 @@ public class AnimationController implements ModelAnimationController {
 	}
 
 	@Override
-	public void rotateTo(final float xDegrees, final float yDegrees, final float zDegrees, final long duration) {
+	public void rotateTo(final float xDegrees, final float yDegrees, final float zDegrees, final long durationMS) {
 		stopRotation();
 
-		if (object != null) {
+		if (objectGroup != null) {
 			rotationAnim = new RotateAnimation3D(xDegrees, yDegrees, zDegrees);
-			rotationAnim.setDuration(duration);
+			rotationAnim.setDuration(durationMS);
 			rotationAnim.setRepeatMode(RepeatMode.NONE);
-			rotationAnim.setTransformable3D(object);
+			rotationAnim.setTransformable3D(objectGroup);
 			renderer.registerAnimation(rotationAnim);
 
 			rotationAnim.play();
@@ -86,14 +86,14 @@ public class AnimationController implements ModelAnimationController {
 	}
 
 	@Override
-	public void scaleTo(final float scale, final long duration) {
+	public void scaleTo(final float scale, final long durationMS) {
 		stopScaling();
 
-		if (object != null) {
+		if (objectGroup != null) {
 			scaleAnim = new ScaleAnimation3D(scale);
-			scaleAnim.setDuration(duration);
+			scaleAnim.setDuration(durationMS);
 			scaleAnim.setRepeatMode(RepeatMode.NONE);
-			scaleAnim.setTransformable3D(object);
+			scaleAnim.setTransformable3D(objectGroup);
 			renderer.registerAnimation(scaleAnim);
 
 			scaleAnim.play();
@@ -115,14 +115,14 @@ public class AnimationController implements ModelAnimationController {
 	}
 
 	@Override
-	public void translateTo(final float x, final float y, final float z, final long duration) {
+	public void translateTo(final float x, final float y, final float z, final long durationMS) {
 		stopTranslation();
 
-		if (object != null) {
+		if (objectGroup != null) {
 			translationAnim = new TranslateAnimation3D(new Vector3(x, y, z));
-			translationAnim.setDuration(duration);
+			translationAnim.setDuration(durationMS);
 			translationAnim.setRepeatMode(RepeatMode.NONE);
-			translationAnim.setTransformable3D(object);
+			translationAnim.setTransformable3D(objectGroup);
 			renderer.registerAnimation(translationAnim);
 
 			translationAnim.play();
