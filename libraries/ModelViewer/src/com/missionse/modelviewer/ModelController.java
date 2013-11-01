@@ -22,6 +22,10 @@ public interface ModelController {
 	void scale(final float x, final float y, final float z);
 	void translate(final float x, final float y, final float z);
 
+	void setRotation(final float x, final float y, final float z);
+	void setScale(final float x, final float y, final float z);
+	void setPosition(final float x, final float y, final float z);
+
 	float getXRotation();
 	float getYRotation();
 	float getZRotation();

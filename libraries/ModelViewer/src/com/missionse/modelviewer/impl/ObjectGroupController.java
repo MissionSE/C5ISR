@@ -126,6 +126,33 @@ public class ObjectGroupController implements ModelController {
 	}
 
 	@Override
+	public void setRotation(final float x, final float y, final float z) {
+		if (!rotationLocked && objectGroup != null) {
+			objectGroup.setRotX(x);
+			objectGroup.setRotY(y);
+			objectGroup.setRotZ(z);
+		}
+	}
+
+	@Override
+	public void setScale(final float x, final float y, final float z) {
+		if (!scaleLocked && objectGroup != null) {
+			objectGroup.setScaleX(x);
+			objectGroup.setScaleY(y);
+			objectGroup.setScaleZ(z);
+		}
+	}
+
+	@Override
+	public void setPosition(final float x, final float y, final float z) {
+		if (!translationLocked && objectGroup != null) {
+			objectGroup.setX(x);
+			objectGroup.setY(y);
+			objectGroup.setZ(z);
+		}
+	}
+
+	@Override
 	public void reset() {
 		if (objectGroup != null) {
 			objectGroup.setPosition(new Vector3());
