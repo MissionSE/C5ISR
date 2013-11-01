@@ -31,7 +31,6 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 		if (savedInstanceState == null)	{
 			fragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
 			fragment.registerObjectPickedListener(this);
-			fragment.setTransparentSurfaceView(true);
 
 			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
 		}
@@ -65,12 +64,12 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 					item.setChecked(fragment.getController().isTranslationLocked());
 					return true;
 				case R.id.action_center:
-					fragment.getAnimator().translateTo(0f, 0f, 0f, 500);
+					fragment.getAnimator().translateTo(0f, 0f, 0f, 250);
 					return true;
 				case R.id.action_reset:
-					fragment.getAnimator().rotateTo(0f, 0f, 0f, 500);
-					fragment.getAnimator().scaleTo(1f, 500);
-					fragment.getAnimator().translateTo(0f, 0f, 0f, 500);
+					fragment.getAnimator().rotateTo(0f, 0f, 0f, 250);
+					fragment.getAnimator().scaleTo(1f, 250);
+					fragment.getAnimator().translateTo(0f, 0f, 0f, 250);
 					optionsMenu.findItem(R.id.action_rotate).setChecked(false);
 					return true;
 			}
