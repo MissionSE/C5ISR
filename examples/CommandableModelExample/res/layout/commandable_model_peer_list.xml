@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <!-- Self information -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/big_card" >
+        <TextView
+            android:id="@+id/this_device_name"
+            android:textAppearance="@style/Header2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:gravity="left|center_vertical" />
+        <TextView
+            android:id="@+id/this_device_status"
+            android:textAppearance="@style/Header4Faded"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:paddingRight="20dp"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical" />        
+        <ImageView 
+            android:contentDescription="@string/right_arrow"
+            android:src="@drawable/ic_action_next_item"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:paddingRight="20dp"
+            android:visibility="invisible" />
+    </LinearLayout>
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/Header2"
+        android:text="@string/peers_list_title"
+        android:paddingTop="10dp"
+        android:paddingBottom="7dp"/>
+    
+    <ProgressBar
+        android:id="@+id/peer_discovery_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:indeterminate="true"
+        android:indeterminateOnly="true"
+        android:visibility="gone" />
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        <!-- Available peers -->
+        <ListView
+            android:id="@id/android:list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>
