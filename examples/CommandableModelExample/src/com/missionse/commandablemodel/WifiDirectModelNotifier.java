@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
+import android.util.Log;
 
 import com.missionse.wifidirect.WifiUtilities;
 
@@ -43,6 +44,10 @@ public class WifiDirectModelNotifier implements ModelNotifier, WifiDirectConnect
 			modelStatusIntent.putExtra(ModelStatusSenderIntent.EXTRAS_STATUS, modelStatus.toString());
 			modelStatusIntent.putExtra(ModelStatusSenderIntent.EXTRAS_HOST, address);
 			modelStatusIntent.putExtra(ModelStatusSenderIntent.EXTRAS_PORT, ModelControllerServer.PORT);
+			
+			activity.startService(modelStatusIntent);
+			
+			Log.e("something", "sending an intent");
 		}
 	}
 }

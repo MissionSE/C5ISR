@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.missionse.modelviewer.ModelController;
 
-public class ModelControllerServer extends AsyncTask<ModelController, Void, String> {
+public class ModelControllerServer extends AsyncTask<Void, Void, String> {
 
 	public static final String TAG = ModelControllerServer.class.getSimpleName();
 	public static final int PORT = 3456;
@@ -22,7 +22,7 @@ public class ModelControllerServer extends AsyncTask<ModelController, Void, Stri
 	}
 
 	@Override
-	protected String doInBackground(final ModelController... params) {
+	protected String doInBackground(final Void... params) {
 		try {
 			Log.d(TAG, "Opening a socket on port: " + PORT);
 			ServerSocket serverSocket = new ServerSocket(PORT);

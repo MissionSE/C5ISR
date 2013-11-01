@@ -37,6 +37,9 @@ public class CommandableModelActivity extends Activity {
 	private WifiDirectModelNotifier modelNotifier;
 	private ModelStatus modelStatus;
 	private WifiModelGestureListener modelGestureListener;
+	private ModelControllerServer modelServer;
+	
+	private WifiP2pDevice targetDevice;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -120,6 +123,11 @@ public class CommandableModelActivity extends Activity {
 				if (viewPager.getCurrentItem() == 1) {
 					peerDetailFragment.refresh();
 				}
+				
+				modelServer = new ModelControllerServer(modelStatus);
+				modelServer.execute();
+				
+				modelNotifier.onConnectionSuccessful(connectionInfo, targetDevice);
 			}
 
 			@Override
@@ -173,6 +181,7 @@ public class CommandableModelActivity extends Activity {
     }
 
 	public void showPeerDetails(final WifiP2pDevice device) {
+		targetDevice = device;
 		peerDetailFragment.setTargetDevice(device);
 		viewPager.setCurrentItem(1);
     }
@@ -205,6 +214,9 @@ public class CommandableModelActivity extends Activity {
 				if (viewPager.getCurrentItem() == 1) {
 					peerDetailFragment.refresh();
 				}
+				
+				modelServer.cancel(true);
+				modelServer = null;
 			}
 
 			@Override

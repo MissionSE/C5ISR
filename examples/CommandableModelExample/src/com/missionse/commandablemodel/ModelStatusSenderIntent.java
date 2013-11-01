@@ -17,6 +17,10 @@ public class ModelStatusSenderIntent extends IntentService {
 	public static final String EXTRAS_HOST = "target_host";
 	public static final String EXTRAS_PORT = "target_port";
 
+	public ModelStatusSenderIntent() {
+		super("ModelStatusSenderIntent");
+	}
+	
 	public ModelStatusSenderIntent(final String name) {
 		super(name);
 	}

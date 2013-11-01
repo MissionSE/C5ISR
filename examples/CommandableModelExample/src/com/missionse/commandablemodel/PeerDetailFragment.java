@@ -8,7 +8,6 @@ import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 
 public class PeerDetailFragment extends Fragment {
 	
-	private static final String TAG = PeerDetailFragment.class.getSimpleName();
+	//private static final String TAG = PeerDetailFragment.class.getSimpleName();
 	
 	private View contentView;
 	
@@ -55,8 +54,6 @@ public class PeerDetailFragment extends Fragment {
 	
 	public void setConnectionSuccessfulInformation(WifiP2pInfo info) {
 		connectionSuccessfulInfo = info;
-		
-		//start server
 	}
 	
 	public void refresh() {
@@ -97,7 +94,13 @@ public class PeerDetailFragment extends Fragment {
 			contentView.findViewById(R.id.btn_connect).setEnabled(false);
 			contentView.findViewById(R.id.btn_disconnect).setEnabled(false);
 		}
-		
-		
+	}
+	
+	private void setEnabledConnectButton(boolean enabled) {
+		contentView.findViewById(R.id.btn_connect).setEnabled(enabled);
+	}
+	
+	private void setEnabledDisconnectButton(boolean enabled) {
+		contentView.findViewById(R.id.btn_disconnect).setEnabled(enabled);
 	}
 }
