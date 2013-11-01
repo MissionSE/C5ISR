@@ -103,11 +103,16 @@ public class ObjectGroupController implements ModelController {
 
 	@Override
 	public void scale(final float scaleFactor) {
+		scale (scaleFactor, scaleFactor, scaleFactor);
+	}
+
+	@Override
+	public void scale(final float x, final float y, final float z) {
 		if (!scaleLocked && objectGroup != null) {
 			Vector3 scale = objectGroup.getScale();
-			objectGroup.setScaleX(scale.x * scaleFactor);
-			objectGroup.setScaleY(scale.y * scaleFactor);
-			objectGroup.setScaleZ(scale.z * scaleFactor);
+			objectGroup.setScaleX(scale.x * x);
+			objectGroup.setScaleY(scale.y * y);
+			objectGroup.setScaleZ(scale.z * z);
 		}
 	}
 
@@ -190,4 +195,84 @@ public class ObjectGroupController implements ModelController {
 		}
 	}
 
+	@Override
+	public float getXRotation() {
+		float xRotation = 0.0f;
+		if (objectGroup != null) {
+			xRotation = (float) objectGroup.getRotX();
+		}
+		return xRotation;
+	}
+
+	@Override
+	public float getYRotation() {
+		float yRotation = 0.0f;
+		if (objectGroup != null) {
+			yRotation = (float) objectGroup.getRotY();
+		}
+		return yRotation;
+	}
+
+	@Override
+	public float getZRotation() {
+		float zRotation = 0.0f;
+		if (objectGroup != null) {
+			zRotation = (float) objectGroup.getRotZ();
+		}
+		return zRotation;
+	}
+
+	@Override
+	public float getXScale() {
+		float xScale = 0.0f;
+		if (objectGroup != null) {
+			xScale = (float) objectGroup.getScaleX();
+		}
+		return xScale;
+	}
+
+	@Override
+	public float getYScale() {
+		float yScale = 0.0f;
+		if (objectGroup != null) {
+			yScale = (float) objectGroup.getScaleY();
+		}
+		return yScale;
+	}
+
+	@Override
+	public float getZScale() {
+		float zScale = 0.0f;
+		if (objectGroup != null) {
+			zScale = (float) objectGroup.getScaleZ();
+		}
+		return zScale;
+	}
+
+	@Override
+	public float getXPosition() {
+		float xPosition = 0.0f;
+		if (objectGroup != null) {
+			xPosition = (float) objectGroup.getX();
+		}
+		return xPosition;
+	}
+
+	@Override
+	public float getYPosition() {
+		float yPosition = 0.0f;
+		if (objectGroup != null) {
+			yPosition = (float) objectGroup.getY();
+		}
+		return yPosition;
+	}
+
+	@Override
+	public float getZPosition() {
+		float zPosition = 0.0f;
+		if (objectGroup != null) {
+			zPosition = (float) objectGroup.getZ();
+		}
+		return zPosition;
+	}
 }
