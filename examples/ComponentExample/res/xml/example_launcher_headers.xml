@@ -4,5 +4,9 @@
         android:fragment="com.missionse.componentexample.GeneralSectionFragment"
         android:title="@string/general"
         android:summary="This section contains general examples." />
+    <header
+        android:fragment="com.missionse.componentexample.PrototypeSectionFragment"
+        android:title="@string/prototype"
+        android:summary="This section contains specific prototypes." />
 </preference-headers>
     

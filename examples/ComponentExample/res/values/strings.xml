@@ -7,14 +7,22 @@
     <!-- Example Launcher setting entries -->
     <string name="action_settings">Settings</string>
     
-    <!-- Example Launcher list items -->
+    <!-- Main Launcher list items -->
     <string name="general">General</string>
+    <string name="prototype">Prototypes</string>
+    
+    <!-- General Section headers -->
     <string name="view_pager">View Pager</string>
     <string name="view_pager_summary">This spawns a View Pager with a Sliding Menu.</string>
     <string name="model_viewer">Model Viewer</string>
     <string name="model_viewer_summary">This spawns a Model Viewer, displaying a 3D object.</string>
     <string name="wifi_direct">Wifi Direct</string>
     <string name="wifi_direct_summary">This spawns a Wifi Direct example.</string>
+    
+    <!-- Prototype Section headers -->
+    <string name="commandable_model">Commandable Model</string>
+    <string name="commandable_model_summary">Use WiFi Direct to command a remote device to center a model around
+        a specific point.</string>
     
     <!-- Content Description -->
     <string name="right_arrow">Right arrow</string>
