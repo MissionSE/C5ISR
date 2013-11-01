@@ -34,10 +34,11 @@ public class RotationGestureDetector {
 				ptrID1 = event.getPointerId(event.getActionIndex());
 				break;
 			case MotionEvent.ACTION_POINTER_DOWN:
-				if (ptrID1 == INVALID_POINTER_ID)
+				if (ptrID1 == INVALID_POINTER_ID) {
 					ptrID1 = event.getPointerId(event.getActionIndex());
-				else
+				} else {
 					ptrID2 = event.getPointerId(event.getActionIndex());
+				}
 
 				if (ptrID1 != INVALID_POINTER_ID && ptrID2 != INVALID_POINTER_ID) {
 					unpackLinePosition(event, previousLine);

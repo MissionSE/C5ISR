@@ -3,10 +3,10 @@ package com.missionse.commandablemodel;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import com.missionse.modelviewer.ModelController;
+import com.missionse.modelviewer.ModelViewerFragment;
 
 public class ModelStatus {
-	private ModelController controller;
+	private ModelViewerFragment modelViewer;
 	private static final int POSITION_X = 0;
 	private static final int POSITION_Y = 1;
 	private static final int POSITION_Z = 2;
@@ -22,26 +22,31 @@ public class ModelStatus {
 	public ModelStatus() {
 	}
 
-	public void setController(final ModelController modelController) {
-		controller = modelController;
+	public void setModelViewer(final ModelViewerFragment modelViewerFragment) {
+		modelViewer = modelViewerFragment;
 	}
-	
+
 	public String toString() {
 		String modelStatus = "";
-		modelStatus += controller.getXPosition() + " " + controller.getYPosition() + " " + controller.getZPosition();
-		modelStatus += " ";
-		modelStatus += controller.getXScale() + " " + controller.getYScale() + " " + controller.getZScale();
-		modelStatus += " ";
-		modelStatus += controller.getXRotation() + " " + controller.getYRotation() + " " + controller.getZRotation();
+
+		if (modelViewer.getController() != null) {
+			modelStatus += modelViewer.getController().getXPosition() + " " + modelViewer.getController().getYPosition() + " " + modelViewer.getController().getZPosition();
+			modelStatus += " ";
+			modelStatus += modelViewer.getController().getXScale() + " " + modelViewer.getController().getYScale() + " " + modelViewer.getController().getZScale();
+			modelStatus += " ";
+			modelStatus += modelViewer.getController().getXRotation() + " " + modelViewer.getController().getYRotation() + " " + modelViewer.getController().getZRotation();
+		}
 
 		return modelStatus;
 	}
 
 	public void setModelStatus(final String modelStatus) {
-		ArrayList<Float> modelValues = getModelValues(modelStatus);
-		controller.setRotation(modelValues.get(ROTATION_X), modelValues.get(ROTATION_Y), modelValues.get(ROTATION_Z));
-		controller.setScale(modelValues.get(SCALE_X), modelValues.get(SCALE_Y), modelValues.get(SCALE_Z));
-		controller.setPosition(modelValues.get(POSITION_X), modelValues.get(POSITION_Y), modelValues.get(POSITION_Z));
+		if (modelViewer.getController() != null) {
+			ArrayList<Float> modelValues = getModelValues(modelStatus);
+			modelViewer.getController().setRotation(modelValues.get(ROTATION_X), modelValues.get(ROTATION_Y), modelValues.get(ROTATION_Z));
+			modelViewer.getController().setScale(modelValues.get(SCALE_X), modelValues.get(SCALE_Y), modelValues.get(SCALE_Z));
+			modelViewer.getController().setPosition(modelValues.get(POSITION_X), modelValues.get(POSITION_Y), modelValues.get(POSITION_Z));
+		}
 	}
 
 	private ArrayList<Float> getModelValues(final String modelStatus) {
