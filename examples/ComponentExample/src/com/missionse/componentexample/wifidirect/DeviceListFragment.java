@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.missionse.componentexample.R;
+import com.missionse.wifidirect.WifiDirectConnector;
 
 import android.app.ListFragment;
 import android.content.Context;
@@ -72,7 +73,7 @@ public class DeviceListFragment extends ListFragment {
                 	deviceName.setText(device.deviceName);
                 }
                 if (deviceStatus != null) {
-                	deviceStatus.setText(((WifiDirectActivity)getActivity()).deviceStatuses.get(device.status));
+                	deviceStatus.setText(WifiDirectConnector.deviceStatuses.get(device.status));
                 }
             }
             return convertView;

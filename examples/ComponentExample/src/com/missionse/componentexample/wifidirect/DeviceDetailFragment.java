@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.missionse.componentexample.R;
+import com.missionse.wifidirect.WifiDirectConnector;
 import com.missionse.wifidirect.WifiUtilities;
 
 import android.app.Activity;
@@ -56,7 +57,7 @@ public class DeviceDetailFragment extends Fragment {
         view.setText(targetDevice.deviceName);
 		
         view = (TextView) contentView.findViewById(R.id.device_detail_status);
-        view.setText("Status: " + ((WifiDirectActivity)getActivity()).deviceStatuses.get(targetDevice.status));
+        view.setText("Status: " + WifiDirectConnector.deviceStatuses.get(targetDevice.status));
         
         view = (TextView) contentView.findViewById(R.id.device_detail_primarytype);
         view.setText("Primary type: " + targetDevice.primaryDeviceType);

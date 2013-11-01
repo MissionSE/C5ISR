@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.util.SparseArray;
 
 public class WifiDirectConnector {
 	
@@ -16,8 +18,16 @@ public class WifiDirectConnector {
 	private Channel wifiChannel;
 	private WifiDirectBroadcastReceiver broadcastReceiver;
 	
+	public final static SparseArray<String> deviceStatuses = new SparseArray<String>();
+	
 	public WifiDirectConnector() {
 		setupIntentFilter();
+		
+		deviceStatuses.append(WifiP2pDevice.AVAILABLE, "Available");
+		deviceStatuses.append(WifiP2pDevice.INVITED, "Invited");
+		deviceStatuses.append(WifiP2pDevice.CONNECTED, "Connected");
+		deviceStatuses.append(WifiP2pDevice.FAILED, "Failed");
+		deviceStatuses.append(WifiP2pDevice.UNAVAILABLE, "Unavailable");
 	}
 	
 	private void setupIntentFilter() {

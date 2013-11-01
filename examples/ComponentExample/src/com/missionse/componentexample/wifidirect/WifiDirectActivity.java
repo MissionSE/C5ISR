@@ -18,7 +18,6 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.TextView;
 //import android.util.Log;
@@ -27,8 +26,6 @@ import android.widget.Toast;
 public class WifiDirectActivity extends Activity {
 	
 	//private static final String TAG = "WifiDirectActivity";
-	
-	public final SparseArray<String> deviceStatuses = new SparseArray<String>();
 	
 	private final WifiDirectConnector wifiDirectConnector = new WifiDirectConnector();
 	
@@ -45,12 +42,6 @@ public class WifiDirectActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setTitle("Wi-Fi Direct");		
 		setContentView(R.layout.activity_wifi_direct);
-		
-		deviceStatuses.append(WifiP2pDevice.AVAILABLE, "Available");
-		deviceStatuses.append(WifiP2pDevice.INVITED, "Invited");
-		deviceStatuses.append(WifiP2pDevice.CONNECTED, "Connected");
-		deviceStatuses.append(WifiP2pDevice.FAILED, "Failed");
-		deviceStatuses.append(WifiP2pDevice.UNAVAILABLE, "Unavailable");
 		
 		deviceListFragment = new DeviceListFragment();
 		deviceDetailFragment = new DeviceDetailFragment();
@@ -142,7 +133,7 @@ public class WifiDirectActivity extends Activity {
 				TextView view = (TextView) findViewById(R.id.this_device_name);
 		        view.setText(thisDevice.deviceName);
 		        view = (TextView) findViewById(R.id.this_device_status);
-		        view.setText(deviceStatuses.get(thisDevice.status));
+		        view.setText(WifiDirectConnector.deviceStatuses.get(thisDevice.status));
 			}
 		});
 	}
