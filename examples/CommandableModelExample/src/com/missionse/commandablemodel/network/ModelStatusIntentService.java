@@ -1,4 +1,4 @@
-package com.missionse.commandablemodel;
+package com.missionse.commandablemodel.network;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,19 +9,19 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-public class ModelStatusSenderIntent extends IntentService {
+public class ModelStatusIntentService extends IntentService {
 
-	public static final String TAG = ModelStatusSenderIntent.class.getSimpleName();
+	public static final String TAG = ModelStatusIntentService.class.getSimpleName();
 	public static final String ACTION_SEND_MODEL_STATUS = "com.missionse.commandablemodel.SEND_MODEL_STATUS";
 	public static final String EXTRAS_STATUS = "sendable_model_status";
 	public static final String EXTRAS_HOST = "target_host";
 	public static final String EXTRAS_PORT = "target_port";
 
-	public ModelStatusSenderIntent() {
-		super("ModelStatusSenderIntent");
+	public ModelStatusIntentService() {
+		super("ModelStatusIntentService");
 	}
 	
-	public ModelStatusSenderIntent(final String name) {
+	public ModelStatusIntentService(final String name) {
 		super(name);
 	}
 

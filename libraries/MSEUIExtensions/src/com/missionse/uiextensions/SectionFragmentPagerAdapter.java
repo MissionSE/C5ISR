@@ -1,4 +1,4 @@
-package com.missionse.commandablemodel;
+package com.missionse.uiextensions;
 
 import java.util.HashMap;
 import java.util.Map;

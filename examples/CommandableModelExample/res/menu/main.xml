@@ -1,11 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_settings"
+        android:id="@+id/menu_enable_p2p"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/menu_settings"/>
+        android:title="@string/menu_enable_p2p"/>
     
+    <!-- Discover Peers icon is at the same level as the menu "three dots" icon. -->
     <item
         android:id="@+id/menu_discover_peers"
         android:icon="@drawable/ic_action_refresh"

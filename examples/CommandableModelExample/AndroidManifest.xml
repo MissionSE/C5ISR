@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         
-        <service android:name=".ModelStatusSenderIntent" />
+        <service android:name=".network.ModelStatusIntentService" />
         
         <activity android:name=".CommandableModelActivity" android:label="@string/app_name" >
             <intent-filter>

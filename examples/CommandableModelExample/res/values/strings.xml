@@ -2,13 +2,18 @@
 <resources>
 
     <string name="app_name">Commandable Model</string>
-    <string name="menu_settings">Settings</string>
+    
+    <!-- Menu entries -->
+    <string name="menu_enable_p2p">Enable P2P</string>
     <string name="menu_discover">Discover</string>
     
+    <!-- Image content descriptions -->
     <string name="right_arrow">Right Arrow</string>
     
+    <!-- PeersList strings -->
     <string name="peers_list_title">Peers</string>
     
+    <!-- PeerDetails strings -->
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
 
