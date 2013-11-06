@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.missionse.modelviewer.ModelAnimationController;
 import com.missionse.modelviewer.ModelController;
@@ -20,6 +21,7 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 	private ModelController controller;
 	private ModelAnimationController animator;
 	private Menu optionsMenu;
+	private TextView objectListText;
 
 	private HashMap<String, Integer> defaultColors;
 	private static final int HIGHLIGHT_COLOR = Color.BLUE;
@@ -33,13 +35,13 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_model_viewer_example);
 
-		if (savedInstanceState == null)	{
-			fragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
-			fragment.registerObjectPickedListener(this);
-			fragment.registerObjectLoadedListener(this);
+		fragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
+		fragment.registerObjectPickedListener(this);
+		fragment.registerObjectLoadedListener(this);
 
-			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
-		}
+		getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+		objectListText = (TextView) findViewById(R.id.object_list);
 	}
 
 	@Override
@@ -101,5 +103,15 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 	public void onObjectLoaded() {
 		controller = fragment.getController();
 		animator = fragment.getAnimator();
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				String objectList = "";
+				for (String object : controller.getObjectList()) {
+					objectList += object + "\n";
+				}
+				objectListText.setText(objectList);
+			}
+		});
 	}
 }
