@@ -8,12 +8,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.missionse.modelviewer.ModelAnimationController;
+import com.missionse.modelviewer.ModelController;
 import com.missionse.modelviewer.ModelViewerFragment;
 import com.missionse.modelviewer.ModelViewerFragmentFactory;
+import com.missionse.modelviewer.ObjectLoadedListener;
 import com.missionse.modelviewer.ObjectPickedListener;
 
-public class ModelViewerExampleActivity extends Activity implements ObjectPickedListener {
+public class ModelViewerExampleActivity extends Activity implements ObjectPickedListener, ObjectLoadedListener {
 	private ModelViewerFragment fragment;
+	private ModelController controller;
+	private ModelAnimationController animator;
 	private Menu optionsMenu;
 
 	private HashMap<String, Integer> defaultColors;
@@ -31,6 +36,7 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 		if (savedInstanceState == null)	{
 			fragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
 			fragment.registerObjectPickedListener(this);
+			fragment.registerObjectLoadedListener(this);
 
 			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
 		}
@@ -45,31 +51,31 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		if (fragment != null && fragment.getController() != null && fragment.getAnimator() != null) {
+		if (fragment != null && controller != null && animator != null) {
 			switch (item.getItemId()) {
 				case R.id.action_rotate:
-					if (fragment.getAnimator().isRotating()) {
-						fragment.getAnimator().stopRotation();
+					if (animator.isRotating()) {
+						animator.stopRotation();
 					} else {
-						fragment.getAnimator().startXRotation(4000);
+						animator.startXRotation(4000);
 					}
-					item.setChecked(fragment.getAnimator().isRotating());
+					item.setChecked(animator.isRotating());
 					return true;
 				case R.id.action_lock:
-					if (fragment.getController().isTranslationLocked()) {
-						fragment.getController().unlockTranslation();
+					if (controller.isTranslationLocked()) {
+						controller.unlockTranslation();
 					} else {
-						fragment.getController().lockTranslation();
+						controller.lockTranslation();
 					}
-					item.setChecked(fragment.getController().isTranslationLocked());
+					item.setChecked(controller.isTranslationLocked());
 					return true;
 				case R.id.action_center:
-					fragment.getAnimator().translateTo(0f, 0f, 0f, 250);
+					animator.translateTo(0f, 0f, 0f, 250);
 					return true;
 				case R.id.action_reset:
-					fragment.getAnimator().rotateTo(0f, 0f, 0f, 250);
-					fragment.getAnimator().scaleTo(1f, 250);
-					fragment.getAnimator().translateTo(0f, 0f, 0f, 250);
+					animator.rotateTo(0f, 0f, 0f, 250);
+					animator.scaleTo(1f, 250);
+					animator.translateTo(0f, 0f, 0f, 250);
 					optionsMenu.findItem(R.id.action_rotate).setChecked(false);
 					return true;
 			}
@@ -80,14 +86,20 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 
 	@Override
 	public void objectPicked(final String objectName) {
-		int objectColor = fragment.getController().getAmbientColor(objectName);
+		int objectColor = controller.getAmbientColor(objectName);
 
 		if (!defaultColors.containsKey(objectName)) {
 			defaultColors.put(objectName, objectColor);
-			fragment.getController().setAmbientColor(objectName, HIGHLIGHT_COLOR);
+			controller.setAmbientColor(objectName, HIGHLIGHT_COLOR);
 		} else {
-			fragment.getController().setAmbientColor(objectName, defaultColors.get(objectName));
+			controller.setAmbientColor(objectName, defaultColors.get(objectName));
 			defaultColors.remove(objectName);
 		}
+	}
+
+	@Override
+	public void onObjectLoaded() {
+		controller = fragment.getController();
+		animator = fragment.getAnimator();
 	}
 }

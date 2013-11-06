@@ -7,7 +7,7 @@ import rajawali.renderer.RajawaliRenderer;
 import android.content.Context;
 
 public abstract class ModelViewerRenderer extends RajawaliRenderer {
-	private ModelViewerFragment fragment;
+	protected ModelViewerFragment fragment;
 
 	public ModelViewerRenderer(final Context context, final ModelViewerFragment modelViewerFragment) {
 		super (context);

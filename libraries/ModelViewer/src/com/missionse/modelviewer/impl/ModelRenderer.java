@@ -44,6 +44,8 @@ public class ModelRenderer extends ModelViewerRenderer {
 			objectController.setObjectGroup(objectGroup);
 			animationController.setObject(objectGroup);
 		}
+
+		fragment.onObjectLoaded();
 	}
 
 	@Override

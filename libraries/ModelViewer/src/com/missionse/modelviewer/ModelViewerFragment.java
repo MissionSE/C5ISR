@@ -19,7 +19,7 @@ import android.widget.ProgressBar;
 import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
 
-public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener, OnObjectPickedListener {
+public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener, OnObjectPickedListener, ObjectLoadedListener {
 	private ModelParser modelParser;
 	private ModelViewerRenderer renderer;
 	private ProgressBar progressBar;
@@ -30,6 +30,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	private RotationGestureDetector rotationGestureDetector;
 	private PanGestureDetector panGestureDetector;
 	private ArrayList<ObjectPickedListener> objectPickedListeners;
+	private ArrayList<ObjectLoadedListener> objectLoadedListeners;
 
 	private boolean transparentSurfaceView;
 
@@ -45,6 +46,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 	public ModelViewerFragment() {
 		objectPickedListeners = new ArrayList<ObjectPickedListener>();
+		objectLoadedListeners = new ArrayList<ObjectLoadedListener>();
 		transparentSurfaceView = false;
 	}
 
@@ -157,8 +159,19 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		}
 	}
 
+	@Override
+	public void onObjectLoaded() {
+		for (ObjectLoadedListener listener : objectLoadedListeners) {
+			listener.onObjectLoaded();
+		}
+	}
+
 	public void registerObjectPickedListener(final ObjectPickedListener listener) {
 		objectPickedListeners.add(listener);
+	}
+
+	public void registerObjectLoadedListener(final ObjectLoadedListener listener) {
+		objectLoadedListeners.add(listener);
 	}
 
 	public ModelController getController() {
