@@ -6,11 +6,15 @@ import gl.CustomGLSurfaceView;
 import gl.GL1Renderer;
 import gl.GLCamera;
 import gl.GLFactory;
-import gl.GLRenderer;
+import gl.MarkerObject;
 import gl.animations.AnimationFaceToCamera;
 import gl.scenegraph.MeshComponent;
 import gl.scenegraph.Shape;
 import gui.GuiSetup;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import markerDetection.MarkerDetectionSetup;
 import markerDetection.MarkerObjectMap;
 import markerDetection.UnrecognizedMarkerListener;
@@ -27,9 +31,11 @@ import android.app.Activity;
 import android.util.Log;
 import android.widget.Button;
 
+import com.missionse.augmented.components.MeshComponentFactory;
 import com.missionse.augmented.components.TimerMarker;
+import com.missionse.augmented.interfaces.OnWorldUpdateListener;
 import com.missionse.augmentedreality.R;
-import commands.Command;
+
 import commands.ui.CommandShowToast;
 import components.ProximitySensor;
 
@@ -37,17 +43,26 @@ public class MultiMarkerSetup extends MarkerDetectionSetup {
 
 	private GLCamera camera;
 	private World world;
-	private MarkerObjectMap markermap;
+	private MarkerObjectMap markermap = new MarkerObjectMap();
+	private Thread worldUpdateThread;
+	private volatile boolean runThread = false;
+	private List<OnWorldUpdateListener> listeners = new LinkedList<OnWorldUpdateListener>();
+	
+	public MultiMarkerSetup(){
+		this(true);
+	}
 	
 	public MultiMarkerSetup(boolean value){
 		super(value);
+		camera = new GLCamera(new Vec(0, 0, 10));
+		world = new World(camera);
 	}
 	 
 
 	@Override
 	public void _a_initFieldsIfNecessary() {
-		camera = new GLCamera(new Vec(0, 0, 10));
-		world = new World(camera);
+		//camera = new GLCamera(new Vec(0, 0, 10));
+		//world = new World(camera);
 	}
 
 	@Override
@@ -64,10 +79,9 @@ public class MultiMarkerSetup extends MarkerDetectionSetup {
 
 	@Override
 	public void _a3_registerMarkerObjects(MarkerObjectMap markerObjectMap) {
+		markerObjectMap.putAll(markermap);
 		markermap = markerObjectMap;
-	
 		_x_addDefaultMarkers(markermap);
-		
 	}
 	
 	public void _x_addDefaultMarkers(MarkerObjectMap markerObjectMap){
@@ -226,7 +240,57 @@ public class MultiMarkerSetup extends MarkerDetectionSetup {
 		itemToCollect.setComp(itemMesh);
 
 		world.add(itemToCollect);
+		
+		//world.add(MeshComponentFactory.createDefaultInfo(getActivity(), getCamera()));
+			
+	}
 	
+	
+	
+	@Override
+	public void onPause(Activity a) {
+		super.onPause(a);
+		runThread = false;
+		
+	}
+
+	@Override
+	public void onResume(Activity a) {
+		super.onResume(a);
+		runThread = true;
+		if(worldUpdateThread == null || !worldUpdateThread.isAlive()){
+			worldUpdateThread = new Thread(new Runnable(){
+				@Override
+				public void run(){
+					while(runThread){
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						if(runThread){
+							//getWorld().add(MeshComponentFactory.createDefaultInfo(getActivity(), getCamera()));
+							//new CommandShowToast(getActivity(), "ADDING TO WORLD").execute();
+							notifyListeners();
+						}
+					}
+				}
+			});
+			worldUpdateThread.start();
+		}
+	}
+	
+	public void notifyListeners(){
+		for(OnWorldUpdateListener l : listeners){
+			l.onWorldUpdate(getActivity(), getCamera(), getWorld(), markermap);
+		}
+	}
+	
+	public void addOnWorldUpdateListener(OnWorldUpdateListener l){
+		listeners.add(l);
+	}
+	public void removeOnWorldUpdateListeners(OnWorldUpdateListener l){
+		listeners.remove(l);
 	}
 
 	@Override
@@ -279,6 +343,29 @@ public class MultiMarkerSetup extends MarkerDetectionSetup {
 //			}
 //		}, "Place 2 meters infront");
 		
+		_e3_addElementsToUi(guiSetup, activity);
+	}
+	
+	public void _e3_addElementsToUi(GuiSetup guiSetup, Activity activity){
+	}
+	
+	public World getWorld(){
+		return this.world;
+	}
+	
+	public GLCamera getCamera(){
+		return this.camera;
+	}
+	
+	public void addMeshToWorld(MeshComponent c){
+		world.add(c);
+	}
+	public void addObjToWorld(Obj o){
+		world.add(o);
+	}
+	
+	public void addMarkerToWorld(MarkerObject o){
+		markermap.put(o);
 	}
 	
 

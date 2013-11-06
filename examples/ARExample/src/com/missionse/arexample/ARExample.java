@@ -1,13 +1,17 @@
 package com.missionse.arexample;
 
+import gl.GLCamera;
 import gl.GLFactory;
 import gl.scenegraph.MeshComponent;
+import markerDetection.MarkerObjectMap;
 import system.ArActivity;
 import util.Vec;
+import worldData.World;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -17,13 +21,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.missionse.augmented.components.MeshComponentFactory;
+import com.missionse.augmented.interfaces.OnWorldUpdateListener;
 import com.missionse.augmented.setups.BasicMultiSetup;
-import com.missionse.augmented.setups.MultiMarkerSetup;
+import com.missionse.augmented.setups.DefaultSetup;
+
 import commands.ui.CommandShowToast;
 
 
 public class ARExample extends Activity implements
-		ActionBar.OnNavigationListener {
+		ActionBar.OnNavigationListener, OnWorldUpdateListener {
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
@@ -80,6 +87,7 @@ public class ARExample extends Activity implements
 		// When the given dropdown item is selected, show its contents in the
 		// container view.
 		final DummySectionFragment fragment = new DummySectionFragment();
+		final OnWorldUpdateListener l = this;
 		//final Activity act = fragment.get;
 		Bundle args = new Bundle();
 		args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
@@ -102,9 +110,20 @@ public class ARExample extends Activity implements
 					s.addObject(m);
 					//ArActivity.startWithSetup(fragment.getActivity(), s);
 					//ArActivity.startWithSetup(fragment.getActivity(), new MultiMarkerSetup());
-					
-					ArActivity.startWithSetup(fragment.getActivity(), 
-							new com.missionse.augmented.setups.DefaultSetup());
+					//DefaultSetup s1 = new DefaultSetup();
+					//MeshComponent e = MeshComponentFactory.createInfoBox(
+					//		fragment.getActivity(), 
+					//		s1.getCamera(), 
+					//		"Information", 
+					//		MeshComponentFactory.createHeadlineInfo("Insert information here."));
+					//e.setPosition(Vec.getNewRandomPosInXYPlane(
+					//		s.getCamera().getPosition(), 
+					//		7, 14));
+					//s1.addMeshToWorld(e);
+					//s1.addObjToWorld(MeshComponentFactory.createDefaultInfo(fragment.getActivity(), s1.getCamera()));
+					DefaultSetup s1 = new DefaultSetup();
+					s1.addOnWorldUpdateListener(l);
+					ArActivity.startWithSetup(fragment.getActivity(),s1);
 					
 				}				
 			});
@@ -158,6 +177,14 @@ public class ARExample extends Activity implements
 		public void setOnClickListener(OnClickListener tListener){
 			mOnClickListener = tListener;
 		}
+	}
+
+	@Override
+	public void onWorldUpdate(Activity activity, GLCamera camera, World world,
+			MarkerObjectMap markerMap) {
+		world.add(MeshComponentFactory.createDefaultInfo(activity, camera));
+		new CommandShowToast(activity, "ADDING TO WORLD").execute();
+		Log.e("HELLLLO", "WORLD UPDATED");
 	}
 
 }
