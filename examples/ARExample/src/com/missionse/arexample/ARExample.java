@@ -1,7 +1,6 @@
 package com.missionse.arexample;
 
 import gl.GLFactory;
-import gl.MarkerObject;
 import gl.scenegraph.MeshComponent;
 import system.ArActivity;
 import util.Vec;
@@ -18,8 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.missionse.augmented.components.MarkerObjectFactory;
 import com.missionse.augmented.setups.BasicMultiSetup;
+import com.missionse.augmented.setups.MultiMarkerSetup;
+import commands.ui.CommandShowToast;
 
 
 public class ARExample extends Activity implements
@@ -94,10 +94,17 @@ public class ARExample extends Activity implements
 					MeshComponent m = GLFactory.getInstance().newCube();
 					m.setScale(new Vec(2,2,2));
 					m.setColor(gl.Color.red());
-					MarkerObject o = MarkerObjectFactory.createTimeoutMarker(s,4,m);
-					s.addMarker(o);
-					ArActivity.startWithSetup(fragment.getActivity(), s);
+					m.setPosition(Vec.getNewRandomPosInXYPlane(s.getCamera().getPosition(), 10, 25));
+					m.setOnClickCommand(new CommandShowToast(s.getActivity(),"Malfuction"));
+					//MarkerObject o = MarkerObjectFactory.createTimeoutMarker(s,4,m);
+					
+					//s.addMarker(o);
+					s.addObject(m);
+					//ArActivity.startWithSetup(fragment.getActivity(), s);
 					//ArActivity.startWithSetup(fragment.getActivity(), new MultiMarkerSetup());
+					
+					ArActivity.startWithSetup(fragment.getActivity(), 
+							new com.missionse.augmented.setups.DefaultSetup());
 					
 				}				
 			});
