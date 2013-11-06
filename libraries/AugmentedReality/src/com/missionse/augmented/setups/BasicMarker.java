@@ -1,10 +1,9 @@
-package com.missionse.arexample;
+package com.missionse.augmented.setups;
 
-import util.Vec;
-import android.opengl.Matrix;
 import gl.GLCamera;
 import gl.MarkerObject;
-import gl.scenegraph.MeshComponent;
+import util.Vec;
+import android.opengl.Matrix;
 
 public abstract class BasicMarker implements MarkerObject {
 

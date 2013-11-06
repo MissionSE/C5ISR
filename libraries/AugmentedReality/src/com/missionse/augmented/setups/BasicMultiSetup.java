@@ -5,7 +5,6 @@ import gl.CustomGLSurfaceView;
 import gl.GL1Renderer;
 import gl.GLCamera;
 import gl.GLFactory;
-import gl.GLRenderer;
 import gl.MarkerObject;
 import gl.scenegraph.MeshComponent;
 import gui.GuiSetup;
@@ -22,16 +21,13 @@ import worldData.Obj;
 import worldData.SystemUpdater;
 import worldData.World;
 import actions.Action;
-import actions.ActionCalcRelativePos;
 import actions.ActionMoveCameraBuffered;
 import actions.ActionRotateCameraBuffered;
 import android.app.Activity;
 import android.util.Log;
 import android.util.SparseArray;
-import android.widget.LinearLayout;
 
 import com.missionse.augmented.interfaces.ModifiableWorldSetup;
-import commands.Command;
 
 /**
  * Basic Setup to handle both marker and geo objects 
@@ -99,17 +95,40 @@ public class BasicMultiSetup extends MarkerDetectionSetup implements ModifiableW
 	@Override
 	public void _c_addActionsToEvents(EventManager eventManager,
 			CustomGLSurfaceView arView, SystemUpdater updater) {
-		ActionMoveCameraBuffered move = new ActionMoveCameraBuffered(mCamera, 5,
-				25);
-		arView.addOnTouchMoveAction(move);
-		eventManager.addOnTrackballAction(move);
+		
+		//arView.addOnTouchMoveAction(new ActionMoveCameraBuffered(mCamera, 5,25));
+		//arView.addOnTouchMoveListener(new ActionMoveCameraBuffered(mCamera, 5,25));
+		
+		//Action rot = new ActionRotateCameraBuffered(mCamera);
+		//updater.addObjectToUpdateCycle(rot);
+		//eventManager.addOnOrientationChangedAction(rot);
+		//eventManager.addOnLocationChangedAction(new ActionCalcRelativePos(mWorld, mCamera));
+		//eventManager.addOnTrackballAction(new ActionMoveCameraBuffered(mCamera,1, 25));
+
+		//TODO: Roberto, wait for valid gps?
+		
+		//ActionWASDMovement wasdAction = new ActionWASDMovement(mCamera, 25f,
+		//		50f, 20f);
+		//ActionRotateCameraBuffered rotateAction = new ActionRotateCameraBuffered(
+		//		mCamera);
+
+		//updater.addObjectToUpdateCycle(wasdAction);
+		//updater.addObjectToUpdateCycle(rotateAction);
+
+		//arView.addOnTouchMoveAction(wasdAction);
+		//eventManager.addOnOrientationChangedAction(rotateAction);
+
+		//eventManager.addOnTrackballAction(new ActionMoveCameraBuffered(mCamera,
+		//		5, 25));
+		
+		arView.addOnTouchMoveListener(new ActionMoveCameraBuffered(mCamera, 5,
+				25));
 		Action rot = new ActionRotateCameraBuffered(mCamera);
 		updater.addObjectToUpdateCycle(rot);
 		eventManager.addOnOrientationChangedAction(rot);
-		eventManager.addOnLocationChangedAction(new ActionCalcRelativePos(
-				mWorld, mCamera));
-		
-		//TODO: Roberto, wait for valid gps?
+		eventManager.addOnTrackballAction(new ActionMoveCameraBuffered(mCamera,
+				1, 25));
+
 	}
 
 	@Override
@@ -144,10 +163,15 @@ public class BasicMultiSetup extends MarkerDetectionSetup implements ModifiableW
 	
 	@Override
 	public boolean addObject(MeshComponent tComponent) {
-		Obj o = new Obj();
-		o.setComp(tComponent);
-		mMeshToObjMap.put(tComponent, o);
-		mWorld.add(o);
+	//	Obj o = new Obj();
+	//	o.setComp(tComponent);
+	//	o.setOnClickCommand(tComponent.getOnClickCommand());
+	//	o.setOnDoubleClickCommand(tComponent.getOnDoubleClickCommand());
+	//	o.setOnLongClickCommand(tComponent.getOnLongClickCommand());
+	//	o.setOnMapClickCommand(tComponent.getOnMapClickCommand());
+	//	mMeshToObjMap.put(tComponent, o);
+	//	mWorld.add(o);
+		mWorld.add(tComponent);
 		return true;
 	}
 
