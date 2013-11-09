@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NFCExample</string>
+    <string name="action_settings">Settings</string>
+    
+    <!-- For navigation -->
+    <string name="title_section1">Message Sender</string>
+    <string name="title_section2">Message Log</string>
+
+</resources>
