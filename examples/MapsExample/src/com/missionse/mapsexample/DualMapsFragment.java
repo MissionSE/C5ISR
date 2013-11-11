@@ -191,7 +191,11 @@ LocationListener {
 
 		mMapLeft.setOnCameraChangeListener(new OnCameraChangeListener() {
 			@Override
-			public void onCameraChange(CameraPosition arg0) {
+			public void onCameraChange(CameraPosition posLeft) {
+				Log.d("Dual Maps Fragment", "posLeft.zoom=" + posLeft.zoom + ", mMapRight.zoom=" + mMapRight.getCameraPosition().zoom + ", mMapLeft.zoom=" + mMapLeft.getCameraPosition().zoom);
+				if (mMapRight.getCameraPosition().zoom < posLeft.zoom) {
+					mMapRight.animateCamera(CameraUpdateFactory.zoomTo(posLeft.zoom + 3));
+				}
 				drawZoomedViewPolygon();
 			}
 		});
