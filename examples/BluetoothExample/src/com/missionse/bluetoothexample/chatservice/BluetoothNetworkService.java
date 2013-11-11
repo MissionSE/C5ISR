@@ -50,8 +50,8 @@ public class BluetoothNetworkService {
 
 	public BluetoothNetworkService(final Context context, final Handler handler) {
 		adapter = BluetoothAdapter.getDefaultAdapter();
-		serviceState = STATE_NONE;
 		this.handler = handler;
+		setState(STATE_NONE);
 	}
 
 	private synchronized void setState(final int state) {
@@ -60,10 +60,6 @@ public class BluetoothNetworkService {
 		// Give the new state to the Handler so the UI Activity can update
 		handler.obtainMessage(MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
 	}
-
-	//public synchronized int getState() {
-	//	return serviceState;
-	//}
 
 	public synchronized void start() {
 		if (serviceState == BluetoothNetworkService.STATE_NONE) {

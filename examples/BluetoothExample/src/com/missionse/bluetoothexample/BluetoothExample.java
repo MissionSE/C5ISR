@@ -30,6 +30,7 @@ public class BluetoothExample extends Activity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_bluetooth_example);
 
 		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

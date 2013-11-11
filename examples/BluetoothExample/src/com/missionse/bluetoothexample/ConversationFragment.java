@@ -82,11 +82,21 @@ public class ConversationFragment extends Fragment {
 	};
 
 	private final void setStatus(final String subtitle) {
-		getActivity().getActionBar().setSubtitle(subtitle);
+		try {
+			getActivity().getActionBar().setSubtitle(subtitle);
+		} catch (Exception e) {
+
+		}
 	}
 
 	public Handler getHandler() {
 		return chatServiceMessageHandler;
+	}
+
+	@Override
+	public void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
 	}
 
 	@Override
