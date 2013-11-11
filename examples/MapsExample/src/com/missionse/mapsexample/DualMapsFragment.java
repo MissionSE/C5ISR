@@ -27,12 +27,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.GroundOverlay;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -40,7 +36,7 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 
-public class MapsFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
+public class DualMapsFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
 LocationListener {
 	private static final LatLng MSE = new LatLng(39.974552, -74.976844);
 	private static final LatLng ZONE_A = new LatLng(39.974074, -74.977462);
@@ -51,13 +47,7 @@ LocationListener {
 	private GoogleMap mMapLeft;
 	private GoogleMap mMapRight;
 
-	private GroundOverlay mGroundOverlay;
-
 	private Polygon mZoomedViewPolygon;
-
-	private int mCurrentLevel = 0;
-
-	private final List<BitmapDescriptor> mLevelImages = new ArrayList<BitmapDescriptor>();
 
 	private LocationClient mLocationClient;
 
@@ -118,9 +108,6 @@ LocationListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.switchLevel:
-			switchLevel();
-			return true;
 		case R.id.myLocation:
 			boolean enabled = !item.isChecked();
 			item.setChecked(enabled);
@@ -153,11 +140,6 @@ LocationListener {
 //		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.dual_maps_example, menu);
 		setMyLocationEnabled(menu.findItem(R.id.myLocation).isChecked());
-	}
-
-	public void switchLevel() {
-		mCurrentLevel = (mCurrentLevel + 1) % mLevelImages.size();
-		mGroundOverlay.setImage(mLevelImages.get(mCurrentLevel));
 	}
 
 	private void setUpMapIfNeeded() {
@@ -242,16 +224,6 @@ LocationListener {
 		});
 
 		mMapRight.setMapType(MAP_TYPE_HYBRID);
-
-		mLevelImages.clear();
-		mLevelImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor1));
-		mLevelImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor2));
-
-		mCurrentLevel = 0;
-		mGroundOverlay = mMapRight.addGroundOverlay(new GroundOverlayOptions()
-		.image(mLevelImages.get(mCurrentLevel))
-		.position(MSE, 90)
-		.bearing(27));
 
 		double radius = 50;
 		int fillColor = Color.argb(75, 255, 0, 0);

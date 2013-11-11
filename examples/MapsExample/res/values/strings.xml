@@ -4,5 +4,6 @@
     <string name="app_name">Maps Example</string>
     <string name="action_settings">Settings</string>
     <string name="switch_level">Switch Level</string>
+    <string name="my_location">My Location</string>
 
 </resources>

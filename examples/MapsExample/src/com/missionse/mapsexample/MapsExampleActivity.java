@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
 
 public class MapsExampleActivity extends FragmentActivity {
 
@@ -17,18 +16,11 @@ public class MapsExampleActivity extends FragmentActivity {
 		Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 		
 		if (fragment == null) {
-			fragment = new MapsFragment();
+			fragment = new DualMapsFragment();
 			fm.beginTransaction()
 				.add(R.id.fragmentContainer, fragment)
 				.commit();
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.maps_example, menu);
-		return true;
 	}
 
 }
