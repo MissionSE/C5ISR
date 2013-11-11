@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BaseFragmentExample</string>
+    <string name="action_image">Image</string>
+    <string name="action_video">Video</string>
+    <string name="action_model">Model</string>
+
+</resources>
