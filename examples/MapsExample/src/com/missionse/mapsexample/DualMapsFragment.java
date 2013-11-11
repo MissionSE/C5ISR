@@ -113,9 +113,19 @@ LocationListener {
 			item.setChecked(enabled);
 			setMyLocationEnabled(enabled);
 			return true;
+		case R.id.resetMaps:
+			resetMaps();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void resetMaps() {
+		mMapLeft.animateCamera(CameraUpdateFactory
+				.newCameraPosition(new CameraPosition(MSE, 15f, 0, MSE_BEARING)));
+		mMapRight.animateCamera(CameraUpdateFactory
+				.newCameraPosition(new CameraPosition(MSE, 18f, 0, MSE_BEARING)));
 	}
 
 	private void setMyLocationEnabled(boolean enabled) {
@@ -218,7 +228,10 @@ LocationListener {
 
 		mMapRight.setOnCameraChangeListener(new OnCameraChangeListener() {
 			@Override
-			public void onCameraChange(CameraPosition arg0) {
+			public void onCameraChange(CameraPosition posRight) {
+				if (mMapLeft.getCameraPosition().zoom > posRight.zoom) {
+					mMapLeft.animateCamera(CameraUpdateFactory.zoomTo(posRight.zoom - 3));
+				}
 				drawZoomedViewPolygon();
 			}
 		});
