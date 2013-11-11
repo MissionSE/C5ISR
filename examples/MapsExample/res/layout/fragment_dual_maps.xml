@@ -11,14 +11,14 @@
         android:id="@+id/map_left"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.75"
+        android:layout_weight="0.5"
         class="com.google.android.gms.maps.MapFragment" />
 
     <fragment
         android:id="@+id/map_right"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.25"
+        android:layout_weight="0.5"
         class="com.google.android.gms.maps.MapFragment" />
 
 </LinearLayout>
