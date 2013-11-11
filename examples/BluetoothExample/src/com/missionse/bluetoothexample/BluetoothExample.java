@@ -11,11 +11,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.missionse.bluetoothexample.chatservice.ChatService;
+import com.missionse.bluetoothexample.chatservice.BluetoothNetworkService;
 
 public class BluetoothExample extends Activity {
 
@@ -23,7 +22,7 @@ public class BluetoothExample extends Activity {
 	private static final int REQUEST_ENABLE_BT = 1;
 
 	private BluetoothAdapter bluetoothAdapter;
-	private ChatService chatService;
+	private BluetoothNetworkService networkService;
 	private ConversationFragment conversationFragment;
 
 	private BroadcastReceiver broadcastReceiver;
@@ -66,9 +65,6 @@ public class BluetoothExample extends Activity {
 						}
 					}
 				} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-					//setProgressBarIndeterminateVisibility(false);
-					//setTitle(R.string.select_device);
-
 					Fragment dialogFragment = getFragmentManager().findFragmentByTag("dialog");
 					if (dialogFragment != null) {
 						//Dialog is showing
@@ -83,7 +79,6 @@ public class BluetoothExample extends Activity {
 		filter.addAction(BluetoothDevice.ACTION_FOUND);
 		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 		registerReceiver(broadcastReceiver, filter);
-
 	}
 
 	@Override
@@ -96,8 +91,8 @@ public class BluetoothExample extends Activity {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 		} else {
-			if (chatService == null) {
-				startChatService();
+			if (networkService == null) {
+				startNetworkService();
 			}
 		}
 	}
@@ -106,7 +101,7 @@ public class BluetoothExample extends Activity {
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		if (requestCode == REQUEST_ENABLE_BT) {
 			if (resultCode == Activity.RESULT_OK) {
-				startChatService();
+				startNetworkService();
 			} else {
 				Toast.makeText(this, "Bluetooth not enabled. Exiting.", Toast.LENGTH_SHORT).show();
 				finish();
@@ -114,25 +109,24 @@ public class BluetoothExample extends Activity {
 		}
 	}
 
-	private void startChatService() {
-		chatService = new ChatService(this, conversationFragment.getHandler());
+	private void startNetworkService() {
+		networkService = new BluetoothNetworkService(this, conversationFragment.getHandler());
 	}
 
-	public ChatService getChatService() {
-		return chatService;
-	}
+	//public BluetoothNetworkService getChatService() {
+	//	return networkService;
+	//}
 
 	public void connectDevice(final String address, final boolean secure) {
 		// Get the BluetoothDevice object
 		BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
 		// Attempt to connect to the device
-		chatService.connect(device, secure);
+		networkService.connect(device, secure);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_menu, menu);
+		getMenuInflater().inflate(R.menu.main_menu, menu);
 		return true;
 	}
 
@@ -168,7 +162,7 @@ public class BluetoothExample extends Activity {
 	private void enableDiscovery() {
 		if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
 			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 15);
 			startActivity(discoverableIntent);
 		}
 	}
@@ -176,11 +170,8 @@ public class BluetoothExample extends Activity {
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
-		if (chatService != null) {
-			// Only if the state is STATE_NONE, do we know that we haven't started already
-			if (chatService.getState() == ChatService.STATE_NONE) {
-				chatService.start();
-			}
+		if (networkService != null) {
+			networkService.start();
 		}
 	}
 
@@ -189,8 +180,18 @@ public class BluetoothExample extends Activity {
 		super.onDestroy();
 		this.unregisterReceiver(broadcastReceiver);
 
-		if (chatService != null) {
-			chatService.stop();
+		if (networkService != null) {
+			networkService.stop();
 		}
+	}
+
+	public boolean sendMessage(final String message) {
+		// Check that there's actually something to send
+		byte[] data = message.getBytes();
+		if (!networkService.write(data)) {
+			Toast.makeText(this, "Error: Not connected.", Toast.LENGTH_SHORT).show();
+			return false;
+		};
+		return true;
 	}
 }

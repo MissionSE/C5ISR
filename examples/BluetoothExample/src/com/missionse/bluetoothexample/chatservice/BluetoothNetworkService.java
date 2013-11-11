@@ -1,5 +1,7 @@
 package com.missionse.bluetoothexample.chatservice;
 
+import java.io.IOException;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -9,13 +11,16 @@ import android.os.Handler;
 import android.os.Message;
 
 /**
- * This class manages all threads for connecting and maintaining a live connection with another device. It then sends
- * out messages as necessary back to the "handler", who is notified of various state changes and other actions. Finally,
- * it maintains an overall service state.
+ * This class manages all threads for: listening for incoming connections (via SocketConnectionAcceptThread), connecting
+ * to a remote (given service UUIDs, via ConnectThread), and sending and receiving data over the socket (via
+ * ConnectedThread)
+ * 
+ * To communicate back to the encompassing application, it sends out messages as necessary back to the "handler", who is
+ * notified of various state changes and other actions.
  */
-public class ChatService {
+public class BluetoothNetworkService {
 
-	// Message types sent from the ChatService Handler
+	// Message types sent from the BluetoothNetworkService Handler
 	public static final int MESSAGE_STATE_CHANGE = 1;
 	public static final int MESSAGE_INCOMING_DATA = 2;
 	public static final int MESSAGE_OUTGOING_DATA = 3;
@@ -26,7 +31,7 @@ public class ChatService {
 	public static final String DEVICE_NAME = "device_name";
 	public static final String TOAST = "toast";
 
-	// Constants that indicate the current connection state
+	// Current connection state enumerations
 	public static final int STATE_NONE = 0;
 	public static final int STATE_LISTEN = 1;
 	public static final int STATE_CONNECTING = 2;
@@ -35,24 +40,20 @@ public class ChatService {
 	private final BluetoothAdapter adapter;
 	private final Handler handler;
 
-	private AcceptThread secureAcceptThread;
-	private AcceptThread insecureAcceptThread;
+	private SocketConnectionAcceptThread secureAcceptThread;
+	private SocketConnectionAcceptThread insecureAcceptThread;
 
 	private ConnectThread connectThread;
 	private ConnectedThread connectedThread;
 
 	private int serviceState;
 
-	public ChatService(final Context context, final Handler handler) {
+	public BluetoothNetworkService(final Context context, final Handler handler) {
 		adapter = BluetoothAdapter.getDefaultAdapter();
 		serviceState = STATE_NONE;
 		this.handler = handler;
 	}
 
-	/**
-	 * Set the current state of the chat connection
-	 * @param state An integer defining the current connection state
-	 */
 	private synchronized void setState(final int state) {
 		serviceState = state;
 
@@ -60,18 +61,34 @@ public class ChatService {
 		handler.obtainMessage(MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
 	}
 
-	/**
-	 * Return the current connection state.
-	 */
-	public synchronized int getState() {
-		return serviceState;
+	//public synchronized int getState() {
+	//	return serviceState;
+	//}
+
+	public synchronized void start() {
+		if (serviceState == BluetoothNetworkService.STATE_NONE) {
+			restart();
+		}
 	}
 
-	/**
-	 * Start the chat service. Specifically start AcceptThread to begin a session in listening (server) mode. Called by
-	 * the Activity onResume()
-	 */
-	public synchronized void start() {
+	public synchronized void restart() {
+		cancelCurrentConnectionThreads();
+
+		// Start the thread to listen on a BluetoothServerSocket
+		if (secureAcceptThread == null) {
+			secureAcceptThread = new SocketConnectionAcceptThread(this, adapter, true);
+			secureAcceptThread.start();
+		}
+
+		if (insecureAcceptThread == null) {
+			insecureAcceptThread = new SocketConnectionAcceptThread(this, adapter, false);
+			insecureAcceptThread.start();
+		}
+
+		setState(STATE_LISTEN);
+	}
+
+	private void cancelCurrentConnectionThreads() {
 		// Cancel any thread attempting to make a connection
 		if (connectThread != null) {
 			connectThread.cancel();
@@ -83,39 +100,10 @@ public class ChatService {
 			connectedThread.cancel();
 			connectedThread = null;
 		}
-
-		setState(STATE_LISTEN);
-
-		// Start the thread to listen on a BluetoothServerSocket
-		if (secureAcceptThread == null) {
-			secureAcceptThread = new AcceptThread(this, adapter, true);
-			secureAcceptThread.start();
-		}
-		if (insecureAcceptThread == null) {
-			insecureAcceptThread = new AcceptThread(this, adapter, false);
-			insecureAcceptThread.start();
-		}
 	}
 
-	/**
-	 * Start the ConnectThread to initiate a connection to a remote device.
-	 * @param device The BluetoothDevice to connect
-	 * @param secure Socket Security type - Secure (true) , Insecure (false)
-	 */
 	public synchronized void connect(final BluetoothDevice device, final boolean secure) {
-		// Cancel any thread attempting to make a connection
-		if (serviceState == STATE_CONNECTING) {
-			if (connectThread != null) {
-				connectThread.cancel();
-				connectThread = null;
-			}
-		}
-
-		// Cancel any thread currently running a connection
-		if (connectedThread != null) {
-			connectedThread.cancel();
-			connectedThread = null;
-		}
+		cancelCurrentConnectionThreads();
 
 		// Cancel discovery, and start the thread to connect with the given device
 		adapter.cancelDiscovery();
@@ -129,16 +117,12 @@ public class ChatService {
 	 * Stop all threads
 	 */
 	public synchronized void stop() {
-		if (connectThread != null) {
-			connectThread.cancel();
-			connectThread = null;
-		}
+		cancelCurrentConnectionThreads();
+		cancelCurrentAcceptThreads();
+		setState(STATE_NONE);
+	}
 
-		if (connectedThread != null) {
-			connectedThread.cancel();
-			connectedThread = null;
-		}
-
+	private void cancelCurrentAcceptThreads() {
 		if (secureAcceptThread != null) {
 			secureAcceptThread.cancel();
 			secureAcceptThread = null;
@@ -148,38 +132,46 @@ public class ChatService {
 			insecureAcceptThread.cancel();
 			insecureAcceptThread = null;
 		}
-		setState(STATE_NONE);
 	}
 
-	/**
-	 * Write to the ConnectedThread in an unsynchronized manner
-	 * @param out The bytes to write
-	 * @see ConnectedThread#write(byte[])
-	 */
-	public void write(final byte[] out) {
+	public boolean write(final byte[] out) {
 		// Create temporary object
-		ConnectedThread r;
+		ConnectedThread thread;
 		// Synchronize a copy of the ConnectedThread
 		synchronized (this) {
 			if (serviceState != STATE_CONNECTED) {
-				return;
+				return false;
 			}
-			r = connectedThread;
+			thread = connectedThread;
 		}
 		// Perform the write unsynchronized
-		r.write(out);
+		thread.write(out);
+		return true;
 	}
 
 	/**
-	 * CONNECT THREAD HOOKS
+	 * ACCEPT THREAD HOOKS
 	 */
 
+	public synchronized void onIncomingConnectionSuccessful(final BluetoothSocket socket, final BluetoothDevice device) {
+		if (serviceState == STATE_CONNECTING || serviceState == STATE_LISTEN) {
+			onConnectionSuccessful(socket, device);
+		} else {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/**
-	 * Start the ConnectedThread to begin managing a Bluetooth connection
-	 * @param socket The BluetoothSocket on which the connection was made
-	 * @param device The BluetoothDevice that has been connected
+	 * CONNECT THEAD HOOKS
 	 */
+
 	public synchronized void onConnectionSuccessful(final BluetoothSocket socket, final BluetoothDevice device) {
+		// Cancel the accept thread because we only want to connect to one device
+		cancelCurrentAcceptThreads();
 
 		// Cancel any thread currently running a connection
 		if (connectedThread != null) {
@@ -187,21 +179,10 @@ public class ChatService {
 			connectedThread = null;
 		}
 
-		// Cancel the accept thread because we only want to connect to one device
-		if (secureAcceptThread != null) {
-			secureAcceptThread.cancel();
-			secureAcceptThread = null;
-		}
-		if (insecureAcceptThread != null) {
-			insecureAcceptThread.cancel();
-			insecureAcceptThread = null;
-		}
-
-		// Start the thread to manage the connection and perform transmissions
+		// Start the thread to manage the connection and send/receive data
 		connectedThread = new ConnectedThread(this, socket);
 		connectedThread.start();
 
-		// Send the name of the connected device back to the UI Activity
 		Message msg = handler.obtainMessage(MESSAGE_DEVICE_NAME);
 		Bundle bundle = new Bundle();
 		bundle.putString(DEVICE_NAME, device.getName());
@@ -212,15 +193,13 @@ public class ChatService {
 	}
 
 	public void onConnectionFailed() {
-		// Send a failure message back to the Activity
 		Message msg = handler.obtainMessage(MESSAGE_TOAST);
 		Bundle bundle = new Bundle();
 		bundle.putString(TOAST, "Connection failed");
 		msg.setData(bundle);
 		handler.sendMessage(msg);
 
-		// Restart the service to restart listening mode
-		start();
+		restart();
 	}
 
 	/**
@@ -228,7 +207,6 @@ public class ChatService {
 	 */
 
 	public void onIncomingData(final int bytes, final byte[] buffer) {
-		//Send message to handler, notifying of incoming message.
 		handler.obtainMessage(MESSAGE_INCOMING_DATA, bytes, -1, buffer).sendToTarget();
 	}
 
@@ -244,7 +222,6 @@ public class ChatService {
 		msg.setData(bundle);
 		handler.sendMessage(msg);
 
-		// Restart the service to restart listening mode
-		start();
+		restart();
 	}
 }

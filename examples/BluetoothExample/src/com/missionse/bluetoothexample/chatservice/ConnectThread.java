@@ -11,16 +11,15 @@ import android.bluetooth.BluetoothSocket;
  */
 public class ConnectThread extends Thread {
 
-	private ChatService chatService;
+	private BluetoothNetworkService networkService;
 
 	private BluetoothSocket socket;
 	private final BluetoothDevice device;
 
-	public ConnectThread(final ChatService service, final BluetoothDevice device, final boolean secure) {
-		chatService = service;
+	public ConnectThread(final BluetoothNetworkService service, final BluetoothDevice device, final boolean secure) {
+		networkService = service;
 		this.device = device;
 
-		// Get a BluetoothSocket for a connection with the given BluetoothDevice
 		try {
 			if (secure) {
 				socket = device.createRfcommSocketToServiceRecord(ServiceIdentifier.MY_UUID_SECURE);
@@ -44,12 +43,12 @@ public class ConnectThread extends Thread {
 			} catch (IOException e2) {
 				e2.printStackTrace();
 			}
-			chatService.onConnectionFailed();
+			networkService.onConnectionFailed();
 			return;
 		}
 
 		// Start the connected thread
-		chatService.onConnectionSuccessful(socket, device);
+		networkService.onConnectionSuccessful(socket, device);
 	}
 
 	public void cancel() {

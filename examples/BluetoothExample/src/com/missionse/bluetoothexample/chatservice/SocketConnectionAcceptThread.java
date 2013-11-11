@@ -10,14 +10,15 @@ import android.bluetooth.BluetoothSocket;
  * This thread runs while listening for incoming connections. It behaves like a server-side client. It runs until a
  * connection is accepted (or until cancelled).
  */
-public class AcceptThread extends Thread {
+public class SocketConnectionAcceptThread extends Thread {
 
-	private final ChatService chatService;
+	private final BluetoothNetworkService chatService;
 	private final BluetoothAdapter bluetoothAdapter;
 
 	private BluetoothServerSocket serverSocket;
 
-	public AcceptThread(final ChatService service, final BluetoothAdapter adapter, final boolean secure) {
+	public SocketConnectionAcceptThread(final BluetoothNetworkService service, final BluetoothAdapter adapter,
+			final boolean secure) {
 		chatService = service;
 		bluetoothAdapter = adapter;
 
@@ -40,7 +41,7 @@ public class AcceptThread extends Thread {
 		BluetoothSocket socket = null;
 
 		// Listen to the server socket if we're not connected
-		while (chatService.getState() != ChatService.STATE_CONNECTED) {
+		while (socket == null) {
 			try {
 				// This is a blocking call and will only return on a
 				// successful connection or an exception
@@ -48,26 +49,11 @@ public class AcceptThread extends Thread {
 			} catch (IOException e) {
 				break;
 			}
+		}
 
-			// If a connection was accepted
-			if (socket != null) {
-				switch (chatService.getState()) {
-					case ChatService.STATE_LISTEN:
-					case ChatService.STATE_CONNECTING:
-						// Situation normal. Start the connected thread.
-						chatService.onConnectionSuccessful(socket, socket.getRemoteDevice());
-						break;
-					case ChatService.STATE_NONE:
-					case ChatService.STATE_CONNECTED:
-						// Either not ready or already connected. Terminate new socket.
-						try {
-							socket.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						break;
-				}
-			}
+		// If a connection was accepted
+		if (socket != null) {
+			chatService.onIncomingConnectionSuccessful(socket, socket.getRemoteDevice());
 		}
 	}
 
@@ -75,7 +61,7 @@ public class AcceptThread extends Thread {
 		try {
 			serverSocket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			// No reason to print, as the thread was simply cancelled.
 		}
 	}
 }

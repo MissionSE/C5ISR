@@ -11,14 +11,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.missionse.bluetoothexample.chatservice.ChatService;
+import com.missionse.bluetoothexample.chatservice.BluetoothNetworkService;
 
 public class ConversationFragment extends Fragment {
 
@@ -28,52 +28,54 @@ public class ConversationFragment extends Fragment {
 	private ListView conversationList;
 
 	private EditText inputField;
-	private Button sendButton;
+	private ImageButton sendButton;
 
 	private String connectedDevice;
-	private StringBuffer outgoingMessage;
 
-	// The Handler that gets information back from the ChatService
+	private int chatServiceStatus;
+
+	// The Handler that gets information back from the BluetoothNetworkService
 	private final Handler chatServiceMessageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
 			switch (msg.what) {
-				case ChatService.MESSAGE_STATE_CHANGE:
-					switch (msg.arg1) {
-						case ChatService.STATE_CONNECTED:
+				case BluetoothNetworkService.MESSAGE_STATE_CHANGE:
+					chatServiceStatus = msg.arg1;
+					switch (chatServiceStatus) {
+						case BluetoothNetworkService.STATE_CONNECTED:
 							setStatus("connected to " + connectedDevice);
 							conversationArrayAdapter.clear();
 							break;
-						case ChatService.STATE_CONNECTING:
+						case BluetoothNetworkService.STATE_CONNECTING:
 							setStatus("connecting...");
 							break;
-						case ChatService.STATE_LISTEN:
-						case ChatService.STATE_NONE:
+						case BluetoothNetworkService.STATE_LISTEN:
+						case BluetoothNetworkService.STATE_NONE:
 							setStatus("not connected");
 							break;
 					}
 					break;
-				case ChatService.MESSAGE_OUTGOING_DATA:
+				case BluetoothNetworkService.MESSAGE_OUTGOING_DATA:
 					byte[] writeBuf = (byte[]) msg.obj;
 					// construct a string from the buffer
 					String writeMessage = new String(writeBuf);
 					conversationArrayAdapter.add("Me:  " + writeMessage);
 					break;
-				case ChatService.MESSAGE_INCOMING_DATA:
+				case BluetoothNetworkService.MESSAGE_INCOMING_DATA:
 					byte[] readBuf = (byte[]) msg.obj;
 					// construct a string from the valid bytes in the buffer
 					String readMessage = new String(readBuf, 0, msg.arg1);
 					conversationArrayAdapter.add(connectedDevice + ":  " + readMessage);
 					break;
-				case ChatService.MESSAGE_DEVICE_NAME:
+				case BluetoothNetworkService.MESSAGE_DEVICE_NAME:
 					// save the connected device's name
-					connectedDevice = msg.getData().getString(ChatService.DEVICE_NAME);
+					connectedDevice = msg.getData().getString(BluetoothNetworkService.DEVICE_NAME);
 					Toast.makeText(ConversationFragment.this.getActivity().getApplicationContext(),
 							"Connected to " + connectedDevice, Toast.LENGTH_SHORT).show();
 					break;
-				case ChatService.MESSAGE_TOAST:
+				case BluetoothNetworkService.MESSAGE_TOAST:
 					Toast.makeText(ConversationFragment.this.getActivity().getApplicationContext(),
-							msg.getData().getString(ChatService.TOAST), Toast.LENGTH_SHORT).show();
+							msg.getData().getString(BluetoothNetworkService.TOAST), Toast.LENGTH_SHORT).show();
 					break;
 			}
 		}
@@ -111,7 +113,7 @@ public class ConversationFragment extends Fragment {
 		});
 
 		// Initialize the send button with a listener that for click events
-		sendButton = (Button) contentView.findViewById(R.id.send_button);
+		sendButton = (ImageButton) contentView.findViewById(R.id.send_button);
 		sendButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(final View v) {
@@ -126,20 +128,11 @@ public class ConversationFragment extends Fragment {
 	}
 
 	private void sendMessage(final String message) {
-		ChatService chatService = ((BluetoothExample) getActivity()).getChatService();
-
-		// Check that we're actually connected before trying anything
-		if (chatService.getState() != ChatService.STATE_CONNECTED) {
-			Toast.makeText(getActivity(), "Not connected.", Toast.LENGTH_SHORT).show();
-			return;
-		}
-
-		// Check that there's actually something to send
+		//If valid message length and message sent successfully, clear the input field
 		if (message.length() > 0) {
-			byte[] send = message.getBytes();
-			chatService.write(send);
-
-			inputField.setText("");;
+			if (((BluetoothExample) getActivity()).sendMessage(message)) {
+				inputField.setText("");
+			}
 		}
 	}
 }

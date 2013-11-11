@@ -23,11 +23,13 @@ public class DeviceListFragment extends DialogFragment {
 
 	private static final String SECURE_KEY = "secure";
 
+	private static final String NO_DEVICES_FOUND = "No devices found";
+
 	private boolean secure;
 
-	private BluetoothAdapter mBtAdapter;
-	private ArrayAdapter<String> mPairedDevicesArrayAdapter;
-	private ArrayAdapter<String> mNewDevicesArrayAdapter;
+	private BluetoothAdapter adapter;
+	private ArrayAdapter<String> pairedDevicesArrayAdapter;
+	private ArrayAdapter<String> newDevicesArrayAdapter;
 
 	public static DeviceListFragment newInstance(final boolean secure) {
 		DeviceListFragment fragment = new DeviceListFragment();
@@ -43,11 +45,15 @@ public class DeviceListFragment extends DialogFragment {
 		super.onCreate(savedInstanceState);
 
 		secure = getArguments().getBoolean(SECURE_KEY);
+
+		this.setStyle(STYLE_NO_TITLE, android.R.style.Theme_Holo_Dialog);
 	}
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		contentView = inflater.inflate(R.layout.device_list, null);
+		contentView = inflater.inflate(R.layout.fragment_device_list, null);
+
+		adapter = BluetoothAdapter.getDefaultAdapter();
 
 		Button scanButton = (Button) contentView.findViewById(R.id.button_scan);
 		scanButton.setOnClickListener(new OnClickListener() {
@@ -58,36 +64,30 @@ public class DeviceListFragment extends DialogFragment {
 			}
 		});
 
-		// Initialize array adapters. One for already paired devices and
-		// one for newly discovered devices
-		mPairedDevicesArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
-		mNewDevicesArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
+		pairedDevicesArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
+		newDevicesArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
 
 		// Find and set up the ListView for paired devices
 		ListView pairedListView = (ListView) contentView.findViewById(R.id.paired_devices);
-		pairedListView.setAdapter(mPairedDevicesArrayAdapter);
+		pairedListView.setAdapter(pairedDevicesArrayAdapter);
 		pairedListView.setOnItemClickListener(mDeviceClickListener);
 
 		// Find and set up the ListView for newly discovered devices
 		ListView newDevicesListView = (ListView) contentView.findViewById(R.id.new_devices);
-		newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
+		newDevicesListView.setAdapter(newDevicesArrayAdapter);
 		newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
-		// Get the local Bluetooth adapter
-		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-
 		// Get a set of currently paired devices
-		Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+		Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
 
 		// If there are paired devices, add each one to the ArrayAdapter
 		if (pairedDevices.size() > 0) {
 			contentView.findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
 			for (BluetoothDevice device : pairedDevices) {
-				mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+				pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
 			}
 		} else {
-			String noDevices = getResources().getText(R.string.none_paired).toString();
-			mPairedDevicesArrayAdapter.add(noDevices);
+			pairedDevicesArrayAdapter.add("No devices have been paired");
 		}
 
 		return contentView;
@@ -97,9 +97,8 @@ public class DeviceListFragment extends DialogFragment {
 	public void onDestroy() {
 		super.onDestroy();
 
-		// Make sure we're not doing discovery anymore
-		if (mBtAdapter != null) {
-			mBtAdapter.cancelDiscovery();
+		if (adapter != null) {
+			adapter.cancelDiscovery();
 		}
 	}
 
@@ -111,23 +110,18 @@ public class DeviceListFragment extends DialogFragment {
 		// Turn on sub-title for new devices
 		contentView.findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
 
-		// If we're already discovering, stop it
-		if (mBtAdapter.isDiscovering()) {
-			mBtAdapter.cancelDiscovery();
-		}
-
-		// Request discover from BluetoothAdapter
-		mBtAdapter.startDiscovery();
+		adapter.cancelDiscovery();
+		adapter.startDiscovery();
 	}
 
 	public void addDevice(final String string) {
-		mNewDevicesArrayAdapter.add(string);
+		newDevicesArrayAdapter.remove(NO_DEVICES_FOUND);
+		newDevicesArrayAdapter.add(string);
 	}
 
 	public void onDiscoveryFinished() {
-		if (mNewDevicesArrayAdapter.getCount() == 0) {
-			String noDevices = getResources().getText(R.string.none_found).toString();
-			mNewDevicesArrayAdapter.add(noDevices);
+		if (newDevicesArrayAdapter.getCount() == 0) {
+			newDevicesArrayAdapter.add(NO_DEVICES_FOUND);
 		}
 	}
 
@@ -136,7 +130,7 @@ public class DeviceListFragment extends DialogFragment {
 		@Override
 		public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
 			// Cancel discovery because it's costly and we're about to connect
-			mBtAdapter.cancelDiscovery();
+			adapter.cancelDiscovery();
 
 			// Get the device MAC address, which is the last 17 chars in the View
 			String info = ((TextView) v).getText().toString();

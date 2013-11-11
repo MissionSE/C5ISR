@@ -10,26 +10,26 @@
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
         android:layout_weight="1"
-        android:padding="10dp"
-    />
+        android:padding="10dp" />
     
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        >
+        android:padding="10dp" >
         <EditText android:id="@+id/message_entry"
             android:hint="@string/entry_hint"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="bottom"
-        />
-        <Button android:id="@+id/send_button"
+            android:layout_weight="1" />
+        <ImageButton
+            android:id="@+id/send_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/send"
-        />
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_action_send_now"
+            android:contentDescription="@string/send_button"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingLeft="15dp" />
     </LinearLayout>
 </LinearLayout>
