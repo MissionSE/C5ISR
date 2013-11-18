@@ -3,24 +3,22 @@ package com.missionse.nfcexample;
 import java.util.List;
 import java.util.Locale;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-public class NfcExample extends Activity implements ActionBar.OnNavigationListener {
+import com.missionse.nfc.NfcConnector;
+import com.missionse.nfc.NfcUtilities;
+import com.missionse.nfc.TextRecord;
 
-	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+public class NfcExample extends Activity {
 
-	private MessageSenderFragment messageSenderFragment;
 	private MessageLogFragment messageLogFragment;
 
 	private NfcConnector nfcConnector;
@@ -33,24 +31,7 @@ public class NfcExample extends Activity implements ActionBar.OnNavigationListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_nfcexample);
 
-		messageSenderFragment = new MessageSenderFragment();
 		messageLogFragment = new MessageLogFragment();
-
-		// Set up the action bar to show a dropdown list.
-		final ActionBar actionBar = getActionBar();
-		actionBar.setDisplayShowTitleEnabled(false);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-		// Set up the dropdown list navigation in the action bar.
-		actionBar.setListNavigationCallbacks(new ArrayAdapter<String>(actionBar.getThemedContext(),
-				android.R.layout.simple_list_item_1, android.R.id.text1, new String[] {
-						getString(R.string.title_section1), getString(R.string.title_section2), }), this);
-
-		//Determine if the intent that started this activity was an NFC intent.
-		NdefMessage[] receivedNfcMessages = NfcConnector.parseIntent(getIntent());
-		if (receivedNfcMessages != null) {
-			displayMessages(receivedNfcMessages);
-		}
 
 		//Create the NFC Connector.
 		nfcConnector = new NfcConnector();
@@ -67,6 +48,8 @@ public class NfcExample extends Activity implements ActionBar.OnNavigationListen
 
 		nfcConnector.setPendingIntent(nfcBroadcastIntent);
 		nfcConnector.setMessage(nfcMessage);
+
+		getFragmentManager().beginTransaction().replace(R.id.container, messageLogFragment).commit();
 	}
 
 	private void displayMessages(final NdefMessage[] messages) {
@@ -98,40 +81,17 @@ public class NfcExample extends Activity implements ActionBar.OnNavigationListen
 	@Override
 	public void onNewIntent(final Intent intent) {
 		setIntent(intent);
+
+		String action = intent.getAction();
+		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action) || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
+				|| NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+			Log.e(NfcExample.class.getSimpleName(), "Received NFC intent.");
+			messageLogFragment.addMessage("Received NFC intent.");
+		}
+
 		NdefMessage[] receivedNfcMessages = NfcConnector.parseIntent(getIntent());
 		if (receivedNfcMessages != null) {
 			displayMessages(receivedNfcMessages);
 		}
 	}
-
-	@Override
-	public void onRestoreInstanceState(final Bundle savedInstanceState) {
-		if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-			getActionBar().setSelectedNavigationItem(savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-		}
-	}
-
-	@Override
-	public void onSaveInstanceState(final Bundle outState) {
-		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar().getSelectedNavigationIndex());
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.nfcexample, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onNavigationItemSelected(final int position, final long id) {
-		Fragment fragment;
-		if (position == 0) {
-			fragment = messageSenderFragment;
-		} else {
-			fragment = messageLogFragment;
-		}
-		getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-		return true;
-	}
-
 }

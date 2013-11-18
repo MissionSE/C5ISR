@@ -1,4 +1,4 @@
-package com.missionse.nfcexample;
+package com.missionse.nfc;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -39,8 +39,12 @@ public class NfcConnector {
 
 	public void onResume() {
 		if (nfcAdapter != null) {
-			nfcAdapter.enableForegroundDispatch(activity, pendingIntent, null, null);
-			nfcAdapter.setNdefPushMessage(ndefMessage, activity);
+			if (pendingIntent != null) {
+				nfcAdapter.enableForegroundDispatch(activity, pendingIntent, null, null);
+			}
+			if (ndefMessage != null) {
+				nfcAdapter.setNdefPushMessage(ndefMessage, activity);
+			}
 		}
 	}
 

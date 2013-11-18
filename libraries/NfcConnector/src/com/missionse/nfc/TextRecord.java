@@ -1,4 +1,4 @@
-package com.missionse.nfcexample;
+package com.missionse.nfc;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;

@@ -1,4 +1,4 @@
-package com.missionse.nfcexample;
+package com.missionse.nfc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,8 @@ import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.os.Parcelable;
+
+import com.missionse.nfc.TextRecord;
 
 public class NfcUtilities {
 
