@@ -1,4 +1,4 @@
-package com.missionse.bluetoothexample.chatservice;
+package com.missionse.bluetooth;
 
 import java.io.IOException;
 
@@ -26,10 +26,10 @@ public class SocketConnectionAcceptThread extends Thread {
 		try {
 			if (secure) {
 				serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(ServiceIdentifier.NAME_SECURE,
-						ServiceIdentifier.MY_UUID_SECURE);
+						ServiceIdentifier.UUID_SECURE);
 			} else {
 				serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(
-						ServiceIdentifier.NAME_INSECURE, ServiceIdentifier.MY_UUID_INSECURE);
+						ServiceIdentifier.NAME_INSECURE, ServiceIdentifier.UUID_INSECURE);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.missionse.bluetoothexample.chatservice.BluetoothNetworkService;
+import com.missionse.bluetooth.BluetoothNetworkService;
 
 public class BluetoothExample extends Activity {
 

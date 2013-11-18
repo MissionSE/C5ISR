@@ -1,4 +1,4 @@
-package com.missionse.bluetoothexample.chatservice;
+package com.missionse.bluetooth;
 
 import java.io.IOException;
 import java.io.InputStream;
