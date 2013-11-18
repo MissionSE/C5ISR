@@ -1,5 +1,6 @@
 package com.missionse.bluetoothexample;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +34,7 @@ public class ConversationFragment extends Fragment {
 
 	private int chatServiceStatus;
 
+	@SuppressLint("HandlerLeak")
 	private final Handler bluetoothNetworkMessageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {

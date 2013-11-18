@@ -1,5 +1,6 @@
 package com.missionse.bluetoothexample;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -33,6 +34,7 @@ public class BluetoothExample extends Activity {
 	private BroadcastReceiver broadcastReceiver;
 
 	// The Handler that gets information back from the BluetoothNetworkService.
+	@SuppressLint("HandlerLeak")
 	private final Handler bluetoothServiceMessageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
