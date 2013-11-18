@@ -1,14 +1,17 @@
 package com.missionse.bluetooth;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+
+import com.missionse.bluetooth.ServiceIdentifier.ServiceNotIdentifiedException;
 
 /**
  * This class manages all threads for: listening for incoming connections (via SocketConnectionAcceptThread), connecting
@@ -27,10 +30,6 @@ public class BluetoothNetworkService {
 	public static final int MESSAGE_DEVICE_NAME = 4;
 	public static final int MESSAGE_TOAST = 5;
 
-	// Key names for message packing
-	public static final String DEVICE_NAME = "device_name";
-	public static final String TOAST = "toast";
-
 	// Current connection state enumerations
 	public static final int STATE_NONE = 0;
 	public static final int STATE_LISTEN = 1;
@@ -38,7 +37,7 @@ public class BluetoothNetworkService {
 	public static final int STATE_CONNECTED = 3;
 
 	private final BluetoothAdapter adapter;
-	private final Handler handler;
+	private final List<Handler> handlers = Collections.synchronizedList(new ArrayList<Handler>());
 
 	private SocketConnectionAcceptThread secureAcceptThread;
 	private SocketConnectionAcceptThread insecureAcceptThread;
@@ -48,50 +47,73 @@ public class BluetoothNetworkService {
 
 	private int serviceState;
 
-	public BluetoothNetworkService(final Context context, final Handler handler) {
+	private boolean secureMode = true;
+
+	public BluetoothNetworkService(final Context context) {
 		adapter = BluetoothAdapter.getDefaultAdapter();
-		this.handler = handler;
+
 		setState(STATE_NONE);
+	}
+
+	public void addHandler(final Handler handler) {
+		handler.obtainMessage(MESSAGE_STATE_CHANGE, serviceState, -1).sendToTarget();
+		handlers.add(handler);
+	}
+
+	public void removeHandler(final Handler handler) {
+		handlers.remove(handler);
+	}
+
+	private List<Handler> getHandlers() {
+		return handlers;
 	}
 
 	private synchronized void setState(final int state) {
 		serviceState = state;
 
-		// Give the new state to the Handler so the UI Activity can update
-		handler.obtainMessage(MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+		synchronized (handlers) {
+			for (Handler handler : getHandlers()) {
+				handler.obtainMessage(MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+			}
+		}
 	}
 
-	public synchronized void start() {
-		if (serviceState == BluetoothNetworkService.STATE_NONE) {
+	public synchronized void start(final boolean secure) throws ServiceNotIdentifiedException {
+		secureMode = secure;
+		if (serviceState == STATE_NONE) {
 			restart();
 		}
 	}
 
-	public synchronized void restart() {
+	private synchronized void restart() throws ServiceNotIdentifiedException {
 		cancelCurrentConnectionThreads();
 
-		// Start the thread to listen on a BluetoothServerSocket
-		if (secureAcceptThread == null) {
-			secureAcceptThread = new SocketConnectionAcceptThread(this, adapter, true);
-			secureAcceptThread.start();
-		}
-
-		if (insecureAcceptThread == null) {
-			insecureAcceptThread = new SocketConnectionAcceptThread(this, adapter, false);
-			insecureAcceptThread.start();
+		// Start the thread to listen on a BluetoothServerSocket.
+		if (secureMode) {
+			ServiceIdentifier.validateSecureService();
+			if (secureAcceptThread == null) {
+				secureAcceptThread = new SocketConnectionAcceptThread(this, adapter, true);
+				secureAcceptThread.start();
+			}
+		} else {
+			ServiceIdentifier.validateInsecureService();
+			if (insecureAcceptThread == null) {
+				insecureAcceptThread = new SocketConnectionAcceptThread(this, adapter, false);
+				insecureAcceptThread.start();
+			}
 		}
 
 		setState(STATE_LISTEN);
 	}
 
 	private void cancelCurrentConnectionThreads() {
-		// Cancel any thread attempting to make a connection
+		// Cancel any thread attempting to make a connection.
 		if (connectThread != null) {
 			connectThread.cancel();
 			connectThread = null;
 		}
 
-		// Cancel any thread currently running a connection
+		// Cancel any thread currently running a connection.
 		if (connectedThread != null) {
 			connectedThread.cancel();
 			connectedThread = null;
@@ -101,7 +123,7 @@ public class BluetoothNetworkService {
 	public synchronized void connect(final BluetoothDevice device, final boolean secure) {
 		cancelCurrentConnectionThreads();
 
-		// Cancel discovery, and start the thread to connect with the given device
+		// Cancel discovery, and start the thread to connect with the given device.
 		adapter.cancelDiscovery();
 
 		connectThread = new ConnectThread(this, device, secure);
@@ -109,9 +131,6 @@ public class BluetoothNetworkService {
 		setState(STATE_CONNECTING);
 	}
 
-	/**
-	 * Stop all threads
-	 */
 	public synchronized void stop() {
 		cancelCurrentConnectionThreads();
 		cancelCurrentAcceptThreads();
@@ -131,16 +150,15 @@ public class BluetoothNetworkService {
 	}
 
 	public boolean write(final byte[] out) {
-		// Create temporary object
 		ConnectedThread thread;
-		// Synchronize a copy of the ConnectedThread
+		// Synchronize a copy of the ConnectedThread.
 		synchronized (this) {
 			if (serviceState != STATE_CONNECTED) {
 				return false;
 			}
 			thread = connectedThread;
 		}
-		// Perform the write unsynchronized
+		// Perform the write unsynchronized.
 		thread.write(out);
 		return true;
 	}
@@ -149,7 +167,8 @@ public class BluetoothNetworkService {
 	 * ACCEPT THREAD HOOKS
 	 */
 
-	public synchronized void onIncomingConnectionSuccessful(final BluetoothSocket socket, final BluetoothDevice device) {
+	protected synchronized void onIncomingConnectionSuccessful(final BluetoothSocket socket,
+			final BluetoothDevice device) {
 		if (serviceState == STATE_CONNECTING || serviceState == STATE_LISTEN) {
 			onConnectionSuccessful(socket, device);
 		} else {
@@ -165,35 +184,35 @@ public class BluetoothNetworkService {
 	 * CONNECT THEAD HOOKS
 	 */
 
-	public synchronized void onConnectionSuccessful(final BluetoothSocket socket, final BluetoothDevice device) {
-		// Cancel the accept thread because we only want to connect to one device
+	protected synchronized void onConnectionSuccessful(final BluetoothSocket socket, final BluetoothDevice device) {
+		// Cancel the accept thread because we only want to connect to one device.
 		cancelCurrentAcceptThreads();
 
-		// Cancel any thread currently running a connection
+		// Cancel any thread currently running a connection.
 		if (connectedThread != null) {
 			connectedThread.cancel();
 			connectedThread = null;
 		}
 
-		// Start the thread to manage the connection and send/receive data
+		// Start the thread to manage the connection and send/receive data.
 		connectedThread = new ConnectedThread(this, socket);
 		connectedThread.start();
 
-		Message msg = handler.obtainMessage(MESSAGE_DEVICE_NAME);
-		Bundle bundle = new Bundle();
-		bundle.putString(DEVICE_NAME, device.getName());
-		msg.setData(bundle);
-		handler.sendMessage(msg);
+		synchronized (handlers) {
+			for (Handler handler : getHandlers()) {
+				handler.obtainMessage(MESSAGE_DEVICE_NAME, device.getName()).sendToTarget();;
+			}
+		}
 
 		setState(STATE_CONNECTED);
 	}
 
-	public void onConnectionFailed() {
-		Message msg = handler.obtainMessage(MESSAGE_TOAST);
-		Bundle bundle = new Bundle();
-		bundle.putString(TOAST, "Connection failed");
-		msg.setData(bundle);
-		handler.sendMessage(msg);
+	protected void onConnectionFailed() throws ServiceNotIdentifiedException {
+		synchronized (handlers) {
+			for (Handler handler : getHandlers()) {
+				handler.obtainMessage(MESSAGE_TOAST, "Connection failed.").sendToTarget();
+			}
+		}
 
 		restart();
 	}
@@ -202,21 +221,28 @@ public class BluetoothNetworkService {
 	 * CONNECTED THREAD HOOKS
 	 */
 
-	public void onIncomingData(final int bytes, final byte[] buffer) {
-		handler.obtainMessage(MESSAGE_INCOMING_DATA, bytes, -1, buffer).sendToTarget();
+	protected void onIncomingData(final int bytes, final byte[] buffer) {
+		synchronized (handlers) {
+			for (Handler handler : getHandlers()) {
+				handler.obtainMessage(MESSAGE_INCOMING_DATA, bytes, -1, buffer).sendToTarget();
+			}
+		}
 	}
 
-	public void onOutgoingData(final byte[] buffer) {
-		handler.obtainMessage(MESSAGE_OUTGOING_DATA, -1, -1, buffer).sendToTarget();
+	protected void onOutgoingData(final byte[] buffer) {
+		synchronized (handlers) {
+			for (Handler handler : getHandlers()) {
+				handler.obtainMessage(MESSAGE_OUTGOING_DATA, buffer).sendToTarget();
+			}
+		}
 	}
 
-	public void onConnectionLost() {
-		// Send a failure message back to the Activity
-		Message msg = handler.obtainMessage(MESSAGE_TOAST);
-		Bundle bundle = new Bundle();
-		bundle.putString(TOAST, "Connection lost");
-		msg.setData(bundle);
-		handler.sendMessage(msg);
+	protected void onConnectionLost() throws ServiceNotIdentifiedException {
+		synchronized (handlers) {
+			for (Handler handler : getHandlers()) {
+				handler.obtainMessage(MESSAGE_TOAST, "Connection lost.").sendToTarget();
+			}
+		}
 
 		restart();
 	}

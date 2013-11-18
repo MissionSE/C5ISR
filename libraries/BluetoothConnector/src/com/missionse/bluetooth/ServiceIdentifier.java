@@ -4,13 +4,21 @@ import java.util.UUID;
 
 public class ServiceIdentifier {
 
+	public static class ServiceNotIdentifiedException extends RuntimeException {
+		private static final long serialVersionUID = 6166719170878873681L;
+
+		public ServiceNotIdentifiedException(final String message) {
+			super(message);
+		}
+	}
+
 	// Name for the SDP record when creating server socket
-	protected static String NAME_SECURE = "Secure";
-	protected static String NAME_INSECURE = "Insecure";
+	protected static String NAME_SECURE = null;
+	protected static String NAME_INSECURE = null;
 
 	// Unique UUID for this application
-	protected static UUID UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
-	protected static UUID UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+	protected static UUID UUID_SECURE = null;
+	protected static UUID UUID_INSECURE = null;
 
 	public static void setSecureServiceName(final String name) {
 		NAME_SECURE = name;
@@ -34,5 +42,19 @@ public class ServiceIdentifier {
 
 	public static void setInsecureUUID(final UUID uuid) {
 		UUID_INSECURE = uuid;
+	}
+
+	public static void validateSecureService() throws ServiceNotIdentifiedException {
+		if (NAME_SECURE == null || UUID_SECURE == null) {
+			throw new ServiceNotIdentifiedException(
+					"Did you forget to set the Service Name and/or UUID before starting?");
+		}
+	}
+
+	public static void validateInsecureService() throws ServiceNotIdentifiedException {
+		if (NAME_INSECURE == null || UUID_INSECURE == null) {
+			throw new ServiceNotIdentifiedException(
+					"Did you forget to set the Service Name and/or UUID before starting?");
+		}
 	}
 }

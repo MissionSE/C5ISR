@@ -16,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.missionse.bluetooth.BluetoothNetworkService;
 
@@ -30,12 +29,11 @@ public class ConversationFragment extends Fragment {
 	private EditText inputField;
 	private ImageButton sendButton;
 
-	private String connectedDevice;
+	private String connectedDevice = "";
 
 	private int chatServiceStatus;
 
-	// The Handler that gets information back from the BluetoothNetworkService
-	private final Handler chatServiceMessageHandler = new Handler() {
+	private final Handler bluetoothNetworkMessageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
 			switch (msg.what) {
@@ -43,54 +41,29 @@ public class ConversationFragment extends Fragment {
 					chatServiceStatus = msg.arg1;
 					switch (chatServiceStatus) {
 						case BluetoothNetworkService.STATE_CONNECTED:
-							setStatus("connected to " + connectedDevice);
 							conversationArrayAdapter.clear();
-							break;
-						case BluetoothNetworkService.STATE_CONNECTING:
-							setStatus("connecting...");
-							break;
-						case BluetoothNetworkService.STATE_LISTEN:
-						case BluetoothNetworkService.STATE_NONE:
-							setStatus("not connected");
 							break;
 					}
 					break;
+				case BluetoothNetworkService.MESSAGE_DEVICE_NAME:
+					connectedDevice = (String) msg.obj;
+					break;
 				case BluetoothNetworkService.MESSAGE_OUTGOING_DATA:
 					byte[] writeBuf = (byte[]) msg.obj;
-					// construct a string from the buffer
 					String writeMessage = new String(writeBuf);
 					conversationArrayAdapter.add("Me:  " + writeMessage);
 					break;
 				case BluetoothNetworkService.MESSAGE_INCOMING_DATA:
 					byte[] readBuf = (byte[]) msg.obj;
-					// construct a string from the valid bytes in the buffer
 					String readMessage = new String(readBuf, 0, msg.arg1);
 					conversationArrayAdapter.add(connectedDevice + ":  " + readMessage);
-					break;
-				case BluetoothNetworkService.MESSAGE_DEVICE_NAME:
-					// save the connected device's name
-					connectedDevice = msg.getData().getString(BluetoothNetworkService.DEVICE_NAME);
-					Toast.makeText(ConversationFragment.this.getActivity().getApplicationContext(),
-							"Connected to " + connectedDevice, Toast.LENGTH_SHORT).show();
-					break;
-				case BluetoothNetworkService.MESSAGE_TOAST:
-					Toast.makeText(ConversationFragment.this.getActivity().getApplicationContext(),
-							msg.getData().getString(BluetoothNetworkService.TOAST), Toast.LENGTH_SHORT).show();
 					break;
 			}
 		}
 	};
 
-	private final void setStatus(final String subtitle) {
-		try {
-			getActivity().getActionBar().setSubtitle(subtitle);
-		} catch (Exception e) {
-
-		}
-	}
-
 	public Handler getHandler() {
-		return chatServiceMessageHandler;
+		return bluetoothNetworkMessageHandler;
 	}
 
 	@Override
@@ -138,7 +111,7 @@ public class ConversationFragment extends Fragment {
 	}
 
 	private void sendMessage(final String message) {
-		//If valid message length and message sent successfully, clear the input field
+		// If valid message length and message sent successfully, clear the input field
 		if (message.length() > 0) {
 			if (((BluetoothExample) getActivity()).sendMessage(message)) {
 				inputField.setText("");

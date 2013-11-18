@@ -6,6 +6,8 @@ import java.io.OutputStream;
 
 import android.bluetooth.BluetoothSocket;
 
+import com.missionse.bluetooth.ServiceIdentifier.ServiceNotIdentifiedException;
+
 /**
  * This thread runs during a connection with a remote device. It handles all incoming and outgoing transmissions.
  */
@@ -34,13 +36,17 @@ public class ConnectedThread extends Thread {
 		byte[] buffer = new byte[1024];
 		int bytes;
 
-		// Keep listening to the InputStream while connected
+		// Keep listening to the InputStream while connected.
 		while (true) {
 			try {
 				bytes = inStream.read(buffer);
 				networkService.onIncomingData(bytes, buffer);
 			} catch (IOException e) {
-				networkService.onConnectionLost();
+				try {
+					networkService.onConnectionLost();
+				} catch (ServiceNotIdentifiedException e1) {
+					e1.printStackTrace();
+				}
 				break;
 			}
 		}

@@ -10,22 +10,58 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.missionse.bluetooth.BluetoothNetworkService;
+import com.missionse.bluetooth.ServiceIdentifier;
 
 public class BluetoothExample extends Activity {
 
-	// Intent request codes
+	// Intent request codes.
 	private static final int REQUEST_ENABLE_BT = 1;
+
+	private String connectedDevice = "";
 
 	private BluetoothAdapter bluetoothAdapter;
 	private BluetoothNetworkService networkService;
 	private ConversationFragment conversationFragment;
 
 	private BroadcastReceiver broadcastReceiver;
+
+	// The Handler that gets information back from the BluetoothNetworkService.
+	private final Handler bluetoothServiceMessageHandler = new Handler() {
+		@Override
+		public void handleMessage(final Message msg) {
+			switch (msg.what) {
+				case BluetoothNetworkService.MESSAGE_STATE_CHANGE:
+					switch (msg.arg1) {
+						case BluetoothNetworkService.STATE_CONNECTED:
+							getActionBar().setSubtitle("connected to " + connectedDevice);
+							break;
+						case BluetoothNetworkService.STATE_CONNECTING:
+							getActionBar().setSubtitle("connecting...");
+							break;
+						case BluetoothNetworkService.STATE_LISTEN:
+						case BluetoothNetworkService.STATE_NONE:
+							getActionBar().setSubtitle("not connected");
+							break;
+					}
+					break;
+				case BluetoothNetworkService.MESSAGE_DEVICE_NAME:
+					connectedDevice = (String) msg.obj;
+					Toast.makeText(BluetoothExample.this, "Connected to " + connectedDevice, Toast.LENGTH_SHORT).show();
+					break;
+				case BluetoothNetworkService.MESSAGE_TOAST:
+					String message = (String) msg.obj;
+					Toast.makeText(BluetoothExample.this, message, Toast.LENGTH_SHORT).show();
+					break;
+			}
+		}
+	};
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -53,14 +89,13 @@ public class BluetoothExample extends Activity {
 			public void onReceive(final Context context, final Intent intent) {
 				String action = intent.getAction();
 				if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-					// Get the BluetoothDevice object from the Intent
+					// Get the BluetoothDevice object from the Intent.
 					BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-					// If it's already paired, skip it, because it's been listed already
+					// If it's already paired, skip it, because it's been listed already.
 
 					if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
 						Fragment dialogFragment = getFragmentManager().findFragmentByTag("dialog");
 						if (dialogFragment != null) {
-							//Dialog is showing
 							DeviceListFragment deviceList = (DeviceListFragment) dialogFragment;
 							deviceList.addDevice(device.getName() + "\n" + device.getAddress());
 						}
@@ -68,7 +103,6 @@ public class BluetoothExample extends Activity {
 				} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 					Fragment dialogFragment = getFragmentManager().findFragmentByTag("dialog");
 					if (dialogFragment != null) {
-						//Dialog is showing
 						DeviceListFragment deviceList = (DeviceListFragment) dialogFragment;
 						deviceList.onDiscoveryFinished();
 					}
@@ -87,7 +121,6 @@ public class BluetoothExample extends Activity {
 		super.onStart();
 
 		// Request that Bluetooth be enabled if not enabled already.
-		// setupChat() will be called during onActivityResult()
 		if (!bluetoothAdapter.isEnabled()) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
@@ -111,17 +144,21 @@ public class BluetoothExample extends Activity {
 	}
 
 	private void startNetworkService() {
-		networkService = new BluetoothNetworkService(this, conversationFragment.getHandler());
+		ServiceIdentifier.setSecureServiceName("BluetoothExampleSecure");
+		//ServiceIdentifier.setInsecureServiceName("BluetoothExampleSecure");
+
+		ServiceIdentifier.setSecureUUIDFromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
+		//ServiceIdentifier.setInsecureUUIDFromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+
+		networkService = new BluetoothNetworkService(this);
+		networkService.addHandler(conversationFragment.getHandler());
+		networkService.addHandler(bluetoothServiceMessageHandler);
 	}
 
-	//public BluetoothNetworkService getChatService() {
-	//	return networkService;
-	//}
-
 	public void connectDevice(final String address, final boolean secure) {
-		// Get the BluetoothDevice object
+		// Get the BluetoothDevice object...
 		BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-		// Attempt to connect to the device
+		// ...and attempt to connect to the device.
 		networkService.connect(device, secure);
 	}
 
@@ -155,7 +192,7 @@ public class BluetoothExample extends Activity {
 		}
 		transaction.addToBackStack(null).commit();
 
-		// Launch the DeviceListActivity to see devices and do scan
+		// Launch the DeviceListActivity to see devices and do a scan.
 		DeviceListFragment deviceListFragment = DeviceListFragment.newInstance(secure);
 		deviceListFragment.show(getFragmentManager(), "dialog");
 	}
@@ -163,7 +200,7 @@ public class BluetoothExample extends Activity {
 	private void enableDiscovery() {
 		if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
 			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 15);
+			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 20);
 			startActivity(discoverableIntent);
 		}
 	}
@@ -172,7 +209,7 @@ public class BluetoothExample extends Activity {
 	public synchronized void onResume() {
 		super.onResume();
 		if (networkService != null) {
-			networkService.start();
+			networkService.start(true);
 		}
 	}
 
@@ -187,7 +224,7 @@ public class BluetoothExample extends Activity {
 	}
 
 	public boolean sendMessage(final String message) {
-		// Check that there's actually something to send
+		// Check that there's actually something to send.
 		byte[] data = message.getBytes();
 		if (!networkService.write(data)) {
 			Toast.makeText(this, "Error: Not connected.", Toast.LENGTH_SHORT).show();
