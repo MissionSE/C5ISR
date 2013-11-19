@@ -1,37 +1,61 @@
 package com.missionse.nfc;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.os.Parcelable;
 
-import com.missionse.nfc.TextRecord;
-
 public class NfcUtilities {
 
+	public static NdefMessage[] parseIntent(final Intent intent) {
+		NdefMessage[] messages = null;
+
+		String action = intent.getAction();
+		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action) || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
+				|| NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+			Parcelable[] rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+			if (rawMessages != null) {
+				messages = new NdefMessage[rawMessages.length];
+				for (int i = 0; i < rawMessages.length; i++) {
+					messages[i] = (NdefMessage) rawMessages[i];
+				}
+			} else {
+				// Unknown tag type
+				byte[] empty = new byte[0];
+				byte[] id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
+				Parcelable tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+				byte[] payload = NfcUtilities.dumpTagData(tag).getBytes();
+				NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload);
+				NdefMessage msg = new NdefMessage(new NdefRecord[] { record });
+				messages = new NdefMessage[] { msg };
+			}
+		}
+		return messages;
+	}
+
 	public static String dumpTagData(final Parcelable p) {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder stringBuilder = new StringBuilder();
 		Tag tag = (Tag) p;
 		byte[] id = tag.getId();
-		sb.append("Tag ID (hex): ").append(getHex(id)).append("\n");
-		sb.append("Tag ID (dec): ").append(getDec(id)).append("\n");
-		sb.append("ID (reversed): ").append(getReversed(id)).append("\n");
+		stringBuilder.append("Tag ID (hex): ").append(getHex(id)).append("\n");
+		stringBuilder.append("Tag ID (dec): ").append(getDec(id)).append("\n");
+		stringBuilder.append("ID (reversed): ").append(getReversed(id)).append("\n");
 
 		String prefix = "android.nfc.tech.";
-		sb.append("Technologies: ");
+		stringBuilder.append("Technologies: ");
 		for (String tech : tag.getTechList()) {
-			sb.append(tech.substring(prefix.length()));
-			sb.append(", ");
+			stringBuilder.append(tech.substring(prefix.length()));
+			stringBuilder.append(", ");
 		}
-		sb.delete(sb.length() - 2, sb.length());
+		stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
 		for (String tech : tag.getTechList()) {
 			if (tech.equals(MifareClassic.class.getName())) {
-				sb.append('\n');
+				stringBuilder.append('\n');
 				MifareClassic mifareTag = MifareClassic.get(tag);
 				String type = "Unknown";
 				switch (mifareTag.getType()) {
@@ -45,24 +69,24 @@ public class NfcUtilities {
 						type = "Pro";
 						break;
 				}
-				sb.append("Mifare Classic type: ");
-				sb.append(type);
-				sb.append('\n');
+				stringBuilder.append("Mifare Classic type: ");
+				stringBuilder.append(type);
+				stringBuilder.append('\n');
 
-				sb.append("Mifare size: ");
-				sb.append(mifareTag.getSize() + " bytes");
-				sb.append('\n');
+				stringBuilder.append("Mifare size: ");
+				stringBuilder.append(mifareTag.getSize() + " bytes");
+				stringBuilder.append('\n');
 
-				sb.append("Mifare sectors: ");
-				sb.append(mifareTag.getSectorCount());
-				sb.append('\n');
+				stringBuilder.append("Mifare sectors: ");
+				stringBuilder.append(mifareTag.getSectorCount());
+				stringBuilder.append('\n');
 
-				sb.append("Mifare blocks: ");
-				sb.append(mifareTag.getBlockCount());
+				stringBuilder.append("Mifare blocks: ");
+				stringBuilder.append(mifareTag.getBlockCount());
 			}
 
 			if (tech.equals(MifareUltralight.class.getName())) {
-				sb.append('\n');
+				stringBuilder.append('\n');
 				MifareUltralight mifareUlTag = MifareUltralight.get(tag);
 				String type = "Unknown";
 				switch (mifareUlTag.getType()) {
@@ -73,27 +97,27 @@ public class NfcUtilities {
 						type = "Ultralight C";
 						break;
 				}
-				sb.append("Mifare Ultralight type: ");
-				sb.append(type);
+				stringBuilder.append("Mifare Ultralight type: ");
+				stringBuilder.append(type);
 			}
 		}
 
-		return sb.toString();
+		return stringBuilder.toString();
 	}
 
 	private static String getHex(final byte[] bytes) {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder stringBuilder = new StringBuilder();
 		for (int i = bytes.length - 1; i >= 0; --i) {
 			int b = bytes[i] & 0xff;
 			if (b < 0x10) {
-				sb.append('0');
+				stringBuilder.append('0');
 			}
-			sb.append(Integer.toHexString(b));
+			stringBuilder.append(Integer.toHexString(b));
 			if (i > 0) {
-				sb.append(" ");
+				stringBuilder.append(" ");
 			}
 		}
-		return sb.toString();
+		return stringBuilder.toString();
 	}
 
 	private static long getDec(final byte[] bytes) {
@@ -116,19 +140,5 @@ public class NfcUtilities {
 			factor *= 256l;
 		}
 		return result;
-	}
-
-	public static List<TextRecord> parse(final NdefMessage message) {
-		return getTextRecords(message.getRecords());
-	}
-
-	private static List<TextRecord> getTextRecords(final NdefRecord[] records) {
-		List<TextRecord> elements = new ArrayList<TextRecord>();
-		for (final NdefRecord record : records) {
-			if (TextRecord.isTextRecord(record)) {
-				elements.add(TextRecord.parse(record));
-			}
-		}
-		return elements;
 	}
 }

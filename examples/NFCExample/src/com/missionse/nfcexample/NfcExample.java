@@ -1,5 +1,8 @@
 package com.missionse.nfcexample;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,6 +19,7 @@ import android.widget.Toast;
 import com.missionse.nfc.NfcConnector;
 import com.missionse.nfc.NfcUtilities;
 import com.missionse.nfc.TextRecord;
+import com.missionse.nfc.TextRecord.NotATextRecordException;
 
 public class NfcExample extends Activity {
 
@@ -43,8 +47,8 @@ public class NfcExample extends Activity {
 
 		nfcBroadcastIntent = PendingIntent.getActivity(this, 0,
 				new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-		nfcMessage = new NdefMessage(new NdefRecord[] { TextRecord.newTextRecord("Message from the other side!",
-				Locale.ENGLISH, true) });
+		TextRecord myMessage = new TextRecord("Message from the other side!", Locale.ENGLISH, Charset.defaultCharset());
+		nfcMessage = new NdefMessage(new NdefRecord[] { TextRecord.toNdefRecord(myMessage) });
 
 		nfcConnector.setPendingIntent(nfcBroadcastIntent);
 		nfcConnector.setMessage(nfcMessage);
@@ -53,7 +57,20 @@ public class NfcExample extends Activity {
 	}
 
 	private void displayMessages(final NdefMessage[] messages) {
-		List<TextRecord> textRecords = NfcUtilities.parse(messages[0]);
+		List<TextRecord> textRecords = new ArrayList<TextRecord>();
+		for (NdefMessage message : messages) {
+			for (NdefRecord record : message.getRecords()) {
+				if (TextRecord.isTextRecord(record)) {
+					try {
+						textRecords.add(TextRecord.parseTextRecord(record));
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					} catch (NotATextRecordException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 
 		for (TextRecord record : textRecords) {
 			Log.e(NfcExample.class.getSimpleName(), "message: " + record.getText());
@@ -64,7 +81,7 @@ public class NfcExample extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (!nfcConnector.isReady()) {
+		if (!nfcConnector.isEnabled()) {
 			Toast.makeText(this, "NFC is not enabled.", Toast.LENGTH_SHORT).show();
 		} else {
 			nfcConnector.onResume();
@@ -89,7 +106,7 @@ public class NfcExample extends Activity {
 			messageLogFragment.addMessage("Received NFC intent.");
 		}
 
-		NdefMessage[] receivedNfcMessages = NfcConnector.parseIntent(getIntent());
+		NdefMessage[] receivedNfcMessages = NfcUtilities.parseIntent(getIntent());
 		if (receivedNfcMessages != null) {
 			displayMessages(receivedNfcMessages);
 		}

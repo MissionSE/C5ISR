@@ -2,11 +2,8 @@ package com.missionse.nfc;
 
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.Intent;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.os.Parcelable;
 
 public class NfcConnector {
 
@@ -33,7 +30,7 @@ public class NfcConnector {
 		ndefMessage = message;
 	}
 
-	public boolean isReady() {
+	public boolean isEnabled() {
 		return nfcAdapter.isEnabled();
 	}
 
@@ -53,32 +50,4 @@ public class NfcConnector {
 			nfcAdapter.disableForegroundDispatch(activity);
 		}
 	}
-
-	public static NdefMessage[] parseIntent(final Intent intent) {
-		NdefMessage[] messages = null;
-
-		String action = intent.getAction();
-		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action) || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
-				|| NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-			Parcelable[] rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-
-			if (rawMessages != null) {
-				messages = new NdefMessage[rawMessages.length];
-				for (int i = 0; i < rawMessages.length; i++) {
-					messages[i] = (NdefMessage) rawMessages[i];
-				}
-			} else {
-				// Unknown tag type
-				byte[] empty = new byte[0];
-				byte[] id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
-				Parcelable tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-				byte[] payload = NfcUtilities.dumpTagData(tag).getBytes();
-				NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload);
-				NdefMessage msg = new NdefMessage(new NdefRecord[] { record });
-				messages = new NdefMessage[] { msg };
-			}
-		}
-		return messages;
-	}
-
 }
