@@ -28,12 +28,10 @@ public class ImageFragment extends Fragment {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_image, null);
-		image = (ImageView) view.findViewById(R.id.image_view);
-		if (image.getParent() != null) {
-			((ViewGroup) image.getParent()).removeView(image);
-		}
 
+		image = (ImageView) view.findViewById(R.id.image_view);
 		image.setImageResource(imageId);
-		return image;
+
+		return view;
 	}
 }

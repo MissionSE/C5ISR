@@ -1,5 +1,6 @@
 package com.missionse.imageviewer;
 
+import android.app.Fragment;
 import android.os.Bundle;
 
 public class ImageFragmentFactory {
@@ -8,7 +9,7 @@ public class ImageFragmentFactory {
 
 	}
 
-	public static ImageFragment createImageFragment(final int imageResourceId) {
+	public static Fragment createImageFragment(final int imageResourceId) {
 		ImageFragment imageFragment = new ImageFragment();
 
 		Bundle arguments = new Bundle();
@@ -18,7 +19,7 @@ public class ImageFragmentFactory {
 		return imageFragment;
 	}
 
-	public static MultiImageFragment createMultiImageFragment(final ImagePagerAdapter adapter) {
+	public static Fragment createImageFragment(final ImagePagerAdapter adapter) {
 		MultiImageFragment imageFragment = new MultiImageFragment();
 		imageFragment.setAdapter(adapter);
 

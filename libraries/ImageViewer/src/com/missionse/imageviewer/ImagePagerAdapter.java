@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
-public class ImagePagerAdapter extends FragmentPagerAdapter {
+public class ImagePagerAdapter extends FragmentStatePagerAdapter {
 
 	private static final String TAG = ImagePagerAdapter.class.getName();
 
@@ -24,11 +24,11 @@ public class ImagePagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(final int position) {
-		ImageFragment fragment = null;
+		Fragment fragment = null;
 		try {
 			fragment = ImageFragmentFactory.createImageFragment(imageResources.get(position));
 		} catch (IndexOutOfBoundsException e) {
-			Log.e(TAG, "Invalid item: " + position + ", max = " + getCount() + ".");
+			Log.e(TAG, "Invalid item: " + position + ", max = " + getCount());
 		}
 
 		return fragment;
@@ -38,5 +38,4 @@ public class ImagePagerAdapter extends FragmentPagerAdapter {
 	public int getCount() {
 		return imageResources.size();
 	}
-
 }
