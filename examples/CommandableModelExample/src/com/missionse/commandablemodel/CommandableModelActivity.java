@@ -89,7 +89,7 @@ public class CommandableModelActivity extends Activity {
 		pages.put(2, modelFragment);
 		pagerAdapter = new SectionFragmentPagerAdapter(getFragmentManager());
 		for (Map.Entry<Integer, Fragment> page : pages.entrySet()) {
-			pagerAdapter.setPage(page.getKey().intValue(), page.getValue());
+			pagerAdapter.setPage(page.getKey().intValue(), "", page.getValue());
 		}
 
 		// Create ViewPager

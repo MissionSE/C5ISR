@@ -13,12 +13,16 @@ public class SectionFragmentPagerAdapter extends FragmentPagerAdapter {
 	@SuppressLint("UseSparseArrays")
 	private final Map<Integer, Fragment> pages = new HashMap<Integer, Fragment>();
 
+	@SuppressLint("UseSparseArrays")
+	private final Map<Integer, String> pageTitles = new HashMap<Integer, String>();
+
 	public SectionFragmentPagerAdapter(final FragmentManager fragmentManager) {
 		super(fragmentManager);
 	}
 
-	public void setPage(final int pageNumber, final Fragment fragment) {
+	public void setPage(final int pageNumber, final String fragmentTitle, final Fragment fragment) {
 		pages.put(Integer.valueOf(pageNumber), fragment);
+		pageTitles.put(Integer.valueOf(pageNumber), fragmentTitle);
 	}
 
 	@Override
@@ -29,5 +33,13 @@ public class SectionFragmentPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public int getCount() {
 		return pages.size();
+	}
+
+	@Override
+	public CharSequence getPageTitle(final int position) {
+		if (pageTitles.containsKey(Integer.valueOf(position))) {
+			return pageTitles.get(Integer.valueOf(position));
+		}
+		return null;
 	}
 }
