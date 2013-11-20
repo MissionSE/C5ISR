@@ -32,9 +32,6 @@ public class VideoFragment extends Fragment {
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_video, null);
 		video = (VideoView) view.findViewById(R.id.video_view);
-		if (video.getParent() != null) {
-			((ViewGroup) video.getParent()).removeView(video);
-		}
 
 		String uriPath = "android.resource://" + getActivity().getPackageName() + "/" + videoId;
 		video.setVideoURI(Uri.parse(uriPath));
@@ -45,7 +42,7 @@ public class VideoFragment extends Fragment {
 		video.requestFocus();
 		video.start();
 
-		return video;
+		return view;
 	}
 
 	public void start() {
