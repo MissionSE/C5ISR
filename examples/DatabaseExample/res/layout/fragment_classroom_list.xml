@@ -9,10 +9,10 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal" >
 	    <Button
-        	android:id="@+id/button_newstudent"
+        	android:id="@+id/button_newclassroom"
         	android:layout_width="match_parent"
         	android:layout_height="wrap_content"
-        	android:text="@string/add_student"
+        	android:text="@string/add_classroom"
         	android:layout_weight=".5"
         	style="?android:attr/buttonBarButtonStyle" />
 	    <Button
@@ -25,7 +25,7 @@
 	</LinearLayout>
   
     <ListView
-        android:id="@+id/student_list"
+        android:id="@+id/classroom_list"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"

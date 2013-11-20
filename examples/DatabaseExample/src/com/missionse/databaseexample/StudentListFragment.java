@@ -1,11 +1,12 @@
 package com.missionse.databaseexample;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.orman.mapper.Model;
 
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,92 +14,66 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.missionse.databaseexample.Model.Student;
 
+public class StudentListFragment extends Fragment {
 
-public class CreateNew extends ListFragment {
-	
-	private Button mButtonStudent;
-	private Button mButtonClassRoom;
-	private List<Student> students;
+	private static final String[] FIRST_NAMES = new String[] { "James", "Kyle", "Mike", "Rob" };
+	private static final String[] LAST_NAMES = new String[] { "Lehman", "Sant'Angelo", "Testen", "Vieras" };
+
+	private ArrayAdapter<Student> listAdapter;
+	private List<Student> students = new ArrayList<Student>();
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-	
-		View lRootView = inflater.inflate(R.layout.database_dummy, container, false);
-		
-		
-		initComponents(lRootView);
-		
-		updateStudentList();
-		
-		
-		return lRootView;
-		
-	}
-	
-	
-	private void initComponents(View tRootView){
-		
-		initButton(tRootView);
-		
-	}
-	
-	private void initButton(View tRootView){
-		mButtonStudent = (Button)tRootView.findViewById(R.id.section_button_one);
-		mButtonClassRoom = (Button)tRootView.findViewById(R.id.section_button_two);
-		
-		mButtonStudent.setText("AddStudent");
-		mButtonClassRoom.setText("AddClassRoom");
-		
-		mButtonStudent.setOnClickListener(new OnClickListener(){
+	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+		View contentView = inflater.inflate(R.layout.fragment_student_list, container, false);
 
+		ListView studentList = (ListView) contentView.findViewById(R.id.student_list);
+
+		listAdapter = new ArrayAdapter<Student>(getActivity(), R.layout.student_list_entry, students);
+		studentList.setAdapter(listAdapter);
+
+		Button addStudentButton = (Button) contentView.findViewById(R.id.button_newstudent);
+		addStudentButton.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View arg0) {
-				createNewStudent(arg0);
-			}
-			
-		});
-		
-		mButtonClassRoom.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View tView){
-				createNewClassRoom(tView);
+			public void onClick(final View view) {
+				createNewStudent();
 			}
 		});
-	
-		
-	}
-	
-	private void createNewStudent(View tView){
-		Random r = new Random();
-		Student s = new Student();
-		s.mFirstName = "RV" + r.nextInt();
-		s.mLastName = "BV" + r.nextInt();
-		s.insert();
-		
-		updateStudentList();
-		
-	}
-	
-	private void createNewClassRoom(View tView){
-		
-	}
-	
-	
-	private void updateStudentList(){
-		students = Model.fetchAll(Student.class);
-		
-		ListAdapter l = 
-				new ArrayAdapter<Student>(getActivity().getApplicationContext(),R.layout.student_list_textview,
-						students.toArray(new Student[students.size()]));
-		setListAdapter(l);
-	}
-	
-	
 
+		Button clearButton = (Button) contentView.findViewById(R.id.clear_button);
+		clearButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(final View view) {
+				clearAllStudents();
+			}
+		});
+
+		listAdapter.addAll(Model.fetchAll(Student.class));
+
+		return contentView;
+	}
+
+	private void createNewStudent() {
+		Random random = new Random();
+		Student student = new Student();
+		student.mFirstName = FIRST_NAMES[random.nextInt(FIRST_NAMES.length)];
+		student.mLastName = LAST_NAMES[random.nextInt(FIRST_NAMES.length)];
+		student.insert();
+
+		students.clear();
+		students.addAll(Model.fetchAll(Student.class));
+		listAdapter.notifyDataSetChanged();
+	}
+
+	private void clearAllStudents() {
+		for (Student student : Model.fetchAll(Student.class)) {
+			student.delete();
+		}
+
+		students.clear();
+		listAdapter.notifyDataSetChanged();
+	}
 }
