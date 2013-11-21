@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Application name -->
+    <string name="app_name">MSE UI Extensions Example</string>
+    
+    <!-- Example Launcher setting entries -->
+    <string name="action_settings">Settings</string>
+    
+    <!-- Main Launcher list items -->
+    <string name="general">General</string>
+    
+    <!-- General Section headers -->
+    <string name="view_pager">View Pager</string>
+    <string name="view_pager_summary">This spawns a View Pager with a Sliding Menu.</string>
+    
+    <!-- Content Description -->
+    <string name="right_arrow">Right arrow</string>
+    <string name="send_button">Send button</string>
+
+</resources>
