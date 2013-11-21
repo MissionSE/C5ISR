@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- Menu values -->
+    <dimen name="default_menu_width">250dp</dimen>
+    <dimen name="menu_shadow_width">15dp</dimen>
+
+</resources>
