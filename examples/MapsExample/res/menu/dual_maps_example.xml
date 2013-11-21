@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
         android:id="@+id/myLocation"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/my_location"
         android:checkable="true"
         android:checked="false"
-        android:icon="@android:drawable/ic_menu_mylocation"/>
-    <item
-        android:id="@+id/resetMaps"
+        android:icon="@android:drawable/ic_menu_mylocation"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/reset"
-        android:icon="@android:drawable/ic_menu_revert"/>
+        android:title="@string/my_location"/>
+    <item
+        android:id="@+id/showMiniMap"
+        android:checkable="true"
+        android:checked="true"
+        android:icon="@android:drawable/ic_menu_view"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/show_mini_map"/>
+    <item
+        android:id="@+id/resetMaps"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/reset"/>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
 
 </menu>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="pref_mini_map"
+        android:summary="@string/pref_mini_map_summ"
+        android:title="@string/pref_mini_map" />
+
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+        android:key="pref_view_area_fill_color"
+        android:title="@string/pref_view_area_fill_color" />
+    
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+        android:key="pref_circle_fill_color"
+        android:title="@string/pref_circle_fill_color" />
+
+</PreferenceScreen>

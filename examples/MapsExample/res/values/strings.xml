@@ -5,6 +5,11 @@
     <string name="action_settings">Settings</string>
     <string name="switch_level">Switch Level</string>
     <string name="my_location">My Location</string>
+    <string name="show_mini_map">Show Mini Map</string>
     <string name="reset">Reset</string>
-
+    
+    <string name="pref_mini_map">Mini Map</string>
+    <string name="pref_mini_map_summ">Show mini map in top-left corner</string>
+    <string name="pref_view_area_fill_color">View Area Fill Color</string>
+    <string name="pref_circle_fill_color">Circle Fill Color</string>
 </resources>
