@@ -7,11 +7,6 @@
             <intent android:action=".viewpager.ViewPagerActivity" />
         </PreferenceScreen>
         <PreferenceScreen 
-            android:title="@string/model_viewer"
-            android:summary="@string/model_viewer_summary" >
-            <intent android:action=".modelviewer.ModelViewerActivity" />
-        </PreferenceScreen>
-        <PreferenceScreen 
             android:title="@string/wifi_direct"
             android:summary="@string/wifi_direct_summary" >
             <intent android:action=".wifidirect.WifiDirectActivity" />

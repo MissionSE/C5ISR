@@ -1,4 +1,4 @@
-<com.missionse.uiextensions.DrawerSafeViewPager
+<com.missionse.uiextensions.viewpager.DrawerSafeViewPager
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pager"
     android:layout_width="match_parent"
@@ -13,4 +13,4 @@
 	     android:paddingBottom="4dp"
 	     android:paddingTop="4dp"
 	     android:textColor="#fff" />
-</com.missionse.uiextensions.DrawerSafeViewPager>
+</com.missionse.uiextensions.viewpager.DrawerSafeViewPager>
