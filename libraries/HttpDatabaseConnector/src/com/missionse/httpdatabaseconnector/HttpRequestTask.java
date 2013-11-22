@@ -7,15 +7,15 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 public abstract class HttpRequestTask extends AsyncTask<String, String, String> {
 	private final Context context;
 	private final String message;
 
-	private ProgressDialog progressDialog;
+	private Toast connectionToast;
 	private List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 	private HttpClientRequester httpRequester = new HttpClientRequester();
 
@@ -47,15 +47,12 @@ public abstract class HttpRequestTask extends AsyncTask<String, String, String> 
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage(message);
-		progressDialog.setIndeterminate(false);
-		progressDialog.setCancelable(false);
-		progressDialog.show();
+		connectionToast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+		connectionToast.show();
 	}
 
 	@Override
 	protected void onPostExecute(final String result) {
-		progressDialog.dismiss();
+		connectionToast.cancel();
 	}
 }
