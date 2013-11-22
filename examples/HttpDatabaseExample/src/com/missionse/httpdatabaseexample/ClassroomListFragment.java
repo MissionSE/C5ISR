@@ -15,6 +15,9 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.missionse.httpdatabaseexample.model.Classroom;
+import com.missionse.httpdatabaseexample.tasks.CreateClassroomTask;
+import com.missionse.httpdatabaseexample.tasks.DeleteAllClassroomsTask;
+import com.missionse.httpdatabaseexample.tasks.GetAllClassroomsTask;
 
 public class ClassroomListFragment extends Fragment {
 
@@ -46,28 +49,22 @@ public class ClassroomListFragment extends Fragment {
 			}
 		});
 
-//		listAdapter.addAll(Model.fetchAll(Classroom.class));
+		getAllClassrooms();
 
 		return contentView;
 	}
 
 	private void createNewClassroom() {
 		Random random = new Random();
-		Classroom classroom = new Classroom();
-		classroom.classRoomName = "Classroom#" + random.nextInt(1000);
-//		classroom.insert();
-
-		classrooms.clear();
-//		classrooms.addAll(Model.fetchAll(Classroom.class));
-		listAdapter.notifyDataSetChanged();
+		String classroomName = "Classroom#" + random.nextInt(1000);
+		new CreateClassroomTask(getActivity(), listAdapter, classrooms).execute(classroomName);
 	}
 
 	private void clearAllClassrooms() {
-//		for (Classroom classroom : Model.fetchAll(Classroom.class)) {
-//			classroom.delete();
-//		}
+		new DeleteAllClassroomsTask(getActivity(), listAdapter, classrooms).execute();
+	}
 
-		classrooms.clear();
-		listAdapter.notifyDataSetChanged();
+	private void getAllClassrooms() {
+		new GetAllClassroomsTask(getActivity(), listAdapter, classrooms).execute();
 	}
 }

@@ -1,17 +1,16 @@
 <?php
 	$response = array();
 
-	if (isset($_POST['first_name']) && isset($_POST['last_name'])) {
-		$first_name = $_POST['first_name'];
-		$last_name = $_POST['last_name'];
+	if (isset($_POST['name'])) {
+		$name = $_POST['name'];
 
 		require_once __DIR__ . '/db_connect.php';
 		$db = new DB_CONNECT();
-		$result = mysql_query("INSERT INTO students(first_name, last_name) VALUES('$first_name', '$last_name')");
+		$result = mysql_query("INSERT INTO classrooms(name) VALUES('$name')");
 
 		if ($result) {
 			$response["success"] = 1;
-			$response["message"] = "Student successfully created";
+			$response["message"] = "Classroom successfully created";
 
 			echo json_encode($response);
 		} else {
@@ -22,7 +21,7 @@
 		}
 	} else {
 		$response["success"] = 0;
-		$response["message"] = "Required field(s) is missing";
+		$response["message"] = "Required field is missing";
 
 		echo json_encode($response);
 	}

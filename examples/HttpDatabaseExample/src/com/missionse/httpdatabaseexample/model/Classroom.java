@@ -2,10 +2,14 @@ package com.missionse.httpdatabaseexample.model;
 
 public class Classroom {
 
-	public int id;
-	public String classRoomName;
+	private String classRoomName;
 
-	public Classroom() {
+	public Classroom(final String name) {
+		classRoomName = name;
+	}
+
+	public String getName() {
+		return classRoomName;
 	}
 
 	@Override
