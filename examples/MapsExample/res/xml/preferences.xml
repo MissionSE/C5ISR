@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="pref_mini_map"
-        android:summary="@string/pref_mini_map_summ"
-        android:title="@string/pref_mini_map" />
+    <PreferenceCategory android:title="@string/pref_view_area" >
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="pref_view_area_fill_color"
+            android:title="@string/pref_fill_color" />
 
-    <net.margaritov.preference.colorpicker.ColorPickerPreference
-        android:key="pref_view_area_fill_color"
-        android:title="@string/pref_view_area_fill_color" />
-    
-    <net.margaritov.preference.colorpicker.ColorPickerPreference
-        android:key="pref_circle_fill_color"
-        android:title="@string/pref_circle_fill_color" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_view_area_stroke"
+            android:summary="@string/pref_view_area_stroke_summ"
+            android:title="@string/pref_stroke" />
+
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:dependency="pref_view_area_stroke"
+            android:key="pref_view_area_stroke_color"
+            android:title="@string/pref_view_area_stroke_color" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_circle" >
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="pref_circle_fill_color"
+            android:title="@string/pref_fill_color" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_circle_stroke"
+            android:summary="@string/pref_circle_stroke_summ"
+            android:title="@string/pref_stroke" />
+
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:dependency="pref_circle_stroke"
+            android:key="pref_circle_stroke_color"
+            android:title="@string/pref_stroke_color" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

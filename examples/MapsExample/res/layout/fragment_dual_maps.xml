@@ -21,7 +21,6 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="5dp"
         android:weightSum="1" >
 
         <Space
@@ -50,6 +49,7 @@
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.33"
+                android:layout_gravity="top"
                 class="com.google.android.gms.maps.MapFragment" />
         </TableRow>
     </TableLayout>

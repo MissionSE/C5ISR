@@ -45,6 +45,8 @@ import com.google.android.gms.maps.model.VisibleRegion;
 
 public class DualMapsFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
 LocationListener, OnSharedPreferenceChangeListener {
+
+	private static final String TAG = DualMapsFragment.class.getSimpleName();
 	private static final LatLng MSE = new LatLng(39.974552, -74.976844);
 	private static final LatLng ZONE_A = new LatLng(39.974074, -74.977462);
 	private static final LatLng ZONE_B = new LatLng(39.975233, -74.977328);
@@ -54,8 +56,14 @@ LocationListener, OnSharedPreferenceChangeListener {
 
 	private static final String PREF_VIEW_AREA_FILL_COLOR = "pref_view_area_fill_color";
 	private static final String PREF_CIRCLE_FILL_COLOR = "pref_circle_fill_color";
+	private static final String PREF_VIEW_AREA_STROKE_COLOR = "pref_view_area_stroke_color";
+	private static final String PREF_CIRCLE_STROKE_COLOR = "pref_circle_stroke_color";
+	private static final String PREF_VIEW_AREA_STROKE = "pref_view_area_stroke";
+	private static final String PREF_CIRCLE_STROKE = "pref_circle_stroke";
 	private static final String PREF_MINI_MAP_SIZE = "pref_mini_map_size";
 	private static final float DEF_MINI_MAP_SIZE = 0.33f;
+	private static final float DEF_STROKE = 2f;
+	private static final float NO_STROKE = 0f;
 
 	private GoogleMap mMapLeft;
 	private GoogleMap mMapRight;
@@ -65,7 +73,7 @@ LocationListener, OnSharedPreferenceChangeListener {
 	private LocationClient mLocationClient;
 
 	private SharedPreferences mPrefs;
-	
+
 	private ArrayList<Circle> mCircles = new ArrayList<Circle>();
 
 	// These settings are the same as the settings for the map. They will in fact give you updates
@@ -86,7 +94,7 @@ LocationListener, OnSharedPreferenceChangeListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View v = inflater.inflate(R.layout.fragment_dual_maps, container, false);
-		
+
 
 		return v;
 	}
@@ -155,7 +163,7 @@ LocationListener, OnSharedPreferenceChangeListener {
 
 	private void resetMaps() {
 		mMapLeft.animateCamera(CameraUpdateFactory
-				.newCameraPosition(new CameraPosition(MSE, 12f, 0, MSE_BEARING)));
+				.newCameraPosition(new CameraPosition(MSE, 14f, 0, MSE_BEARING)));
 		mMapRight.animateCamera(CameraUpdateFactory
 				.newCameraPosition(new CameraPosition(MSE, 18f, 0, MSE_BEARING)));
 	}
@@ -211,7 +219,9 @@ LocationListener, OnSharedPreferenceChangeListener {
 		mMapLeft.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 			@Override
 			public void onMapClick(LatLng latLng) {
-				mMapRight.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latLng);
+				//				mMapLeft.animateCamera(cameraUpdate);
+				mMapRight.animateCamera(cameraUpdate);
 			}
 		});
 
@@ -241,24 +251,40 @@ LocationListener, OnSharedPreferenceChangeListener {
 			@Override
 			public void onMapLoaded() {
 				mMapRight.animateCamera(CameraUpdateFactory
-						.newCameraPosition(new CameraPosition(MSE, 18f, 0, MSE_BEARING)));
+						.newCameraPosition(new CameraPosition(MSE, 18f, 0, MSE_BEARING)), new GoogleMap.CancelableCallback() {
+							
+							@Override
+							public void onFinish() {
+								setOnCameraChangeListener();
+								animateZoomedView();
+							}
+							
+							@Override
+							public void onCancel() {
+								setOnCameraChangeListener();
+							}
+							
+							private void setOnCameraChangeListener() {
+								mMapRight.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+
+									@Override
+									public void onCameraChange(CameraPosition cameraPosition) {
+										animateZoomedView();
+									}
+								});
+							}
+						} );
 			}
 		});
 
-		mMapRight.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-
-			@Override
-			public void onCameraChange(CameraPosition arg0) {
-				animateZoomedView();
-			}
-		});
+		
 
 		mMapRight.setMapType(MAP_TYPE_HYBRID);
 
 		double radius = 50;
 		int fillColor = mPrefs.getInt(PREF_CIRCLE_FILL_COLOR, DEF_FILL_COLOR);
-		int strokeColor = Color.RED;
-		float strokeWidth = 2f;
+		int strokeColor = mPrefs.getInt(PREF_CIRCLE_STROKE_COLOR, Color.BLACK);
+		float strokeWidth = mPrefs.getBoolean(PREF_CIRCLE_STROKE, false) ? DEF_STROKE : NO_STROKE;
 
 		mCircles.add(mMapRight.addCircle(new CircleOptions()
 		.center(ZONE_A)
@@ -283,11 +309,70 @@ LocationListener, OnSharedPreferenceChangeListener {
 	}
 
 	private void animateZoomedView() {
-		LatLngBounds rightBounds = mMapRight.getProjection().getVisibleRegion().latLngBounds;
-		CameraUpdate leftCameraUpdate = CameraUpdateFactory.newLatLngBounds(rightBounds, 50);
-		mMapLeft.animateCamera(leftCameraUpdate);
-
+		
+		float maxZoomDiff = 6f;
+		float minZoomDiff = 2f;
+		float zoomDiff = mMapRight.getCameraPosition().zoom - mMapLeft.getCameraPosition().zoom;
+		if (zoomDiff > maxZoomDiff || zoomDiff < minZoomDiff ) {
+			mMapLeft.animateCamera(CameraUpdateFactory.zoomTo(mMapRight.getCameraPosition().zoom - 4f), new GoogleMap.CancelableCallback() {
+				
+				@Override
+				public void onFinish() {
+					boundZoomedView();
+				}
+				
+				@Override
+				public void onCancel() {
+					boundZoomedView();
+				}
+			});
+		} else {
+			boundZoomedView();
+		}
+		
 		drawZoomedViewPolygon();
+	}
+	
+	private void boundZoomedView() {
+		boolean adjustMap = false;
+		
+		LatLngBounds boundsMapRight = mMapRight.getProjection().getVisibleRegion().latLngBounds;
+		LatLngBounds boundsMapLeft = mMapLeft.getProjection().getVisibleRegion().latLngBounds;
+
+		LatLng swMapRight = boundsMapRight.southwest;
+		LatLng swMapLeft = boundsMapLeft.southwest;
+
+		LatLng neMapRight = boundsMapRight.northeast;
+		LatLng neMapLeft = boundsMapLeft.northeast;
+
+		double diff;
+		if (swMapLeft.latitude > swMapRight.latitude)  {
+			diff = swMapLeft.latitude - swMapRight.latitude;
+			swMapLeft = new LatLng(swMapRight.latitude, swMapLeft.longitude);
+			neMapLeft = new LatLng(neMapLeft.latitude - diff, neMapLeft.longitude);
+			adjustMap = true;
+		} else if (neMapRight.latitude > neMapLeft.latitude) {
+			diff = neMapRight.latitude - neMapLeft.latitude;
+			neMapLeft = new LatLng(neMapRight.latitude, neMapLeft.longitude);
+			swMapLeft = new LatLng(swMapLeft.latitude + diff, swMapLeft.longitude);
+			adjustMap = true;
+		}
+
+		if (swMapLeft.longitude > swMapRight.longitude) {
+			diff = swMapLeft.longitude - swMapRight.longitude;
+			swMapLeft = new LatLng(swMapLeft.latitude, swMapRight.longitude);
+			neMapLeft = new LatLng(neMapLeft.latitude, neMapLeft.longitude - diff);
+			adjustMap = true;
+		} else if (neMapRight.longitude > neMapLeft.longitude) {
+			diff = neMapRight.longitude - neMapLeft.longitude;
+			neMapLeft = new LatLng(neMapLeft.latitude, neMapRight.longitude);
+			swMapLeft = new LatLng(swMapLeft.latitude, swMapLeft.longitude + diff);
+			adjustMap = true;
+		}
+
+		if (adjustMap) {
+			mMapLeft.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(swMapLeft, neMapLeft), 0));
+		}
 	}
 
 	private void drawZoomedViewPolygon() {
@@ -319,12 +404,25 @@ LocationListener, OnSharedPreferenceChangeListener {
 		if (PREF_VIEW_AREA_FILL_COLOR.equals(key)) {
 			mZoomedViewPolygon.setFillColor(sharedPreferences.getInt(PREF_VIEW_AREA_FILL_COLOR, DEF_FILL_COLOR));
 		} else if (PREF_CIRCLE_FILL_COLOR.equals(key)) {
+			int fillColor = mPrefs.getInt(PREF_CIRCLE_FILL_COLOR, DEF_FILL_COLOR);
 			for (Circle circle : mCircles) {
-				circle.setFillColor(sharedPreferences.getInt(PREF_CIRCLE_FILL_COLOR, DEF_FILL_COLOR));
+				circle.setFillColor(fillColor);
 			}
+		} else if (PREF_CIRCLE_STROKE.equals(key) || PREF_CIRCLE_STROKE_COLOR.equals(key)) {
+			int strokeColor =  mPrefs.getInt(PREF_CIRCLE_STROKE_COLOR, Color.BLACK);
+			float strokeWidth = mPrefs.getBoolean(PREF_CIRCLE_STROKE, false) ? DEF_STROKE : NO_STROKE;
+			for (Circle circle : mCircles) {
+				circle.setStrokeColor(strokeColor);
+				circle.setStrokeWidth(strokeWidth);
+			}
+		} else if (PREF_VIEW_AREA_STROKE.equals(key) || PREF_VIEW_AREA_STROKE_COLOR.equals(key)) {
+			int strokeColor =  mPrefs.getInt(PREF_VIEW_AREA_STROKE_COLOR, Color.BLACK);
+			float strokeWidth = mPrefs.getBoolean(PREF_VIEW_AREA_STROKE, false) ? DEF_STROKE : NO_STROKE;
+			mZoomedViewPolygon.setStrokeColor(strokeColor);
+			mZoomedViewPolygon.setStrokeWidth(strokeWidth);
 		}
 	}
-	
+
 	private void setupViewWeights(View v) {
 		float weight = mPrefs.getFloat(PREF_MINI_MAP_SIZE, DEF_MINI_MAP_SIZE);
 		v.findViewById(R.id.spacer_1).setLayoutParams(

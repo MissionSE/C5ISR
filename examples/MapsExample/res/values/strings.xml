@@ -9,7 +9,16 @@
     <string name="reset">Reset</string>
     
     <string name="pref_mini_map">Mini Map</string>
-    <string name="pref_mini_map_summ">Show mini map in top-left corner</string>
-    <string name="pref_view_area_fill_color">View Area Fill Color</string>
-    <string name="pref_circle_fill_color">Circle Fill Color</string>
+    <string name="pref_mini_map_summ">Show mini map in bottom-left corner</string>
+    
+    <string name="pref_view_area">View Area</string>
+    <string name="pref_view_area_stroke_summ">Show outline around view area</string>
+    <string name="pref_view_area_stroke_color">View Area Stroke Color</string>
+    
+    <string name="pref_circle">Circles</string>
+    <string name="pref_fill_color">Fill Color</string>
+    <string name="pref_stroke"> Stroke</string>
+    <string name="pref_circle_stroke_summ">Show outline around circles</string>
+    <string name="pref_stroke_color">Stroke Color</string>
+    
 </resources>
