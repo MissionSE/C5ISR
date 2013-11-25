@@ -19,7 +19,7 @@ import com.missionse.bluetooth.BluetoothIntentListener;
 import com.missionse.bluetooth.network.BluetoothNetworkService;
 import com.missionse.bluetooth.network.ServiceIdentifier;
 import com.missionse.commandablemodel.network.ModelControllerClient;
-import com.missionse.commandablemodel.network.ModelControllerServer;
+import com.missionse.commandablemodel.network.ModelState;
 import com.missionse.commandablemodel.network.NotifyingModelGestureListener;
 import com.missionse.modelviewer.ModelViewerFragment;
 import com.missionse.modelviewer.ModelViewerFragmentFactory;
@@ -33,7 +33,6 @@ public class CommandableModelActivity extends Activity {
 	private NotifyingModelGestureListener modelGestureListener;
 
 	private ModelControllerClient modelClient;
-	private ModelControllerServer modelServer;
 
 	private BluetoothConnector bluetoothConnector;
 	private String connectedDevice;
@@ -69,7 +68,10 @@ public class CommandableModelActivity extends Activity {
 					break;
 				case BluetoothNetworkService.MESSAGE_INCOMING_DATA:
 					byte[] readBuf = (byte[]) msg.obj;
-					//Do something with the incoming data here.
+					ModelState modelState = new ModelState();
+					if (modelState.setModelValues(new String(readBuf, 0, msg.arg1))) {
+						setModelState(modelState);
+					}
 					break;
 			}
 		}
@@ -215,14 +217,28 @@ public class CommandableModelActivity extends Activity {
 		bluetoothConnector.stopService();
 	}
 
-	public boolean sendMessage(final String message) {
+	public boolean sendModelState(final String message) {
 		// Check that there's actually something to send.
 		byte[] data = message.getBytes();
 
 		if (!bluetoothConnector.getService().write(data)) {
-			Toast.makeText(this, "Error: Not connected.", Toast.LENGTH_SHORT).show();
 			return false;
 		};
 		return true;
+	}
+
+	private void setModelState(final ModelState state) {
+		modelFragment.getController().setOrientation(
+				state.get(ModelState.YAW),
+				state.get(ModelState.PITCH),
+				state.get(ModelState.ROLL));
+		modelFragment.getController().setScale(
+				state.get(ModelState.SCALE_X),
+				state.get(ModelState.SCALE_Y),
+				state.get(ModelState.SCALE_Z));
+		modelFragment.getController().setPosition(
+				state.get(ModelState.POSITION_X),
+				state.get(ModelState.POSITION_Y),
+				state.get(ModelState.POSITION_Z));
 	}
 }

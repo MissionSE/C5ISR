@@ -3,9 +3,12 @@ package com.missionse.commandablemodel.network;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import android.util.Log;
+
 import com.missionse.modelviewer.ModelController;
 
 public class ModelState {
+	private static final String TAG = ModelState.class.getName();
 
 	private ArrayList<Float> modelState;
 
@@ -17,9 +20,9 @@ public class ModelState {
 	public static final int SCALE_Y = 4;
 	public static final int SCALE_Z = 5;
 
-	public static final int ROTATION_X = 6;
-	public static final int ROTATION_Y = 7;
-	public static final int ROTATION_Z = 8;
+	public static final int YAW = 6;
+	public static final int PITCH = 7;
+	public static final int ROLL = 8;
 
 	public ModelState() {
 	}
@@ -29,38 +32,44 @@ public class ModelState {
 	}
 
 	public ModelState(final ModelController controller) {
-		String parseableState = "";
+		String parseableState = " ";
 		parseableState += controller.getXPosition() + " " + controller.getYPosition() + " " + controller.getZPosition();
 		parseableState += " ";
 		parseableState += controller.getXScale() + " " + controller.getYScale() + " " + controller.getZScale();
 		parseableState += " ";
-		parseableState += controller.getXRotation() + " " + controller.getYRotation() + " " + controller.getZRotation();
+		parseableState += controller.getYaw() + " " + controller.getPitch() + " " + controller.getRoll();
 
 		setModelValues(parseableState);
 	}
 
 	@Override
 	public String toString() {
-		String parseableState = "";
+		String parseableState = " ";
 
-		parseableState += modelState.get(POSITION_X) + " " + modelState.get(POSITION_Y) + " "
-				+ modelState.get(POSITION_Z);
+		parseableState += modelState.get(POSITION_X) + " " + modelState.get(POSITION_Y) + " " + modelState.get(POSITION_Z);
 		parseableState += " ";
 		parseableState += modelState.get(SCALE_X) + " " + modelState.get(SCALE_Y) + " " + modelState.get(SCALE_Z);
 		parseableState += " ";
-		parseableState += modelState.get(ROTATION_X) + " " + modelState.get(ROTATION_Y) + " "
-				+ modelState.get(ROTATION_Z);
+		parseableState += modelState.get(YAW) + " " + modelState.get(PITCH) + " " + modelState.get(ROLL);
 
 		return parseableState;
 	}
 
-	public void setModelValues(final String modelStatus) {
+	public boolean setModelValues(final String modelStatus) {
+		boolean isValid = true;
 		modelState = new ArrayList<Float>();
 
 		StringTokenizer tokenizer = new StringTokenizer(modelStatus);
-		while (tokenizer.hasMoreTokens()) {
-			modelState.add(Float.parseFloat(tokenizer.nextToken()));
+		try {
+			while (tokenizer.hasMoreTokens()) {
+				modelState.add(Float.parseFloat(tokenizer.nextToken()));
+			}
+		} catch (NumberFormatException e) {
+			Log.e(TAG, "Unable to parse string: " + modelStatus);
+			isValid = false;
 		}
+
+		return isValid;
 	}
 
 	public Float get(final int index) {
