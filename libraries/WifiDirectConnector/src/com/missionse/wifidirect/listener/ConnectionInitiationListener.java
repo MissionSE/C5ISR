@@ -1,4 +1,4 @@
-package com.missionse.wifidirect;
+package com.missionse.wifidirect.listener;
 
 public interface ConnectionInitiationListener {
 	

@@ -1,10 +1,10 @@
-package com.missionse.wifidirect;
+package com.missionse.wifidirect.listener;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 
-public interface P2pStateChangeHandler {
+public interface P2pStateChangeListener {
 
 	/**
 	 * Called on receipt of WIFI_P2P_PEERS_CHANGED_ACTION.

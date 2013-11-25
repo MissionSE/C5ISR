@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WifiDirectExample</string>
+    <string name="discover_peers">Discover Peers</string>
+    <string name="disconnect">Disconnect</string>
+    
+    <!--  Conversation Fragment -->
+    <string name="send">Send</string>
+    <string name="entry_hint">Enter message here</string>
+    
+    <!-- Discovery Fragment -->
+    <string name="discovered_devices_title">Discovered Devices</string>
+
+    <!-- Content Descriptions -->
+    <string name="send_button">Send Button</string>
+    
+</resources>

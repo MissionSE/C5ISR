@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/discover_peers"
+          android:icon="@drawable/ic_action_search"
+          android:title="@string/discover_peers"
+          android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/disconnect"
+          android:icon="@drawable/ic_action_cancel"
+          android:title="@string/disconnect"
+          android:showAsAction="ifRoom|withText" />
+</menu>

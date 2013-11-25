@@ -3,6 +3,8 @@ package com.missionse.wifidirect;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.missionse.wifidirect.listener.P2pStateChangeListener;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +22,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 	private WifiP2pManager wifiP2pManager;
 	private Channel wifiChannel;
 
-	private List<P2pStateChangeHandler> p2pStateChangeHandlers;
+	private List<P2pStateChangeListener> p2pStateChangeHandlers;
 	
 	private boolean p2pIsEnabled;
 	
@@ -30,14 +32,14 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 		wifiChannel = channel;		
 		p2pIsEnabled = false;
 		
-		p2pStateChangeHandlers = new ArrayList<P2pStateChangeHandler>();
+		p2pStateChangeHandlers = new ArrayList<P2pStateChangeListener>();
 	}
 	
 	public boolean isP2PEnabled() {
 		return p2pIsEnabled;
 	}
 	
-	public void addStateChangeHandler(final P2pStateChangeHandler handler) {
+	public void addStateChangeHandler(final P2pStateChangeListener handler) {
 		p2pStateChangeHandlers.add(handler);
 	}
 	
@@ -58,7 +60,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 				wifiP2pManager.requestPeers(wifiChannel, new PeerListListener() {
 					@Override
 					public void onPeersAvailable(WifiP2pDeviceList peers) {
-						for(P2pStateChangeHandler handler : p2pStateChangeHandlers) {
+						for(P2pStateChangeListener handler : p2pStateChangeHandlers) {
 							handler.onPeersAvailable(peers);
 						}
 					}
@@ -72,7 +74,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 					wifiP2pManager.requestConnectionInfo(wifiChannel, new ConnectionInfoListener() {
 						@Override
 						public void onConnectionInfoAvailable(WifiP2pInfo connectionInfo) {
-							for(P2pStateChangeHandler handler : p2pStateChangeHandlers) {
+							for(P2pStateChangeListener handler : p2pStateChangeHandlers) {
 								handler.onConnectionInfoAvailable(connectionInfo);
 							}
 						}
@@ -82,7 +84,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 		}
 		else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 			WifiP2pDevice thisDevice = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-			for(P2pStateChangeHandler handler : p2pStateChangeHandlers) {
+			for(P2pStateChangeListener handler : p2pStateChangeHandlers) {
 				handler.onDeviceChanged(thisDevice);
 			}
 		}
