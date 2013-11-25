@@ -323,7 +323,7 @@ LocationListener, OnSharedPreferenceChangeListener {
 				
 				@Override
 				public void onCancel() {
-					boundZoomedView();
+//					boundZoomedView();
 				}
 			});
 		} else {
