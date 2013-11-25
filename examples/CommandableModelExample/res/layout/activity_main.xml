@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     android:background="#eee">
     
-    <com.missionse.uiextensions.DisableableViewPager
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/content_pager"
+    <FrameLayout
+	    android:id="@+id/content"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent" >
-	</com.missionse.uiextensions.DisableableViewPager>
+	</FrameLayout>
 </LinearLayout>
