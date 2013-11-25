@@ -1,4 +1,4 @@
-package com.missionse.bluetooth;
+package com.missionse.bluetooth.network;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Handler;
 
-import com.missionse.bluetooth.ServiceIdentifier.ServiceNotIdentifiedException;
+import com.missionse.bluetooth.network.ServiceIdentifier.ServiceNotIdentifiedException;
 
 /**
  * This class manages all threads for: listening for incoming connections (via SocketConnectionAcceptThread), connecting

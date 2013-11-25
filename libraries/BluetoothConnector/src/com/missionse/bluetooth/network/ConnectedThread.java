@@ -1,4 +1,4 @@
-package com.missionse.bluetooth;
+package com.missionse.bluetooth.network;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 import android.bluetooth.BluetoothSocket;
 
-import com.missionse.bluetooth.ServiceIdentifier.ServiceNotIdentifiedException;
+import com.missionse.bluetooth.network.ServiceIdentifier.ServiceNotIdentifiedException;
 
 /**
  * This thread runs during a connection with a remote device. It handles all incoming and outgoing transmissions.

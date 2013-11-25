@@ -1,4 +1,4 @@
-package com.missionse.bluetooth;
+package com.missionse.bluetooth.network;
 
 import java.util.UUID;
 

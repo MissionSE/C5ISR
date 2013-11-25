@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.missionse.bluetooth.BluetoothNetworkService;
+import com.missionse.bluetooth.network.BluetoothNetworkService;
 
 public class ConversationFragment extends Fragment {
 
