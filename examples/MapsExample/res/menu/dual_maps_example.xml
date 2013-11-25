@@ -12,11 +12,12 @@
     <item
         android:id="@+id/showMiniMap"
         android:checkable="true"
-        android:checked="true"
+        android:checked="false"
         android:icon="@android:drawable/ic_menu_view"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/show_mini_map"/>
+        android:showAsAction="always"
+        android:actionLayout="@layout/mini_map_switch"
+        android:title="@string/mini_map"/>
     <item
         android:id="@+id/resetMaps"
         android:icon="@android:drawable/ic_menu_revert"

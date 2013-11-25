@@ -44,13 +44,12 @@
             android:layout_weight="0.33"
             android:weightSum="1" >
 
-            <fragment
-                android:id="@+id/map_left"
+            <FrameLayout
+                android:id="@+id/mini_map_container"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.33"
-                android:layout_gravity="top"
-                class="com.google.android.gms.maps.MapFragment" />
+                android:layout_gravity="top" />
         </TableRow>
     </TableLayout>
 
