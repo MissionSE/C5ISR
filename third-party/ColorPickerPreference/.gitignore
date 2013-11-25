@@ -1,0 +1,6 @@
+#Ignore everything...
+*
+#...but the archived zip file for ColorPickerPreference and this gitignore
+!.gitignore
+!android-ColorPickerPreference-master.zip
+!README.md
