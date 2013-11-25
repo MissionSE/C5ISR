@@ -1,5 +1,10 @@
 package com.missionse.slidingmenu;
 
 public interface MenuClickListener {
-	public void onMenuClick(int clickedItem);
+
+	/**
+	 * Called when an item in the SlidingMenu is clicked.
+	 * @param index of the selected item
+	 */
+	public void onMenuClick(int position);
 }
