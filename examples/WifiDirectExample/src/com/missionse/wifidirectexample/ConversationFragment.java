@@ -29,8 +29,14 @@ public class ConversationFragment extends Fragment implements IncomingDataListen
 
 	@Override
 	public void processReceivedData(final byte[] data) {
-		String readMessage = new String(data, 0, data.length);
-		conversationArrayAdapter.add("Incoming:  " + readMessage);
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				String readMessage = new String(data, 0, data.length);
+				conversationArrayAdapter.add("Incoming:  " + readMessage);
+			}
+		});
+
 	}
 
 	@Override

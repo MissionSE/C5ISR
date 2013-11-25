@@ -29,7 +29,7 @@ public class ClientIntentService extends IntentService {
 	protected void onHandleIntent(final Intent intent) {
 		Log.e(TAG, "Got intent: " + intent.getAction());
 		if (intent.getAction().equals(ACTION_SEND_DATA)) {
-			String data = intent.getExtras().getString(EXTRAS_DATA);
+			byte[] data = intent.getExtras().getByteArray(EXTRAS_DATA);
 			String targetHost = intent.getExtras().getString(EXTRAS_HOST);
 			int targetPort = intent.getExtras().getInt(EXTRAS_PORT);
 

@@ -35,15 +35,36 @@ public class WifiDirectExample extends Activity {
 		getFragmentManager().beginTransaction().replace(R.id.content, conversationFragment).commit();
 
 		wifiDirectConnector.registerDataListener(conversationFragment);
+
+		getActionBar().setSubtitle("disconnected");
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.main_menu, menu);
 		mainMenu = menu;
+		showDiscoveryButton();
+		return true;
+	}
+
+	private void showDiscoveryButton() {
 		mainMenu.findItem(R.id.disconnect).setVisible(false);
 		mainMenu.findItem(R.id.disconnect).setEnabled(false);
-		return true;
+
+		mainMenu.findItem(R.id.discover_peers).setVisible(true);
+		mainMenu.findItem(R.id.discover_peers).setEnabled(true);
+	}
+
+	private void showDisconnectButton() {
+		try {
+			mainMenu.findItem(R.id.disconnect).setVisible(true);
+			mainMenu.findItem(R.id.disconnect).setEnabled(true);
+
+			mainMenu.findItem(R.id.discover_peers).setVisible(false);
+			mainMenu.findItem(R.id.discover_peers).setEnabled(false);
+		} catch (Exception e) {
+		}
+
 	}
 
 	@Override
@@ -60,7 +81,7 @@ public class WifiDirectExample extends Activity {
 	}
 
 	private void discoverPeers() {
-		wifiDirectConnector.discoverPeers(new DiscoverPeersListener() {
+		wifiDirectConnector.startDiscovery(new DiscoverPeersListener() {
 			@Override
 			public void onP2pNotEnabled() {
 				Toast.makeText(WifiDirectExample.this, "You must enable P2P first!", Toast.LENGTH_SHORT).show();
@@ -95,7 +116,7 @@ public class WifiDirectExample extends Activity {
 
 	private void showDiscoveryDialog() {
 		// Launch the DeviceListActivity to see devices and do a scan.
-		DeviceListFragment deviceListFragment = DeviceListFragment.newInstance();
+		DeviceListFragment deviceListFragment = DeviceListFragment.newInstance(wifiDirectConnector);
 		deviceListFragment.show(getFragmentManager(), "dialog");
 	}
 
@@ -105,16 +126,15 @@ public class WifiDirectExample extends Activity {
 			@Override
 			public void onDisconnectionSuccess() {
 				// The remote device has been disconnected.
-
-				mainMenu.findItem(R.id.disconnect).setVisible(false);
-				mainMenu.findItem(R.id.disconnect).setEnabled(false);
-
-				mainMenu.findItem(R.id.discover_peers).setVisible(true);
-				mainMenu.findItem(R.id.discover_peers).setEnabled(true);
+				showDiscoveryButton();
+				getActionBar().setSubtitle("disconnected");
+				Toast.makeText(WifiDirectExample.this, "Disconnection successful.", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onDisconnectionFailure() {
+				showDiscoveryButton();
+				getActionBar().setSubtitle("disconnected");
 				Toast.makeText(WifiDirectExample.this, "Disconnection failed. Retry.", Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -145,7 +165,8 @@ public class WifiDirectExample extends Activity {
 			public void onConnectionInfoAvailable(final WifiP2pInfo connectionInfo) {
 				// We have made a connection.
 				hideDiscoveryDialog();
-				getActionBar().setSubtitle("Connected");
+				getActionBar().setSubtitle("connected");
+				showDisconnectButton();
 
 				Toast.makeText(WifiDirectExample.this, "Connection successful.", Toast.LENGTH_SHORT).show();
 			}
@@ -169,12 +190,6 @@ public class WifiDirectExample extends Activity {
 			@Override
 			public void onConnectionInitiationSuccess() {
 				Toast.makeText(WifiDirectExample.this, "Initiating connection...", Toast.LENGTH_SHORT).show();
-
-				mainMenu.findItem(R.id.disconnect).setVisible(true);
-				mainMenu.findItem(R.id.disconnect).setEnabled(true);
-
-				mainMenu.findItem(R.id.discover_peers).setVisible(false);
-				mainMenu.findItem(R.id.discover_peers).setEnabled(false);
 			}
 
 			@Override

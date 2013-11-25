@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
+import android.util.Log;
 
 import com.missionse.wifidirect.WifiUtilities;
 
@@ -36,6 +37,8 @@ public class Client {
 			} else {
 				address = connectionInfo.groupOwnerAddress.getHostAddress();
 			}
+
+			Log.e(Client.class.getSimpleName(), "Sending to " + address);
 
 			Intent modelStatusIntent = new Intent(context, ClientIntentService.class);
 			modelStatusIntent.setAction(ClientIntentService.ACTION_SEND_DATA);

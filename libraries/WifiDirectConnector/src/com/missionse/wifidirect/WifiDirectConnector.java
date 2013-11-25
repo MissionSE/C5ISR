@@ -14,7 +14,6 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.util.SparseArray;
 
 import com.missionse.wifidirect.listener.ConnectionInitiationListener;
 import com.missionse.wifidirect.listener.DisconnectionListener;
@@ -41,17 +40,9 @@ public class WifiDirectConnector {
 
 	private WifiP2pDevice targetDevice;
 
-	public final static SparseArray<String> deviceStatuses = new SparseArray<String>();
-
 	public WifiDirectConnector(final Activity activity) {
 		parentActivity = activity;
 		setupIntentFilter();
-
-		deviceStatuses.append(WifiP2pDevice.AVAILABLE, "Available");
-		deviceStatuses.append(WifiP2pDevice.INVITED, "Invited");
-		deviceStatuses.append(WifiP2pDevice.CONNECTED, "Connected");
-		deviceStatuses.append(WifiP2pDevice.FAILED, "Failed");
-		deviceStatuses.append(WifiP2pDevice.UNAVAILABLE, "Unavailable");
 	}
 
 	private void setupIntentFilter() {
@@ -78,7 +69,7 @@ public class WifiDirectConnector {
 		parentActivity.unregisterReceiver(broadcastReceiver);
 	}
 
-	public void discoverPeers(final DiscoverPeersListener listener) {
+	public void startDiscovery(final DiscoverPeersListener listener) {
 		if (!broadcastReceiver.isP2PEnabled()) {
 			listener.onP2pNotEnabled();
 		} else {
@@ -91,9 +82,15 @@ public class WifiDirectConnector {
 				@Override
 				public void onFailure(final int reasonCode) {
 					listener.onDiscoverPeersFailure(reasonCode);
+					wifiManager.cancelConnect(wifiChannel, null);
+					wifiManager.stopPeerDiscovery(wifiChannel, null);
 				}
 			});
 		}
+	}
+
+	public void cancelDiscovery() {
+		wifiManager.stopPeerDiscovery(wifiChannel, null);
 	}
 
 	public void connect(final WifiP2pDevice device, final ConnectionInitiationListener listener) {
@@ -134,6 +131,8 @@ public class WifiDirectConnector {
 			@Override
 			public void onFailure(final int reasonCode) {
 				listener.onDisconnectionFailure();
+				//wifiManager.cancelConnect(wifiChannel, null);
+				//wifiManager.stopPeerDiscovery(wifiChannel, null);
 			}
 		});
 	}
@@ -164,7 +163,6 @@ public class WifiDirectConnector {
 				}
 			});
 		}
-
 	}
 
 	public void registerDataListener(final IncomingDataListener listener) {
