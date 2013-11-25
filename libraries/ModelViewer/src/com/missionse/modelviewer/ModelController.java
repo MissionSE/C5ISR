@@ -17,26 +17,32 @@ public interface ModelController {
 	void unlockTranslation();
 	boolean isTranslationLocked();
 
-	void rotate(final float x, final float y, final float z);
-	void scale(final float scaleFactor);
-	void scale(final float x, final float y, final float z);
-	void translate(final float x, final float y, final float z);
+	void rotate(final double x, final double y, final double z);
+	void rotateAroundAxis(final double x, final double y, final double z);
+	void scale(final double scaleFactor);
+	void scale(final double x, final double y, final double z);
+	void translate(final double x, final double y, final double z);
 
-	void setRotation(final float x, final float y, final float z);
-	void setScale(final float x, final float y, final float z);
-	void setPosition(final float x, final float y, final float z);
+	void setRotation(final double x, final double y, final double z);
+	void setScale(final double x, final double y, final double z);
+	void setPosition(final double x, final double y, final double z);
+	void setOrientation(final double yaw, final double pitch, final double roll);
 
-	float getXRotation();
-	float getYRotation();
-	float getZRotation();
+	double getXRotation();
+	double getYRotation();
+	double getZRotation();
 
-	float getXScale();
-	float getYScale();
-	float getZScale();
+	double getXScale();
+	double getYScale();
+	double getZScale();
 
-	float getXPosition();
-	float getYPosition();
-	float getZPosition();
+	double getXPosition();
+	double getYPosition();
+	double getZPosition();
+
+	double getYaw();
+	double getPitch();
+	double getRoll();
 
 	void reset();
 	void center();

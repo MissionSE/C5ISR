@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import rajawali.Object3D;
 import rajawali.materials.Material;
+import rajawali.math.Quaternion;
 import rajawali.math.vector.Vector3;
 import rajawali.util.ObjectColorPicker;
 import rajawali.util.OnObjectPickedListener;
@@ -93,7 +94,17 @@ public class ObjectGroupController implements ModelController {
 	}
 
 	@Override
-	public void rotate(final float x, final float y, final float z) {
+	public void rotate(final double x, final double y, final double z) {
+		if (!rotationLocked && objectGroup != null) {
+			Vector3 rotation = objectGroup.getRotation();
+			objectGroup.setRotX(rotation.x + x);
+			objectGroup.setRotY(rotation.y + y);
+			objectGroup.setRotZ(rotation.z + z);
+		}
+	}
+
+	@Override
+	public void rotateAroundAxis(final double x, final double y, final double z) {
 		if (!rotationLocked && objectGroup != null) {
 			objectGroup.rotateAround(Vector3.Y, x);
 			objectGroup.rotateAround(Vector3.X, y);
@@ -102,12 +113,12 @@ public class ObjectGroupController implements ModelController {
 	}
 
 	@Override
-	public void scale(final float scaleFactor) {
+	public void scale(final double scaleFactor) {
 		scale (scaleFactor, scaleFactor, scaleFactor);
 	}
 
 	@Override
-	public void scale(final float x, final float y, final float z) {
+	public void scale(final double x, final double y, final double z) {
 		if (!scaleLocked && objectGroup != null) {
 			Vector3 scale = objectGroup.getScale();
 			objectGroup.setScaleX(scale.x * x);
@@ -117,7 +128,7 @@ public class ObjectGroupController implements ModelController {
 	}
 
 	@Override
-	public void translate(final float x, final float y, final float z) {
+	public void translate(final double x, final double y, final double z) {
 		if (!translationLocked && objectGroup != null) {
 			objectGroup.setX(objectGroup.getX() + x);
 			objectGroup.setY(objectGroup.getY() + y);
@@ -126,7 +137,7 @@ public class ObjectGroupController implements ModelController {
 	}
 
 	@Override
-	public void setRotation(final float x, final float y, final float z) {
+	public void setRotation(final double x, final double y, final double z) {
 		if (!rotationLocked && objectGroup != null) {
 			objectGroup.setRotX(x);
 			objectGroup.setRotY(y);
@@ -135,7 +146,7 @@ public class ObjectGroupController implements ModelController {
 	}
 
 	@Override
-	public void setScale(final float x, final float y, final float z) {
+	public void setScale(final double x, final double y, final double z) {
 		if (!scaleLocked && objectGroup != null) {
 			objectGroup.setScaleX(x);
 			objectGroup.setScaleY(y);
@@ -144,11 +155,18 @@ public class ObjectGroupController implements ModelController {
 	}
 
 	@Override
-	public void setPosition(final float x, final float y, final float z) {
+	public void setPosition(final double x, final double y, final double z) {
 		if (!translationLocked && objectGroup != null) {
 			objectGroup.setX(x);
 			objectGroup.setY(y);
 			objectGroup.setZ(z);
+		}
+	}
+
+	@Override
+	public void setOrientation(final double yaw, final double pitch, final double roll) {
+		if (!rotationLocked && objectGroup != null) {
+			objectGroup.setOrientation(new Quaternion().fromEuler(yaw, pitch, roll));
 		}
 	}
 
@@ -223,83 +241,110 @@ public class ObjectGroupController implements ModelController {
 	}
 
 	@Override
-	public float getXRotation() {
-		float xRotation = 0.0f;
+	public double getXRotation() {
+		double xRotation = 0.0f;
 		if (objectGroup != null) {
-			xRotation = (float) objectGroup.getRotX();
+			xRotation = objectGroup.getRotX();
 		}
 		return xRotation;
 	}
 
 	@Override
-	public float getYRotation() {
-		float yRotation = 0.0f;
+	public double getYRotation() {
+		double yRotation = 0.0f;
 		if (objectGroup != null) {
-			yRotation = (float) objectGroup.getRotY();
+			yRotation = objectGroup.getRotY();
 		}
 		return yRotation;
 	}
 
 	@Override
-	public float getZRotation() {
-		float zRotation = 0.0f;
+	public double getZRotation() {
+		double zRotation = 0.0f;
 		if (objectGroup != null) {
-			zRotation = (float) objectGroup.getRotZ();
+			zRotation = objectGroup.getRotZ();
 		}
 		return zRotation;
 	}
 
 	@Override
-	public float getXScale() {
-		float xScale = 0.0f;
+	public double getXScale() {
+		double xScale = 0.0f;
 		if (objectGroup != null) {
-			xScale = (float) objectGroup.getScaleX();
+			xScale = objectGroup.getScaleX();
 		}
 		return xScale;
 	}
 
 	@Override
-	public float getYScale() {
-		float yScale = 0.0f;
+	public double getYScale() {
+		double yScale = 0.0f;
 		if (objectGroup != null) {
-			yScale = (float) objectGroup.getScaleY();
+			yScale = objectGroup.getScaleY();
 		}
 		return yScale;
 	}
 
 	@Override
-	public float getZScale() {
-		float zScale = 0.0f;
+	public double getZScale() {
+		double zScale = 0.0f;
 		if (objectGroup != null) {
-			zScale = (float) objectGroup.getScaleZ();
+			zScale = objectGroup.getScaleZ();
 		}
 		return zScale;
 	}
 
 	@Override
-	public float getXPosition() {
-		float xPosition = 0.0f;
+	public double getXPosition() {
+		double xPosition = 0.0f;
 		if (objectGroup != null) {
-			xPosition = (float) objectGroup.getX();
+			xPosition = objectGroup.getX();
 		}
 		return xPosition;
 	}
 
 	@Override
-	public float getYPosition() {
-		float yPosition = 0.0f;
+	public double getYPosition() {
+		double yPosition = 0.0f;
 		if (objectGroup != null) {
-			yPosition = (float) objectGroup.getY();
+			yPosition = objectGroup.getY();
 		}
 		return yPosition;
 	}
 
 	@Override
-	public float getZPosition() {
-		float zPosition = 0.0f;
+	public double getZPosition() {
+		double zPosition = 0.0f;
 		if (objectGroup != null) {
-			zPosition = (float) objectGroup.getZ();
+			zPosition = objectGroup.getZ();
 		}
 		return zPosition;
+	}
+
+	@Override
+	public double getYaw() {
+		double yaw = 0.0f;
+		if (objectGroup != null) {
+			yaw = Math.toDegrees(objectGroup.getOrientation(new Quaternion()).getYaw(false));
+		}
+		return yaw;
+	}
+
+	@Override
+	public double getPitch() {
+		double pitch = 0.0f;
+		if (objectGroup != null) {
+			pitch = Math.toDegrees(objectGroup.getOrientation(new Quaternion()).getPitch(false));
+		}
+		return pitch;
+	}
+
+	@Override
+	public double getRoll() {
+		double roll = 0.0f;
+		if (objectGroup != null) {
+			roll = Math.toDegrees(objectGroup.getOrientation(new Quaternion()).getRoll(false));
+		}
+		return roll;
 	}
 }
