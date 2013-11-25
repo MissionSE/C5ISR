@@ -1,24 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/map_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
-    android:orientation="vertical" >
-
-    <fragment
-        android:id="@+id/map_left"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        class="com.google.android.gms.maps.MapFragment" />
+    android:orientation="horizontal" >
 
     <fragment
         android:id="@+id/map_right"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         class="com.google.android.gms.maps.MapFragment" />
 
-</LinearLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:weightSum="1" >
+
+        <Space
+            android:id="@+id/spacer_1"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.33"
+            android:visibility="invisible" />
+
+        <Space
+            android:id="@+id/spacer_2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.33"
+            android:visibility="invisible" />
+
+        <TableRow
+            android:id="@+id/map_table_row"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:weightSum="1" >
+
+            <fragment
+                android:id="@+id/map_left"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.33"
+                android:layout_gravity="top"
+                class="com.google.android.gms.maps.MapFragment" />
+        </TableRow>
+    </TableLayout>
+
+</RelativeLayout>
