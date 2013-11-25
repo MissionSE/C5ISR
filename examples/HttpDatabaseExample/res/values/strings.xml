@@ -14,7 +14,7 @@
     <string name="tag_first_name">first_name</string>
     <string name="tag_last_name">last_name</string>
     
-    <string name="remote_db_path">http://192.168.86.100/</string>
+    <string name="remote_db_path">http://192.168.86.81/</string>
     
     <string name="get_all_students">get_all_students.php</string>
     <string name="create_student">create_student.php</string>

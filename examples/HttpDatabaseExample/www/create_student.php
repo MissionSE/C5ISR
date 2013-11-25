@@ -2,8 +2,8 @@
 	$response = array();
 
 	if (isset($_POST['first_name']) && isset($_POST['last_name'])) {
-		$first_name = $_POST['first_name'];
-		$last_name = $_POST['last_name'];
+		$first_name = mysql_real_escape_string($_POST['first_name']);
+		$last_name = mysql_real_escape_string($_POST['last_name']);
 
 		require_once __DIR__ . '/db_connect.php';
 		$db = new DB_CONNECT();

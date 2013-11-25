@@ -22,7 +22,7 @@ import com.missionse.httpdatabaseexample.tasks.GetAllStudentsTask;
 public class StudentListFragment extends Fragment {
 
 	private static final String[] FIRST_NAMES = new String[] { "James", "Kyle", "Mike", "Rob" };
-	private static final String[] LAST_NAMES = new String[] { "Lehman", "SantAngelo", "Testen", "Vieras" }; // Sant'Angelo results in error.
+	private static final String[] LAST_NAMES = new String[] { "Lehman", "Sant'Angelo", "Testen", "Vieras" };
 
 	private ArrayAdapter<Student> listAdapter;
 	private List<Student> students = new ArrayList<Student>();

@@ -2,7 +2,7 @@
 	$response = array();
 
 	if (isset($_POST['name'])) {
-		$name = $_POST['name'];
+		$name = mysql_real_escape_string($_POST['name']);
 
 		require_once __DIR__ . '/db_connect.php';
 		$db = new DB_CONNECT();
