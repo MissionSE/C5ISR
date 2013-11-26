@@ -10,12 +10,13 @@ import android.os.AsyncTask;
 
 import com.missionse.wifidirect.listener.IncomingDataListener;
 
+/**
+ * An asynchronous task that receives data from the socket and notifies listeners.
+ */
 public class Server extends AsyncTask<List<IncomingDataListener>, Void, Void> {
 
+	public static final int BUFFER_SIZE = 1024;
 	public static final int PORT = 3456;
-
-	public Server() {
-	}
 
 	@Override
 	protected Void doInBackground(final List<IncomingDataListener>... listeners) {
@@ -27,8 +28,7 @@ public class Server extends AsyncTask<List<IncomingDataListener>, Void, Void> {
 
 				ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
 
-				int bufferSize = 1024;
-				byte[] buffer = new byte[bufferSize];
+				byte[] buffer = new byte[BUFFER_SIZE];
 
 				int len = 0;
 				while ((len = connectingClient.getInputStream().read(buffer)) != -1) {
@@ -52,5 +52,4 @@ public class Server extends AsyncTask<List<IncomingDataListener>, Void, Void> {
 		}
 		return null;
 	}
-
 }
