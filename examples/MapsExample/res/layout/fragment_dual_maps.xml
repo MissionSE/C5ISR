@@ -16,55 +16,32 @@
         android:layout_alignParentTop="true"
         class="com.google.android.gms.maps.MapFragment" />
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <FrameLayout
+        android:id="@+id/top_left_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:padding="10dp"
-        android:weightSum="3" >
+        android:layout_alignParentTop="true" />
 
-        <Space
-            android:id="@+id/spacer_1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:visibility="invisible" />
+    <FrameLayout
+        android:id="@+id/top_right_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
 
-        <Space
-            android:id="@+id/spacer_2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:visibility="invisible" />
+    <FrameLayout
+        android:id="@+id/bottom_left_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
 
-        <TableRow
-            android:id="@+id/bottom_table_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:weightSum="3" >
-
-            <FrameLayout
-                android:id="@+id/mini_map_container"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="top"
-                android:layout_weight="1" />
-
-            <Space
-                android:id="@+id/bottom_center_container"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="top"
-                android:layout_weight="1" />
-
-            <FrameLayout
-                android:id="@+id/bottom_right_container"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-        </TableRow>
-    </TableLayout>
+    <FrameLayout
+        android:id="@+id/bottom_right_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>

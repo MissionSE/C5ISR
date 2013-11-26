@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,6 +27,8 @@ import com.google.android.gms.maps.model.VisibleRegion;
 
 public class MiniMapFragment extends MapFragment implements OnSharedPreferenceChangeListener {
 
+	private static final String TAG = MiniMapFragment.class.getSimpleName();
+	
 	private static final String PREF_VIEW_AREA_FILL_COLOR = "pref_view_area_fill_color";
 	private static final String PREF_VIEW_AREA_STROKE = "pref_view_area_stroke";
 	private static final String PREF_VIEW_AREA_STROKE_COLOR = "pref_view_area_stroke_color";
@@ -38,23 +41,25 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 	private Polygon mZoomedViewPolygon;
 
 	private SharedPreferences mPrefs;
-
-	public MiniMapFragment() {
-		super();
-	}
-
+	
 	public static MiniMapFragment newInstance(GoogleMap mainMap) {
 		MiniMapFragment fragment = new MiniMapFragment();
 		fragment.mMainMap = mainMap;
+		
 		return fragment;
+	}
+
+	public MiniMapFragment() {
+		super();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
-
-		setUpMap();
+		
+		View containerParentView = (View) container.getParent();
+		v.setLayoutParams(new FrameLayout.LayoutParams(containerParentView.getWidth()/3, containerParentView.getHeight()/3));
 
 		return v;
 	}
@@ -133,7 +138,7 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 		LatLng neMapLeft = boundsMapLeft.northeast;
 
 		double diff;
-		if (swMapLeft.latitude > swMapRight.latitude)  {
+		if (swMapLeft.latitude > swMapRight.latitude) {
 			diff = swMapLeft.latitude - swMapRight.latitude;
 			swMapLeft = new LatLng(swMapRight.latitude, swMapLeft.longitude);
 			neMapLeft = new LatLng(neMapLeft.latitude - diff, neMapLeft.longitude);
@@ -165,6 +170,8 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		setRetainInstance(true);
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
@@ -182,6 +189,15 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 			mZoomedViewPolygon.setStrokeWidth(strokeWidth);
 		}
 	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		setUpMap();
+	}
+	
+
 
 	private List<LatLng> getMainViewRegionPoints() {
 		final VisibleRegion mainVR = mMainMap.getProjection().getVisibleRegion();
