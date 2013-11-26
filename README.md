@@ -1,9 +1,14 @@
+[documentation]: documentation/
+[examples]: examples/
+[libraries]: libraries/
+[third-party]: third-party/
+
 C5ISR Application Development
 =============================
 
 The C5ISR Application Development repository contains all Android, exploratory development for [Mission Solutions Engineering](http://asrcfederal.com/mse/Pages/default.aspx).
 
-This repository includes custom [libraries][libraries] written to facilitate Android development and leverage serveral technologies available to the Android platform, and [examples][examples] to demonstrate their use. To see a list of the available libraries, see the [README.md][libraries/README.md] in the libraries directory.
+This repository includes custom [libraries][libraries] written to facilitate Android development and leverage serveral technologies available to the Android platform, and [examples][examples] to demonstrate their use. To see a list of the available libraries, see the [README.md](libraries/README.md) in the libraries directory.
 
 Directory Listing
 -----------------
@@ -35,9 +40,9 @@ For further information, view the `README.md` in each directory.
 Getting Started
 ---------------
 
-To get started, view the [Getting Started guide][documentation/GettingStarted.md] in documentation directory.
+To get started, view the [Getting Started guide](documentation/GettingStarted.md) in documentation directory.
 
 Developer's Guide
 -----------------
 
-Several coding standards are required for contribution to this project. Please read the [Developer's guide][documentation/DevelopersGuide.md] before your first commit.
+Several coding standards are required for contribution to this project. Please read the [Developer's guide](documentation/DevelopersGuide.md) before your first commit.
