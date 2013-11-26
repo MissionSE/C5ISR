@@ -7,116 +7,142 @@ import android.widget.ArrayAdapter;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+/**
+ * Provides an abstracted, easy-to-use API based on the third-party SlidingMenu library.
+ */
 public class SlidingMenuHelper {
 
-	private Activity activity;
+	private Activity mActivity;
 
-	private SlidingMenu leftMenu;
-	private MenuFragment leftMenuFragment;
-	private SlidingMenu rightMenu;
-	private MenuFragment rightMenuFragment;
+	private SlidingMenu mLeftMenu;
+	private MenuFragment mLeftMenuFragment;
+	private SlidingMenu mRightMenu;
+	private MenuFragment mRightMenuFragment;
 
+	/**
+	 * Creates a SlidingMenuHelper.
+	 * @param parent the parent activity creating this helper
+	 */
 	public SlidingMenuHelper(final Activity parent) {
-		activity = parent;
+		mActivity = parent;
 	}
 
+	/**
+	 * Creates a menu given various options.
+	 * @param type the type of menu (LEFT/RIGHT)
+	 * @param adapter the array adapter to use when populating the list
+	 * @param title an optional title to be displayed at the top of the menu, can be null
+	 * @param listener a listener to be called back when a menu item is clicked
+	 * @return a newly created SlidingMenu
+	 */
 	public SlidingMenu createMenu(final int type, final ArrayAdapter<?> adapter, final String title,
 			final MenuClickListener listener) {
 
 		if (SlidingMenu.LEFT == type) {
-			leftMenu = new SlidingMenu(activity);
+			mLeftMenu = new SlidingMenu(mActivity);
 
-			leftMenu.setMode(SlidingMenu.LEFT);
-			leftMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-			leftMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
-			leftMenu.setShadowDrawable(R.drawable.shadow_left);
-			leftMenu.setBehindWidthRes(R.dimen.default_menu_width);
-			leftMenu.attachToActivity(activity, SlidingMenu.SLIDING_WINDOW);
-			leftMenu.setMenu(R.layout.left_menu);
+			mLeftMenu.setMode(SlidingMenu.LEFT);
+			mLeftMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+			mLeftMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
+			mLeftMenu.setShadowDrawable(R.drawable.shadow_left);
+			mLeftMenu.setBehindWidthRes(R.dimen.default_menu_width);
+			mLeftMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
+			mLeftMenu.setMenu(R.layout.left_menu);
 
-			leftMenuFragment = new CustomMenuFragment();
+			mLeftMenuFragment = new CustomMenuFragment();
 			if (title != null) {
-				leftMenuFragment.setTitle(title);
+				mLeftMenuFragment.setTitle(title);
 			}
-			((CustomMenuFragment) leftMenuFragment).setCustomArrayAdapter(adapter);
-			leftMenuFragment.registerListener(listener);
+			((CustomMenuFragment) mLeftMenuFragment).setCustomArrayAdapter(adapter);
+			mLeftMenuFragment.registerListener(listener);
 
-			return leftMenu;
+			return mLeftMenu;
 		} else if (SlidingMenu.RIGHT == type) {
-			rightMenu = new SlidingMenu(activity);
+			mRightMenu = new SlidingMenu(mActivity);
 
-			rightMenu.setMode(SlidingMenu.RIGHT);
-			rightMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-			rightMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
-			rightMenu.setShadowDrawable(R.drawable.shadow_right);
-			rightMenu.setBehindWidthRes(R.dimen.default_menu_width);
-			rightMenu.attachToActivity(activity, SlidingMenu.SLIDING_WINDOW);
-			rightMenu.setMenu(R.layout.right_menu);
+			mRightMenu.setMode(SlidingMenu.RIGHT);
+			mRightMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+			mRightMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
+			mRightMenu.setShadowDrawable(R.drawable.shadow_right);
+			mRightMenu.setBehindWidthRes(R.dimen.default_menu_width);
+			mRightMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
+			mRightMenu.setMenu(R.layout.right_menu);
 
-			rightMenuFragment = new CustomMenuFragment();
+			mRightMenuFragment = new CustomMenuFragment();
 			if (title != null) {
-				rightMenuFragment.setTitle(title);
+				mRightMenuFragment.setTitle(title);
 			}
-			((CustomMenuFragment) rightMenuFragment).setCustomArrayAdapter(adapter);
-			rightMenuFragment.registerListener(listener);
+			((CustomMenuFragment) mRightMenuFragment).setCustomArrayAdapter(adapter);
+			mRightMenuFragment.registerListener(listener);
 
-			return rightMenu;
+			return mRightMenu;
 		}
 		return null;
 	}
 
+	/**
+	 * Creates a SlidingMenu given various options.
+	 * @param type the type of menu to create (LEFT/RIGHT)
+	 * @param entries a list of entries with which to populate the menu list
+	 * @param title an optional title to be displayed at the top of the menu, can be null
+	 * @param listener a listener to be called back when a menu item is clicked
+	 * @return a newly created SlidingMenu
+	 */
 	public SlidingMenu createMenu(final int type, final List<String> entries, final String title,
 			final MenuClickListener listener) {
 
 		if (SlidingMenu.LEFT == type) {
-			leftMenu = new SlidingMenu(activity);
+			mLeftMenu = new SlidingMenu(mActivity);
 
-			leftMenu.setMode(SlidingMenu.LEFT);
-			leftMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-			leftMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
-			leftMenu.setShadowDrawable(R.drawable.shadow_left);
-			leftMenu.setBehindWidthRes(R.dimen.default_menu_width);
-			leftMenu.attachToActivity(activity, SlidingMenu.SLIDING_WINDOW);
-			leftMenu.setMenu(R.layout.left_menu);
+			mLeftMenu.setMode(SlidingMenu.LEFT);
+			mLeftMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+			mLeftMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
+			mLeftMenu.setShadowDrawable(R.drawable.shadow_left);
+			mLeftMenu.setBehindWidthRes(R.dimen.default_menu_width);
+			mLeftMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
+			mLeftMenu.setMenu(R.layout.left_menu);
 
-			leftMenuFragment = new DefaultMenuFragment();
+			mLeftMenuFragment = new DefaultMenuFragment();
 			if (title != null) {
-				leftMenuFragment.setTitle(title);
+				mLeftMenuFragment.setTitle(title);
 			}
-			((DefaultMenuFragment) leftMenuFragment).setMenuEntries(entries);
-			leftMenuFragment.registerListener(listener);
+			((DefaultMenuFragment) mLeftMenuFragment).setMenuEntries(entries);
+			mLeftMenuFragment.registerListener(listener);
 
-			return leftMenu;
+			return mLeftMenu;
 		} else if (SlidingMenu.RIGHT == type) {
-			rightMenu = new SlidingMenu(activity);
+			mRightMenu = new SlidingMenu(mActivity);
 
-			rightMenu.setMode(SlidingMenu.RIGHT);
-			rightMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-			rightMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
-			rightMenu.setShadowDrawable(R.drawable.shadow_right);
-			rightMenu.setBehindWidthRes(R.dimen.default_menu_width);
-			rightMenu.attachToActivity(activity, SlidingMenu.SLIDING_WINDOW);
-			rightMenu.setMenu(R.layout.right_menu);
+			mRightMenu.setMode(SlidingMenu.RIGHT);
+			mRightMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+			mRightMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
+			mRightMenu.setShadowDrawable(R.drawable.shadow_right);
+			mRightMenu.setBehindWidthRes(R.dimen.default_menu_width);
+			mRightMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
+			mRightMenu.setMenu(R.layout.right_menu);
 
-			rightMenuFragment = new DefaultMenuFragment();
+			mRightMenuFragment = new DefaultMenuFragment();
 			if (title != null) {
-				rightMenuFragment.setTitle(title);
+				mRightMenuFragment.setTitle(title);
 			}
-			((DefaultMenuFragment) rightMenuFragment).setMenuEntries(entries);
-			rightMenuFragment.registerListener(listener);
+			((DefaultMenuFragment) mRightMenuFragment).setMenuEntries(entries);
+			mRightMenuFragment.registerListener(listener);
 
-			return rightMenu;
+			return mRightMenu;
 		}
 		return null;
 	}
 
+	/**
+	 * Commits any SlidingMenu configuration by doing a fragment transaction to place the SlidingMenus (if created) in
+	 * their appropriate containers.
+	 */
 	public void complete() {
-		if (leftMenu != null) {
-			activity.getFragmentManager().beginTransaction().replace(R.id.left_menu, leftMenuFragment).commit();
+		if (mLeftMenu != null) {
+			mActivity.getFragmentManager().beginTransaction().replace(R.id.left_menu, mLeftMenuFragment).commit();
 		}
-		if (rightMenu != null) {
-			activity.getFragmentManager().beginTransaction().replace(R.id.right_menu, rightMenuFragment).commit();
+		if (mRightMenu != null) {
+			mActivity.getFragmentManager().beginTransaction().replace(R.id.right_menu, mRightMenuFragment).commit();
 		}
 	}
-
 }

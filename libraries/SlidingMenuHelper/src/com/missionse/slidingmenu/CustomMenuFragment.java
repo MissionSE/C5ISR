@@ -6,19 +6,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+/**
+ * Custom fragment that provides an array adapter to be used when creating the menu list.
+ */
 public class CustomMenuFragment extends MenuFragment {
 
-	private ArrayAdapter<?> arrayAdapter;
+	private ArrayAdapter<?> mArrayAdapter;
 
+	/**
+	 * Sets the array adapter to be used when creating the menu list.
+	 * @param adapter the adapter to be used
+	 */
 	public void setCustomArrayAdapter(final ArrayAdapter<?> adapter) {
-		arrayAdapter = adapter;
+		mArrayAdapter = adapter;
 	}
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View contentView = super.onCreateView(inflater, container, savedInstanceState);
 
-		menuList.setAdapter(arrayAdapter);
+		getMenuList().setAdapter(mArrayAdapter);
 
 		return contentView;
 	}
