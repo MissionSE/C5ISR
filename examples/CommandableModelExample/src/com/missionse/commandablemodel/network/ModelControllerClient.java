@@ -10,7 +10,7 @@ public class ModelControllerClient implements ModelChangeRecipient {
 	// We should only send ModelState changes at most every 20ms.
 	// Note: In the future, this logic should be replaced by some sort of timed task that automatically sends
 	// the current state at a fixed rate, to avoid jitter. For now, rate limiting works fine.
-	private static final long PERIODIC = 33L;
+	private static final long PERIODIC = 17L;
 	private long lastStateSentTime = 0L;
 
 	private CommandableModelActivity activity;

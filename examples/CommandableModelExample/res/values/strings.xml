@@ -6,9 +6,9 @@
     <!-- Menu entries -->
     <string name="menu_connect_scan">Connect</string>
     <string name="menu_discoverable">Make Discoverable</string>
+    <string name="menu_reset">Reset</string>
     
     <!-- Device List -->
-    <!--   DeviceListActivity -->
     <string name="title_paired_devices">Paired Devices</string>
     <string name="title_other_devices">Other Available Devices</string>
     <string name="button_scan">Scan for devices</string>

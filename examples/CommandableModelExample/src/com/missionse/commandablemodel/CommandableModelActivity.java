@@ -184,6 +184,12 @@ public class CommandableModelActivity extends Activity {
 			case R.id.discoverable:
 				enableDiscovery();
 				return true;
+			case R.id.reset:
+				if (modelFragment.getController() != null) {
+					modelFragment.getController().reset();
+					modelClient.onModelChange();
+				}
+				return true;
 		}
 		return false;
 	}

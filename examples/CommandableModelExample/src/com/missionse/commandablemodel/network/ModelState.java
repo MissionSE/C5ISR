@@ -24,6 +24,7 @@ public class ModelState {
 	public static final int ORIENTATION_X = 7;
 	public static final int ORIENTATION_Y = 8;
 	public static final int ORIENTATION_Z = 9;
+	private static final int MODEL_SIZE = ORIENTATION_Z + 1;
 
 	public ModelState() {
 	}
@@ -33,7 +34,7 @@ public class ModelState {
 	}
 
 	public ModelState(final ModelController controller) {
-		String parseableState = "";
+		String parseableState = " B ";
 		parseableState += " " + controller.getXPosition();
 		parseableState += " " + controller.getYPosition();
 		parseableState += " " + controller.getZPosition();
@@ -44,13 +45,14 @@ public class ModelState {
 		parseableState += " " + controller.getXOrientation();
 		parseableState += " " + controller.getYOrientation();
 		parseableState += " " + controller.getZOrientation();
+		parseableState += " E ";
 
 		setModelValues(parseableState);
 	}
 
 	@Override
 	public String toString() {
-		String parseableState = "";
+		String parseableState = " B ";
 		parseableState += " " + modelState.get(POSITION_X);
 		parseableState += " " + modelState.get(POSITION_Y);
 		parseableState += " " + modelState.get(POSITION_Z);
@@ -61,23 +63,60 @@ public class ModelState {
 		parseableState += " " + modelState.get(ORIENTATION_X);
 		parseableState += " " + modelState.get(ORIENTATION_Y);
 		parseableState += " " + modelState.get(ORIENTATION_Z);
+		parseableState += " E ";
 
 		return parseableState;
 	}
 
 	public boolean setModelValues(final String modelStatus) {
-		boolean isValid = true;
 		modelState = new ArrayList<Float>();
 
-		StringTokenizer tokenizer = new StringTokenizer(modelStatus);
-		try {
-			while (tokenizer.hasMoreTokens()) {
-				modelState.add(Float.parseFloat(tokenizer.nextToken()));
-			}
-		} catch (NumberFormatException e) {
-			Log.e(TAG, "Unable to parse string: " + modelStatus);
-			Log.e(TAG, "Size of value list: " + modelState.size());
+		boolean isValid = parseMessage(modelStatus);
+		if (isValid && modelState.size() < MODEL_SIZE) {
 			isValid = false;
+		}
+
+		if (!isValid) {
+			Log.e(TAG, "Message invalid: " + modelStatus);
+		}
+
+		return isValid;
+	}
+
+	private boolean parseMessage(final String incomingMessage) {
+
+		boolean messageBegan = false;
+		boolean messageEnded = false;
+		boolean isValid = true;
+
+		StringTokenizer tokenizer = new StringTokenizer(incomingMessage);
+		while (tokenizer.hasMoreTokens() && !messageEnded) {
+			String token = tokenizer.nextToken();
+			if (!messageBegan) {
+				if (token.equals("B")) {
+					messageBegan = true;
+					modelState = new ArrayList<Float>();
+				}
+			} else if (token.equals("E")) {
+				if (modelState.size() == MODEL_SIZE) {
+					messageEnded = true;
+				} else {
+					Log.e(TAG, "Message processed with invalid size.");
+					messageBegan = false;
+				}
+			} else if (messageBegan && !messageEnded) {
+				try {
+					modelState.add(Float.valueOf(token));
+				} catch (NumberFormatException e) {
+					Log.e(TAG, "Got an unexpected value: " + token);
+					messageBegan = false;
+				}
+			}
+		}
+
+		if (!messageBegan || !messageEnded || modelState.size() != MODEL_SIZE) {
+			isValid = false;
+			modelState = new ArrayList<Float>();
 		}
 
 		return isValid;
