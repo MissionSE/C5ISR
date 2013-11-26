@@ -159,7 +159,10 @@ public class BluetoothNetworkService {
 			thread = connectedThread;
 		}
 		// Perform the write unsynchronized.
-		thread.write(out);
+		synchronized (this) {
+			thread.write(out);
+		}
+
 		return true;
 	}
 

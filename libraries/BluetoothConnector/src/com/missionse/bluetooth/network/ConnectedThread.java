@@ -55,6 +55,7 @@ public class ConnectedThread extends Thread {
 	public void write(final byte[] buffer) {
 		try {
 			outStream.write(buffer);
+			outStream.flush();
 			networkService.onOutgoingData(buffer);
 		} catch (IOException e) {
 			e.printStackTrace();
