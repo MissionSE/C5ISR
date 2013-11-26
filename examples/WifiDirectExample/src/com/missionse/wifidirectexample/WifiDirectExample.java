@@ -17,24 +17,28 @@ import com.missionse.wifidirect.listener.DisconnectionListener;
 import com.missionse.wifidirect.listener.DiscoverPeersListener;
 import com.missionse.wifidirect.listener.P2pStateChangeListener;
 
+/**
+ * Acts as the main entry point to the WifiDirectExample application, displaying the conversation fragment and handling
+ * all WifiDirectConnector callbacks.
+ */
 public class WifiDirectExample extends Activity {
 
-	private Menu mainMenu;
+	private Menu mMainMenu;
 
-	private WifiDirectConnector wifiDirectConnector;
-	private ConversationFragment conversationFragment;
+	private WifiDirectConnector mWifiDirectConnector;
+	private ConversationFragment mConversationFragment;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wifi_direct_example);
-		wifiDirectConnector = new WifiDirectConnector(this);
-		wifiDirectConnector.onCreate();
+		mWifiDirectConnector = new WifiDirectConnector(this);
+		mWifiDirectConnector.onCreate();
 
-		conversationFragment = new ConversationFragment();
-		getFragmentManager().beginTransaction().replace(R.id.content, conversationFragment).commit();
+		mConversationFragment = new ConversationFragment();
+		getFragmentManager().beginTransaction().replace(R.id.content, mConversationFragment).commit();
 
-		wifiDirectConnector.registerDataListener(conversationFragment);
+		mWifiDirectConnector.registerDataListener(mConversationFragment);
 
 		getActionBar().setSubtitle("disconnected");
 	}
@@ -42,27 +46,28 @@ public class WifiDirectExample extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.main_menu, menu);
-		mainMenu = menu;
+		mMainMenu = menu;
 		showDiscoveryButton();
 		return true;
 	}
 
 	private void showDiscoveryButton() {
-		mainMenu.findItem(R.id.disconnect).setVisible(false);
-		mainMenu.findItem(R.id.disconnect).setEnabled(false);
+		mMainMenu.findItem(R.id.disconnect).setVisible(false);
+		mMainMenu.findItem(R.id.disconnect).setEnabled(false);
 
-		mainMenu.findItem(R.id.discover_peers).setVisible(true);
-		mainMenu.findItem(R.id.discover_peers).setEnabled(true);
+		mMainMenu.findItem(R.id.discover_peers).setVisible(true);
+		mMainMenu.findItem(R.id.discover_peers).setEnabled(true);
 	}
 
 	private void showDisconnectButton() {
 		try {
-			mainMenu.findItem(R.id.disconnect).setVisible(true);
-			mainMenu.findItem(R.id.disconnect).setEnabled(true);
+			mMainMenu.findItem(R.id.disconnect).setVisible(true);
+			mMainMenu.findItem(R.id.disconnect).setEnabled(true);
 
-			mainMenu.findItem(R.id.discover_peers).setVisible(false);
-			mainMenu.findItem(R.id.discover_peers).setEnabled(false);
+			mMainMenu.findItem(R.id.discover_peers).setVisible(false);
+			mMainMenu.findItem(R.id.discover_peers).setEnabled(false);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -76,12 +81,14 @@ public class WifiDirectExample extends Activity {
 			case R.id.disconnect:
 				disconnect();
 				return true;
+			default:
+				break;
 		}
 		return false;
 	}
 
 	private void discoverPeers() {
-		wifiDirectConnector.startDiscovery(new DiscoverPeersListener() {
+		mWifiDirectConnector.startDiscovery(new DiscoverPeersListener() {
 			@Override
 			public void onP2pNotEnabled() {
 				Toast.makeText(WifiDirectExample.this, "You must enable P2P first!", Toast.LENGTH_SHORT).show();
@@ -116,13 +123,16 @@ public class WifiDirectExample extends Activity {
 
 	private void showDiscoveryDialog() {
 		// Launch the DeviceListActivity to see devices and do a scan.
-		DeviceListFragment deviceListFragment = DeviceListFragment.newInstance(wifiDirectConnector);
+		DeviceListFragment deviceListFragment = DeviceListFragment.newInstance(mWifiDirectConnector);
 		deviceListFragment.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * Disconnects the WifiDirect connection.
+	 */
 	public void disconnect() {
 		// Called by the PeerDetail fragment when the Disconnect button is pressed.
-		wifiDirectConnector.disconnect(new DisconnectionListener() {
+		mWifiDirectConnector.disconnect(new DisconnectionListener() {
 			@Override
 			public void onDisconnectionSuccess() {
 				// The remote device has been disconnected.
@@ -143,8 +153,8 @@ public class WifiDirectExample extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		wifiDirectConnector.onResume();
-		wifiDirectConnector.registerStateChangeListener(new P2pStateChangeListener() {
+		mWifiDirectConnector.onResume();
+		mWifiDirectConnector.registerStateChangeListener(new P2pStateChangeListener() {
 			@Override
 			public void onPeersAvailable(final WifiP2pDeviceList peers) {
 
@@ -181,12 +191,16 @@ public class WifiDirectExample extends Activity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		wifiDirectConnector.onPause();
+		mWifiDirectConnector.onPause();
 		hideDiscoveryDialog();
 	}
 
+	/**
+	 * Connects via WifiDirect to a specific device.
+	 * @param device the device to which a connection should be initiated.
+	 */
 	public void connectToDevice(final WifiP2pDevice device) {
-		wifiDirectConnector.connect(device, new ConnectionInitiationListener() {
+		mWifiDirectConnector.connect(device, new ConnectionInitiationListener() {
 			@Override
 			public void onConnectionInitiationSuccess() {
 				Toast.makeText(WifiDirectExample.this, "Initiating connection...", Toast.LENGTH_SHORT).show();
@@ -199,7 +213,12 @@ public class WifiDirectExample extends Activity {
 		});
 	}
 
+	/**
+	 * Sends a message via the WifiDirect connection.
+	 * @param message the message to be sent
+	 * @return the success/failure of the data sending
+	 */
 	public boolean sendMessage(final String message) {
-		return wifiDirectConnector.getClient().sendData(message.getBytes());
+		return mWifiDirectConnector.getClient().sendData(message.getBytes());
 	}
 }
