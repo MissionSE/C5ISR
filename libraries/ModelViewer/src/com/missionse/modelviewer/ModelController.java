@@ -18,7 +18,7 @@ public interface ModelController {
 	boolean isTranslationLocked();
 
 	void rotate(final double x, final double y, final double z);
-	void rotateAroundAxis(final double x, final double y, final double z);
+	void rotateAround(final double x, final double y, final double z);
 	void scale(final double scaleFactor);
 	void scale(final double x, final double y, final double z);
 	void translate(final double x, final double y, final double z);
@@ -26,7 +26,7 @@ public interface ModelController {
 	void setRotation(final double x, final double y, final double z);
 	void setScale(final double x, final double y, final double z);
 	void setPosition(final double x, final double y, final double z);
-	void setOrientation(final double yaw, final double pitch, final double roll);
+	void setOrientation(final double w, final double x, final double y, final double z);
 
 	double getXRotation();
 	double getYRotation();
@@ -40,9 +40,10 @@ public interface ModelController {
 	double getYPosition();
 	double getZPosition();
 
-	double getYaw();
-	double getPitch();
-	double getRoll();
+	double getWOrientation();
+	double getXOrientation();
+	double getYOrientation();
+	double getZOrientation();
 
 	void reset();
 	void center();

@@ -39,14 +39,14 @@ public class NotifyingModelGestureListener extends ModelViewerGestureListener {
 
 	@Override
 	public boolean onRotate(final RotationGestureDetector detector, final float angle) {
-		controller.rotateAroundAxis(0f, 0f, -detector.getAngle());
+		controller.rotateAround(0f, 0f, -detector.getAngle());
 		notifyRecipients();
 		return true;
 	}
 
 	@Override
 	public boolean onPan(final PanGestureDetector detector, final float distanceX, final float distanceY) {
-		controller.rotateAroundAxis(-distanceX / 3f, -distanceY / 3f, 0);
+		controller.rotateAround(-distanceY / 3f, -distanceX / 3f, 0);
 		notifyRecipients();
 		return true;
 	}

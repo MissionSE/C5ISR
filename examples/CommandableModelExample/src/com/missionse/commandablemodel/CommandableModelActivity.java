@@ -229,9 +229,10 @@ public class CommandableModelActivity extends Activity {
 
 	private void setModelState(final ModelState state) {
 		modelFragment.getController().setOrientation(
-				state.get(ModelState.YAW),
-				state.get(ModelState.PITCH),
-				state.get(ModelState.ROLL));
+				state.get(ModelState.ORIENTATION_W),
+				state.get(ModelState.ORIENTATION_X),
+				state.get(ModelState.ORIENTATION_Y),
+				state.get(ModelState.ORIENTATION_Z));
 		modelFragment.getController().setScale(
 				state.get(ModelState.SCALE_X),
 				state.get(ModelState.SCALE_Y),

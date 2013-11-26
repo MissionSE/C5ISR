@@ -20,9 +20,10 @@ public class ModelState {
 	public static final int SCALE_Y = 4;
 	public static final int SCALE_Z = 5;
 
-	public static final int YAW = 6;
-	public static final int PITCH = 7;
-	public static final int ROLL = 8;
+	public static final int ORIENTATION_W = 6;
+	public static final int ORIENTATION_X = 7;
+	public static final int ORIENTATION_Y = 8;
+	public static final int ORIENTATION_Z = 9;
 
 	public ModelState() {
 	}
@@ -32,25 +33,34 @@ public class ModelState {
 	}
 
 	public ModelState(final ModelController controller) {
-		String parseableState = " ";
-		parseableState += controller.getXPosition() + " " + controller.getYPosition() + " " + controller.getZPosition();
-		parseableState += " ";
-		parseableState += controller.getXScale() + " " + controller.getYScale() + " " + controller.getZScale();
-		parseableState += " ";
-		parseableState += controller.getYaw() + " " + controller.getPitch() + " " + controller.getRoll();
+		String parseableState = "";
+		parseableState += " " + controller.getXPosition();
+		parseableState += " " + controller.getYPosition();
+		parseableState += " " + controller.getZPosition();
+		parseableState += " " + controller.getXScale();
+		parseableState += " " + controller.getYScale();
+		parseableState += " " + controller.getZScale();
+		parseableState += " " + controller.getWOrientation();
+		parseableState += " " + controller.getXOrientation();
+		parseableState += " " + controller.getYOrientation();
+		parseableState += " " + controller.getZOrientation();
 
 		setModelValues(parseableState);
 	}
 
 	@Override
 	public String toString() {
-		String parseableState = " ";
-
-		parseableState += modelState.get(POSITION_X) + " " + modelState.get(POSITION_Y) + " " + modelState.get(POSITION_Z);
-		parseableState += " ";
-		parseableState += modelState.get(SCALE_X) + " " + modelState.get(SCALE_Y) + " " + modelState.get(SCALE_Z);
-		parseableState += " ";
-		parseableState += modelState.get(YAW) + " " + modelState.get(PITCH) + " " + modelState.get(ROLL);
+		String parseableState = "";
+		parseableState += " " + modelState.get(POSITION_X);
+		parseableState += " " + modelState.get(POSITION_Y);
+		parseableState += " " + modelState.get(POSITION_Z);
+		parseableState += " " + modelState.get(SCALE_X);
+		parseableState += " " + modelState.get(SCALE_Y);
+		parseableState += " " + modelState.get(SCALE_Z);
+		parseableState += " " + modelState.get(ORIENTATION_W);
+		parseableState += " " + modelState.get(ORIENTATION_X);
+		parseableState += " " + modelState.get(ORIENTATION_Y);
+		parseableState += " " + modelState.get(ORIENTATION_Z);
 
 		return parseableState;
 	}
@@ -66,6 +76,7 @@ public class ModelState {
 			}
 		} catch (NumberFormatException e) {
 			Log.e(TAG, "Unable to parse string: " + modelStatus);
+			Log.e(TAG, "Size of value list: " + modelState.size());
 			isValid = false;
 		}
 
@@ -73,6 +84,12 @@ public class ModelState {
 	}
 
 	public Float get(final int index) {
-		return modelState.get(index);
+		Float value = 0.0f;
+		try {
+			value = modelState.get(index);
+		} catch (IndexOutOfBoundsException e) {
+			Log.e(TAG, "Attempted to use an invalid index.");
+		}
+		return value;
 	}
 }
