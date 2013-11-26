@@ -1,6 +1,6 @@
 #Ignore everything...
 *
-#...but the archived zip file for google play services and this gitignore
-!.gitignore
-!google-play-services_lib.zip
+#...but the archive(s), this gitignore, and the requisite README.
 !README.md
+!.gitignore
+!*.zip

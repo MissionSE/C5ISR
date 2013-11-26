@@ -1,6 +1,8 @@
 Third-Party
 ===========
 
+The Third-Party library does this and that.
+
 The Third-Party library can be found [here](http://www.google.com).
 
-It was last downloaded on: `12/30/2013`
+Retrieved on: `12/30/2013`

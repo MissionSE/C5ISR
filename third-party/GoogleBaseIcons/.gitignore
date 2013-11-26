@@ -1,5 +1,6 @@
 #Ignore everything...
 *
-#...but the archived zip file for Android base icons and this gitignore
+#...but the archive(s), this gitignore, and the requisite README.
+!README.md
 !.gitignore
 !*.zip

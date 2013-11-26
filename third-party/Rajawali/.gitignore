@@ -1,5 +1,6 @@
 #Ignore everything...
 *
-#...but the archived zip file for Rajawali and this gitignore
+#...but the archive(s), this gitignore, and the requisite README.
+!README.md
 !.gitignore
-!Rajawali-master.zip
+!*.zip
