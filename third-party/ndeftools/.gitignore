@@ -1,5 +1,5 @@
 #Ignore everything...
 *
-#...but the archived zip file for SlidingMenu and this gitignore
+#...but the archived zip file for ndeftools and this gitignore
 !.gitignore
 !ndeftools-all-src-1.2.3.zip

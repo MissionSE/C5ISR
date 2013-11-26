@@ -1,6 +1,6 @@
 #Ignore everything...
 *
-#...but the archived zip file for SlidingMenu and this gitignore
+#...but the archived zip file for google play services and this gitignore
 !.gitignore
 !google-play-services_lib.zip
 !README.md

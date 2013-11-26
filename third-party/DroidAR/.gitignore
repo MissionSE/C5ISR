@@ -1,5 +1,5 @@
 #Ignore everything...
 *
-#...but the archived zip file for SlidingMenu and this gitignore
+#...but the archived zip file for DroidAR and this gitignore
 !.gitignore
 !*.zip
