@@ -8,42 +8,45 @@ import android.view.MenuItem;
 import com.missionse.videoviewer.VideoFragment;
 import com.missionse.videoviewer.VideoFragmentFactory;
 
+/**
+ * Provides an activity that is an example for how to use the video viewer library.
+ */
 public class VideoViewerExampleActivity extends Activity {
-
-	private VideoFragment videoFragment;
+	private VideoFragment mVideoFragment;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_video_viewer_example);
 
-		videoFragment = VideoFragmentFactory.createVideoFragment(R.raw.security_video);
-		getFragmentManager().beginTransaction().replace(R.id.content_frame, videoFragment).commit();
+		mVideoFragment = VideoFragmentFactory.createVideoFragment(R.raw.security_video);
+		getFragmentManager().beginTransaction().replace(R.id.content_frame, mVideoFragment).commit();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.video_viewer_example, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		if (videoFragment != null) {
+		if (mVideoFragment != null) {
 			switch (item.getItemId()) {
 				case R.id.action_play:
-					videoFragment.start();
+					mVideoFragment.start();
 					return true;
 				case R.id.action_stop:
-					videoFragment.stop();
+					mVideoFragment.stop();
 					return true;
 				case R.id.action_pause:
-					videoFragment.pause();
+					mVideoFragment.pause();
 					return true;
 				case R.id.action_resume:
-					videoFragment.resume();
+					mVideoFragment.resume();
 					return true;
+				default:
+					break;
 			}
 		}
 
