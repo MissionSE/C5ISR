@@ -7,26 +7,37 @@ import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
+/**
+ * Provides a pager adapter used for image resources.
+ */
 public class ImagePagerAdapter extends FragmentStatePagerAdapter {
 
 	private static final String TAG = ImagePagerAdapter.class.getName();
 
-	private ArrayList<Integer> imageResources;
+	private ArrayList<Integer> mImageResources;
 
-	public ImagePagerAdapter(final FragmentManager fm) {
-		super(fm);
-		imageResources = new ArrayList<Integer>();
+	/**
+	 * Constructor.
+	 * @param fragmentManager The fragment manager.
+	 */
+	public ImagePagerAdapter(final FragmentManager fragmentManager) {
+		super(fragmentManager);
+		mImageResources = new ArrayList<Integer>();
 	}
 
+	/**
+	 * Adds an image resource to the adapter.
+	 * @param resourceId The resource id of the image to be added.
+	 */
 	public void addImage(final int resourceId) {
-		imageResources.add(resourceId);
+		mImageResources.add(resourceId);
 	}
 
 	@Override
 	public Fragment getItem(final int position) {
 		Fragment fragment = null;
 		try {
-			fragment = ImageFragmentFactory.createImageFragment(imageResources.get(position));
+			fragment = ImageFragmentFactory.createImageFragment(mImageResources.get(position));
 		} catch (IndexOutOfBoundsException e) {
 			Log.e(TAG, "Invalid item: " + position + ", max = " + getCount());
 		}
@@ -36,6 +47,6 @@ public class ImagePagerAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public int getCount() {
-		return imageResources.size();
+		return mImageResources.size();
 	}
 }

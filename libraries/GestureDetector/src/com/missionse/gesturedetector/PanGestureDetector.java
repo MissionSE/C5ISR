@@ -153,7 +153,7 @@ public class PanGestureDetector {
 	 */
 	public interface OnPanGestureListener {
 		/**
-		 * Called on a motion event when a pan is detected.
+		 * Called on receipt of a motion event when a pan is detected.
 		 * @param detector The pan gesture detector.
 		 * @param distanceX The x distance of the pan.
 		 * @param distanceY The y distance of the pan.
