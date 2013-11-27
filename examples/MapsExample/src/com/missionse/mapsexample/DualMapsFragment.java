@@ -5,6 +5,7 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
 import java.util.ArrayList;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -12,6 +13,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -70,8 +72,6 @@ LocationListener, OnSharedPreferenceChangeListener {
 
 	private GoogleMap mMainMap;
 
-	private MiniMapFragment mMiniMapFragment;
-
 	private LatLng mMockLatLng;
 
 	private SharedPreferences mPrefs;
@@ -106,24 +106,78 @@ LocationListener, OnSharedPreferenceChangeListener {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (mMiniMapFragment == null) {
-					mMiniMapFragment = MiniMapFragment.newInstance(mMainMap);
-					getFragmentManager().beginTransaction()
-					.replace(R.id.bottom_left_container, mMiniMapFragment, TAG_MINI_MAP)
-					.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-					.commit();
+				FragmentManager fm = getFragmentManager();
+				MiniMapFragment fragment = (MiniMapFragment) fm.findFragmentByTag(TAG_MINI_MAP);
+				if (fragment == null) {
+					Log.d(TAG, "MimiMapFragment does not exist in fragment manager");
+					fragment = MiniMapFragment.newInstance(mMainMap);
+					replaceBottomLeftCornerFragment(fragment, TAG_MINI_MAP);
+//				}
+//				if (isChecked) {
+//					replaceBottomLeftCornerFragment(fragment, TAG_MINI_MAP);
+//				} else {
+//					removeCornerFragment(fragment, R.animator.card_flip_right_in, R.animator.card_flip_right_out);
+//				}
 				} else {
+					Log.d(TAG, "MimiMapFragment exists in fragment manager");
 					FragmentTransaction ft = getFragmentManager().beginTransaction();
+					ft.setCustomAnimations( R.animator.card_flip_right_in, R.animator.card_flip_right_out);
 					if (isChecked) {
-						ft.show(mMiniMapFragment);
+						ft.attach(fragment);
 					} else {
-						ft.hide(mMiniMapFragment);
+						ft.detach(fragment);
 					}
 					ft.commit();
 //					mMiniMapFragment.getView().setVisibility(isChecked == true ? View.VISIBLE : View.INVISIBLE);
 				}
 			}
 		});
+	}
+	
+	/**
+	 * @param fragment
+	 * @param tag
+	 */
+	public void replaceTopLeftCornerFragment(Fragment fragment, String tag) {
+		replaceCornerFragment(R.id.top_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
+	}
+	
+	/**
+	 * @param fragment
+	 * @param tag
+	 */
+	public void replaceTopRightCornerFragment(Fragment fragment, String tag) {
+		replaceCornerFragment(R.id.top_right_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
+	}
+	
+	/**
+	 * @param fragment
+	 * @param tag
+	 */
+	public void replaceBottomLeftCornerFragment(Fragment fragment, String tag) {
+		replaceCornerFragment(R.id.bottom_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
+	}
+	
+	/**
+	 * @param fragment
+	 * @param tag
+	 */
+	public void replaceBottomRightCornerFragment(Fragment fragment, String tag) {
+		replaceCornerFragment(R.id.bottom_right_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
+	}
+	
+	private void replaceCornerFragment(int containerViewId, Fragment fragment, String tag, int enter, int exit) {
+		getFragmentManager().beginTransaction()
+		.replace(containerViewId, fragment, tag)
+		.setCustomAnimations(enter, exit)
+		.commit();
+	}
+	
+	private void removeCornerFragment(Fragment fragment, int enter, int exit) {
+		getFragmentManager().beginTransaction()
+		.remove(fragment)
+		.setCustomAnimations(enter, exit)
+		.commit();
 	}
 
 	@Override
