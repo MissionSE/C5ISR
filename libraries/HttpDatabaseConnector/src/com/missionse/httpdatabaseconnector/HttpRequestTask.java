@@ -11,48 +11,56 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+/**
+ * Provides an asynchronous task used for http requests.
+ */
 public abstract class HttpRequestTask extends AsyncTask<String, String, String> {
-	private final Context context;
-	private final String message;
+	private final Context mContext;
+	private final String mMessage;
 
-	private Toast connectionToast;
-	private List<NameValuePair> parameters = new ArrayList<NameValuePair>();
-	private HttpClientRequester httpRequester = new HttpClientRequester();
+	private Toast mConnectionToast;
+	private List<NameValuePair> mParameters = new ArrayList<NameValuePair>();
+	private HttpClientRequester mHttpRequester = new HttpClientRequester();
 
+	/**
+	 * Constructor.
+	 * @param context The context of the owner of the task.
+	 * @param loadingMessage The message to display while loading.
+	 */
 	public HttpRequestTask(final Context context, final String loadingMessage) {
-		this.context = context;
-		this.message = loadingMessage;
+		mContext = context;
+		mMessage = loadingMessage;
 	}
 
 	protected Context getContext() {
-		return context;
+		return mContext;
 	}
 
 	protected void addParameter(final NameValuePair parameter) {
-		parameters.add(parameter);
+		mParameters.add(parameter);
 	}
 
 	protected void addParameter(final String name, final String value) {
-		parameters.add(new BasicNameValuePair(name, value));
+		mParameters.add(new BasicNameValuePair(name, value));
 	}
 
 	protected JSONObject makeGetRequest(final String url) {
-		return httpRequester.makeHttpGetRequest(url, parameters);
+		return mHttpRequester.makeHttpGetRequest(url, mParameters);
 	}
 
 	protected JSONObject makePostRequest(final String url) {
-		return httpRequester.makeHttpPostRequest(url, parameters);
+		return mHttpRequester.makeHttpPostRequest(url, mParameters);
 	}
 
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		connectionToast = Toast.makeText(context, message, Toast.LENGTH_LONG);
-		connectionToast.show();
+		mConnectionToast = Toast.makeText(mContext, mMessage, Toast.LENGTH_LONG);
+		mConnectionToast.show();
 	}
 
 	@Override
 	protected void onPostExecute(final String result) {
-		connectionToast.cancel();
+		mConnectionToast.cancel();
 	}
 }

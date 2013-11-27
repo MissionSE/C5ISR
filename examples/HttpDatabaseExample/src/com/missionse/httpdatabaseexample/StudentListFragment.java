@@ -19,13 +19,15 @@ import com.missionse.httpdatabaseexample.tasks.CreateStudentTask;
 import com.missionse.httpdatabaseexample.tasks.DeleteAllStudentsTask;
 import com.missionse.httpdatabaseexample.tasks.GetAllStudentsTask;
 
+/**
+ * A fragment that contains a list of students provided by a database.
+ */
 public class StudentListFragment extends Fragment {
-
 	private static final String[] FIRST_NAMES = new String[] { "James", "Kyle", "Mike", "Rob" };
 	private static final String[] LAST_NAMES = new String[] { "Lehman", "Sant'Angelo", "Testen", "Vieras" };
 
-	private ArrayAdapter<Student> listAdapter;
-	private List<Student> students = new ArrayList<Student>();
+	private ArrayAdapter<Student> mListAdapter;
+	private List<Student> mStudents = new ArrayList<Student>();
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -33,8 +35,8 @@ public class StudentListFragment extends Fragment {
 
 		ListView studentList = (ListView) contentView.findViewById(R.id.student_list);
 
-		listAdapter = new ArrayAdapter<Student>(getActivity(), R.layout.student_list_entry, students);
-		studentList.setAdapter(listAdapter);
+		mListAdapter = new ArrayAdapter<Student>(getActivity(), R.layout.student_list_entry, mStudents);
+		studentList.setAdapter(mListAdapter);
 
 		Button addStudentButton = (Button) contentView.findViewById(R.id.button_newstudent);
 		addStudentButton.setOnClickListener(new OnClickListener() {
@@ -62,14 +64,14 @@ public class StudentListFragment extends Fragment {
 		String firstName = FIRST_NAMES[random.nextInt(FIRST_NAMES.length)];
 		String lastName = LAST_NAMES[random.nextInt(LAST_NAMES.length)];
 
-		new CreateStudentTask(getActivity(), listAdapter, students).execute(firstName, lastName);
+		new CreateStudentTask(getActivity(), mListAdapter, mStudents).execute(firstName, lastName);
 	}
 
 	private void clearAllStudents() {
-		new DeleteAllStudentsTask(getActivity(), listAdapter, students).execute();
+		new DeleteAllStudentsTask(getActivity(), mListAdapter, mStudents).execute();
 	}
 
 	private void getAllStudents() {
-		new GetAllStudentsTask(getActivity(), listAdapter, students).execute();
+		new GetAllStudentsTask(getActivity(), mListAdapter, mStudents).execute();
 	}
 }

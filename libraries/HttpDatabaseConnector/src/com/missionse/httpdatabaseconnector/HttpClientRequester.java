@@ -15,16 +15,28 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+/**
+ * Provides functionality to perform http post and get requests.
+ */
 public class HttpClientRequester {
 
 	private static final String TAG = HttpClientRequester.class.getName();
 
-	private final JSONParser jsonParser;
+	private final JSONParser mJsonParser;
 
+	/**
+	 * Constructor.
+	 */
 	public HttpClientRequester() {
-		jsonParser = new JSONParser();
+		mJsonParser = new JSONParser();
 	}
 
+	/**
+	 * Makes an http get request with a specified url and parameters.
+	 * @param url The http url with which the request will be made.
+	 * @param parameters The parameters in the request.
+	 * @return A JSON Object containing the response to the request.
+	 */
 	public JSONObject makeHttpGetRequest(final String url, final List<NameValuePair> parameters) {
 		JSONObject json = null;
 		InputStream input = null;
@@ -39,7 +51,7 @@ public class HttpClientRequester {
 			HttpEntity httpEntity = httpResponse.getEntity();
 			input = httpEntity.getContent();
 
-			json = jsonParser.parse(input);
+			json = mJsonParser.parse(input);
 			input.close();
 		} catch (Exception e) {
 			Log.e(TAG, "Error getting HTTP Get Response: " + e.toString());
@@ -48,6 +60,12 @@ public class HttpClientRequester {
 		return json;
 	}
 
+	/**
+	 * Makes an http post request with a specified url and parameters.
+	 * @param url The http url with which the request will be made.
+	 * @param parameters The parameters in the request.
+	 * @return A JSON Object containing the response to the request.
+	 */
 	public JSONObject makeHttpPostRequest(final String url, final List<NameValuePair> parameters) {
 		JSONObject json = null;
 		InputStream input = null;
@@ -61,7 +79,7 @@ public class HttpClientRequester {
 			HttpEntity httpEntity = httpResponse.getEntity();
 			input = httpEntity.getContent();
 
-			json = jsonParser.parse(input);
+			json = mJsonParser.parse(input);
 			input.close();
 		} catch (Exception e) {
 			Log.e(TAG, "Error getting HTTP Post Response: " + e.toString());

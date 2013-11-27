@@ -15,26 +15,35 @@ import com.missionse.httpdatabaseconnector.HttpRequestTask;
 import com.missionse.httpdatabaseexample.R;
 import com.missionse.httpdatabaseexample.model.Classroom;
 
+/**
+ * Provides a task that creates a classroom in the database.
+ */
 public class CreateClassroomTask extends HttpRequestTask {
 	private static final String TAG = GetAllClassroomsTask.class.getName();
 
-	private final String tagSuccess;
-	private final String tagName;
-	private final String addClassroomsURL;
+	private final String mTagSuccess;
+	private final String mTagName;
+	private final String mAddClassroomsURL;
 
-	private final ArrayAdapter<Classroom> classroomListAdapter;
-	private final List<Classroom> classroomList;
+	private final ArrayAdapter<Classroom> mClassroomListAdapter;
+	private final List<Classroom> mClassroomList;
 
+	/**
+	 * Constructor.
+	 * @param context The context of the owner of the task.
+	 * @param adapter The adapter containing the classrooms.
+	 * @param classrooms The list of classrooms.
+	 */
 	public CreateClassroomTask(final Context context, final ArrayAdapter<Classroom> adapter, final List<Classroom> classrooms) {
 		super(context, "Creating classroom");
-		classroomListAdapter = adapter;
-		classroomList = classrooms;
+		mClassroomListAdapter = adapter;
+		mClassroomList = classrooms;
 
 		Resources resources = getContext().getResources();
-		tagSuccess = resources.getString(R.string.tag_success);
-		tagName = resources.getString(R.string.tag_name);
-		addClassroomsURL = resources.getString(R.string.remote_db_path) +
-				resources.getString(R.string.create_classroom);
+		mTagSuccess = resources.getString(R.string.tag_success);
+		mTagName = resources.getString(R.string.tag_name);
+		mAddClassroomsURL = resources.getString(R.string.remote_db_path)
+				+ resources.getString(R.string.create_classroom);
 	}
 
 	@Override
@@ -44,19 +53,19 @@ public class CreateClassroomTask extends HttpRequestTask {
 		}
 
 		Classroom classroom = new Classroom(params[0]);
-		addParameter(tagName, classroom.getName());
-		JSONObject json = makePostRequest(addClassroomsURL);
+		addParameter(mTagName, classroom.getName());
+		JSONObject json = makePostRequest(mAddClassroomsURL);
 
 		if (json != null) {
 			Log.d(TAG, "Create Classroom Result: " + json.toString());
 
 			try {
-				if (json.getInt(tagSuccess) == 1) {
-					classroomList.add(classroom);
+				if (json.getInt(mTagSuccess) == 1) {
+					mClassroomList.add(classroom);
 					((Activity) getContext()).runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							classroomListAdapter.notifyDataSetChanged();
+							mClassroomListAdapter.notifyDataSetChanged();
 						}
 					});
 				}
