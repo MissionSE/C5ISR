@@ -17,8 +17,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.missionse.bluetooth.network.ServiceIdentifier;
+
 /**
- * Displays a list of paired and discovered devices.
+ * Displays a list of discovered and paired devices in a dialog window.
  */
 public class DeviceListFragment extends DialogFragment {
 
@@ -28,15 +30,15 @@ public class DeviceListFragment extends DialogFragment {
 	private static final String NO_DEVICES_FOUND = "No devices found";
 	private static final int MAC_ADDRESS_LENGTH = 17;
 
-	private boolean mSecure;
+	private ServiceIdentifier.ConnectionType mConnectionType;
 
 	private BluetoothAdapter mAdapter;
 	private ArrayAdapter<String> mPairedDevicesArrayAdapter;
 	private ArrayAdapter<String> mNewDevicesArrayAdapter;
 
 	/**
-	 * Creates a new DeviceListFragment, packing any data necessary.
-	 * @param secure whether or not the initiated scan from this fragment will be secure
+	 * Creates a new DeviceListFragment, packing data as necessary.
+	 * @param secure whether or not the connection initiated by this fragment will be secure
 	 * @return a new DeviceListFragment
 	 */
 	public static DeviceListFragment newInstance(final boolean secure) {
@@ -52,7 +54,11 @@ public class DeviceListFragment extends DialogFragment {
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mSecure = getArguments().getBoolean(SECURE_KEY);
+		if (getArguments().getBoolean(SECURE_KEY)) {
+			mConnectionType = ServiceIdentifier.ConnectionType.SECURE;
+		} else {
+			mConnectionType = ServiceIdentifier.ConnectionType.INSECURE;
+		}
 
 		this.setStyle(STYLE_NO_TITLE, android.R.style.Theme_Holo_Dialog);
 	}
@@ -119,7 +125,7 @@ public class DeviceListFragment extends DialogFragment {
 	}
 
 	/**
-	 * Adds a device to the discovered devices list.
+	 * Adds a device to be displayed.
 	 * @param string the device to display
 	 */
 	public void addDevice(final String string) {
@@ -128,7 +134,7 @@ public class DeviceListFragment extends DialogFragment {
 	}
 
 	/**
-	 * Notifies this fragment that discovery has finished.
+	 * Notifies this fragment that the discovery process has finished.
 	 */
 	public void onDiscoveryFinished() {
 		if (mNewDevicesArrayAdapter.getCount() == 0) {
@@ -147,7 +153,7 @@ public class DeviceListFragment extends DialogFragment {
 			String info = ((TextView) v).getText().toString();
 			String address = info.substring(info.length() - MAC_ADDRESS_LENGTH);
 
-			((CommandableModelActivity) getActivity()).connectDevice(address, mSecure);
+			((CommandableModelActivity) getActivity()).connectDevice(address, mConnectionType);
 
 			DeviceListFragment.this.dismiss();
 		}

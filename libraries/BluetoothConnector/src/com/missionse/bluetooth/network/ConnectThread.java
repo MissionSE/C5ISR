@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
+import com.missionse.bluetooth.network.ServiceIdentifier.ConnectionType;
 import com.missionse.bluetooth.network.ServiceIdentifier.ServiceNotIdentifiedException;
 
 /**
@@ -13,20 +14,26 @@ import com.missionse.bluetooth.network.ServiceIdentifier.ServiceNotIdentifiedExc
  */
 public class ConnectThread extends Thread {
 
-	private BluetoothNetworkService networkService;
+	private BluetoothNetworkService mNetworkService;
 
-	private BluetoothSocket socket;
-	private final BluetoothDevice device;
+	private BluetoothSocket mSocket;
+	private final BluetoothDevice mDevice;
 
-	public ConnectThread(final BluetoothNetworkService service, final BluetoothDevice device, final boolean secure) {
-		networkService = service;
-		this.device = device;
+	/**
+	 * Creates a new ConnectThread.
+	 * @param service the service to callback on connect events
+	 * @param device the device to which to connect
+	 * @param type the type of connection
+	 */
+	public ConnectThread(final BluetoothNetworkService service, final BluetoothDevice device, final ConnectionType type) {
+		mNetworkService = service;
+		mDevice = device;
 
 		try {
-			if (secure) {
-				socket = device.createRfcommSocketToServiceRecord(ServiceIdentifier.UUID_SECURE);
+			if (type == ConnectionType.SECURE) {
+				mSocket = device.createRfcommSocketToServiceRecord(ServiceIdentifier.getServiceUUID(type));
 			} else {
-				socket = device.createInsecureRfcommSocketToServiceRecord(ServiceIdentifier.UUID_INSECURE);
+				mSocket = device.createInsecureRfcommSocketToServiceRecord(ServiceIdentifier.getServiceUUID(type));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -37,27 +44,30 @@ public class ConnectThread extends Thread {
 	public void run() {
 		try {
 			// This is a blocking call and will only return on a successful connection or an exception.
-			socket.connect();
+			mSocket.connect();
 		} catch (IOException e) {
 			try {
-				socket.close();
+				mSocket.close();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			try {
-				networkService.onConnectionFailed();
+				mNetworkService.onConnectionFailed();
 			} catch (ServiceNotIdentifiedException e2) {
 				e2.printStackTrace();
 			}
 			return;
 		}
 
-		networkService.onConnectionSuccessful(socket, device);
+		mNetworkService.onConnectionSuccessful(mSocket, mDevice);
 	}
 
+	/**
+	 * Cancels this thread, closing the client socket.
+	 */
 	public void cancel() {
 		try {
-			socket.close();
+			mSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

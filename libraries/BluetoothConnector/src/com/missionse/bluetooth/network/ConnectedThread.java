@@ -12,20 +12,26 @@ import com.missionse.bluetooth.network.ServiceIdentifier.ServiceNotIdentifiedExc
  * This thread runs during a connection with a remote device. It handles all incoming and outgoing transmissions.
  */
 public class ConnectedThread extends Thread {
-	private final BluetoothNetworkService networkService;
+	private static final int BUFFER_SIZE = 1024;
 
-	private final BluetoothSocket socket;
+	private final BluetoothNetworkService mNetworkService;
+	private final BluetoothSocket mSocket;
 
-	private InputStream inStream;
-	private OutputStream outStream;
+	private InputStream mInputStream;
+	private OutputStream mOutputStream;
 
+	/**
+	 * Creates a new ConnectedThread.
+	 * @param service the service to call back on incoming/outgoing data
+	 * @param socket the socket over which we are connected
+	 */
 	public ConnectedThread(final BluetoothNetworkService service, final BluetoothSocket socket) {
-		networkService = service;
-		this.socket = socket;
+		mNetworkService = service;
+		mSocket = socket;
 
 		try {
-			inStream = socket.getInputStream();
-			outStream = socket.getOutputStream();
+			mInputStream = socket.getInputStream();
+			mOutputStream = socket.getOutputStream();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -33,17 +39,17 @@ public class ConnectedThread extends Thread {
 
 	@Override
 	public void run() {
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[BUFFER_SIZE];
 		int bytes;
 
 		// Keep listening to the InputStream while connected.
 		while (true) {
 			try {
-				bytes = inStream.read(buffer);
-				networkService.onIncomingData(bytes, buffer);
+				bytes = mInputStream.read(buffer);
+				mNetworkService.onIncomingData(bytes, buffer);
 			} catch (IOException e) {
 				try {
-					networkService.onConnectionLost();
+					mNetworkService.onConnectionLost();
 				} catch (ServiceNotIdentifiedException e1) {
 					e1.printStackTrace();
 				}
@@ -52,19 +58,26 @@ public class ConnectedThread extends Thread {
 		}
 	}
 
+	/**
+	 * Writes date over the network connection.
+	 * @param buffer the data to write
+	 */
 	public void write(final byte[] buffer) {
 		try {
-			outStream.write(buffer);
-			outStream.flush();
-			networkService.onOutgoingData(buffer);
+			mOutputStream.write(buffer);
+			mOutputStream.flush();
+			mNetworkService.onOutgoingData(buffer);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Cancels this thread, closing the client socket.
+	 */
 	public void cancel() {
 		try {
-			socket.close();
+			mSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

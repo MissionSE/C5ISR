@@ -6,30 +6,38 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
+import com.missionse.bluetooth.network.ServiceIdentifier.ConnectionType;
+
 /**
  * This thread runs while listening for incoming connections. It behaves like a server-side client. It runs until a
  * connection is accepted (or until cancelled).
  */
 public class SocketConnectionAcceptThread extends Thread {
 
-	private final BluetoothNetworkService chatService;
-	private final BluetoothAdapter bluetoothAdapter;
+	private final BluetoothNetworkService mChatService;
+	private final BluetoothAdapter mBluetoothAdapter;
 
-	private BluetoothServerSocket serverSocket;
+	private BluetoothServerSocket mServerSocket;
 
+	/**
+	 * Creates a new SocketConnectionAcceptThread.
+	 * @param service the parent service creating this thread
+	 * @param adapter the bluetooth adapter
+	 * @param type type of connection
+	 */
 	public SocketConnectionAcceptThread(final BluetoothNetworkService service, final BluetoothAdapter adapter,
-			final boolean secure) {
-		chatService = service;
-		bluetoothAdapter = adapter;
+			final ConnectionType type) {
+		mChatService = service;
+		mBluetoothAdapter = adapter;
 
 		// Create a new listening server socket
 		try {
-			if (secure) {
-				serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(ServiceIdentifier.NAME_SECURE,
-						ServiceIdentifier.UUID_SECURE);
+			if (type == ConnectionType.SECURE) {
+				mServerSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(
+						ServiceIdentifier.getServiceName(type), ServiceIdentifier.getServiceUUID(type));
 			} else {
-				serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(
-						ServiceIdentifier.NAME_INSECURE, ServiceIdentifier.UUID_INSECURE);
+				mServerSocket = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(
+						ServiceIdentifier.getServiceName(type), ServiceIdentifier.getServiceUUID(type));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -45,7 +53,7 @@ public class SocketConnectionAcceptThread extends Thread {
 			try {
 				// This is a blocking call and will only return on a
 				// successful connection or an exception
-				socket = serverSocket.accept();
+				socket = mServerSocket.accept();
 			} catch (IOException e) {
 				break;
 			}
@@ -53,15 +61,18 @@ public class SocketConnectionAcceptThread extends Thread {
 
 		// If a connection was accepted
 		if (socket != null) {
-			chatService.onIncomingConnectionSuccessful(socket, socket.getRemoteDevice());
+			mChatService.onIncomingConnectionSuccessful(socket, socket.getRemoteDevice());
 		}
 	}
 
+	/**
+	 * Ends this thread, closing the open server socket.
+	 */
 	public void cancel() {
 		try {
-			serverSocket.close();
+			mServerSocket.close();
 		} catch (IOException e) {
-			// No reason to print, as the thread was simply cancelled.
+			e.printStackTrace();
 		}
 	}
 }

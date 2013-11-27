@@ -139,11 +139,8 @@ public class BluetoothExample extends Activity {
 	}
 
 	private void createNetworkService() {
-		ServiceIdentifier.setSecureServiceName("BluetoothExampleSecure");
-		//ServiceIdentifier.setInsecureServiceName("BluetoothExampleSecure");
-
-		ServiceIdentifier.setSecureUUIDFromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
-		//ServiceIdentifier.setInsecureUUIDFromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+		ServiceIdentifier.identifyService(ServiceIdentifier.ConnectionType.SECURE, "BluetoothExampleSecure",
+				"fa87c0d0-afac-11de-8a39-0800200c9a66");
 
 		mBluetoothConnector.registerHandler(mConversationFragment.getHandler());
 		mBluetoothConnector.registerHandler(mBluetoothServiceMessageHandler);
@@ -153,10 +150,10 @@ public class BluetoothExample extends Activity {
 	/**
 	 * Connects this device to the specified address.
 	 * @param address the address to connect to
-	 * @param secure whether or not the connection made should be secure
+	 * @param type the type of connection
 	 */
-	public void connectDevice(final String address, final boolean secure) {
-		mBluetoothConnector.connect(address, secure);
+	public void connectDevice(final String address, final ServiceIdentifier.ConnectionType type) {
+		mBluetoothConnector.connect(address, type);
 	}
 
 	@Override

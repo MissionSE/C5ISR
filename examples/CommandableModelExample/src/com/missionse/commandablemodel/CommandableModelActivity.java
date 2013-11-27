@@ -167,9 +167,8 @@ public class CommandableModelActivity extends Activity {
 	}
 
 	private void createNetworkService() {
-		ServiceIdentifier.setSecureServiceName("CommandableModelSecure");
-
-		ServiceIdentifier.setSecureUUIDFromString("65b4f759-a7a2-46a7-a501-f22a666d1375");
+		ServiceIdentifier.identifyService(ServiceIdentifier.ConnectionType.SECURE, "CommandableModelSecure",
+				"65b4f759-a7a2-46a7-a501-f22a666d1375");
 
 		mBluetoothConnector.registerHandler(mBluetoothServiceMessageHandler);
 		mBluetoothConnector.createService();
@@ -178,10 +177,10 @@ public class CommandableModelActivity extends Activity {
 	/**
 	 * Connects this device to the specified address.
 	 * @param address the address to connect to
-	 * @param secure whether or not the connection should be secure
+	 * @param type the connection type
 	 */
-	public void connectDevice(final String address, final boolean secure) {
-		mBluetoothConnector.connect(address, secure);
+	public void connectDevice(final String address, final ServiceIdentifier.ConnectionType type) {
+		mBluetoothConnector.connect(address, type);
 	}
 
 	@Override

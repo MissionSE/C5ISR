@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.missionse.bluetooth.network.ServiceIdentifier;
+
 /**
  * Displays a list of discovered and paired devices in a dialog window.
  */
@@ -28,7 +30,7 @@ public class DeviceListFragment extends DialogFragment {
 	private static final String NO_DEVICES_FOUND = "No devices found";
 	private static final int MAC_ADDRESS_LENGTH = 17;
 
-	private boolean mSecure;
+	private ServiceIdentifier.ConnectionType mConnectionType;
 
 	private BluetoothAdapter mAdapter;
 	private ArrayAdapter<String> mPairedDevicesArrayAdapter;
@@ -52,7 +54,11 @@ public class DeviceListFragment extends DialogFragment {
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mSecure = getArguments().getBoolean(SECURE_KEY);
+		if (getArguments().getBoolean(SECURE_KEY)) {
+			mConnectionType = ServiceIdentifier.ConnectionType.SECURE;
+		} else {
+			mConnectionType = ServiceIdentifier.ConnectionType.INSECURE;
+		}
 
 		this.setStyle(STYLE_NO_TITLE, android.R.style.Theme_Holo_Dialog);
 	}
@@ -111,10 +117,6 @@ public class DeviceListFragment extends DialogFragment {
 	}
 
 	private void startScanningForDiscoverableDevices() {
-		// Indicate scanning in the title
-		//setProgressBarIndeterminateVisibility(true);
-		//setTitle(R.string.scanning);
-
 		// Turn on sub-title for new devices
 		mContentView.findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
 
@@ -151,7 +153,7 @@ public class DeviceListFragment extends DialogFragment {
 			String info = ((TextView) v).getText().toString();
 			String address = info.substring(info.length() - MAC_ADDRESS_LENGTH);
 
-			((BluetoothExample) getActivity()).connectDevice(address, mSecure);
+			((BluetoothExample) getActivity()).connectDevice(address, mConnectionType);
 
 			DeviceListFragment.this.dismiss();
 		}
