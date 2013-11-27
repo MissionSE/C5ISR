@@ -16,18 +16,27 @@ import com.missionse.modelviewer.ModelViewerFragmentFactory;
 import com.missionse.modelviewer.ObjectLoadedListener;
 import com.missionse.modelviewer.ObjectPickedListener;
 
+/**
+ * Provides an activity that is an example of how to use the ModelViewer library.
+ */
 public class ModelViewerExampleActivity extends Activity implements ObjectPickedListener, ObjectLoadedListener {
-	private ModelViewerFragment fragment;
-	private ModelController controller;
-	private ModelAnimationController animator;
-	private Menu optionsMenu;
-	private TextView objectListText;
+	private ModelViewerFragment mFragment;
+	private ModelController mController;
+	private ModelAnimationController mAnimator;
+	private Menu mOptionsMenu;
+	private TextView mObjectListText;
 
-	private HashMap<String, Integer> defaultColors;
+	private HashMap<String, Integer> mDefaultColors;
+
 	private static final int HIGHLIGHT_COLOR = Color.BLUE;
+	private static final int ROTATION_DURATION = 4000;
+	private static final int ANIMATION_DURATION = 250;
 
+	/**
+	 * Constructor.
+	 */
 	public ModelViewerExampleActivity() {
-		defaultColors = new HashMap<String, Integer>();
+		mDefaultColors = new HashMap<String, Integer>();
 	}
 
 	@Override
@@ -35,51 +44,53 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_model_viewer_example);
 
-		fragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
-		fragment.registerObjectPickedListener(this);
-		fragment.registerObjectLoadedListener(this);
+		mFragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj);
+		mFragment.registerObjectPickedListener(this);
+		mFragment.registerObjectLoadedListener(this);
 
-		getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+		getFragmentManager().beginTransaction().replace(R.id.content_frame, mFragment).commit();
 
-		objectListText = (TextView) findViewById(R.id.object_list);
+		mObjectListText = (TextView) findViewById(R.id.object_list);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)	{
-		optionsMenu = menu;
-		getMenuInflater().inflate(R.menu.model_viewer_example, optionsMenu);
+		mOptionsMenu = menu;
+		getMenuInflater().inflate(R.menu.model_viewer_example, mOptionsMenu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		if (fragment != null && controller != null && animator != null) {
+		if (mFragment != null && mController != null && mAnimator != null) {
 			switch (item.getItemId()) {
 				case R.id.action_rotate:
-					if (animator.isRotating()) {
-						animator.stopRotation();
+					if (mAnimator.isRotating()) {
+						mAnimator.stopRotation();
 					} else {
-						animator.startXRotation(4000);
+						mAnimator.startXRotation(ROTATION_DURATION);
 					}
-					item.setChecked(animator.isRotating());
+					item.setChecked(mAnimator.isRotating());
 					return true;
 				case R.id.action_lock:
-					if (controller.isTranslationLocked()) {
-						controller.unlockTranslation();
+					if (mController.isTranslationLocked()) {
+						mController.unlockTranslation();
 					} else {
-						controller.lockTranslation();
+						mController.lockTranslation();
 					}
-					item.setChecked(controller.isTranslationLocked());
+					item.setChecked(mController.isTranslationLocked());
 					return true;
 				case R.id.action_center:
-					animator.translateTo(0f, 0f, 0f, 250);
+					mAnimator.translateTo(0f, 0f, 0f, ANIMATION_DURATION);
 					return true;
 				case R.id.action_reset:
-					animator.rotateTo(0f, 0f, 0f, 250);
-					animator.scaleTo(1f, 250);
-					animator.translateTo(0f, 0f, 0f, 250);
-					optionsMenu.findItem(R.id.action_rotate).setChecked(false);
+					mAnimator.rotateTo(0f, 0f, 0f, ANIMATION_DURATION);
+					mAnimator.scaleTo(1f, ANIMATION_DURATION);
+					mAnimator.translateTo(0f, 0f, 0f, ANIMATION_DURATION);
+					mOptionsMenu.findItem(R.id.action_rotate).setChecked(false);
 					return true;
+				default:
+					return super.onOptionsItemSelected(item);
 			}
 		}
 
@@ -88,29 +99,29 @@ public class ModelViewerExampleActivity extends Activity implements ObjectPicked
 
 	@Override
 	public void objectPicked(final String objectName) {
-		int objectColor = controller.getAmbientColor(objectName);
+		int objectColor = mController.getAmbientColor(objectName);
 
-		if (!defaultColors.containsKey(objectName)) {
-			defaultColors.put(objectName, objectColor);
-			controller.setAmbientColor(objectName, HIGHLIGHT_COLOR);
+		if (!mDefaultColors.containsKey(objectName)) {
+			mDefaultColors.put(objectName, objectColor);
+			mController.setAmbientColor(objectName, HIGHLIGHT_COLOR);
 		} else {
-			controller.setAmbientColor(objectName, defaultColors.get(objectName));
-			defaultColors.remove(objectName);
+			mController.setAmbientColor(objectName, mDefaultColors.get(objectName));
+			mDefaultColors.remove(objectName);
 		}
 	}
 
 	@Override
 	public void onObjectLoaded() {
-		controller = fragment.getController();
-		animator = fragment.getAnimator();
+		mController = mFragment.getController();
+		mAnimator = mFragment.getAnimator();
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				String objectList = "";
-				for (String object : controller.getObjectList()) {
+				for (String object : mController.getObjectList()) {
 					objectList += object + "\n";
 				}
-				objectListText.setText(objectList);
+				mObjectListText.setText(objectList);
 			}
 		});
 	}
