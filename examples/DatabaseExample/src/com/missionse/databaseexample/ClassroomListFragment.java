@@ -18,10 +18,15 @@ import android.widget.ListView;
 
 import com.missionse.databaseexample.Model.Classroom;
 
+/**
+ * Displays a list of mClassrooms, and buttons to manipulate that list.
+ */
 public class ClassroomListFragment extends Fragment {
 
-	private ArrayAdapter<Classroom> listAdapter;
-	private List<Classroom> classrooms = new ArrayList<Classroom>();
+	private static final int MAX_CLASSROOMS = 100;
+
+	private ArrayAdapter<Classroom> mListAdapter;
+	private final List<Classroom> mClassrooms = new ArrayList<Classroom>();
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -29,8 +34,8 @@ public class ClassroomListFragment extends Fragment {
 
 		ListView classroomList = (ListView) contentView.findViewById(R.id.classroom_list);
 
-		listAdapter = new ArrayAdapter<Classroom>(getActivity(), R.layout.classroom_list_entry, classrooms);
-		classroomList.setAdapter(listAdapter);
+		mListAdapter = new ArrayAdapter<Classroom>(getActivity(), R.layout.classroom_list_entry, mClassrooms);
+		classroomList.setAdapter(mListAdapter);
 
 		Button addClassroomButton = (Button) contentView.findViewById(R.id.button_newclassroom);
 		addClassroomButton.setOnClickListener(new OnClickListener() {
@@ -48,7 +53,7 @@ public class ClassroomListFragment extends Fragment {
 			}
 		});
 
-		listAdapter.addAll(Model.fetchAll(Classroom.class));
+		mListAdapter.addAll(Model.fetchAll(Classroom.class));
 
 		return contentView;
 	}
@@ -56,12 +61,12 @@ public class ClassroomListFragment extends Fragment {
 	private void createNewClassroom() {
 		Random random = new Random();
 		Classroom classroom = new Classroom();
-		classroom.mClassRoomName = "Classroom#" + random.nextInt(1000);
+		classroom.mClassRoomName = "Classroom#" + random.nextInt(MAX_CLASSROOMS);
 		classroom.insert();
 
-		classrooms.clear();
-		classrooms.addAll(Model.fetchAll(Classroom.class));
-		listAdapter.notifyDataSetChanged();
+		mClassrooms.clear();
+		mClassrooms.addAll(Model.fetchAll(Classroom.class));
+		mListAdapter.notifyDataSetChanged();
 	}
 
 	private void clearAllClassrooms() {
@@ -69,7 +74,7 @@ public class ClassroomListFragment extends Fragment {
 			classroom.delete();
 		}
 
-		classrooms.clear();
-		listAdapter.notifyDataSetChanged();
+		mClassrooms.clear();
+		mListAdapter.notifyDataSetChanged();
 	}
 }

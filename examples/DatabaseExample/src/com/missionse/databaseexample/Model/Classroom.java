@@ -6,6 +6,11 @@ import org.orman.mapper.annotation.Entity;
 import org.orman.mapper.annotation.OneToMany;
 import org.orman.mapper.annotation.PrimaryKey;
 
+// BEGIN MODEL CODE
+
+/**
+ * A Classroom.
+ */
 @Entity
 public class Classroom extends Model<Classroom> {
 
@@ -18,6 +23,9 @@ public class Classroom extends Model<Classroom> {
 	public EntityList<Classroom, Student> students = new EntityList<Classroom, Student>(Classroom.class, Student.class,
 			this);
 
+	/**
+	 * Creates a new Classroom.
+	 */
 	public Classroom() {
 	}
 
@@ -26,3 +34,5 @@ public class Classroom extends Model<Classroom> {
 		return "[Classroom] " + mClassRoomName;
 	}
 }
+
+// END MODEL CODE

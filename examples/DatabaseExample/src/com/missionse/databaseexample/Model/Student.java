@@ -5,6 +5,11 @@ import org.orman.mapper.annotation.Entity;
 import org.orman.mapper.annotation.ManyToOne;
 import org.orman.mapper.annotation.PrimaryKey;
 
+// BEGIN MODEL CODE
+
+/**
+ * A Student.
+ */
 @Entity
 public class Student extends Model<Student> {
 
@@ -18,6 +23,9 @@ public class Student extends Model<Student> {
 	@ManyToOne
 	public Classroom mClassroom;
 
+	/**
+	 * Creates a new Student.
+	 */
 	public Student() {
 	}
 
@@ -26,3 +34,5 @@ public class Student extends Model<Student> {
 		return "[Student] " + mFirstName + " " + mLastName;
 	}
 }
+
+// END MODEL CODE

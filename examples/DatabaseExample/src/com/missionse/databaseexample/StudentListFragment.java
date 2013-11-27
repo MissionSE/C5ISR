@@ -18,13 +18,16 @@ import android.widget.ListView;
 
 import com.missionse.databaseexample.Model.Student;
 
+/**
+ * Displays a list of mStudents, and buttons for manipulating the list.
+ */
 public class StudentListFragment extends Fragment {
 
 	private static final String[] FIRST_NAMES = new String[] { "James", "Kyle", "Mike", "Rob" };
 	private static final String[] LAST_NAMES = new String[] { "Lehman", "Sant'Angelo", "Testen", "Vieras" };
 
-	private ArrayAdapter<Student> listAdapter;
-	private List<Student> students = new ArrayList<Student>();
+	private ArrayAdapter<Student> mListAdapter;
+	private final List<Student> mStudents = new ArrayList<Student>();
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -32,8 +35,8 @@ public class StudentListFragment extends Fragment {
 
 		ListView studentList = (ListView) contentView.findViewById(R.id.student_list);
 
-		listAdapter = new ArrayAdapter<Student>(getActivity(), R.layout.student_list_entry, students);
-		studentList.setAdapter(listAdapter);
+		mListAdapter = new ArrayAdapter<Student>(getActivity(), R.layout.student_list_entry, mStudents);
+		studentList.setAdapter(mListAdapter);
 
 		Button addStudentButton = (Button) contentView.findViewById(R.id.button_newstudent);
 		addStudentButton.setOnClickListener(new OnClickListener() {
@@ -51,7 +54,7 @@ public class StudentListFragment extends Fragment {
 			}
 		});
 
-		listAdapter.addAll(Model.fetchAll(Student.class));
+		mListAdapter.addAll(Model.fetchAll(Student.class));
 
 		return contentView;
 	}
@@ -63,9 +66,9 @@ public class StudentListFragment extends Fragment {
 		student.mLastName = LAST_NAMES[random.nextInt(FIRST_NAMES.length)];
 		student.insert();
 
-		students.clear();
-		students.addAll(Model.fetchAll(Student.class));
-		listAdapter.notifyDataSetChanged();
+		mStudents.clear();
+		mStudents.addAll(Model.fetchAll(Student.class));
+		mListAdapter.notifyDataSetChanged();
 	}
 
 	private void clearAllStudents() {
@@ -73,7 +76,7 @@ public class StudentListFragment extends Fragment {
 			student.delete();
 		}
 
-		students.clear();
-		listAdapter.notifyDataSetChanged();
+		mStudents.clear();
+		mListAdapter.notifyDataSetChanged();
 	}
 }

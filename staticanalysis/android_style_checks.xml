@@ -12,6 +12,7 @@
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
     <property name="tabWidth" value="4"/>
+    <module name="FileContentsHolder"/>
     <module name="JavadocMethod">
       <property name="scope" value="public"/>
       <property name="suppressLoadErrors" value="true"/>
@@ -130,5 +131,9 @@
     <property name="format" value="\s+$"/>
     <property name="message" value="Line has trailing spaces."/>
     <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+  </module>
+  <module name="SuppressionCommentFilter">
+    <property name="offCommentFormat" value="BEGIN MODEL CODE"/>
+    <property name="onCommentFormat" value="END MODEL CODE"/>
   </module>
 </module>
