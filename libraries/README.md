@@ -5,7 +5,6 @@ This directory contains all libraries for the C5ISR Application Development repo
 
 * AugmentedReality - provides hooks for AR handling, wrapping DroidAR and ARMarker
 * BluetoothConnector - wraps Bluetooth connection initation and maintenance
-* Database - wraps [ORMAN](https://github.com/ahmetalpbalkan/orman), providing ORM for local databases
 * GestureDetector - provides a pan and rotate gesture detector
 * HttpDatabaseConnector - provides handling of an HTTP database connection and interaction
 * ImageViewer - custom, extended Android View for viewing images

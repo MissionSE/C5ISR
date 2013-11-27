@@ -4,10 +4,9 @@ Examples
 This directory contains all examples developed to exercise and demonstrate the C5ISR libraries.
 
 * ARExample - exercises AugmentedReality
-* BaseFragmentExample - demonstrates general use of the VideoViewer, ImageViewer, GestureDetector, and ModelViewer
 * BluetoothExample - demonstrates use of the BluetoothConnector
 * CommandableModelExample - demonstrates use of the BluetoothConnector and ModelViewer
-* DatabaseExample - exercises the Database library
+* DatabaseExample - demonstrates use of the third-party ORMAN library
 * GeofenceExample - demonstrates use of geofencing and the MapViewer
 * HttpDatabaseExample - demonstrates use of the HttpDatabaseConnector
 * ImageViewerExample - uses the ImageViewer
