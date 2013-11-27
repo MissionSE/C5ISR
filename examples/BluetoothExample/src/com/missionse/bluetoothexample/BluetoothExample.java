@@ -19,26 +19,29 @@ import com.missionse.bluetooth.BluetoothIntentListener;
 import com.missionse.bluetooth.network.BluetoothNetworkService;
 import com.missionse.bluetooth.network.ServiceIdentifier;
 
+/**
+ * Acts as the entry point to the BluetoothExample application.
+ */
 public class BluetoothExample extends Activity {
 
-	// Intent request codes.
 	private static final int REQUEST_ENABLE_BT = 1;
+	private static final int DISCOVERY_TIME = 20; //in seconds
 
-	private String connectedDevice = "";
+	private String mConnectedDevice = "";
 
-	private BluetoothConnector bluetoothConnector;
-	private ConversationFragment conversationFragment;
+	private BluetoothConnector mBluetoothConnector;
+	private ConversationFragment mConversationFragment;
 
 	// The Handler that gets information back from the BluetoothNetworkService.
 	@SuppressLint("HandlerLeak")
-	private final Handler bluetoothServiceMessageHandler = new Handler() {
+	private final Handler mBluetoothServiceMessageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
 			switch (msg.what) {
 				case BluetoothNetworkService.MESSAGE_STATE_CHANGE:
 					switch (msg.arg1) {
 						case BluetoothNetworkService.STATE_CONNECTED:
-							getActionBar().setSubtitle("connected to " + connectedDevice);
+							getActionBar().setSubtitle("connected to " + mConnectedDevice);
 							break;
 						case BluetoothNetworkService.STATE_CONNECTING:
 							getActionBar().setSubtitle("connecting...");
@@ -47,15 +50,20 @@ public class BluetoothExample extends Activity {
 						case BluetoothNetworkService.STATE_NONE:
 							getActionBar().setSubtitle("not connected");
 							break;
+						default:
+							break;
 					}
 					break;
 				case BluetoothNetworkService.MESSAGE_DEVICE_NAME:
-					connectedDevice = (String) msg.obj;
-					Toast.makeText(BluetoothExample.this, "Connected to " + connectedDevice, Toast.LENGTH_SHORT).show();
+					mConnectedDevice = (String) msg.obj;
+					Toast.makeText(BluetoothExample.this, "Connected to " + mConnectedDevice, Toast.LENGTH_SHORT)
+							.show();
 					break;
 				case BluetoothNetworkService.MESSAGE_TOAST:
 					String message = (String) msg.obj;
 					Toast.makeText(BluetoothExample.this, message, Toast.LENGTH_SHORT).show();
+					break;
+				default:
 					break;
 			}
 		}
@@ -73,15 +81,15 @@ public class BluetoothExample extends Activity {
 			return;
 		}
 
-		bluetoothConnector = new BluetoothConnector(this);
+		mBluetoothConnector = new BluetoothConnector(this);
 
-		conversationFragment = new ConversationFragment();
+		mConversationFragment = new ConversationFragment();
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		transaction.replace(R.id.content, conversationFragment);
+		transaction.replace(R.id.content, mConversationFragment);
 		transaction.commit();
 
-		bluetoothConnector.onCreate(new BluetoothIntentListener() {
+		mBluetoothConnector.onCreate(new BluetoothIntentListener() {
 			@Override
 			public void onDeviceFound(final BluetoothDevice device) {
 				// If it's already paired, skip it, because it's been listed already.
@@ -137,13 +145,18 @@ public class BluetoothExample extends Activity {
 		ServiceIdentifier.setSecureUUIDFromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
 		//ServiceIdentifier.setInsecureUUIDFromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
-		bluetoothConnector.registerHandler(conversationFragment.getHandler());
-		bluetoothConnector.registerHandler(bluetoothServiceMessageHandler);
-		bluetoothConnector.createService();
+		mBluetoothConnector.registerHandler(mConversationFragment.getHandler());
+		mBluetoothConnector.registerHandler(mBluetoothServiceMessageHandler);
+		mBluetoothConnector.createService();
 	}
 
+	/**
+	 * Connects this device to the specified address.
+	 * @param address the address to connect to
+	 * @param secure whether or not the connection made should be secure
+	 */
 	public void connectDevice(final String address, final boolean secure) {
-		bluetoothConnector.connect(address, secure);
+		mBluetoothConnector.connect(address, secure);
 	}
 
 	@Override
@@ -164,6 +177,8 @@ public class BluetoothExample extends Activity {
 			case R.id.discoverable:
 				enableDiscovery();
 				return true;
+			default:
+				break;
 		}
 		return false;
 	}
@@ -182,29 +197,34 @@ public class BluetoothExample extends Activity {
 	}
 
 	private void enableDiscovery() {
-		bluetoothConnector.startDiscovery(20);
+		mBluetoothConnector.startDiscovery(DISCOVERY_TIME);
 	}
 
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
-		bluetoothConnector.startService();
+		mBluetoothConnector.startService();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		bluetoothConnector.stopService();
+		mBluetoothConnector.stopService();
 	}
 
+	/**
+	 * Sends the specified string across the wire using the BluetoothConnector.
+	 * @param message the message to be sent
+	 * @return whether or not sending was successful
+	 */
 	public boolean sendMessage(final String message) {
 		// Check that there's actually something to send.
 		byte[] data = message.getBytes();
 
-		if (!bluetoothConnector.getService().write(data)) {
+		if (!mBluetoothConnector.getService().write(data)) {
 			Toast.makeText(this, "Error: Not connected.", Toast.LENGTH_SHORT).show();
 			return false;
-		};
+		}
 		return true;
 	}
 }
