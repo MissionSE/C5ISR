@@ -25,4 +25,15 @@ Once installed:
 2. Click the 'New...' button.
 3. In the dialog that appears, set `Type` to `External Configuration File`, `Name` to `Android Code Style`, and selected the [android_style_checks.xml](../staticanalysis/android_style_checks.xml) file in the repository.
 4. Once complete, your imported file will appear in the `Global Check Configurations` list. Select the `Android Code Style` item, and `Set as Default`.
-5. Finally, right click on the imported projects, and under the `Checkstyle` sub-menu, select `Activate Checkstyle`.
+5. Finally, right click on the imported projects, and under the `Checkstyle` sub-menu, select `Activate Checkstyle`. (This is only necessary if the project doesn't already have it activited. You will need to activate it for new projects, which changes the `.project` file.)
+
+Once you have set up Checkstyle, you will will probably get an error. The root directory of the project needs to be defined in order for the suppression filters (filters that keep Checkstyle from applying to specific files, such as `R.java`) to work. To resolve this:
+
+1. Navigate to `Preferences...` -> `Checkstyle`.
+2. Select the configuration we just created (`Android Code Style`, if you followed the previous steps).
+3. Click the `Properties...` button.
+4. In the dialog that appears, click the `Additional properties...` button.
+5. In the dialog that appears, click the `Find unresolved properties` button, and Click `Yes` when prompted. We will need to define the `${repository.root.dir}` variable.
+6. Select the repository.root.dir variable as displayed in the list, and click the `Edit...` button.
+7. When prompted, enter the full path to the C5ISR repository root (i.e., /home/yourname/dev/C5ISR).
+8. Save your changes.
