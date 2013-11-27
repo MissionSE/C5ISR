@@ -109,6 +109,9 @@
       <property name="max" value="140"/>
     </module>
   </module>
+  <module name="SuppressionFilter">
+    <property name="file" value="${repository.root.dir}/staticanalysis/supressions.xml"/>
+  </module>
   <module name="JavadocPackage">
     <property name="severity" value="ignore"/>
     <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
