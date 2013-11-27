@@ -10,21 +10,28 @@ import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
 import com.missionse.modelviewer.ModelViewerGestureListener;
 
+/**
+ * Extends the ModelViewerGestureListener, notifying a mRecipients of change.
+ */
 public class NotifyingModelGestureListener extends ModelViewerGestureListener {
 
-	private final List<ModelChangeRecipient> recipients = new ArrayList<ModelChangeRecipient>();
+	private static final double TRANSLATION_SCALE = 100.0;
+	private static final double ROTATION_SCALE = 2 * Math.PI;
 
-	public NotifyingModelGestureListener() {
-	}
+	private final List<ModelChangeRecipient> mRecipients = new ArrayList<ModelChangeRecipient>();
 
+	/**
+	 * Adds a recipient to be notified of gestures.
+	 * @param recipient the entity to be notified
+	 */
 	public void addRecipient(final ModelChangeRecipient recipient) {
-		recipients.add(recipient);
+		mRecipients.add(recipient);
 	}
 
 	@Override
 	public boolean onScroll(final MotionEvent e1, final MotionEvent e2, final float distanceX, final float distanceY) {
 		if (e2.getPointerCount() == 1) {
-			getController().translate(-distanceX / 100.0f, distanceY / 100.0f, 0);
+			getController().translate(-distanceX / TRANSLATION_SCALE, distanceY / TRANSLATION_SCALE, 0);
 		}
 		notifyRecipients();
 		return true;
@@ -46,13 +53,13 @@ public class NotifyingModelGestureListener extends ModelViewerGestureListener {
 
 	@Override
 	public boolean onPan(final PanGestureDetector detector, final float distanceX, final float distanceY) {
-		getController().rotateAround(-distanceY / 3f, -distanceX / 3f, 0);
+		getController().rotateAround(-distanceY / ROTATION_SCALE, -distanceX / ROTATION_SCALE, 0);
 		notifyRecipients();
 		return true;
 	}
 
 	private void notifyRecipients() {
-		for (ModelChangeRecipient recipient : recipients) {
+		for (ModelChangeRecipient recipient : mRecipients) {
 			recipient.onModelChange();
 		}
 	}

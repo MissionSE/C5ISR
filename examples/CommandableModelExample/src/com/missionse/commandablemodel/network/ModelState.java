@@ -7,10 +7,13 @@ import android.util.Log;
 
 import com.missionse.modelviewer.ModelController;
 
+/**
+ * Represents the current state (position, scale, orientation) of a model.
+ */
 public class ModelState {
 	private static final String TAG = ModelState.class.getName();
 
-	private ArrayList<Float> modelState;
+	private ArrayList<Float> mModelState;
 
 	public static final int POSITION_X = 0;
 	public static final int POSITION_Y = 1;
@@ -26,13 +29,24 @@ public class ModelState {
 	public static final int ORIENTATION_Z = 9;
 	private static final int MODEL_SIZE = ORIENTATION_Z + 1;
 
+	/**
+	 * Creates an empty ModelState with default values.
+	 */
 	public ModelState() {
 	}
 
+	/**
+	 * Creates a new ModelState given an initial state.
+	 * @param parseableState the state to parse, to set initial values
+	 */
 	public ModelState(final String parseableState) {
 		setModelValues(parseableState);
 	}
 
+	/**
+	 * Creates a new ModelState given a controller that holds the actual model state.
+	 * @param controller the controller from which to retrieve data
+	 */
 	public ModelState(final ModelController controller) {
 		String parseableState = " B ";
 		parseableState += " " + controller.getXPosition();
@@ -53,26 +67,31 @@ public class ModelState {
 	@Override
 	public String toString() {
 		String parseableState = " B ";
-		parseableState += " " + modelState.get(POSITION_X);
-		parseableState += " " + modelState.get(POSITION_Y);
-		parseableState += " " + modelState.get(POSITION_Z);
-		parseableState += " " + modelState.get(SCALE_X);
-		parseableState += " " + modelState.get(SCALE_Y);
-		parseableState += " " + modelState.get(SCALE_Z);
-		parseableState += " " + modelState.get(ORIENTATION_W);
-		parseableState += " " + modelState.get(ORIENTATION_X);
-		parseableState += " " + modelState.get(ORIENTATION_Y);
-		parseableState += " " + modelState.get(ORIENTATION_Z);
+		parseableState += " " + mModelState.get(POSITION_X);
+		parseableState += " " + mModelState.get(POSITION_Y);
+		parseableState += " " + mModelState.get(POSITION_Z);
+		parseableState += " " + mModelState.get(SCALE_X);
+		parseableState += " " + mModelState.get(SCALE_Y);
+		parseableState += " " + mModelState.get(SCALE_Z);
+		parseableState += " " + mModelState.get(ORIENTATION_W);
+		parseableState += " " + mModelState.get(ORIENTATION_X);
+		parseableState += " " + mModelState.get(ORIENTATION_Y);
+		parseableState += " " + mModelState.get(ORIENTATION_Z);
 		parseableState += " E ";
 
 		return parseableState;
 	}
 
+	/**
+	 * Sets the ModelState values given a parse-able string.
+	 * @param modelStatus the string to parse
+	 * @return whether or not the string passed in was valid for values
+	 */
 	public boolean setModelValues(final String modelStatus) {
-		modelState = new ArrayList<Float>();
+		mModelState = new ArrayList<Float>();
 
 		boolean isValid = parseMessage(modelStatus);
-		if (isValid && modelState.size() < MODEL_SIZE) {
+		if (isValid && mModelState.size() < MODEL_SIZE) {
 			isValid = false;
 		}
 
@@ -95,10 +114,10 @@ public class ModelState {
 			if (!messageBegan) {
 				if (token.equals("B")) {
 					messageBegan = true;
-					modelState = new ArrayList<Float>();
+					mModelState = new ArrayList<Float>();
 				}
 			} else if (token.equals("E")) {
-				if (modelState.size() == MODEL_SIZE) {
+				if (mModelState.size() == MODEL_SIZE) {
 					messageEnded = true;
 				} else {
 					Log.e(TAG, "Message processed with invalid size.");
@@ -106,7 +125,7 @@ public class ModelState {
 				}
 			} else if (messageBegan && !messageEnded) {
 				try {
-					modelState.add(Float.valueOf(token));
+					mModelState.add(Float.valueOf(token));
 				} catch (NumberFormatException e) {
 					Log.e(TAG, "Got an unexpected value: " + token);
 					messageBegan = false;
@@ -114,18 +133,23 @@ public class ModelState {
 			}
 		}
 
-		if (!messageBegan || !messageEnded || modelState.size() != MODEL_SIZE) {
+		if (!messageBegan || !messageEnded || mModelState.size() != MODEL_SIZE) {
 			isValid = false;
-			modelState = new ArrayList<Float>();
+			mModelState = new ArrayList<Float>();
 		}
 
 		return isValid;
 	}
 
+	/**
+	 * Retrieves the value at a given index of the ModelState.
+	 * @param index the index to retrieve
+	 * @return the value at that index
+	 */
 	public Float get(final int index) {
 		Float value = 0.0f;
 		try {
-			value = modelState.get(index);
+			value = mModelState.get(index);
 		} catch (IndexOutOfBoundsException e) {
 			Log.e(TAG, "Attempted to use an invalid index.");
 		}

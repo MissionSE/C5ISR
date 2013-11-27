@@ -1,5 +1,12 @@
 package com.missionse.commandablemodel.network;
 
+/**
+ * Provides callbacks for model state change.
+ */
 public interface ModelChangeRecipient {
-	public void onModelChange();
+
+	/**
+	 * Called when the model has changed.
+	 */
+	void onModelChange();
 }

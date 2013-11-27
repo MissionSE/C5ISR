@@ -24,29 +24,34 @@ import com.missionse.commandablemodel.network.NotifyingModelGestureListener;
 import com.missionse.modelviewer.ModelViewerFragment;
 import com.missionse.modelviewer.ModelViewerFragmentFactory;
 
+/**
+ * Acts as the entry point for the CommandableModel application. Sets up the ModelViewerFragment, and the Bluetooth
+ * back-end.
+ */
 public class CommandableModelActivity extends Activity {
 
 	private static final int REQUEST_ENABLE_BT = 1;
+	private static final int DISCOVERY_TIME = 20; //in seconds
 
-	private ModelViewerFragment modelFragment;
+	private ModelViewerFragment mModelFragment;
 
-	private NotifyingModelGestureListener modelGestureListener;
+	private NotifyingModelGestureListener mModelGestureListener;
 
-	private ModelControllerClient modelClient;
+	private ModelControllerClient mModelClient;
 
-	private BluetoothConnector bluetoothConnector;
-	private String connectedDevice;
+	private BluetoothConnector mBluetoothConnector;
+	private String mConnectedDevice;
 
 	// The Handler that gets information back from the BluetoothNetworkService.
 	@SuppressLint("HandlerLeak")
-	private final Handler bluetoothServiceMessageHandler = new Handler() {
+	private final Handler mBluetoothServiceMessageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
 			switch (msg.what) {
 				case BluetoothNetworkService.MESSAGE_STATE_CHANGE:
 					switch (msg.arg1) {
 						case BluetoothNetworkService.STATE_CONNECTED:
-							getActionBar().setSubtitle("connected to " + connectedDevice);
+							getActionBar().setSubtitle("connected to " + mConnectedDevice);
 							break;
 						case BluetoothNetworkService.STATE_CONNECTING:
 							getActionBar().setSubtitle("connecting...");
@@ -55,12 +60,14 @@ public class CommandableModelActivity extends Activity {
 						case BluetoothNetworkService.STATE_NONE:
 							getActionBar().setSubtitle("not connected");
 							break;
+						default:
+							break;
 					}
 					break;
 				case BluetoothNetworkService.MESSAGE_DEVICE_NAME:
-					connectedDevice = (String) msg.obj;
-					Toast.makeText(CommandableModelActivity.this, "Connected to " + connectedDevice, Toast.LENGTH_SHORT)
-							.show();
+					mConnectedDevice = (String) msg.obj;
+					Toast.makeText(CommandableModelActivity.this, "Connected to " + mConnectedDevice,
+							Toast.LENGTH_SHORT).show();
 					break;
 				case BluetoothNetworkService.MESSAGE_TOAST:
 					String message = (String) msg.obj;
@@ -73,6 +80,8 @@ public class CommandableModelActivity extends Activity {
 						setModelState(modelState);
 					}
 					break;
+				default:
+					break;
 			}
 		}
 	};
@@ -84,19 +93,20 @@ public class CommandableModelActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		// Create the model client
-		modelClient = new ModelControllerClient(this);
+		mModelClient = new ModelControllerClient(this);
 
 		// Create the gesture listener and add the model client as a recipient of model changes
-		modelGestureListener = new NotifyingModelGestureListener();
-		modelGestureListener.addRecipient(modelClient);
+		mModelGestureListener = new NotifyingModelGestureListener();
+		mModelGestureListener.addRecipient(mModelClient);
 
 		// Create the ModelViewer fragment and give the ModelController to the ModelClient (to retrieve state changes)
 		// when necessary
-		modelFragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj, modelGestureListener);
-		modelClient.setModelViewerFragment(modelFragment);
+		mModelFragment = ModelViewerFragmentFactory.createObjModelFragment(R.raw.multiobjects_obj,
+				mModelGestureListener);
+		mModelClient.setModelViewerFragment(mModelFragment);
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		transaction.replace(R.id.content, modelFragment);
+		transaction.replace(R.id.content, mModelFragment);
 		transaction.commit();
 
 		if (BluetoothAdapter.getDefaultAdapter() == null) {
@@ -105,9 +115,9 @@ public class CommandableModelActivity extends Activity {
 			return;
 		}
 
-		bluetoothConnector = new BluetoothConnector(this);
+		mBluetoothConnector = new BluetoothConnector(this);
 
-		bluetoothConnector.onCreate(new BluetoothIntentListener() {
+		mBluetoothConnector.onCreate(new BluetoothIntentListener() {
 			@Override
 			public void onDeviceFound(final BluetoothDevice device) {
 				// If it's already paired, skip it, because it's been listed already.
@@ -161,12 +171,17 @@ public class CommandableModelActivity extends Activity {
 
 		ServiceIdentifier.setSecureUUIDFromString("65b4f759-a7a2-46a7-a501-f22a666d1375");
 
-		bluetoothConnector.registerHandler(bluetoothServiceMessageHandler);
-		bluetoothConnector.createService();
+		mBluetoothConnector.registerHandler(mBluetoothServiceMessageHandler);
+		mBluetoothConnector.createService();
 	}
 
+	/**
+	 * Connects this device to the specified address.
+	 * @param address the address to connect to
+	 * @param secure whether or not the connection should be secure
+	 */
 	public void connectDevice(final String address, final boolean secure) {
-		bluetoothConnector.connect(address, secure);
+		mBluetoothConnector.connect(address, secure);
 	}
 
 	@Override
@@ -185,11 +200,13 @@ public class CommandableModelActivity extends Activity {
 				enableDiscovery();
 				return true;
 			case R.id.reset:
-				if (modelFragment.getController() != null) {
-					modelFragment.getController().reset();
-					modelClient.onModelChange();
+				if (mModelFragment.getController() != null) {
+					mModelFragment.getController().reset();
+					mModelClient.onModelChange();
 				}
 				return true;
+			default:
+				break;
 		}
 		return false;
 	}
@@ -208,44 +225,43 @@ public class CommandableModelActivity extends Activity {
 	}
 
 	private void enableDiscovery() {
-		bluetoothConnector.startDiscovery(20);
+		mBluetoothConnector.startDiscovery(DISCOVERY_TIME);
 	}
 
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
-		bluetoothConnector.startService();
+		mBluetoothConnector.startService();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		bluetoothConnector.stopService();
+		mBluetoothConnector.stopService();
 	}
 
+	/**
+	 * Sends the current model state over the network.
+	 * @param message the message to send
+	 * @return whether or not sending was successful
+	 */
 	public boolean sendModelState(final String message) {
 		// Check that there's actually something to send.
 		byte[] data = message.getBytes();
 
-		if (!bluetoothConnector.getService().write(data)) {
+		if (!mBluetoothConnector.getService().write(data)) {
 			return false;
-		};
+		}
 		return true;
 	}
 
 	private void setModelState(final ModelState state) {
-		modelFragment.getController().setOrientation(
-				state.get(ModelState.ORIENTATION_W),
-				state.get(ModelState.ORIENTATION_X),
-				state.get(ModelState.ORIENTATION_Y),
+		mModelFragment.getController().setOrientation(state.get(ModelState.ORIENTATION_W),
+				state.get(ModelState.ORIENTATION_X), state.get(ModelState.ORIENTATION_Y),
 				state.get(ModelState.ORIENTATION_Z));
-		modelFragment.getController().setScale(
-				state.get(ModelState.SCALE_X),
-				state.get(ModelState.SCALE_Y),
+		mModelFragment.getController().setScale(state.get(ModelState.SCALE_X), state.get(ModelState.SCALE_Y),
 				state.get(ModelState.SCALE_Z));
-		modelFragment.getController().setPosition(
-				state.get(ModelState.POSITION_X),
-				state.get(ModelState.POSITION_Y),
+		mModelFragment.getController().setPosition(state.get(ModelState.POSITION_X), state.get(ModelState.POSITION_Y),
 				state.get(ModelState.POSITION_Z));
 	}
 }
