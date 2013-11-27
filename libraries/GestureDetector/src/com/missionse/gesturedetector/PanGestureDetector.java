@@ -5,67 +5,92 @@ import android.view.MotionEvent;
 import com.missionse.gesturedetector.util.Line;
 import com.missionse.gesturedetector.util.Point;
 
+/**
+ * Provides a gesture detector to detect panning.
+ * Panning is considered to be a two finger swipe.
+ */
 public class PanGestureDetector {
 	private static final int INVALID_POINTER_ID = -1;
-	private Line previousLine;
-	private int ptrID1, ptrID2;
-	private float xDistance, yDistance;
-	private boolean isPanning;
+	private Line mPreviousLine;
+	private int mPointerId1, mPointerId2;
+	private float mXDistance, mYDistance;
+	private boolean mIsPanning;
 
-	private OnPanGestureListener gestureListener;
+	private OnPanGestureListener mGestureListener;
 
+	/**
+	 * Constructor.
+	 * @param listener The gesture listener that will receive callbacks.
+	 */
 	public PanGestureDetector(final OnPanGestureListener listener) {
-		gestureListener = listener;
-		ptrID1 = INVALID_POINTER_ID;
-		ptrID2 = INVALID_POINTER_ID;
-		xDistance = 0f;
-		yDistance = 0f;
-		previousLine = new Line();
+		mGestureListener = listener;
+		mPointerId1 = INVALID_POINTER_ID;
+		mPointerId2 = INVALID_POINTER_ID;
+		mXDistance = 0f;
+		mYDistance = 0f;
+		mPreviousLine = new Line();
 	}
 
+	/**
+	 * Gets the x distance of the pan.
+	 * @return The x distance of the pan.
+	 */
 	public float getDistanceX() {
-		return xDistance;
+		return mXDistance;
 	}
 
+	/**
+	 * Gets the y distance of the pan.
+	 * @return The y distance of the pan.
+	 */
 	public float getDistanceY() {
-		return yDistance;
+		return mYDistance;
 	}
 
+	/**
+	 * Determines whether a pan gesture is in progress.
+	 * @return Whether a pan gesture is in progress.
+	 */
 	public boolean isPanning() {
-		return isPanning;
+		return mIsPanning;
 	}
 
+	/**
+	 * Processes a touch motion event and calculates the panning gesture.
+	 * @param event The motion event that occurred.
+	 * @return Whether the touch was consumed.
+	 */
 	public boolean onTouchEvent(final MotionEvent event) {
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
-				ptrID1 = event.getPointerId(event.getActionIndex());
+				mPointerId1 = event.getPointerId(event.getActionIndex());
 				break;
 			case MotionEvent.ACTION_POINTER_DOWN:
-				if (ptrID1 == INVALID_POINTER_ID)
-					ptrID1 = event.getPointerId(event.getActionIndex());
-				else
-					ptrID2 = event.getPointerId(event.getActionIndex());
+				if (mPointerId1 == INVALID_POINTER_ID) {
+					mPointerId1 = event.getPointerId(event.getActionIndex());
+				} else {
+					mPointerId2 = event.getPointerId(event.getActionIndex());
+				}
 
-				if (ptrID1 != INVALID_POINTER_ID && ptrID2 != INVALID_POINTER_ID) {
-					unpackLinePosition(event, previousLine);
+				if (mPointerId1 != INVALID_POINTER_ID && mPointerId2 != INVALID_POINTER_ID) {
+					unpackLinePosition(event, mPreviousLine);
 				}
 				break;
 			case MotionEvent.ACTION_MOVE:
-				if(ptrID1 != INVALID_POINTER_ID && ptrID2 != INVALID_POINTER_ID) {
-
+				if (mPointerId1 != INVALID_POINTER_ID && mPointerId2 != INVALID_POINTER_ID) {
 					Line currentLine = new Line();
 					unpackLinePosition(event, currentLine);
 
-					calculateDistanceBetweenLines(previousLine, currentLine);
+					calculateDistanceBetweenLines(mPreviousLine, currentLine);
 
-					if (!isPanning) {
+					if (!mIsPanning) {
 						startPan();
 					}
-					if (gestureListener != null) {
-						gestureListener.onPan(this, getDistanceX(), getDistanceY());
+					if (mGestureListener != null) {
+						mGestureListener.onPan(this, getDistanceX(), getDistanceY());
 					}
 
-					previousLine = currentLine;
+					mPreviousLine = currentLine;
 				}
 				break;
 			case MotionEvent.ACTION_UP:
@@ -74,57 +99,80 @@ public class PanGestureDetector {
 			case MotionEvent.ACTION_POINTER_UP:
 				clearPointerIndex(event.getPointerId(event.getActionIndex()));
 				break;
+			default:
+				break;
 		}
 		return true;
 	}
 
 	private void unpackLinePosition(final MotionEvent event, final Line line) {
-		line.setX1(event.getX(event.findPointerIndex(ptrID1)));
-		line.setY1(event.getY(event.findPointerIndex(ptrID1)));
-		line.setX2(event.getX(event.findPointerIndex(ptrID2)));
-		line.setY2(event.getY(event.findPointerIndex(ptrID2)));
+		line.setX1(event.getX(event.findPointerIndex(mPointerId1)));
+		line.setY1(event.getY(event.findPointerIndex(mPointerId1)));
+		line.setX2(event.getX(event.findPointerIndex(mPointerId2)));
+		line.setY2(event.getY(event.findPointerIndex(mPointerId2)));
 	}
 
-	private void calculateDistanceBetweenLines (final Line line1, final Line line2) {
+	private void calculateDistanceBetweenLines(final Line line1, final Line line2) {
 		Point center1 = line1.getCenter();
 		Point center2 = line2.getCenter();
 
-		xDistance = center2.getX() - center1.getX();
-		yDistance = center2.getY() - center1.getY();
+		mXDistance = center2.getX() - center1.getX();
+		mYDistance = center2.getY() - center1.getY();
 	}
 
 	private void clearPointerIndex(final int pointerIndex) {
-		if (ptrID1 == pointerIndex) {
-			ptrID1 = INVALID_POINTER_ID;
-			if (isPanning) {
+		if (mPointerId1 == pointerIndex) {
+			mPointerId1 = INVALID_POINTER_ID;
+			if (mIsPanning) {
 				endPan();
 			}
-		}
-		else if (ptrID2 == pointerIndex) {
-			ptrID2 = INVALID_POINTER_ID;
-			if (isPanning) {
+		} else if (mPointerId2 == pointerIndex) {
+			mPointerId2 = INVALID_POINTER_ID;
+			if (mIsPanning) {
 				endPan();
 			}
 		}
 	}
 
 	private void startPan() {
-		isPanning = true;
-		if (gestureListener != null) {
-			gestureListener.onPanBegin(this, getDistanceX(), getDistanceY());
+		mIsPanning = true;
+		if (mGestureListener != null) {
+			mGestureListener.onPanBegin(this, getDistanceX(), getDistanceY());
 		}
 	}
 
 	private void endPan() {
-		isPanning = false;
-		if (gestureListener != null) {
-			gestureListener.onPanEnd();
+		mIsPanning = false;
+		if (mGestureListener != null) {
+			mGestureListener.onPanEnd();
 		}
 	}
 
-	public static interface OnPanGestureListener {
-		public boolean onPan(PanGestureDetector detector, float distanceX, float distanceY);
-		public boolean onPanBegin(PanGestureDetector detector, float distanceX, float distanceY);
-		public void onPanEnd();
+	/**
+	 * Provides callbacks to process pan gestures.
+	 */
+	public interface OnPanGestureListener {
+		/**
+		 * Called on a motion event when a pan is detected.
+		 * @param detector The pan gesture detector.
+		 * @param distanceX The x distance of the pan.
+		 * @param distanceY The y distance of the pan.
+		 * @return Whether the touch was consumed.
+		 */
+		boolean onPan(PanGestureDetector detector, float distanceX, float distanceY);
+
+		/**
+		 * Called on receipt of a motion event when a pan is detected to begin.
+		 * @param detector The pan gesture detector.
+		 * @param distanceX The x distance of the pan.
+		 * @param distanceY The y distance of the pan.
+		 * @return Whether the touch was consumed.
+		 */
+		boolean onPanBegin(PanGestureDetector detector, float distanceX, float distanceY);
+
+		/**
+		 * Called on receipt of a motion event when a pan is detected to end.
+		 */
+		void onPanEnd();
 	}
 }
