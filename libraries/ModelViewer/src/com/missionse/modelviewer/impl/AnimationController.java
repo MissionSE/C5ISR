@@ -12,134 +12,147 @@ import rajawali.math.vector.Vector3.Axis;
 import com.missionse.modelviewer.ModelAnimationController;
 import com.missionse.modelviewer.ModelViewerRenderer;
 
+/**
+ * Provides a set of functions used to animate a model.
+ */
 public class AnimationController implements ModelAnimationController {
 
-	private ModelViewerRenderer renderer;
-	private Object3D objectGroup;
-	private Animation3D rotationAnim, scaleAnim, translationAnim;
+	private ModelViewerRenderer mRenderer;
+	private Object3D mObjectGroup;
+	private Animation3D mRotationAnim, mScaleAnim, mTranslationAnim;
 
-	public AnimationController(final ModelViewerRenderer modelRenderer) {
-		renderer = modelRenderer;
+	private static final int FULL_ROTATION = 360;
+
+	/**
+	 * Constructor.
+	 * @param renderer The renderer containing the object group.
+	 */
+	public AnimationController(final ModelViewerRenderer renderer) {
+		mRenderer = renderer;
 	}
 
-	public void setObject(final Object3D object3D) {
-		objectGroup = object3D;
+	/**
+	 * Sets the object group to be animated.
+	 * @param objectGroup The object group on which animations will be performed.
+	 */
+	public void setObjectGroup(final Object3D objectGroup) {
+		mObjectGroup = objectGroup;
 	}
 
 	@Override
-	public void startXRotation(final long durationMS) {
+	public void startXRotation(final long durationMs) {
 		stopRotation();
 
-		if (objectGroup != null) {
-			rotationAnim = new RotateAnimation3D(Axis.Y, 360);
-			rotationAnim.setDuration(8000);
-			rotationAnim.setRepeatMode(RepeatMode.INFINITE);
-			rotationAnim.setTransformable3D(objectGroup);
-			renderer.registerAnimation(rotationAnim);
+		if (mObjectGroup != null) {
+			mRotationAnim = new RotateAnimation3D(Axis.Y, FULL_ROTATION);
+			mRotationAnim.setDuration(durationMs);
+			mRotationAnim.setRepeatMode(RepeatMode.INFINITE);
+			mRotationAnim.setTransformable3D(mObjectGroup);
+			mRenderer.registerAnimation(mRotationAnim);
 
-			rotationAnim.play();
+			mRotationAnim.play();
 		}
 	}
 
 	@Override
-	public void startYRotation(final long durationMS) {
+	public void startYRotation(final long durationMs) {
 		stopRotation();
 
-		if (objectGroup != null) {
-			rotationAnim = new RotateAnimation3D(Axis.X, 360);
-			rotationAnim.setDuration(durationMS);
-			rotationAnim.setRepeatMode(RepeatMode.INFINITE);
-			rotationAnim.setTransformable3D(objectGroup);
-			renderer.registerAnimation(rotationAnim);
+		if (mObjectGroup != null) {
+			mRotationAnim = new RotateAnimation3D(Axis.X, FULL_ROTATION);
+			mRotationAnim.setDuration(durationMs);
+			mRotationAnim.setRepeatMode(RepeatMode.INFINITE);
+			mRotationAnim.setTransformable3D(mObjectGroup);
+			mRenderer.registerAnimation(mRotationAnim);
 
-			rotationAnim.play();
+			mRotationAnim.play();
 		}
 	}
 
 	@Override
-	public void rotateTo(final float xDegrees, final float yDegrees, final float zDegrees, final long durationMS) {
+	public void rotateTo(final float xDegrees, final float yDegrees, final float zDegrees, final long durationMs) {
 		stopRotation();
 
-		if (objectGroup != null) {
-			rotationAnim = new RotateAnimation3D(xDegrees, yDegrees, zDegrees);
-			rotationAnim.setDuration(durationMS);
-			rotationAnim.setRepeatMode(RepeatMode.NONE);
-			rotationAnim.setTransformable3D(objectGroup);
-			renderer.registerAnimation(rotationAnim);
+		if (mObjectGroup != null) {
+			mRotationAnim = new RotateAnimation3D(xDegrees, yDegrees, zDegrees);
+			mRotationAnim.setDuration(durationMs);
+			mRotationAnim.setRepeatMode(RepeatMode.NONE);
+			mRotationAnim.setTransformable3D(mObjectGroup);
+			mRenderer.registerAnimation(mRotationAnim);
 
-			rotationAnim.play();
+			mRotationAnim.play();
 		}
 	}
 
 	@Override
 	public void stopRotation() {
-		if (rotationAnim != null) {
-			rotationAnim.pause();
-			renderer.unregisterAnimation(rotationAnim);
-			rotationAnim = null;
+		if (mRotationAnim != null) {
+			mRotationAnim.pause();
+			mRenderer.unregisterAnimation(mRotationAnim);
+			mRotationAnim = null;
 		}
 	}
 
 	@Override
 	public boolean isRotating() {
-		return (rotationAnim != null && rotationAnim.isPlaying());
+		return (mRotationAnim != null && mRotationAnim.isPlaying());
 	}
 
 	@Override
-	public void scaleTo(final float scale, final long durationMS) {
+	public void scaleTo(final float scale, final long durationMs) {
 		stopScaling();
 
-		if (objectGroup != null) {
-			scaleAnim = new ScaleAnimation3D(scale);
-			scaleAnim.setDuration(durationMS);
-			scaleAnim.setRepeatMode(RepeatMode.NONE);
-			scaleAnim.setTransformable3D(objectGroup);
-			renderer.registerAnimation(scaleAnim);
+		if (mObjectGroup != null) {
+			mScaleAnim = new ScaleAnimation3D(scale);
+			mScaleAnim.setDuration(durationMs);
+			mScaleAnim.setRepeatMode(RepeatMode.NONE);
+			mScaleAnim.setTransformable3D(mObjectGroup);
+			mRenderer.registerAnimation(mScaleAnim);
 
-			scaleAnim.play();
+			mScaleAnim.play();
 		}
 	}
 
 	@Override
 	public void stopScaling() {
-		if (scaleAnim != null) {
-			scaleAnim.pause();
-			renderer.unregisterAnimation(scaleAnim);
-			scaleAnim = null;
+		if (mScaleAnim != null) {
+			mScaleAnim.pause();
+			mRenderer.unregisterAnimation(mScaleAnim);
+			mScaleAnim = null;
 		}
 	}
 
 	@Override
 	public boolean isScaling() {
-		return (scaleAnim != null && scaleAnim.isPlaying());
+		return (mScaleAnim != null && mScaleAnim.isPlaying());
 	}
 
 	@Override
-	public void translateTo(final float x, final float y, final float z, final long durationMS) {
+	public void translateTo(final float x, final float y, final float z, final long durationMs) {
 		stopTranslation();
 
-		if (objectGroup != null) {
-			translationAnim = new TranslateAnimation3D(new Vector3(x, y, z));
-			translationAnim.setDuration(durationMS);
-			translationAnim.setRepeatMode(RepeatMode.NONE);
-			translationAnim.setTransformable3D(objectGroup);
-			renderer.registerAnimation(translationAnim);
+		if (mObjectGroup != null) {
+			mTranslationAnim = new TranslateAnimation3D(new Vector3(x, y, z));
+			mTranslationAnim.setDuration(durationMs);
+			mTranslationAnim.setRepeatMode(RepeatMode.NONE);
+			mTranslationAnim.setTransformable3D(mObjectGroup);
+			mRenderer.registerAnimation(mTranslationAnim);
 
-			translationAnim.play();
+			mTranslationAnim.play();
 		}
 	}
 
 	@Override
 	public void stopTranslation() {
-		if (translationAnim != null) {
-			translationAnim.pause();
-			renderer.unregisterAnimation(translationAnim);
-			translationAnim = null;
+		if (mTranslationAnim != null) {
+			mTranslationAnim.pause();
+			mRenderer.unregisterAnimation(mTranslationAnim);
+			mTranslationAnim = null;
 		}
 	}
 
 	@Override
 	public boolean isTranslating() {
-		return (translationAnim != null && translationAnim.isPlaying());
+		return (mTranslationAnim != null && mTranslationAnim.isPlaying());
 	}
 }

@@ -7,36 +7,42 @@ import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
 import com.missionse.modelviewer.ModelViewerGestureListener;
 
+/**
+ * Provides a base gesture listener that implements all of the types of listeners.
+ */
 public class ModelGestureListener extends ModelViewerGestureListener {
+	private static final double TRANSLATION_SCALE = 100.0;
+	private static final double ROTATION_SCALE = 2 * Math.PI;
+
 	@Override
 	public boolean onScroll(final MotionEvent e1, final MotionEvent e2, final float distanceX, final float distanceY) {
 		if (e2.getPointerCount() == 1) {
-			controller.translate(-distanceX / 100.0f, distanceY / 100.0f, 0);
+			getController().translate(-distanceX / TRANSLATION_SCALE, distanceY / TRANSLATION_SCALE, 0);
 		}
 		return true;
 	}
 
 	@Override
 	public boolean onScale(final ScaleGestureDetector detector) {
-		controller.scale(detector.getScaleFactor());
+		getController().scale(detector.getScaleFactor());
 		return true;
 	}
 
 	@Override
 	public boolean onRotate(final RotationGestureDetector detector, final float angle) {
-		controller.rotateAround(0f, 0f, -detector.getAngle());
+		getController().rotateAround(0f, 0f, -detector.getAngle());
 		return true;
 	}
 
 	@Override
 	public boolean onPan(final PanGestureDetector detector, final float distanceX, final float distanceY) {
-		controller.rotateAround(-distanceY / 3f, -distanceX / 3f, 0f);
+		getController().rotateAround(-distanceY / ROTATION_SCALE, -distanceX / ROTATION_SCALE, 0f);
 		return true;
 	}
 
 	@Override
 	public boolean onSingleTapUp(final MotionEvent e) {
-		controller.getObjectAt(e.getX(), e.getY());
+		getController().getObjectAt(e.getX(), e.getY());
 		return true;
 	}
 }

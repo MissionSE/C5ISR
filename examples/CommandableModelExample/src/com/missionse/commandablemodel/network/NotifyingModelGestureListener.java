@@ -24,7 +24,7 @@ public class NotifyingModelGestureListener extends ModelViewerGestureListener {
 	@Override
 	public boolean onScroll(final MotionEvent e1, final MotionEvent e2, final float distanceX, final float distanceY) {
 		if (e2.getPointerCount() == 1) {
-			controller.translate(-distanceX / 100.0f, distanceY / 100.0f, 0);
+			getController().translate(-distanceX / 100.0f, distanceY / 100.0f, 0);
 		}
 		notifyRecipients();
 		return true;
@@ -32,21 +32,21 @@ public class NotifyingModelGestureListener extends ModelViewerGestureListener {
 
 	@Override
 	public boolean onScale(final ScaleGestureDetector detector) {
-		controller.scale(detector.getScaleFactor());
+		getController().scale(detector.getScaleFactor());
 		notifyRecipients();
 		return true;
 	}
 
 	@Override
 	public boolean onRotate(final RotationGestureDetector detector, final float angle) {
-		controller.rotateAround(0f, 0f, -detector.getAngle());
+		getController().rotateAround(0f, 0f, -detector.getAngle());
 		notifyRecipients();
 		return true;
 	}
 
 	@Override
 	public boolean onPan(final PanGestureDetector detector, final float distanceX, final float distanceY) {
-		controller.rotateAround(-distanceY / 3f, -distanceX / 3f, 0);
+		getController().rotateAround(-distanceY / 3f, -distanceX / 3f, 0);
 		notifyRecipients();
 		return true;
 	}
