@@ -21,39 +21,42 @@ import com.missionse.nfc.NfcUtilities;
 import com.missionse.nfc.TextRecord;
 import com.missionse.nfc.TextRecord.NotATextRecordException;
 
+/**
+ * Acts as the entry point for the NfcExample application, acting as the intermediary for all NFC intent.
+ */
 public class NfcExample extends Activity {
 
-	private MessageLogFragment messageLogFragment;
+	private MessageLogFragment mMessageLogFragment;
 
-	private NfcConnector nfcConnector;
+	private NfcConnector mNfcConnector;
 
-	private PendingIntent nfcBroadcastIntent;
-	private NdefMessage nfcMessage;
+	private PendingIntent mNfcBroadcastIntent;
+	private NdefMessage mNfcMessage;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_nfcexample);
 
-		messageLogFragment = new MessageLogFragment();
+		mMessageLogFragment = new MessageLogFragment();
 
 		//Create the NFC Connector.
-		nfcConnector = new NfcConnector();
-		if (!nfcConnector.onCreate(this)) {
+		mNfcConnector = new NfcConnector();
+		if (!mNfcConnector.onCreate(this)) {
 			Toast.makeText(this, "Error: Cannot resolve NFC Adapter", Toast.LENGTH_SHORT).show();
 			finish();
 			return;
-		};
+		}
 
-		nfcBroadcastIntent = PendingIntent.getActivity(this, 0,
+		mNfcBroadcastIntent = PendingIntent.getActivity(this, 0,
 				new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 		TextRecord myMessage = new TextRecord("Message from the other side!", Locale.ENGLISH, Charset.defaultCharset());
-		nfcMessage = new NdefMessage(new NdefRecord[] { TextRecord.toNdefRecord(myMessage) });
+		mNfcMessage = new NdefMessage(new NdefRecord[] { TextRecord.toNdefRecord(myMessage) });
 
-		nfcConnector.setPendingIntent(nfcBroadcastIntent);
-		nfcConnector.setMessage(nfcMessage);
+		mNfcConnector.setPendingIntent(mNfcBroadcastIntent);
+		mNfcConnector.setMessage(mNfcMessage);
 
-		getFragmentManager().beginTransaction().replace(R.id.container, messageLogFragment).commit();
+		getFragmentManager().beginTransaction().replace(R.id.container, mMessageLogFragment).commit();
 	}
 
 	private void displayMessages(final NdefMessage[] messages) {
@@ -74,17 +77,17 @@ public class NfcExample extends Activity {
 
 		for (TextRecord record : textRecords) {
 			Log.e(NfcExample.class.getSimpleName(), "message: " + record.getText());
-			messageLogFragment.addMessage(record.getText());
+			mMessageLogFragment.addMessage(record.getText());
 		}
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (!nfcConnector.isEnabled()) {
+		if (!mNfcConnector.isEnabled()) {
 			Toast.makeText(this, "NFC is not enabled.", Toast.LENGTH_SHORT).show();
 		} else {
-			nfcConnector.onResume();
+			mNfcConnector.onResume();
 		}
 	}
 
@@ -92,7 +95,7 @@ public class NfcExample extends Activity {
 	public void onPause() {
 		super.onPause();
 
-		nfcConnector.onPause();
+		mNfcConnector.onPause();
 	}
 
 	@Override
@@ -103,7 +106,7 @@ public class NfcExample extends Activity {
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action) || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
 				|| NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
 			Log.e(NfcExample.class.getSimpleName(), "Received NFC intent.");
-			messageLogFragment.addMessage("Received NFC intent.");
+			mMessageLogFragment.addMessage("Received NFC intent.");
 		}
 
 		NdefMessage[] receivedNfcMessages = NfcUtilities.parseIntent(getIntent());
