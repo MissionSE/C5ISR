@@ -3,9 +3,12 @@ package com.missionse.uiextensions.viewpager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+/**
+ * Extends the ViewPager PageTransformer to zoom a page in and out as it changes.
+ */
 public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
-	private static float MIN_SCALE = 0.85f;
-	private static float MIN_ALPHA = 0.5f;
+	private static final float MIN_SCALE = 0.85f;
+	private static final float MIN_ALPHA = 0.5f;
 
 	@Override
 	public void transformPage(final View view, final float position) {
