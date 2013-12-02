@@ -8,8 +8,9 @@ import android.os.Bundle;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.missionse.mseuiextensions.R;
-import com.missionse.slidingmenu.MenuClickListener;
+import com.missionse.slidingmenu.OnMenuClickListener;
 import com.missionse.slidingmenu.SlidingMenuHelper;
+import com.missionse.slidingmenu.SlidingMenuHelper.MenuType;
 import com.missionse.uiextensions.viewpager.DepthPageTransformer;
 import com.missionse.uiextensions.viewpager.DrawerSafeViewPager;
 import com.missionse.uiextensions.viewpager.SectionFragmentPagerAdapter;
@@ -49,13 +50,14 @@ public class ViewPagerActivity extends Activity {
 		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 
 		SlidingMenuHelper menuHelper = new SlidingMenuHelper(this);
-		mNavigationDrawer = menuHelper.createMenu(SlidingMenu.LEFT, menuItems, "Sections", new MenuClickListener() {
+		menuHelper.createSimpleMenu(MenuType.LEFT, menuItems, new OnMenuClickListener() {
 			@Override
 			public void onMenuClick(final int clickedItem) {
 				switchContent(clickedItem);
 			}
 		});
-		menuHelper.complete();
+		menuHelper.getLeftMenu().setTitle("Sections");
+		menuHelper.commit();
 	}
 
 	@Override

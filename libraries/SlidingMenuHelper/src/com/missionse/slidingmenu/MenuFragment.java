@@ -13,23 +13,46 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
 /**
  * Base fragment that provides handling of the mTitle and menu click listener when the parent view is created.
  */
 public class MenuFragment extends Fragment {
 
+	private SlidingMenu mSlidingMenu;
 	private ListView mMenuList;
-
 	private String mTitle;
-
-	private final List<MenuClickListener> mListeners = new ArrayList<MenuClickListener>();
+	private final List<OnMenuClickListener> mListeners = new ArrayList<OnMenuClickListener>();
 
 	/**
 	 * Registers a listener to be called back when a menu item is clicked.
 	 * @param listener a listener to be called back
 	 */
-	public void registerListener(final MenuClickListener listener) {
+	public void registerListener(final OnMenuClickListener listener) {
 		mListeners.add(listener);
+	}
+
+	/**
+	 * Sets the SlidingMenu contained in this fragment.
+	 * @param menu the SlidingMenu used by this fragment
+	 */
+	public void setSlidingMenu(final SlidingMenu menu) {
+		mSlidingMenu = menu;
+	}
+
+	/**
+	 * Enables the shadow.
+	 */
+	public void enableShadow() {
+		mSlidingMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
+	}
+
+	/**
+	 * Hides the shadow.
+	 */
+	public void disableShadow() {
+		mSlidingMenu.setShadowWidth(0);
 	}
 
 	/**
@@ -63,7 +86,7 @@ public class MenuFragment extends Fragment {
 		mMenuList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-				for (MenuClickListener listener : mListeners) {
+				for (OnMenuClickListener listener : mListeners) {
 					listener.onMenuClick(position);
 				}
 			}

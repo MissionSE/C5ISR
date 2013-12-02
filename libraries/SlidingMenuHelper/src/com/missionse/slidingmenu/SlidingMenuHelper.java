@@ -1,10 +1,12 @@
 package com.missionse.slidingmenu;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import android.app.Activity;
 import android.widget.ArrayAdapter;
 
+import com.jeremyfeinstein.slidingmenu.lib.CustomViewAbove;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 /**
@@ -12,12 +14,24 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
  */
 public class SlidingMenuHelper {
 
+	private static final int TOUCH_MARGIN = 150; //currently, an arbitrary number of pixels
+
+	/**
+	 * Enumeration denoting the side on which the menu should appear.
+	 */
+	public enum MenuType {
+		RIGHT, LEFT
+	}
+
 	private Activity mActivity;
 
 	private SlidingMenu mLeftMenu;
 	private MenuFragment mLeftMenuFragment;
+	private boolean mLeftMenuSet;
+
 	private SlidingMenu mRightMenu;
 	private MenuFragment mRightMenuFragment;
+	private boolean mRightMenuSet;
 
 	/**
 	 * Creates a SlidingMenuHelper.
@@ -28,121 +42,190 @@ public class SlidingMenuHelper {
 	}
 
 	/**
-	 * Creates a menu given various options.
-	 * @param type the type of menu (LEFT/RIGHT)
-	 * @param adapter the array adapter to use when populating the list
-	 * @param title an optional title to be displayed at the top of the menu, can be null
-	 * @param listener a listener to be called back when a menu item is clicked
-	 * @return a newly created SlidingMenu
+	 * Retrieves the menu fragment set to populate the LEFT side.
+	 * @return the left menu fragment
 	 */
-	public SlidingMenu createMenu(final int type, final ArrayAdapter<?> adapter, final String title,
-			final MenuClickListener listener) {
-
-		if (SlidingMenu.LEFT == type) {
-			mLeftMenu = new SlidingMenu(mActivity);
-
-			mLeftMenu.setMode(SlidingMenu.LEFT);
-			mLeftMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-			mLeftMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
-			mLeftMenu.setShadowDrawable(R.drawable.shadow_left);
-			mLeftMenu.setBehindWidthRes(R.dimen.default_menu_width);
-			mLeftMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
-			mLeftMenu.setMenu(R.layout.left_menu);
-
-			mLeftMenuFragment = new CustomMenuFragment();
-			if (title != null) {
-				mLeftMenuFragment.setTitle(title);
-			}
-			((CustomMenuFragment) mLeftMenuFragment).setCustomArrayAdapter(adapter);
-			mLeftMenuFragment.registerListener(listener);
-
-			return mLeftMenu;
-		} else if (SlidingMenu.RIGHT == type) {
-			mRightMenu = new SlidingMenu(mActivity);
-
-			mRightMenu.setMode(SlidingMenu.RIGHT);
-			mRightMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-			mRightMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
-			mRightMenu.setShadowDrawable(R.drawable.shadow_right);
-			mRightMenu.setBehindWidthRes(R.dimen.default_menu_width);
-			mRightMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
-			mRightMenu.setMenu(R.layout.right_menu);
-
-			mRightMenuFragment = new CustomMenuFragment();
-			if (title != null) {
-				mRightMenuFragment.setTitle(title);
-			}
-			((CustomMenuFragment) mRightMenuFragment).setCustomArrayAdapter(adapter);
-			mRightMenuFragment.registerListener(listener);
-
-			return mRightMenu;
-		}
-		return null;
+	public MenuFragment getLeftMenu() {
+		return mLeftMenuFragment;
 	}
 
 	/**
-	 * Creates a SlidingMenu given various options.
+	 * Retrieves the SlidingMenu that makes up the core of the LEFT menu.
+	 * @return the SlidingMenu used on the left
+	 */
+	public SlidingMenu getLeftMenuBase() {
+		return mLeftMenu;
+	}
+
+	/**
+	 * Retrieves the menu fragment set to populate the RIGHT side.
+	 * @return the right menu fragment
+	 */
+	public MenuFragment getRightMenu() {
+		return mRightMenuFragment;
+	}
+
+	/**
+	 * Retrieves the SlidingMenu that makes up the core of the RIGHT menu.
+	 * @return the SlidingMenu used on the right
+	 */
+	public SlidingMenu getRightMenuBase() {
+		return mRightMenu;
+	}
+
+	/**
+	 * Creates an untitled, simple menu, built from a List of Strings.
 	 * @param type the type of menu to create (LEFT/RIGHT)
 	 * @param entries a list of entries with which to populate the menu list
-	 * @param title an optional title to be displayed at the top of the menu, can be null
-	 * @param listener a listener to be called back when a menu item is clicked
-	 * @return a newly created SlidingMenu
+	 * @param listener a listener to be called back when a menu item is clicked, can be null
+	 * @return the SlidingMenuHelper
 	 */
-	public SlidingMenu createMenu(final int type, final List<String> entries, final String title,
-			final MenuClickListener listener) {
+	public SlidingMenuHelper createSimpleMenu(final MenuType type, final List<String> entries,
+			final OnMenuClickListener listener) {
 
-		if (SlidingMenu.LEFT == type) {
-			mLeftMenu = new SlidingMenu(mActivity);
-
-			mLeftMenu.setMode(SlidingMenu.LEFT);
-			mLeftMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-			mLeftMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
-			mLeftMenu.setShadowDrawable(R.drawable.shadow_left);
-			mLeftMenu.setBehindWidthRes(R.dimen.default_menu_width);
-			mLeftMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
-			mLeftMenu.setMenu(R.layout.left_menu);
-
-			mLeftMenuFragment = new DefaultMenuFragment();
-			if (title != null) {
-				mLeftMenuFragment.setTitle(title);
-			}
+		if (MenuType.LEFT == type) {
+			createLeftMenu(DefaultMenuFragment.class);
 			((DefaultMenuFragment) mLeftMenuFragment).setMenuEntries(entries);
-			mLeftMenuFragment.registerListener(listener);
-
-			return mLeftMenu;
-		} else if (SlidingMenu.RIGHT == type) {
-			mRightMenu = new SlidingMenu(mActivity);
-
-			mRightMenu.setMode(SlidingMenu.RIGHT);
-			mRightMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-			mRightMenu.setShadowWidthRes(R.dimen.menu_shadow_width);
-			mRightMenu.setShadowDrawable(R.drawable.shadow_right);
-			mRightMenu.setBehindWidthRes(R.dimen.default_menu_width);
-			mRightMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
-			mRightMenu.setMenu(R.layout.right_menu);
-
-			mRightMenuFragment = new DefaultMenuFragment();
-			if (title != null) {
-				mRightMenuFragment.setTitle(title);
+			if (listener != null) {
+				mLeftMenuFragment.registerListener(listener);
 			}
+		} else if (MenuType.RIGHT == type) {
+			createRightMenu(DefaultMenuFragment.class);
 			((DefaultMenuFragment) mRightMenuFragment).setMenuEntries(entries);
-			mRightMenuFragment.registerListener(listener);
-
-			return mRightMenu;
+			if (listener != null) {
+				mRightMenuFragment.registerListener(listener);
+			}
 		}
-		return null;
+		return this;
 	}
 
 	/**
-	 * Commits any SlidingMenu configuration by doing a fragment transaction to place the SlidingMenus (if created) in
-	 * their appropriate containers.
+	 * Creates an untitled menu, built from a provided adapter. NOTE: If the Views you plan to place in the menu via
+	 * your adapter are focusable (such as a Checkbox), then the listener provided via this method will NOT be invoked
+	 * (by design of the Android OS). In this case, you must provide your own mechanism for listening for item selection
+	 * (likely in the adapter itself).
+	 * @param type the type of menu (LEFT/RIGHT)
+	 * @param adapter the array adapter to use when populating the list
+	 * @param listener a listener to be called back when a menu item is clicked, can be null
+	 * @return a newly created SlidingMenu
 	 */
-	public void complete() {
-		if (mLeftMenu != null) {
-			mActivity.getFragmentManager().beginTransaction().replace(R.id.left_menu, mLeftMenuFragment).commit();
+	public SlidingMenuHelper createCustomMenu(final MenuType type, final ArrayAdapter<?> adapter,
+			final OnMenuClickListener listener) {
+
+		if (MenuType.LEFT == type) {
+			createLeftMenu(CustomMenuFragment.class);
+			((CustomMenuFragment) mLeftMenuFragment).setCustomArrayAdapter(adapter);
+
+			if (listener != null) {
+				mLeftMenuFragment.registerListener(listener);
+			}
+		} else if (MenuType.RIGHT == type) {
+			createRightMenu(CustomMenuFragment.class);
+			((CustomMenuFragment) mRightMenuFragment).setCustomArrayAdapter(adapter);
+
+			if (listener != null) {
+				mRightMenuFragment.registerListener(listener);
+			}
 		}
-		if (mRightMenu != null) {
+		return this;
+	}
+
+	private void createLeftMenu(final Class<?> fragmentClass) {
+		mLeftMenuSet = false;
+
+		mLeftMenu = new SlidingMenu(mActivity);
+
+		mLeftMenu.setMode(SlidingMenu.LEFT);
+		setCommonDefaultSettings(mLeftMenu);
+		mLeftMenu.setShadowDrawable(R.drawable.shadow_left);
+		mLeftMenu.setMenu(R.layout.left_menu);
+
+		try {
+			mLeftMenuFragment = (MenuFragment) fragmentClass.newInstance();
+			mLeftMenuFragment.setSlidingMenu(mLeftMenu);
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void createRightMenu(final Class<?> fragmentClass) {
+		mRightMenuSet = false;
+
+		mRightMenu = new SlidingMenu(mActivity);
+
+		mRightMenu.setMode(SlidingMenu.RIGHT);
+		setCommonDefaultSettings(mRightMenu);
+		mRightMenu.setShadowDrawable(R.drawable.shadow_right);
+		mRightMenu.setMenu(R.layout.right_menu);
+
+		try {
+			mRightMenuFragment = (MenuFragment) fragmentClass.newInstance();
+			mRightMenuFragment.setSlidingMenu(mRightMenu);
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void setCommonDefaultSettings(final SlidingMenu menu) {
+		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		menu.setBehindWidthRes(R.dimen.default_menu_width);
+		menu.setShadowWidth(0);
+		menu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
+	}
+
+	/**
+	 * Sets the touch mode of the specified menu.
+	 * @param type the menu to change
+	 * @param touchMode the new touch mode to use (TOUCHMODE_MARGIN, TOUCHMODE_FULLSCREEN, TOUCHMODE_NONE)
+	 * @param ignoreMargin whether or not to ignore the margin space. This only matters if TOUCHMODE_FULLSCREEN is used
+	 */
+	public void setTouchMode(final MenuType type, final int touchMode, final boolean ignoreMargin) {
+		if (type == MenuType.LEFT) {
+			mLeftMenu.setTouchModeAbove(touchMode);
+			if (touchMode == SlidingMenu.TOUCHMODE_FULLSCREEN && ignoreMargin) {
+				modifyTouchSlop(mLeftMenu);
+			}
+		} else if (type == MenuType.RIGHT) {
+			mRightMenu.setTouchModeAbove(touchMode);
+			if (touchMode == SlidingMenu.TOUCHMODE_FULLSCREEN && ignoreMargin) {
+				modifyTouchSlop(mRightMenu);
+			}
+		}
+	}
+
+	private void modifyTouchSlop(final SlidingMenu menu) {
+		try {
+			Field customAboveView = menu.getClass().getDeclaredField("mViewAbove");
+			customAboveView.setAccessible(true);
+			CustomViewAbove customAboveViewObject = (CustomViewAbove) customAboveView.get(menu);
+			Field touchSlop = customAboveViewObject.getClass().getDeclaredField("mTouchSlop");
+			touchSlop.setAccessible(true);
+			touchSlop.setInt(customAboveViewObject, TOUCH_MARGIN);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Commits any menu configuration via fragment transactions. Can be run more than once, and should always be run at
+	 * least once after after a create* call is made.
+	 */
+	public void commit() {
+		if (mLeftMenu != null && !mLeftMenuSet) {
+			mActivity.getFragmentManager().beginTransaction().replace(R.id.left_menu, mLeftMenuFragment).commit();
+			mLeftMenuSet = true;
+		}
+		if (mRightMenu != null && !mRightMenuSet) {
 			mActivity.getFragmentManager().beginTransaction().replace(R.id.right_menu, mRightMenuFragment).commit();
+			mRightMenuSet = true;
 		}
 	}
 }

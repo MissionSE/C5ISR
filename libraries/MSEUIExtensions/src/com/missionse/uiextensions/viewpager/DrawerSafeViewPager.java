@@ -2,6 +2,7 @@ package com.missionse.uiextensions.viewpager;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 /**
@@ -21,6 +22,16 @@ public class DrawerSafeViewPager extends ViewPager {
 	 */
 	public DrawerSafeViewPager(final Context context) {
 		super(context);
+		init();
+	}
+
+	/**
+	 * Creates a new DrawerSafeViewPager.
+	 * @param context the context in which this ViewPager belongs
+	 * @param attrs the attributes to use
+	 */
+	public DrawerSafeViewPager(final Context context, final AttributeSet attrs) {
+		super(context, attrs);
 		init();
 	}
 

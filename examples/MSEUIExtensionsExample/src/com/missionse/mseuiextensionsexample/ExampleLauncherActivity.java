@@ -23,4 +23,9 @@ public class ExampleLauncherActivity extends PreferenceActivity {
 	public void onBuildHeaders(final List<Header> target) {
 		loadHeadersFromResource(R.xml.example_launcher_headers, target);
 	}
+
+	@Override
+	protected boolean isValidFragment(final String fragmentName) {
+		return true;
+	}
 }

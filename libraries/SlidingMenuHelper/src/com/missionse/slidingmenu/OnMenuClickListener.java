@@ -3,7 +3,7 @@ package com.missionse.slidingmenu;
 /**
  * Provides callbacks for when a menu item is clicked.
  */
-public interface MenuClickListener {
+public interface OnMenuClickListener {
 
 	/**
 	 * Called when an item in the SlidingMenu is clicked.
