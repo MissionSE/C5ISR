@@ -114,14 +114,14 @@ public class SlidingMenuHelper {
 
 		if (MenuType.LEFT == type) {
 			createLeftMenu(CustomMenuFragment.class);
-			((CustomMenuFragment) mLeftMenuFragment).setCustomArrayAdapter(adapter);
+			((CustomMenuFragment) mLeftMenuFragment).setAdapter(adapter);
 
 			if (listener != null) {
 				mLeftMenuFragment.registerListener(listener);
 			}
 		} else if (MenuType.RIGHT == type) {
 			createRightMenu(CustomMenuFragment.class);
-			((CustomMenuFragment) mRightMenuFragment).setCustomArrayAdapter(adapter);
+			((CustomMenuFragment) mRightMenuFragment).setAdapter(adapter);
 
 			if (listener != null) {
 				mRightMenuFragment.registerListener(listener);

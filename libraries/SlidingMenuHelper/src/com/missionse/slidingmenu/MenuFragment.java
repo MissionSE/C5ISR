@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,6 +25,9 @@ public class MenuFragment extends Fragment {
 	private ListView mMenuList;
 	private String mTitle;
 	private final List<OnMenuClickListener> mListeners = new ArrayList<OnMenuClickListener>();
+
+	@SuppressWarnings("rawtypes")
+	private ArrayAdapter mAdapter;
 
 	/**
 	 * Registers a listener to be called back when a menu item is clicked.
@@ -69,6 +73,24 @@ public class MenuFragment extends Fragment {
 	 */
 	public ListView getMenuList() {
 		return mMenuList;
+	}
+
+	/**
+	 * Sets the adapter backing this Fragment.
+	 * @param adapter the adapter to set to
+	 */
+	@SuppressWarnings("rawtypes")
+	public void setAdapter(final ArrayAdapter adapter) {
+		mAdapter = adapter;
+	}
+
+	/**
+	 * Retrieves the adapter backing this Fragment.
+	 * @return the array adapter
+	 */
+	@SuppressWarnings("rawtypes")
+	public ArrayAdapter getAdapter() {
+		return mAdapter;
 	}
 
 	@Override

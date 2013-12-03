@@ -27,10 +27,9 @@ public class DefaultMenuFragment extends MenuFragment {
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View contentView = super.onCreateView(inflater, container, savedInstanceState);
 
-		getMenuList().setAdapter(
-				new ArrayAdapter<String>(getActivity(), R.layout.default_menu_entry, R.id.menu_text, mMenuEntries));
+		setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.default_menu_entry, R.id.menu_text, mMenuEntries));
+		getMenuList().setAdapter(getAdapter());
 
 		return contentView;
 	}
-
 }

@@ -52,10 +52,19 @@ public class SlidingMenuHelperExample extends Activity {
 
 		mSlidingMenuHelper = new SlidingMenuHelper(this);
 
+		createLeftMenu();
+
+		createRightCustomMenu();
+
+		createNavigationDrawer();
+	}
+
+	private void createLeftMenu() {
 		/**
 		 * Creating a generic navigation menu with a shadow and a title, built with a simple List of Strings. Also
 		 * setting touch mode to FULLSCREEN, so that a gesture from anywhere will make it appear. We do this because we
-		 * do not want it to collide with the NavigationDrawer provided by the Android OS.
+		 * do not want it to collide with the NavigationDrawer provided by the Android OS. It also closes when an item
+		 * is clicked.
 		 */
 		final List<String> leftMenuEntries = new ArrayList<String>();
 		leftMenuEntries.add("One");
@@ -65,6 +74,7 @@ public class SlidingMenuHelperExample extends Activity {
 			public void onMenuClick(final int position) {
 				mTranscriptAdapter.add("Left menu entry [" + position + ", " + leftMenuEntries.get(position)
 						+ "] selected");
+				mSlidingMenuHelper.getLeftMenuBase().showContent();
 			}
 		});
 		mSlidingMenuHelper.getLeftMenu().setTitle("Navigation Menu");
@@ -76,14 +86,18 @@ public class SlidingMenuHelperExample extends Activity {
 		 */
 		mSlidingMenuHelper.setTouchMode(MenuType.LEFT, SlidingMenu.TOUCHMODE_FULLSCREEN, true);
 		mSlidingMenuHelper.commit();
+	}
 
+	private void createRightCustomMenu() {
 		// Creating a menu without a shadow or a title, built with an array adapter for custom line items.
 		final List<String> rightMenuEntries = new ArrayList<String>();
 		rightMenuEntries.add("Three");
 		rightMenuEntries.add("Four");
 		CustomAdapter rightMenuAdapter = new CustomAdapter(this, R.layout.custom_menu_entry, rightMenuEntries);
 		mSlidingMenuHelper.createCustomMenu(MenuType.RIGHT, rightMenuAdapter, null).commit();
+	}
 
+	private void createNavigationDrawer() {
 		// Creating a generic "admin" menu.
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -111,12 +125,24 @@ public class SlidingMenuHelperExample extends Activity {
 		mAdminMenu = (ListView) findViewById(R.id.admin_drawer);
 		mAdminMenu.setAdapter(new ArrayAdapter<String>(this, R.layout.nav_drawer_item, adminMenuEntries));
 		mAdminMenu.setOnItemClickListener(new OnItemClickListener() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
 				mTranscriptAdapter.add("Drawer entry [" + position + ", " + adminMenuEntries.get(position)
 						+ "] selected");
+				if (adminMenuEntries.get(position).equals("Add To Right Menu")) {
+					mSlidingMenuHelper.getRightMenu().getAdapter().add("New entry");
+				} else if (adminMenuEntries.get(position).equals("Switch to Notification Menu")) {
+					createRightNotificationMenu();
+				} else if (adminMenuEntries.get(position).equals("Switch to Custom Menu")) {
+					createRightCustomMenu();
+				}
 			}
 		});
+	}
+
+	private void createRightNotificationMenu() {
+
 	}
 
 	/**
@@ -161,5 +187,4 @@ public class SlidingMenuHelperExample extends Activity {
 			return convertView;
 		}
 	}
-
 }
