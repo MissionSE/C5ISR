@@ -1,9 +1,11 @@
 package com.missionse.modelviewer.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import rajawali.Object3D;
 import rajawali.materials.Material;
+import rajawali.math.Quaternion;
 import rajawali.math.vector.Vector3;
 import rajawali.util.ObjectColorPicker;
 import rajawali.util.OnObjectPickedListener;
@@ -11,37 +13,49 @@ import rajawali.util.OnObjectPickedListener;
 import com.missionse.modelviewer.ModelController;
 import com.missionse.modelviewer.ModelViewerRenderer;
 
+/**
+ * Provides a set of functions used to control a model.
+ */
 public class ObjectGroupController implements ModelController {
 
-	private ModelViewerRenderer renderer;
-	private OnObjectPickedListener objectPickedListener;
-	private Object3D objectGroup;
-	private ArrayList<Object3D> objectList;
+	private ModelViewerRenderer mRenderer;
+	private OnObjectPickedListener mObjectPickedListener;
+	private Object3D mObjectGroup;
+	private ArrayList<Object3D> mObjectList;
 
-	private ObjectColorPicker objectPicker;
-	private boolean rotationLocked, scaleLocked, translationLocked;
+	private ObjectColorPicker mObjectPicker;
+	private boolean mRotationLocked, mScaleLocked, mTranslationLocked;
 
-	public ObjectGroupController(final ModelViewerRenderer modelRenderer, final OnObjectPickedListener listener) {
-		renderer = modelRenderer;
-		objectPickedListener = listener;
+	/**
+	 * Constructor.
+	 * @param renderer The renderer containing the object group.
+	 * @param listener The listener to handle on object picked callbacks.
+	 */
+	public ObjectGroupController(final ModelViewerRenderer renderer, final OnObjectPickedListener listener) {
+		mRenderer = renderer;
+		mObjectPickedListener = listener;
 	}
 
-	public void setObjectGroup(final Object3D group) {
-		objectGroup = group;
+	/**
+	 * Sets the object group to be animated.
+	 * @param objectGroup The object group that will be controlled.
+	 */
+	public void setObjectGroup(final Object3D objectGroup) {
+		mObjectGroup = objectGroup;
 
-		objectPicker = new ObjectColorPicker(renderer);
-		objectPicker.setOnObjectPickedListener(objectPickedListener);
+		mObjectPicker = new ObjectColorPicker(mRenderer);
+		mObjectPicker.setOnObjectPickedListener(mObjectPickedListener);
 
-		objectList = getObjects();
-		for (Object3D object : objectList) {
-			objectPicker.registerObject(object);
+		mObjectList = getObjects();
+		for (Object3D object : mObjectList) {
+			mObjectPicker.registerObject(object);
 		}
 	}
 
 	private ArrayList<Object3D> getObjects() {
 		ArrayList<Object3D> objects = new ArrayList<Object3D>();
-		for (int index = 0; index < objectGroup.getNumObjects(); ++index) {
-			objects.add(objectGroup.getChildAt(index));
+		for (int index = 0; index < mObjectGroup.getNumObjects(); ++index) {
+			objects.add(mObjectGroup.getChildAt(index));
 		}
 
 		return objects;
@@ -49,130 +63,147 @@ public class ObjectGroupController implements ModelController {
 
 	@Override
 	public void lockRotation() {
-		rotationLocked = true;
+		mRotationLocked = true;
 	}
 
 	@Override
 	public void unlockRotation() {
-		rotationLocked = false;
+		mRotationLocked = false;
 	}
 
 	@Override
 	public boolean isRotationLocked() {
-		return rotationLocked;
+		return mRotationLocked;
 	}
 
 	@Override
 	public void lockScale() {
-		scaleLocked = true;
+		mScaleLocked = true;
 	}
 
 	@Override
 	public void unlockScale() {
-		scaleLocked = false;
+		mScaleLocked = false;
 	}
 
 	@Override
 	public boolean isScaleLocked() {
-		return scaleLocked;
+		return mScaleLocked;
 	}
 
 	@Override
 	public void lockTranslation() {
-		translationLocked = true;
+		mTranslationLocked = true;
 	}
 
 	@Override
 	public void unlockTranslation() {
-		translationLocked = false;
+		mTranslationLocked = false;
 	}
 
 	@Override
 	public boolean isTranslationLocked() {
-		return translationLocked;
+		return mTranslationLocked;
 	}
 
 	@Override
-	public void rotate(final float x, final float y, final float z) {
-		if (!rotationLocked && objectGroup != null) {
-			objectGroup.rotateAround(Vector3.Y, x);
-			objectGroup.rotateAround(Vector3.X, y);
-			objectGroup.rotateAround(Vector3.Z, z);
+	public void rotate(final double x, final double y, final double z) {
+		if (!mRotationLocked && mObjectGroup != null) {
+			Vector3 rotation = mObjectGroup.getRotation();
+			mObjectGroup.setRotX(rotation.x + x);
+			mObjectGroup.setRotY(rotation.y + y);
+			mObjectGroup.setRotZ(rotation.z + z);
 		}
 	}
 
 	@Override
-	public void scale(final float scaleFactor) {
-		scale (scaleFactor, scaleFactor, scaleFactor);
-	}
-
-	@Override
-	public void scale(final float x, final float y, final float z) {
-		if (!scaleLocked && objectGroup != null) {
-			Vector3 scale = objectGroup.getScale();
-			objectGroup.setScaleX(scale.x * x);
-			objectGroup.setScaleY(scale.y * y);
-			objectGroup.setScaleZ(scale.z * z);
+	public void rotateAround(final double x, final double y, final double z) {
+		if (!mRotationLocked && mObjectGroup != null) {
+			mObjectGroup.rotateAround(Vector3.X, x);
+			mObjectGroup.rotateAround(Vector3.Y, y);
+			mObjectGroup.rotateAround(Vector3.Z, z);
 		}
 	}
 
 	@Override
-	public void translate(final float x, final float y, final float z) {
-		if (!translationLocked && objectGroup != null) {
-			objectGroup.setX(objectGroup.getX() + x);
-			objectGroup.setY(objectGroup.getY() + y);
-			objectGroup.setZ(objectGroup.getZ() + z);
+	public void scale(final double scaleFactor) {
+		scale(scaleFactor, scaleFactor, scaleFactor);
+	}
+
+	@Override
+	public void scale(final double x, final double y, final double z) {
+		if (!mScaleLocked && mObjectGroup != null) {
+			Vector3 scale = mObjectGroup.getScale();
+			mObjectGroup.setScaleX(scale.x * x);
+			mObjectGroup.setScaleY(scale.y * y);
+			mObjectGroup.setScaleZ(scale.z * z);
 		}
 	}
 
 	@Override
-	public void setRotation(final float x, final float y, final float z) {
-		if (!rotationLocked && objectGroup != null) {
-			objectGroup.setRotX(x);
-			objectGroup.setRotY(y);
-			objectGroup.setRotZ(z);
+	public void translate(final double x, final double y, final double z) {
+		if (!mTranslationLocked && mObjectGroup != null) {
+			mObjectGroup.setX(mObjectGroup.getX() + x);
+			mObjectGroup.setY(mObjectGroup.getY() + y);
+			mObjectGroup.setZ(mObjectGroup.getZ() + z);
 		}
 	}
 
 	@Override
-	public void setScale(final float x, final float y, final float z) {
-		if (!scaleLocked && objectGroup != null) {
-			objectGroup.setScaleX(x);
-			objectGroup.setScaleY(y);
-			objectGroup.setScaleZ(z);
+	public void setRotation(final double x, final double y, final double z) {
+		if (!mRotationLocked && mObjectGroup != null) {
+			mObjectGroup.setRotX(x);
+			mObjectGroup.setRotY(y);
+			mObjectGroup.setRotZ(z);
 		}
 	}
 
 	@Override
-	public void setPosition(final float x, final float y, final float z) {
-		if (!translationLocked && objectGroup != null) {
-			objectGroup.setX(x);
-			objectGroup.setY(y);
-			objectGroup.setZ(z);
+	public void setScale(final double x, final double y, final double z) {
+		if (!mScaleLocked && mObjectGroup != null) {
+			mObjectGroup.setScaleX(x);
+			mObjectGroup.setScaleY(y);
+			mObjectGroup.setScaleZ(z);
+		}
+	}
+
+	@Override
+	public void setPosition(final double x, final double y, final double z) {
+		if (!mTranslationLocked && mObjectGroup != null) {
+			mObjectGroup.setX(x);
+			mObjectGroup.setY(y);
+			mObjectGroup.setZ(z);
+		}
+	}
+
+	@Override
+	public void setOrientation(final double w, final double x, final double y, final double z) {
+		if (!mRotationLocked && mObjectGroup != null) {
+			mObjectGroup.setOrientation(new Quaternion(w, x, y, z));
 		}
 	}
 
 	@Override
 	public void reset() {
-		if (objectGroup != null) {
-			objectGroup.setPosition(new Vector3());
-			objectGroup.setRotation(new Vector3());
-			objectGroup.setScale(1);
+		if (mObjectGroup != null) {
+			mObjectGroup.setPosition(new Vector3());
+			mObjectGroup.setRotation(new Vector3());
+			mObjectGroup.setScale(1);
 		}
 	}
 
 	@Override
 	public void center() {
-		if (objectGroup != null) {
-			objectGroup.setPosition(new Vector3());
+		if (mObjectGroup != null) {
+			mObjectGroup.setPosition(new Vector3());
 		}
 	}
 
 	@Override
 	public int getAmbientColor(final String objectName) {
 		int color = -1;
-		if (objectGroup != null) {
-			Object3D object = objectGroup.getChildByName(objectName);
+		if (mObjectGroup != null) {
+			Object3D object = mObjectGroup.getChildByName(objectName);
 			if (null != object) {
 				Material material = object.getMaterial();
 				if (null != material) {
@@ -187,8 +218,8 @@ public class ObjectGroupController implements ModelController {
 	@Override
 	public boolean setAmbientColor(final String objectName, final int color) {
 		boolean successful = false;
-		if (objectGroup != null) {
-			Object3D object = objectGroup.getChildByName(objectName);
+		if (mObjectGroup != null) {
+			Object3D object = mObjectGroup.getChildByName(objectName);
 			if (null != object) {
 				Material material = object.getMaterial();
 				if (null != material) {
@@ -202,11 +233,11 @@ public class ObjectGroupController implements ModelController {
 	}
 
 	@Override
-	public ArrayList<String> getObjectList() {
-		ArrayList<String> objectNames = new ArrayList<String>();
+	public List<String> getObjectList() {
+		List<String> objectNames = new ArrayList<String>();
 
-		if (objectList != null) {
-			for (Object3D object : objectList) {
+		if (mObjectList != null) {
+			for (Object3D object : mObjectList) {
 				if (object.getName() != null) {
 					objectNames.add(object.getName());
 				}
@@ -217,89 +248,125 @@ public class ObjectGroupController implements ModelController {
 
 	@Override
 	public void getObjectAt(final float x, final float y) {
-		if (objectPicker != null) {
-			objectPicker.getObjectAt(x, y);
+		if (mObjectPicker != null) {
+			mObjectPicker.getObjectAt(x, y);
 		}
 	}
 
 	@Override
-	public float getXRotation() {
-		float xRotation = 0.0f;
-		if (objectGroup != null) {
-			xRotation = (float) objectGroup.getRotX();
+	public double getXRotation() {
+		double xRotation = 0.0f;
+		if (mObjectGroup != null) {
+			xRotation = mObjectGroup.getRotX();
 		}
 		return xRotation;
 	}
 
 	@Override
-	public float getYRotation() {
-		float yRotation = 0.0f;
-		if (objectGroup != null) {
-			yRotation = (float) objectGroup.getRotY();
+	public double getYRotation() {
+		double yRotation = 0.0f;
+		if (mObjectGroup != null) {
+			yRotation = mObjectGroup.getRotY();
 		}
 		return yRotation;
 	}
 
 	@Override
-	public float getZRotation() {
-		float zRotation = 0.0f;
-		if (objectGroup != null) {
-			zRotation = (float) objectGroup.getRotZ();
+	public double getZRotation() {
+		double zRotation = 0.0f;
+		if (mObjectGroup != null) {
+			zRotation = mObjectGroup.getRotZ();
 		}
 		return zRotation;
 	}
 
 	@Override
-	public float getXScale() {
-		float xScale = 0.0f;
-		if (objectGroup != null) {
-			xScale = (float) objectGroup.getScaleX();
+	public double getXScale() {
+		double xScale = 0.0f;
+		if (mObjectGroup != null) {
+			xScale = mObjectGroup.getScaleX();
 		}
 		return xScale;
 	}
 
 	@Override
-	public float getYScale() {
-		float yScale = 0.0f;
-		if (objectGroup != null) {
-			yScale = (float) objectGroup.getScaleY();
+	public double getYScale() {
+		double yScale = 0.0f;
+		if (mObjectGroup != null) {
+			yScale = mObjectGroup.getScaleY();
 		}
 		return yScale;
 	}
 
 	@Override
-	public float getZScale() {
-		float zScale = 0.0f;
-		if (objectGroup != null) {
-			zScale = (float) objectGroup.getScaleZ();
+	public double getZScale() {
+		double zScale = 0.0f;
+		if (mObjectGroup != null) {
+			zScale = mObjectGroup.getScaleZ();
 		}
 		return zScale;
 	}
 
 	@Override
-	public float getXPosition() {
-		float xPosition = 0.0f;
-		if (objectGroup != null) {
-			xPosition = (float) objectGroup.getX();
+	public double getXPosition() {
+		double xPosition = 0.0f;
+		if (mObjectGroup != null) {
+			xPosition = mObjectGroup.getX();
 		}
 		return xPosition;
 	}
 
 	@Override
-	public float getYPosition() {
-		float yPosition = 0.0f;
-		if (objectGroup != null) {
-			yPosition = (float) objectGroup.getY();
+	public double getYPosition() {
+		double yPosition = 0.0f;
+		if (mObjectGroup != null) {
+			yPosition = mObjectGroup.getY();
 		}
 		return yPosition;
 	}
 
 	@Override
-	public float getZPosition() {
-		float zPosition = 0.0f;
-		if (objectGroup != null) {
-			zPosition = (float) objectGroup.getZ();
+	public double getZPosition() {
+		double zPosition = 0.0f;
+		if (mObjectGroup != null) {
+			zPosition = mObjectGroup.getZ();
 		}
 		return zPosition;
+	}
+
+	@Override
+	public double getWOrientation() {
+		double wOrientation = 0.0f;
+		if (mObjectGroup != null) {
+			wOrientation = mObjectGroup.getOrientation(new Quaternion()).w;
+		}
+		return wOrientation;
+	}
+
+	@Override
+	public double getXOrientation() {
+		double xOrientation = 0.0f;
+		if (mObjectGroup != null) {
+			xOrientation = mObjectGroup.getOrientation(new Quaternion()).x;
+		}
+		return xOrientation;
+	}
+
+	@Override
+	public double getYOrientation() {
+		double yOrientation = 0.0f;
+		if (mObjectGroup != null) {
+			yOrientation = mObjectGroup.getOrientation(new Quaternion()).y;
+		}
+		return yOrientation;
+	}
+
+	@Override
+	public double getZOrientation() {
+		double zOrientation = 0.0f;
+		if (mObjectGroup != null) {
+			zOrientation = mObjectGroup.getOrientation(new Quaternion()).z;
+		}
+		return zOrientation;
 	}
 }

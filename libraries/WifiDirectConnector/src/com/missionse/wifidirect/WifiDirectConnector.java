@@ -14,7 +14,6 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.util.SparseArray;
 
 import com.missionse.wifidirect.listener.ConnectionInitiationListener;
 import com.missionse.wifidirect.listener.DisconnectionListener;
@@ -24,65 +23,72 @@ import com.missionse.wifidirect.listener.P2pStateChangeListener;
 import com.missionse.wifidirect.network.Client;
 import com.missionse.wifidirect.network.Server;
 
+/**
+ * Provides an easy-to-use API against the WifiManager and WifiP2p connections provided by Android.
+ */
 public class WifiDirectConnector {
 
-	private Activity parentActivity;
+	private Activity mParentActivity;
 
-	private IntentFilter intentFilter;
+	private WifiP2pManager mWifiManager;
+	private Channel mWifiChannel;
+	private WifiDirectBroadcastReceiver mBroadcastReceiver;
 
-	private WifiP2pManager wifiManager;
-	private Channel wifiChannel;
-	private WifiDirectBroadcastReceiver broadcastReceiver;
+	private Server mServer;
+	private final List<IncomingDataListener> mDataListeners = new ArrayList<IncomingDataListener>();
 
-	private Server server;
-	private final List<IncomingDataListener> dataListeners = new ArrayList<IncomingDataListener>();
+	private Client mClient;
 
-	private Client client;
+	private WifiP2pDevice mTargetDevice;
 
-	private WifiP2pDevice targetDevice;
-
-	public final static SparseArray<String> deviceStatuses = new SparseArray<String>();
-
+	/**
+	 * Creates a WifiDirectConnector.
+	 * @param activity the parent activity creating this connector
+	 */
 	public WifiDirectConnector(final Activity activity) {
-		parentActivity = activity;
-		setupIntentFilter();
-
-		deviceStatuses.append(WifiP2pDevice.AVAILABLE, "Available");
-		deviceStatuses.append(WifiP2pDevice.INVITED, "Invited");
-		deviceStatuses.append(WifiP2pDevice.CONNECTED, "Connected");
-		deviceStatuses.append(WifiP2pDevice.FAILED, "Failed");
-		deviceStatuses.append(WifiP2pDevice.UNAVAILABLE, "Unavailable");
+		mParentActivity = activity;
 	}
 
-	private void setupIntentFilter() {
-		intentFilter = new IntentFilter();
+	/**
+	 * Sets up the WifiDirectConnector. Meant to be called during the parent activity's onCreate().
+	 */
+	public void onCreate() {
+		mWifiManager = (WifiP2pManager) mParentActivity.getSystemService(Context.WIFI_P2P_SERVICE);
+		mWifiChannel = mWifiManager.initialize(mParentActivity, mParentActivity.getMainLooper(), null);
+
+		mClient = new Client(mParentActivity);
+	}
+
+	/**
+	 * Sets the IntentFilter for Wifi P2P intents. Meant to be called during the parent activity's onResume().
+	 */
+	public void onResume() {
+		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
+		mBroadcastReceiver = new WifiDirectBroadcastReceiver(mWifiManager, mWifiChannel);
+		mParentActivity.registerReceiver(mBroadcastReceiver, intentFilter);
 	}
 
-	public void onCreate() {
-		wifiManager = (WifiP2pManager) parentActivity.getSystemService(Context.WIFI_P2P_SERVICE);
-		wifiChannel = wifiManager.initialize(parentActivity, parentActivity.getMainLooper(), null);
-
-		client = new Client(parentActivity);
-	}
-
-	public void onResume() {
-		broadcastReceiver = new WifiDirectBroadcastReceiver(wifiManager, wifiChannel);
-		parentActivity.registerReceiver(broadcastReceiver, intentFilter);
-	}
-
+	/**
+	 * Halts reception of registered intents. Meant to be called during the parent activity's onPause().
+	 */
 	public void onPause() {
-		parentActivity.unregisterReceiver(broadcastReceiver);
+		mParentActivity.unregisterReceiver(mBroadcastReceiver);
 	}
 
-	public void discoverPeers(final DiscoverPeersListener listener) {
-		if (!broadcastReceiver.isP2PEnabled()) {
+	/**
+	 * Starts the WifiP2p discovery process.
+	 * @param listener the listener to be called back with results
+	 */
+	public void startDiscovery(final DiscoverPeersListener listener) {
+		if (!mBroadcastReceiver.isP2PEnabled()) {
 			listener.onP2pNotEnabled();
 		} else {
-			wifiManager.discoverPeers(wifiChannel, new WifiP2pManager.ActionListener() {
+			mWifiManager.discoverPeers(mWifiChannel, new WifiP2pManager.ActionListener() {
 				@Override
 				public void onSuccess() {
 					listener.onDiscoverPeersSuccess();
@@ -91,13 +97,27 @@ public class WifiDirectConnector {
 				@Override
 				public void onFailure(final int reasonCode) {
 					listener.onDiscoverPeersFailure(reasonCode);
+					mWifiManager.cancelConnect(mWifiChannel, null);
+					mWifiManager.stopPeerDiscovery(mWifiChannel, null);
 				}
 			});
 		}
 	}
 
+	/**
+	 * Cancels the discovery process.
+	 */
+	public void cancelDiscovery() {
+		mWifiManager.stopPeerDiscovery(mWifiChannel, null);
+	}
+
+	/**
+	 * Connects this device to a target device.
+	 * @param device the device to connect to
+	 * @param listener a listener to notify of results
+	 */
 	public void connect(final WifiP2pDevice device, final ConnectionInitiationListener listener) {
-		targetDevice = device;
+		mTargetDevice = device;
 
 		// Called by the PeerDetail fragment when the Connect button is pressed.
 		WifiP2pConfig config = new WifiP2pConfig();
@@ -105,7 +125,7 @@ public class WifiDirectConnector {
 		config.wps.setup = WpsInfo.PBC;
 		config.groupOwnerIntent = 0;
 
-		wifiManager.connect(wifiChannel, config, new ActionListener() {
+		mWifiManager.connect(mWifiChannel, config, new ActionListener() {
 			@Override
 			public void onSuccess() {
 				listener.onConnectionInitiationSuccess();
@@ -118,15 +138,19 @@ public class WifiDirectConnector {
 		});
 	}
 
+	/**
+	 * Disconnects this device from its current connection.
+	 * @param listener a listener to notify of results
+	 */
 	public void disconnect(final DisconnectionListener listener) {
-		wifiManager.removeGroup(wifiChannel, new ActionListener() {
+		mWifiManager.removeGroup(mWifiChannel, new ActionListener() {
 			@Override
 			public void onSuccess() {
-				// On disconnect, stop the client from sending, and shut down the server thread.
-				client.onDisconnect();
+				// On disconnect, stop the mClient from sending, and shut down the mServer thread.
+				mClient.onDisconnect();
 
-				server.cancel(true);
-				server = null;
+				mServer.cancel(true);
+				mServer = null;
 
 				listener.onDisconnectionSuccess();
 			}
@@ -134,13 +158,19 @@ public class WifiDirectConnector {
 			@Override
 			public void onFailure(final int reasonCode) {
 				listener.onDisconnectionFailure();
+				//mWifiManager.cancelConnect(mWifiChannel, null);
+				//mWifiManager.stopPeerDiscovery(mWifiChannel, null);
 			}
 		});
 	}
 
+	/**
+	 * Registers a StateChangeListener to be called back.
+	 * @param listener the listener to be called back with results
+	 */
 	public void registerStateChangeListener(final P2pStateChangeListener listener) {
-		if (broadcastReceiver != null) {
-			broadcastReceiver.addStateChangeHandler(new P2pStateChangeListener() {
+		if (mBroadcastReceiver != null) {
+			mBroadcastReceiver.addStateChangeHandler(new P2pStateChangeListener() {
 
 				@Override
 				public void onPeersAvailable(final WifiP2pDeviceList peers) {
@@ -150,10 +180,10 @@ public class WifiDirectConnector {
 				@SuppressWarnings("unchecked")
 				@Override
 				public void onConnectionInfoAvailable(final WifiP2pInfo connectionInfo) {
-					server = new Server();
-					server.execute(dataListeners);
+					mServer = new Server();
+					mServer.execute(mDataListeners);
 
-					client.setConnectionSuccessful(connectionInfo, targetDevice);
+					mClient.setConnectionSuccessful(connectionInfo, mTargetDevice);
 
 					listener.onConnectionInfoAvailable(connectionInfo);
 				}
@@ -164,14 +194,21 @@ public class WifiDirectConnector {
 				}
 			});
 		}
-
 	}
 
+	/**
+	 * Registers a data listener for incoming data on the WifiDirect connection.
+	 * @param listener the listener to notify of incoming data
+	 */
 	public void registerDataListener(final IncomingDataListener listener) {
-		dataListeners.add(listener);
+		mDataListeners.add(listener);
 	}
 
+	/**
+	 * Returns the connection client.
+	 * @return the connection client
+	 */
 	public Client getClient() {
-		return client;
+		return mClient;
 	}
 }

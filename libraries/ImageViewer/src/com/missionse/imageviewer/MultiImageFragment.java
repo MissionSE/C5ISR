@@ -7,13 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Provides a fragment with a pager of images.
+ */
 public class MultiImageFragment extends Fragment {
 
-	ViewPager pager;
-	ImagePagerAdapter adapter;
+	private ViewPager mPager;
+	private ImagePagerAdapter mAdapter;
 
-	public void setAdapter(final ImagePagerAdapter imagePagerAdapter) {
-		adapter = imagePagerAdapter;
+	/**
+	 * Sets the adapter to be used with the fragment.
+	 * @param adapter The pager adapter used to contain the images.
+	 */
+	public void setAdapter(final ImagePagerAdapter adapter) {
+		mAdapter = adapter;
 	}
 
 	@Override
@@ -25,8 +32,8 @@ public class MultiImageFragment extends Fragment {
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_pager, null);
 
-		pager = (ViewPager) view.findViewById(R.id.pager);
-		pager.setAdapter(adapter);
+		mPager = (ViewPager) view.findViewById(R.id.pager);
+		mPager.setAdapter(mAdapter);
 
 		return view;
 	}

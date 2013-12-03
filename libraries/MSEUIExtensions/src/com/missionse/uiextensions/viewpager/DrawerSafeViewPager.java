@@ -5,18 +5,31 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+/**
+ * Extends the ViewPager to work with a Navigation Drawer and horizontal gestures.
+ */
 public class DrawerSafeViewPager extends ViewPager {
 
 	private static final int DEFAULT_GUTTER_SIZE = 16; // dips
+	private static final int GUTTER_RATIO = 10;
 
 	private int mDefaultGutterSize;
 	private int mGutterSize;
 
+	/**
+	 * Creates a new DrawerSafeViewPager.
+	 * @param context the context in which this ViewPager belongs
+	 */
 	public DrawerSafeViewPager(final Context context) {
 		super(context);
 		init();
 	}
 
+	/**
+	 * Creates a new DrawerSafeViewPager.
+	 * @param context the context in which this ViewPager belongs
+	 * @param attrs the attributes to use
+	 */
 	public DrawerSafeViewPager(final Context context, final AttributeSet attrs) {
 		super(context, attrs);
 		init();
@@ -30,7 +43,7 @@ public class DrawerSafeViewPager extends ViewPager {
 	@Override
 	protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
 		final int measuredWidth = getMeasuredWidth();
-		final int maxGutterSize = measuredWidth / 10;
+		final int maxGutterSize = measuredWidth / GUTTER_RATIO;
 		mGutterSize = Math.min(maxGutterSize, mDefaultGutterSize);
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}

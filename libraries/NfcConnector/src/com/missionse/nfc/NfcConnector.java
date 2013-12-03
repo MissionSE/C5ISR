@@ -5,49 +5,75 @@ import android.app.PendingIntent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 
+/**
+ * Wraps the NfcAdapter to automatically setup and maintain NFC related processes.
+ */
 public class NfcConnector {
 
-	private Activity activity;
+	private Activity mActivity;
 
-	private NfcAdapter nfcAdapter;
-	private PendingIntent pendingIntent;
-	private NdefMessage ndefMessage;
+	private NfcAdapter mNfcAdapter;
+	private PendingIntent mPendingIntent;
+	private NdefMessage mNdefMessage;
 
+	/**
+	 * Sets up the NfcAdapter. To be called by the parent activity's onCreate().
+	 * @param activity the parent activity
+	 * @return whether or not the NfcAdapter exists
+	 */
 	public boolean onCreate(final Activity activity) {
-		this.activity = activity;
-		nfcAdapter = NfcAdapter.getDefaultAdapter(activity);
-		if (nfcAdapter == null) {
+		this.mActivity = activity;
+		mNfcAdapter = NfcAdapter.getDefaultAdapter(activity);
+		if (mNfcAdapter == null) {
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * Sets the pending intent to be broadcast when requested.
+	 * @param intent the intent to broadcast
+	 */
 	public void setPendingIntent(final PendingIntent intent) {
-		pendingIntent = intent;
+		mPendingIntent = intent;
 	}
 
+	/**
+	 * Sets the message to be sent when requested.
+	 * @param message the message to send
+	 */
 	public void setMessage(final NdefMessage message) {
-		ndefMessage = message;
+		mNdefMessage = message;
 	}
 
+	/**
+	 * Retrieves the NfcAdapter state.
+	 * @return whether or not the NfcAdapter is enabled
+	 */
 	public boolean isEnabled() {
-		return nfcAdapter.isEnabled();
+		return mNfcAdapter.isEnabled();
 	}
 
+	/**
+	 * Enables foreground dispatch and push message if available. To be called by the parent activity's onResume().
+	 */
 	public void onResume() {
-		if (nfcAdapter != null) {
-			if (pendingIntent != null) {
-				nfcAdapter.enableForegroundDispatch(activity, pendingIntent, null, null);
+		if (mNfcAdapter != null) {
+			if (mPendingIntent != null) {
+				mNfcAdapter.enableForegroundDispatch(mActivity, mPendingIntent, null, null);
 			}
-			if (ndefMessage != null) {
-				nfcAdapter.setNdefPushMessage(ndefMessage, activity);
+			if (mNdefMessage != null) {
+				mNfcAdapter.setNdefPushMessage(mNdefMessage, mActivity);
 			}
 		}
 	}
 
+	/**
+	 * Disables all operations of the NfcAdapter. To be called by the parent activity's onPause().
+	 */
 	public void onPause() {
-		if (nfcAdapter != null) {
-			nfcAdapter.disableForegroundDispatch(activity);
+		if (mNfcAdapter != null) {
+			mNfcAdapter.disableForegroundDispatch(mActivity);
 		}
 	}
 }

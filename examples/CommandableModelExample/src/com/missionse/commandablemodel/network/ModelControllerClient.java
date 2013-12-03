@@ -1,68 +1,45 @@
 package com.missionse.commandablemodel.network;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pInfo;
-
+import com.missionse.commandablemodel.CommandableModelActivity;
 import com.missionse.modelviewer.ModelViewerFragment;
-import com.missionse.wifidirect.WifiUtilities;
 
+/**
+ * Acts as a recipient of model state changes, and notifies the mActivity to send the state out.
+ */
 public class ModelControllerClient implements ModelChangeRecipient {
 
-	private Context context;
-	private ModelViewerFragment modelFragment;
-
-	private WifiP2pInfo connectionInfo;
-	private WifiP2pDevice targetDevice;
+	private ModelViewerFragment mModelFragment;
 
 	// We should only send ModelState changes at most every 20ms.
 	// Note: In the future, this logic should be replaced by some sort of timed task that automatically sends
 	// the current state at a fixed rate, to avoid jitter. For now, rate limiting works fine.
-	private static final long PERIODIC = 20L;
-	private long lastStateSentTime = 0L;
+	private static final long PERIODIC = 17L;
+	private long mLastStateSentTime = 0L;
 
-	public ModelControllerClient(final Context context) {
-		this.context = context;
+	private CommandableModelActivity mActivity;
+
+	/**
+	 * Creates a new ModelControllerClient.
+	 * @param commandableModelActivity the parent activity to call back on change
+	 */
+	public ModelControllerClient(final CommandableModelActivity commandableModelActivity) {
+		mActivity = commandableModelActivity;
 	}
 
+	/**
+	 * Sets the ModelViewerFragment from which we are retrieving the model state (via controller).
+	 * @param fragment the fragment to get data from
+	 */
 	public void setModelViewerFragment(final ModelViewerFragment fragment) {
-		modelFragment = fragment;
-	}
-
-	public void onConnectionSuccessful(final WifiP2pInfo p2pInfo, final WifiP2pDevice p2pDevice) {
-		connectionInfo = p2pInfo;
-		targetDevice = p2pDevice;
-	}
-
-	public void onDisconnect() {
-		connectionInfo = null;
-		targetDevice = null;
+		mModelFragment = fragment;
 	}
 
 	@Override
 	public void onModelChange() {
-		if (System.currentTimeMillis() - lastStateSentTime > PERIODIC) {
-			if (connectionInfo != null && targetDevice != null) {
-				String address = "";
-				if (connectionInfo.isGroupOwner) {
-					address = WifiUtilities.getIPAddressFromMacAddress(targetDevice.deviceAddress);
-				} else {
-					address = connectionInfo.groupOwnerAddress.getHostAddress();
-				}
-
-				Intent modelStatusIntent = new Intent(context, ModelStatusIntentService.class);
-				modelStatusIntent.setAction(ModelStatusIntentService.ACTION_SEND_MODEL_STATUS);
-
-				ModelState currentModelState = new ModelState(modelFragment.getController());
-				modelStatusIntent.putExtra(ModelStatusIntentService.EXTRAS_STATUS, currentModelState.toString());
-				modelStatusIntent.putExtra(ModelStatusIntentService.EXTRAS_HOST, address);
-				modelStatusIntent.putExtra(ModelStatusIntentService.EXTRAS_PORT, ModelControllerServer.PORT);
-
-				context.startService(modelStatusIntent);
-
-				lastStateSentTime = System.currentTimeMillis();
-			}
+		if (System.currentTimeMillis() - mLastStateSentTime > PERIODIC) {
+			ModelState currentModelState = new ModelState(mModelFragment.getController());
+			mActivity.sendModelState(currentModelState.toString());
+			mLastStateSentTime = System.currentTimeMillis();
 		}
 	}
 }

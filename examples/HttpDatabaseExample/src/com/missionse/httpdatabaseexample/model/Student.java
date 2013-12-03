@@ -1,25 +1,40 @@
 package com.missionse.httpdatabaseexample.model;
 
+/**
+ * Provides the model of a student.
+ */
 public class Student {
+	private String mFirstName;
+	private String mLastName;
 
-	private String firstName;
-	private String lastName;
-
-	public Student(final String first, final String last) {
-		firstName = first;
-		lastName = last;
+	/**
+	 * Constructor.
+	 * @param firstName The first name of the student.
+	 * @param lastName The last name of the student.
+	 */
+	public Student(final String firstName, final String lastName) {
+		mFirstName = firstName;
+		mLastName = lastName;
 	}
 
+	/**
+	 * Gets the first name of the student.
+	 * @return The first name of the student.
+	 */
 	public String getFirstName() {
-		return firstName;
+		return mFirstName;
 	}
 
+	/**
+	 * Gets the last name of the student.
+	 * @return The last name of the student.
+	 */
 	public String getLastName() {
-		return lastName;
+		return mLastName;
 	}
 
 	@Override
 	public String toString() {
-		return "[Student] " + firstName + " " + lastName;
+		return "[Student] " + mFirstName + " " + mLastName;
 	}
 }

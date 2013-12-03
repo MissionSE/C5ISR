@@ -8,6 +8,9 @@ import android.util.Log;
 
 import com.missionse.modelviewer.ModelParser;
 
+/**
+ * A Model Parser that parses Wavefront Object (.obj) files.
+ */
 public class ObjModelParser implements ModelParser {
 
 	private static final String TAG = "ObjModelParser";

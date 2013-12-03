@@ -9,11 +9,17 @@ import android.widget.TextView;
 
 import com.missionse.mseuiextensions.R;
 
+/**
+ * Acts as a dummy fragment, to display page changes.
+ */
 public class DummySectionFragment extends Fragment {
 
 	private static final String CONTENT = "This is some content in section ";
 	public static final String ARG_SECTION_NUMBER = "section_number";
 
+	/**
+	 * Creates a new DummySectionFragment.
+	 */
 	public DummySectionFragment() {
 	}
 

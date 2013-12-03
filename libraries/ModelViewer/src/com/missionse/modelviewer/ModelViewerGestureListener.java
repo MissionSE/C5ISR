@@ -7,16 +7,27 @@ import android.view.ScaleGestureDetector;
 import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
 
+/**
+ * Provides a base gesture listener that implements all of the types of listeners.
+ */
 public abstract class ModelViewerGestureListener implements
 		GestureDetector.OnGestureListener,
 		ScaleGestureDetector.OnScaleGestureListener,
 		RotationGestureDetector.OnRotationGestureListener,
 		PanGestureDetector.OnPanGestureListener {
 
-	protected ModelController controller;
+	private ModelController mController;
 
+	/**
+	 * Sets the controller used to control the model.
+	 * @param modelController The model controller used to control the model.
+	 */
 	public void setController(final ModelController modelController) {
-		controller = modelController;
+		mController = modelController;
+	}
+
+	protected ModelController getController() {
+		return mController;
 	}
 
 	@Override

@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    <TextView android:id="@+id/discovered_devices_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/discovered_devices_title"
-        android:textAppearance="@android:style/TextAppearance.Medium"
-        android:textColor="#fff"
-        android:padding="10dp" />
+        android:layout_height="wrap_content">
+	    <TextView android:id="@+id/discovered_devices_title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:text="@string/discovered_devices_title"
+	        android:textAppearance="@android:style/TextAppearance.Medium"
+	        android:textColor="#fff"
+	        android:paddingLeft="10dp" />
+        <ProgressBar
+            android:id="@+id/discovery_progress"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:indeterminate="true"
+	        android:paddingRight="10dp" />
+    </LinearLayout>
+    
     <ListView android:id="@+id/discovered_devices"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:stackFromBottom="true"
         android:paddingLeft="20dp"
         android:layout_weight="1"
-        android:background="@android:color/white" />
+        android:background="#eee" />
 </LinearLayout>

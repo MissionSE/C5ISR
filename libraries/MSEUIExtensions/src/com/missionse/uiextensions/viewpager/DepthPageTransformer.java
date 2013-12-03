@@ -3,8 +3,11 @@ package com.missionse.uiextensions.viewpager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+/**
+ * Extends the ViewPager PageTransformer to add a fade in/out animation when a page changes.
+ */
 public class DepthPageTransformer implements ViewPager.PageTransformer {
-	private static float MIN_SCALE = 0.75f;
+	private static final float MIN_SCALE = 0.75f;
 
 	@Override
 	public void transformPage(final View view, final float position) {

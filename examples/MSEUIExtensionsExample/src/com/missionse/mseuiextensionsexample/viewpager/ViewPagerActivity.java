@@ -8,18 +8,22 @@ import android.os.Bundle;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.missionse.mseuiextensions.R;
-import com.missionse.slidingmenu.MenuClickListener;
+import com.missionse.slidingmenu.OnMenuClickListener;
 import com.missionse.slidingmenu.SlidingMenuHelper;
+import com.missionse.slidingmenu.SlidingMenuHelper.MenuType;
 import com.missionse.uiextensions.viewpager.DepthPageTransformer;
 import com.missionse.uiextensions.viewpager.DrawerSafeViewPager;
 import com.missionse.uiextensions.viewpager.SectionFragmentPagerAdapter;
 
+/**
+ * Acts as the entry point to the ViewPager demonstration.
+ */
 public class ViewPagerActivity extends Activity {
 
-	private SectionFragmentPagerAdapter pagerAdapter;
-	private DrawerSafeViewPager viewPager;
+	private SectionFragmentPagerAdapter mPagerAdapter;
+	private DrawerSafeViewPager mViewPager;
 
-	private SlidingMenu navigationDrawer;
+	private SlidingMenu mNavigationDrawer;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -27,7 +31,7 @@ public class ViewPagerActivity extends Activity {
 		setContentView(R.layout.activity_view_pager);
 
 		final List<String> menuItems = new ArrayList<String>();
-		pagerAdapter = new SectionFragmentPagerAdapter(getFragmentManager());
+		mPagerAdapter = new SectionFragmentPagerAdapter(getFragmentManager());
 
 		for (int pageCount = 0; pageCount <= 2; ++pageCount) {
 			Bundle arguments = new Bundle();
@@ -37,35 +41,40 @@ public class ViewPagerActivity extends Activity {
 
 			String title = "Section " + (pageCount + 1);
 
-			pagerAdapter.setPage(pageCount, title, section);
+			mPagerAdapter.setPage(pageCount, title, section);
 			menuItems.add(title);
 		}
 
-		viewPager = (DrawerSafeViewPager) findViewById(R.id.pager);
-		viewPager.setAdapter(pagerAdapter);
-		viewPager.setPageTransformer(true, new DepthPageTransformer());
+		mViewPager = (DrawerSafeViewPager) findViewById(R.id.pager);
+		mViewPager.setAdapter(mPagerAdapter);
+		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 
 		SlidingMenuHelper menuHelper = new SlidingMenuHelper(this);
-		navigationDrawer = menuHelper.createMenu(SlidingMenu.LEFT, menuItems, "Sections", new MenuClickListener() {
+		menuHelper.createSimpleMenu(MenuType.LEFT, menuItems, new OnMenuClickListener() {
 			@Override
 			public void onMenuClick(final int clickedItem) {
 				switchContent(clickedItem);
 			}
 		});
-		menuHelper.complete();
+		menuHelper.getLeftMenu().setTitle("Sections");
+		menuHelper.commit();
 	}
 
 	@Override
 	public void onBackPressed() {
-		if (navigationDrawer.isMenuShowing()) {
-			navigationDrawer.showContent(true);
+		if (mNavigationDrawer.isMenuShowing()) {
+			mNavigationDrawer.showContent(true);
 		} else {
 			super.onBackPressed();
 		}
 	}
 
+	/**
+	 * Changes the displayed content.
+	 * @param position the page to switch to
+	 */
 	public void switchContent(final int position) {
-		navigationDrawer.showContent();
-		viewPager.setCurrentItem(position);
+		mNavigationDrawer.showContent();
+		mViewPager.setCurrentItem(position);
 	}
 }

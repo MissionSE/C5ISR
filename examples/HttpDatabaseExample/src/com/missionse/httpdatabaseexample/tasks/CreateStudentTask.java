@@ -15,28 +15,37 @@ import com.missionse.httpdatabaseconnector.HttpRequestTask;
 import com.missionse.httpdatabaseexample.R;
 import com.missionse.httpdatabaseexample.model.Student;
 
+/**
+ * Provides a task that creates a student in the database.
+ */
 public class CreateStudentTask extends HttpRequestTask {
 	private static final String TAG = GetAllStudentsTask.class.getName();
 
-	private final String tagSuccess;
-	private final String tagFirstName;
-	private final String tagLastName;
-	private final String addStudentsURL;
+	private final String mTagSuccess;
+	private final String mTagFirstName;
+	private final String mTagLastName;
+	private final String mAddStudentsURL;
 
-	private final ArrayAdapter<Student> studentListAdapter;
-	private final List<Student> studentList;
+	private final ArrayAdapter<Student> mStudentListAdapter;
+	private final List<Student> mStudentList;
 
+	/**
+	 * Constructor.
+	 * @param context The context of the owner of the task.
+	 * @param adapter The adapter containing the students.
+	 * @param students The list of students.
+	 */
 	public CreateStudentTask(final Context context, final ArrayAdapter<Student> adapter, final List<Student> students) {
 		super(context, "Creating student");
-		studentListAdapter = adapter;
-		studentList = students;
+		mStudentListAdapter = adapter;
+		mStudentList = students;
 
 		Resources resources = getContext().getResources();
-		tagSuccess = resources.getString(R.string.tag_success);
-		tagFirstName = resources.getString(R.string.tag_first_name);
-		tagLastName = resources.getString(R.string.tag_last_name);
-		addStudentsURL = resources.getString(R.string.remote_db_path) +
-				resources.getString(R.string.create_student);
+		mTagSuccess = resources.getString(R.string.tag_success);
+		mTagFirstName = resources.getString(R.string.tag_first_name);
+		mTagLastName = resources.getString(R.string.tag_last_name);
+		mAddStudentsURL = resources.getString(R.string.remote_db_path)
+				+ resources.getString(R.string.create_student);
 	}
 
 	@Override
@@ -46,20 +55,20 @@ public class CreateStudentTask extends HttpRequestTask {
 		}
 
 		Student student = new Student(params[0], params[1]);
-		addParameter(tagFirstName, student.getFirstName());
-		addParameter(tagLastName, student.getLastName());
-		JSONObject json = makePostRequest(addStudentsURL);
+		addParameter(mTagFirstName, student.getFirstName());
+		addParameter(mTagLastName, student.getLastName());
+		JSONObject json = makePostRequest(mAddStudentsURL);
 
 		if (json != null) {
 			Log.d(TAG, "Create Student Result: " + json.toString());
 
 			try {
-				if (json.getInt(tagSuccess) == 1) {
-					studentList.add(student);
+				if (json.getInt(mTagSuccess) == 1) {
+					mStudentList.add(student);
 					((Activity) getContext()).runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							studentListAdapter.notifyDataSetChanged();
+							mStudentListAdapter.notifyDataSetChanged();
 						}
 					});
 				}

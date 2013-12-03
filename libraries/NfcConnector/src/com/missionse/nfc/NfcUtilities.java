@@ -9,8 +9,24 @@ import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.os.Parcelable;
 
-public class NfcUtilities {
+/**
+ * Provides various methods for several NFC related tasks.
+ */
+public final class NfcUtilities {
 
+	private static final long MAGIC_NUM2 = 256L;
+	private static final long MAGIC_NUM1 = 0xffL;
+	private static final int HEX_NUM2 = 0x10;
+	private static final int HEX_NUM1 = 0xff;
+
+	private NfcUtilities() {
+	}
+
+	/**
+	 * Determines whether a given Intent includes NFC data, and returns the associated NdefMessages if available.
+	 * @param intent the incoming intent to check
+	 * @return associated NdefMessages
+	 */
 	public static NdefMessage[] parseIntent(final Intent intent) {
 		NdefMessage[] messages = null;
 
@@ -38,6 +54,11 @@ public class NfcUtilities {
 		return messages;
 	}
 
+	/**
+	 * Prints out all tag data associated with a Parcelable.
+	 * @param p the Parcelable to parse
+	 * @return a string containing all tag data
+	 */
 	public static String dumpTagData(final Parcelable p) {
 		StringBuilder stringBuilder = new StringBuilder();
 		Tag tag = (Tag) p;
@@ -68,6 +89,8 @@ public class NfcUtilities {
 					case MifareClassic.TYPE_PRO:
 						type = "Pro";
 						break;
+					default:
+						break;
 				}
 				stringBuilder.append("Mifare Classic type: ");
 				stringBuilder.append(type);
@@ -96,6 +119,8 @@ public class NfcUtilities {
 					case MifareUltralight.TYPE_ULTRALIGHT_C:
 						type = "Ultralight C";
 						break;
+					default:
+						break;
 				}
 				stringBuilder.append("Mifare Ultralight type: ");
 				stringBuilder.append(type);
@@ -108,8 +133,8 @@ public class NfcUtilities {
 	private static String getHex(final byte[] bytes) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (int i = bytes.length - 1; i >= 0; --i) {
-			int b = bytes[i] & 0xff;
-			if (b < 0x10) {
+			int b = bytes[i] & HEX_NUM1;
+			if (b < HEX_NUM2) {
 				stringBuilder.append('0');
 			}
 			stringBuilder.append(Integer.toHexString(b));
@@ -124,9 +149,9 @@ public class NfcUtilities {
 		long result = 0;
 		long factor = 1;
 		for (byte b : bytes) {
-			long value = b & 0xffl;
+			long value = b & MAGIC_NUM1;
 			result += value * factor;
-			factor *= 256l;
+			factor *= MAGIC_NUM2;
 		}
 		return result;
 	}
@@ -135,9 +160,9 @@ public class NfcUtilities {
 		long result = 0;
 		long factor = 1;
 		for (int i = bytes.length - 1; i >= 0; --i) {
-			long value = bytes[i] & 0xffl;
+			long value = bytes[i] & MAGIC_NUM1;
 			result += value * factor;
-			factor *= 256l;
+			factor *= MAGIC_NUM2;
 		}
 		return result;
 	}

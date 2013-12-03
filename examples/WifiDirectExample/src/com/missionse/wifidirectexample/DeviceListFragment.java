@@ -14,20 +14,39 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.missionse.wifidirect.WifiDirectConnector;
+
+/**
+ * Provides a user interface for displaying and selecting a device for WifiDirect connection initiation.
+ */
 public class DeviceListFragment extends DialogFragment {
 
-	private View contentView;
+	private WifiDirectConnector mWifiDirectConnector;
+
+	private View mContentView;
+	private ProgressBar mProgressBar;
 
 	private static final String NO_DEVICES_FOUND = "No devices found";
 
-	private ArrayAdapter<String> discoveredDevicesArrayAdapter;
-	private final Map<String, WifiP2pDevice> discoveredDevices = new HashMap<String, WifiP2pDevice>();
+	private ArrayAdapter<String> mDiscoveredDevicesArrayAdapter;
+	private final Map<String, WifiP2pDevice> mDiscoveredDevices = new HashMap<String, WifiP2pDevice>();
 
-	public static DeviceListFragment newInstance() {
+	/**
+	 * Provides a new DeviceListFragment.
+	 * @param wifiDirectConnector connector via which WifiDirect calls can be made.
+	 * @return a new DeviceListFragment
+	 */
+	public static DeviceListFragment newInstance(final WifiDirectConnector wifiDirectConnector) {
 		DeviceListFragment fragment = new DeviceListFragment();
+		fragment.setWifiDirectConnector(wifiDirectConnector);
 		return fragment;
+	}
+
+	private void setWifiDirectConnector(final WifiDirectConnector connector) {
+		mWifiDirectConnector = connector;
 	}
 
 	@Override
@@ -38,13 +57,13 @@ public class DeviceListFragment extends DialogFragment {
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		contentView = inflater.inflate(R.layout.fragment_device_list, null);
+		mContentView = inflater.inflate(R.layout.fragment_device_list, null);
 
-		discoveredDevicesArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
+		mDiscoveredDevicesArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
 
 		// Find and set up the ListView for paired devices
-		ListView pairedListView = (ListView) contentView.findViewById(R.id.discovered_devices);
-		pairedListView.setAdapter(discoveredDevicesArrayAdapter);
+		ListView pairedListView = (ListView) mContentView.findViewById(R.id.discovered_devices);
+		pairedListView.setAdapter(mDiscoveredDevicesArrayAdapter);
 		pairedListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
@@ -52,7 +71,7 @@ public class DeviceListFragment extends DialogFragment {
 				String displayedText = ((TextView) v).getText().toString();
 				String deviceName = displayedText.split("\n")[0];
 
-				WifiP2pDevice selectedDevice = discoveredDevices.get(deviceName);
+				WifiP2pDevice selectedDevice = mDiscoveredDevices.get(deviceName);
 				if (selectedDevice != null) {
 					((WifiDirectExample) getActivity()).connectToDevice(selectedDevice);
 					DeviceListFragment.this.dismiss();
@@ -60,19 +79,35 @@ public class DeviceListFragment extends DialogFragment {
 			}
 		});
 
-		return contentView;
+		mProgressBar = (ProgressBar) mContentView.findViewById(R.id.discovery_progress);
+		mProgressBar.setVisibility(View.VISIBLE);
+
+		return mContentView;
 	}
 
+	/**
+	 * Sets the displayed available peers.
+	 * @param peers list of discovered WifiP2pDevices
+	 */
 	public void setAvailablePeers(final WifiP2pDeviceList peers) {
-		discoveredDevices.clear();
+		mDiscoveredDevices.clear();
+		mDiscoveredDevicesArrayAdapter.clear();
+
+		mProgressBar.setVisibility(View.INVISIBLE);
 
 		if (peers == null) {
-			discoveredDevicesArrayAdapter.add(NO_DEVICES_FOUND);
+			mDiscoveredDevicesArrayAdapter.add(NO_DEVICES_FOUND);
 		} else {
 			for (WifiP2pDevice discoveredDevice : peers.getDeviceList()) {
-				discoveredDevices.put(discoveredDevice.deviceName, discoveredDevice);
-				discoveredDevicesArrayAdapter.add(discoveredDevice.deviceName + "\n" + discoveredDevice.deviceAddress);
+				mDiscoveredDevices.put(discoveredDevice.deviceName, discoveredDevice);
+				mDiscoveredDevicesArrayAdapter.add(discoveredDevice.deviceName + "\n" + discoveredDevice.deviceAddress);
 			}
 		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		mWifiDirectConnector.cancelDiscovery();
 	}
 }

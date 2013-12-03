@@ -19,48 +19,65 @@ import android.widget.ProgressBar;
 import com.missionse.gesturedetector.PanGestureDetector;
 import com.missionse.gesturedetector.RotationGestureDetector;
 
-public abstract class ModelViewerFragment extends RajawaliFragment implements OnTouchListener, OnObjectPickedListener, ObjectLoadedListener {
-	private ModelParser modelParser;
-	private ModelViewerRenderer renderer;
-	private ProgressBar progressBar;
+/**
+ * Provides a fragment that displays a 3d model viewer.
+ */
+public abstract class ModelViewerFragment extends RajawaliFragment implements
+		OnTouchListener, OnObjectPickedListener, ObjectLoadedListener {
 
-	private ModelViewerGestureListener gestureListener;
-	private GestureDetector gestureDetector;
-	private ScaleGestureDetector scaleGestureDetector;
-	private RotationGestureDetector rotationGestureDetector;
-	private PanGestureDetector panGestureDetector;
-	private ArrayList<ObjectPickedListener> objectPickedListeners;
-	private ArrayList<ObjectLoadedListener> objectLoadedListeners;
+	private ModelParser mModelParser;
+	private ModelViewerRenderer mRenderer;
+	private ProgressBar mProgressBar;
 
-	private boolean transparentSurfaceView;
+	private ModelViewerGestureListener mGestureListener;
+	private GestureDetector mGestureDetector;
+	private ScaleGestureDetector mScaleGestureDetector;
+	private RotationGestureDetector mRotationGestureDetector;
+	private PanGestureDetector mPanGestureDetector;
+	private ArrayList<ObjectPickedListener> mObjectPickedListeners;
+	private ArrayList<ObjectLoadedListener> mObjectLoadedListeners;
+
+	private boolean mTransparentSurfaceView;
 
 	public static final String ARG_MODEL_ID = "model_id";
 
-	public void setModelParser(final ModelParser parser) {
-		modelParser = parser;
+	/**
+	 * Sets the model parser used in the fragment.
+	 * @param modelParser The parser used to parse the model file.
+	 */
+	public void setModelParser(final ModelParser modelParser) {
+		mModelParser = modelParser;
 	}
 
-	public void setGestureListener(final ModelViewerGestureListener modelViewerGestureListener) {
-		gestureListener = modelViewerGestureListener;
+	/**
+	 * Sets the gesture listener used in the fragment.
+	 * @param gestureListener The gesture listener used to handle all gesture processing.
+	 */
+	public void setGestureListener(final ModelViewerGestureListener gestureListener) {
+		mGestureListener = gestureListener;
 	}
 
+	/**
+	 * Default constructor.
+	 */
 	public ModelViewerFragment() {
-		objectPickedListeners = new ArrayList<ObjectPickedListener>();
-		objectLoadedListeners = new ArrayList<ObjectLoadedListener>();
-		transparentSurfaceView = false;
+		mObjectPickedListeners = new ArrayList<ObjectPickedListener>();
+		mObjectLoadedListeners = new ArrayList<ObjectLoadedListener>();
+		mTransparentSurfaceView = false;
 	}
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
 
 		final Bundle arguments = getArguments();
-		final int modelID = arguments.getInt(ARG_MODEL_ID);
-		if (0 == modelID) {
+		final int modelId = arguments.getInt(ARG_MODEL_ID);
+		if (0 == modelId) {
 			throw new RuntimeException("ModelViewerFragment passed invalid model id.");
 		}
 
-		if (null == modelParser) {
+		if (null == mModelParser) {
 			throw new RuntimeException("No valid model parser set.");
 		}
 
@@ -68,16 +85,16 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 			setGLBackgroundTransparent(true);
 		}
 
-		renderer = createRenderer(modelID, modelParser);
-		renderer.setSurfaceView(mSurfaceView);
-		setRenderer(renderer);
+		mRenderer = createRenderer(modelId, mModelParser);
+		mRenderer.setSurfaceView(mSurfaceView);
+		setRenderer(mRenderer);
 
-		if (gestureListener != null) {
-			gestureListener.setController(getController());
-			gestureDetector = new GestureDetector(getActivity(), gestureListener);
-			scaleGestureDetector = new ScaleGestureDetector(getActivity(), gestureListener);
-			rotationGestureDetector = new RotationGestureDetector(gestureListener);
-			panGestureDetector = new PanGestureDetector(gestureListener);
+		if (mGestureListener != null) {
+			mGestureListener.setController(getController());
+			mGestureDetector = new GestureDetector(getActivity(), mGestureListener);
+			mScaleGestureDetector = new ScaleGestureDetector(getActivity(), mGestureListener);
+			mRotationGestureDetector = new RotationGestureDetector(mGestureListener);
+			mPanGestureDetector = new PanGestureDetector(mGestureListener);
 
 			mSurfaceView.setOnTouchListener(this);
 		}
@@ -95,7 +112,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 		mLayout.addView(mSurfaceView);
 
 		mLayout.findViewById(R.id.progress_bar_container).bringToFront();
-		progressBar = (ProgressBar) mLayout.findViewById(R.id.progress_bar);
+		mProgressBar = (ProgressBar) mLayout.findViewById(R.id.progress_bar);
 
 		return mLayout;
 	}
@@ -103,47 +120,52 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		renderer.onSurfaceDestroyed();
+		mRenderer.onSurfaceDestroyed();
 	}
 
 	protected void showLoader() {
-		if (!progressBar.isShown()) {
-			progressBar.post(new Runnable() {
+		if (!mProgressBar.isShown()) {
+			mProgressBar.post(new Runnable() {
 				@Override
 				public void run() {
-					progressBar.setVisibility(View.VISIBLE);
+					mProgressBar.setVisibility(View.VISIBLE);
 				}
 			});
 		}
 	}
 
 	protected void hideLoader() {
-		if (progressBar.isShown()) {
-			progressBar.post(new Runnable() {
+		if (mProgressBar.isShown()) {
+			mProgressBar.post(new Runnable() {
 				@Override
 				public void run() {
-					progressBar.setVisibility(View.GONE);
+					mProgressBar.setVisibility(View.GONE);
 				}
 			});
 		}
 	}
 
+	/**
+	 * Sets whether the background of the model viewer is transparent.
+	 * Must be done before onCreate is called.
+	 * @param transparent Whether the surface view is transparent.
+	 */
 	public void setTransparentSurfaceView(final boolean transparent) {
-		transparentSurfaceView = transparent;
+		mTransparentSurfaceView = transparent;
 	}
 
 	protected boolean isTransparentSurfaceView() {
-		return transparentSurfaceView;
+		return mTransparentSurfaceView;
 	}
 
 	@Override
 	public boolean onTouch(final View v, final MotionEvent event) {
 		boolean touchConsumed = false;
-		if (gestureListener != null) {
-			scaleGestureDetector.onTouchEvent(event);
-			rotationGestureDetector.onTouchEvent(event);
-			panGestureDetector.onTouchEvent(event);
-			gestureDetector.onTouchEvent(event);
+		if (mGestureListener != null) {
+			mScaleGestureDetector.onTouchEvent(event);
+			mRotationGestureDetector.onTouchEvent(event);
+			mPanGestureDetector.onTouchEvent(event);
+			mGestureDetector.onTouchEvent(event);
 			touchConsumed = true;
 		}
 
@@ -153,7 +175,7 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 	@Override
 	public void onObjectPicked(final Object3D object) {
 		if (object != null && object.getName() != null) {
-			for (ObjectPickedListener listener : objectPickedListeners) {
+			for (ObjectPickedListener listener : mObjectPickedListeners) {
 				listener.objectPicked(object.getName());
 			}
 		}
@@ -161,25 +183,41 @@ public abstract class ModelViewerFragment extends RajawaliFragment implements On
 
 	@Override
 	public void onObjectLoaded() {
-		for (ObjectLoadedListener listener : objectLoadedListeners) {
+		for (ObjectLoadedListener listener : mObjectLoadedListeners) {
 			listener.onObjectLoaded();
 		}
 	}
 
+	/**
+	 * Registers an object picked listener to be notified when an object is picked.
+	 * @param listener The object picked listener to be registered.
+	 */
 	public void registerObjectPickedListener(final ObjectPickedListener listener) {
-		objectPickedListeners.add(listener);
+		mObjectPickedListeners.add(listener);
 	}
 
+	/**
+	 * Registers an object loaded listener to be notified when the object group is loaded.
+	 * @param listener The object loaded listener to be registered.
+	 */
 	public void registerObjectLoadedListener(final ObjectLoadedListener listener) {
-		objectLoadedListeners.add(listener);
+		mObjectLoadedListeners.add(listener);
 	}
 
+	/**
+	 * Gets the controller used to control the model.
+	 * @return The model controller.
+	 */
 	public ModelController getController() {
-		return renderer.getController();
+		return mRenderer.getController();
 	}
 
+	/**
+	 * Gets the animation controller used to control the animations of the model.
+	 * @return The model animation controller.
+	 */
 	public ModelAnimationController getAnimator() {
-		return renderer.getAnimator();
+		return mRenderer.getAnimator();
 	}
 
 	protected abstract ModelViewerRenderer createRenderer(final int modelID, final ModelParser parser);

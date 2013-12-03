@@ -1,16 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/menu_enable_p2p"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/menu_enable_p2p"/>
-    
-    <!-- Discover Peers icon is at the same level as the menu "three dots" icon. -->
-    <item
-        android:id="@+id/menu_discover_peers"
-        android:icon="@drawable/ic_action_refresh"
-        android:orderInCategory="200"
-        android:showAsAction="always"
-        android:title="@string/menu_discover"/>
+    <item android:id="@+id/connect_scan"
+          android:icon="@android:drawable/ic_menu_search"
+          android:title="@string/menu_connect_scan"
+          android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/discoverable"
+          android:icon="@android:drawable/ic_menu_mylocation"
+          android:title="@string/menu_discoverable"
+          android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/reset"
+          android:icon="@android:drawable/ic_menu_revert"
+          android:title="@string/menu_reset"
+          android:showAsAction="ifRoom|withText" />
 </menu>

@@ -7,14 +7,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+/**
+ * Provides a fragment with a single image displayed.
+ */
 public class ImageFragment extends Fragment {
-	private ImageView image;
-	private int imageId;
+	private ImageView mImage;
+	private int mImageId;
 
 	public static final String ARG_IMAGE_ID = "image_id";
 
+	/**
+	 * Constructor.
+	 */
 	public ImageFragment() {
-		imageId = 0;
+		mImageId = 0;
 	}
 
 	@Override
@@ -22,15 +28,15 @@ public class ImageFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 
 		final Bundle arguments = getArguments();
-		imageId = arguments.getInt(ARG_IMAGE_ID);
+		mImageId = arguments.getInt(ARG_IMAGE_ID);
 	}
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_image, null);
 
-		image = (ImageView) view.findViewById(R.id.image_view);
-		image.setImageResource(imageId);
+		mImage = (ImageView) view.findViewById(R.id.image_view);
+		mImage.setImageResource(mImageId);
 
 		return view;
 	}

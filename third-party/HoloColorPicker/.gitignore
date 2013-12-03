@@ -1,6 +1,6 @@
 #Ignore everything...
 *
-#...but the archived zip file for HoloColorPicker and this gitignore
-!.gitignore
-!HoloColorPicker-master.zip
+#...but the archive(s), this gitignore, and the requisite README.
 !README.md
+!.gitignore
+!*.zip
