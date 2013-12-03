@@ -1,4 +1,4 @@
-package com.missionse.mapsexample;
+package com.missionse.mapviewer;
 
 import java.util.ArrayList;
 import java.util.List;
