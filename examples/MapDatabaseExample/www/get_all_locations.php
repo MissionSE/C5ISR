@@ -10,6 +10,7 @@
 
 		while ($row = mysql_fetch_array($result)) {
 			$location = array();
+			$location["id"] = $row["id"];
 			$location["name"] = $row["name"];
 			$location["latitude"] = $row["latitude"];
 			$location["longitude"] = $row["longitude"];

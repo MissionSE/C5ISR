@@ -1,9 +1,15 @@
 package com.missionse.mapdatabaseexample;
 
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +22,12 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.missionse.mapdatabaseexample.model.MapLocation;
 import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
@@ -27,12 +35,11 @@ import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
 /**
  * Provides a fragment that displays a map.
  */
+@SuppressLint("UseSparseArrays")
 public class GoogleMapFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
-LocationListener, OnMyLocationButtonClickListener, MapLocationAdder {
+LocationListener, OnMyLocationButtonClickListener, MapLocationAdder, OnMapLongClickListener {
 
-	private GoogleMap mMap;
-	private LocationClient mLocationClient;
-	private boolean mFirstLocationChange = true;
+	private static final String TAG = GoogleMapFragment.class.getName();
 
 	private static final LatLng MSE = new LatLng(39.974552, -74.976844);
 	private static final float INITIAL_ZOOM = 17.5f;
@@ -44,6 +51,12 @@ LocationListener, OnMyLocationButtonClickListener, MapLocationAdder {
 	private static final LocationRequest REQUEST = LocationRequest.create().setInterval(UPDATE_INTERVAL)
 			.setFastestInterval(FASTEST_INTERVAL)
 			.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+	private GoogleMap mMap;
+	private LocationClient mLocationClient;
+	private boolean mFirstLocationChange = true;
+	private final Map<Integer, MapLocation> mLocations = new HashMap<Integer, MapLocation>();
+	private final Map<Integer, Marker> mMarkers = new HashMap<Integer, Marker>();
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -118,13 +131,30 @@ LocationListener, OnMyLocationButtonClickListener, MapLocationAdder {
 		mMap.setOnMyLocationButtonClickListener(this);
 		mMap.setBuildingsEnabled(true);
 		mMap.setMapType(MAP_TYPE_HYBRID);
+		mMap.setOnMapLongClickListener(this);
 		new GetAllLocationsTask(getActivity(), this).execute();
 	}
 
 	@Override
 	public void addLocation(final MapLocation location) {
 		if (mMap != null) {
-			mMap.addMarker(new MarkerOptions().position(location.getLatLng()));
+			int locationId = location.getId();
+			if (!mLocations.containsKey(locationId)) {
+				Log.d(TAG, "Marker added: " + location);
+				mMarkers.put(locationId, mMap.addMarker(new MarkerOptions().position(location.getLatLng())));
+			} else {
+				Log.d(TAG, "Marker updated: " + location);
+				Marker marker = mMarkers.get(locationId);
+				marker.setPosition(location.getLatLng());
+			}
+
+			mLocations.put(locationId, location);
 		}
+	}
+
+	@Override
+	public void onMapLongClick(final LatLng location) {
+		CreateLocationDialogFragment.newInstance(location.latitude, location.longitude)
+			.show(getFragmentManager(), "create_location");
 	}
 }

@@ -24,6 +24,7 @@ public class GetAllLocationsTask extends HttpRequestTask {
 
 	private final String mTagSuccess;
 	private final String mTagLocations;
+	private final String mTagId;
 	private final String mTagName;
 	private final String mTagLatitude;
 	private final String mTagLongitude;
@@ -46,6 +47,7 @@ public class GetAllLocationsTask extends HttpRequestTask {
 		Resources resources = getContext().getResources();
 		mTagSuccess = resources.getString(R.string.tag_success);
 		mTagLocations = resources.getString(R.string.tag_locations);
+		mTagId = resources.getString(R.string.tag_id);
 		mTagName = resources.getString(R.string.tag_name);
 		mTagLatitude = resources.getString(R.string.tag_latitude);
 		mTagLongitude = resources.getString(R.string.tag_longitude);
@@ -65,6 +67,7 @@ public class GetAllLocationsTask extends HttpRequestTask {
 					for (int index = 0; index < locations.length(); ++index) {
 						JSONObject locationJSON = locations.getJSONObject(index);
 						MapLocation location = new MapLocation(
+								locationJSON.getInt(mTagId),
 								locationJSON.getString(mTagName),
 								locationJSON.getDouble(mTagLatitude),
 								locationJSON.getDouble(mTagLongitude));

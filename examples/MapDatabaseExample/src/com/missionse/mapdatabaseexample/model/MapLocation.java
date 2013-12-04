@@ -6,20 +6,31 @@ import com.google.android.gms.maps.model.LatLng;
  * Provides the model of a location on the map.
  */
 public class MapLocation {
+	private int mId;
 	private String mName;
 	private double mLatitude;
 	private double mLongitude;
 
 	/**
 	 * Constructor.
+	 * @param id The unique id for the location.
 	 * @param name The name of the location.
 	 * @param latitude The latitude of the location, in degrees.
 	 * @param longitude The longitude of the location, in degrees..
 	 */
-	public MapLocation(final String name, final double latitude, final double longitude) {
+	public MapLocation(final int id, final String name, final double latitude, final double longitude) {
+		mId = id;
 		mName = name;
 		mLatitude = latitude;
 		mLongitude = longitude;
+	}
+
+	/**
+	 * Get the unique id of the location.
+	 * @return The id of the location.
+	 */
+	public int getId() {
+		return mId;
 	}
 
 	/**

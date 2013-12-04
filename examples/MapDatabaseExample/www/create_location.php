@@ -1,17 +1,18 @@
 <?php
 	$response = array();
 
-	if (isset($_POST['first_name']) && isset($_POST['last_name'])) {
-		$first_name = mysql_real_escape_string($_POST['first_name']);
-		$last_name = mysql_real_escape_string($_POST['last_name']);
+	if (isset($_POST['name']) && isset($_POST['latitude']) && isset($_POST['longitude'])) {
+		$name = mysql_real_escape_string($_POST['name']);
+		$latitude = mysql_real_escape_string($_POST['latitude']);
+		$longitude = mysql_real_escape_string($_POST['longitude']);
 
 		require_once __DIR__ . '/db_connect.php';
 		$db = new DB_CONNECT();
-		$result = mysql_query("INSERT INTO students(first_name, last_name) VALUES('$first_name', '$last_name')");
+		$result = mysql_query("INSERT INTO locations(name, latitude, longitude) VALUES('$name', '$latitude', '$longitude')");
 
 		if ($result) {
 			$response["success"] = 1;
-			$response["message"] = "Student successfully created";
+			$response["message"] = "Location successfully created";
 
 			echo json_encode($response);
 		} else {
