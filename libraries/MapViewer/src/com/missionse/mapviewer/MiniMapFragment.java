@@ -25,30 +25,51 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 
+/**
+ * A {@link GoogleMap} view in a fragment that is sized to a configurable
+ * percentage of the display that shows a zoomed out view of a {@link GoogleMap} 
+ * that is considered the main map.  The view region of the main map is highlighted
+ * on this map which is configurable through shared preferences.  This map registers
+ * as a {@link GoogleMap.OnCameraChangeListener} to keep it's view region in sync with the 
+ * main map.  It also listens for clicks as a {@link GoogleMap.OnMapClickListener} on the
+ * smaller map in order to change the main map to display the desired view area.
+ *
+ */
 public class MiniMapFragment extends MapFragment implements OnSharedPreferenceChangeListener {
 
 	private static final String TAG = MiniMapFragment.class.getSimpleName();
-	
+
 	private static final String PREF_VIEW_AREA_FILL_COLOR = "pref_view_area_fill_color";
 	private static final String PREF_VIEW_AREA_STROKE = "pref_view_area_stroke";
 	private static final String PREF_VIEW_AREA_STROKE_COLOR = "pref_view_area_stroke_color";
 	private static final int DEF_VIEW_AREA_COLOR = Color.argb(150, 0, 0, 0);
 	private static final float DEF_STROKE = 2f;
 	private static final float NO_STROKE = 0f;
+	private static final int DEF_SCREEN_RATIO = 3;
 
 	private GoogleMap mMainMap;	
+	private GoogleMap mMiniMap;
 
 	private Polygon mZoomedViewPolygon;
 
 	private SharedPreferences mPrefs;
-	
+
+	/**
+	 * Creates a new instance of the {@link MiniMapFragment} and sets the 
+	 * <code>mMainMap</code> which will be used to update this map.
+	 * @param mainMap the {@link GoogleMap} use to update this map
+	 * @return a new instance of the {@link MiniMapFragment}
+	 */
 	public static MiniMapFragment newInstance(GoogleMap mainMap) {
 		MiniMapFragment fragment = new MiniMapFragment();
 		fragment.mMainMap = mainMap;
-		
+
 		return fragment;
 	}
 
+	/**
+	 * Constructs a {@link MiniMapFragment}.
+	 */
 	public MiniMapFragment() {
 		super();
 	}
@@ -57,21 +78,34 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
-		
+
 		View containerParentView = (View) container.getParent();
-		v.setLayoutParams(new FrameLayout.LayoutParams(containerParentView.getWidth()/3, containerParentView.getHeight()/3));
+		v.setLayoutParams(new FrameLayout.LayoutParams(
+				containerParentView.getWidth() / DEF_SCREEN_RATIO, 
+				containerParentView.getHeight() / DEF_SCREEN_RATIO));
 
 		return v;
 	}
 
+	private void setUpMapIfNeeded() {
+		// Do a null check to confirm that we have not already instantiated the map.
+		if (mMiniMap == null) {
+			// Try to obtain the map.
+			mMiniMap = getMap();
+			// Check if we were successful in obtaining the map.
+			if (mMiniMap != null) {
+				setUpMap();
+			}
+		}
+	}
+
 	private void setUpMap() {
-		GoogleMap miniMap = getMap();
-		UiSettings settings = miniMap.getUiSettings();
+		UiSettings settings = mMiniMap.getUiSettings();
 
 		settings.setCompassEnabled(false);
 		settings.setZoomControlsEnabled(false);
 
-		miniMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+		mMiniMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
 			@Override
 			public void onMapClick(LatLng latLng) {
@@ -89,10 +123,17 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 		});
 
 		int fillColor = mPrefs.getInt(PREF_VIEW_AREA_FILL_COLOR, DEF_VIEW_AREA_COLOR);
-		float strokeWidth = mPrefs.getBoolean(PREF_VIEW_AREA_STROKE, false) ? DEF_STROKE : NO_STROKE;
+
+		float strokeWidth;
+		if (mPrefs.getBoolean(PREF_VIEW_AREA_STROKE, false)) {
+			strokeWidth = DEF_STROKE;
+		} else {
+			strokeWidth = NO_STROKE;
+		}
+
 		int strokeColor = mPrefs.getInt(PREF_VIEW_AREA_STROKE_COLOR, DEF_VIEW_AREA_COLOR);
 
-		mZoomedViewPolygon = getMap().addPolygon(new PolygonOptions()
+		mZoomedViewPolygon = mMiniMap.addPolygon(new PolygonOptions()
 		.addAll(getMainViewRegionPoints())
 		.fillColor(fillColor)
 		.strokeWidth(strokeWidth)
@@ -101,11 +142,14 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 
 	private void animateZoomedView(CameraPosition mainMapCameraPosition) {
 
-		float maxZoomDiff = 6f;
-		float minZoomDiff = 2f;
-		float zoomDiff = mainMapCameraPosition.zoom - getMap().getCameraPosition().zoom;
-		if (zoomDiff > maxZoomDiff || zoomDiff < minZoomDiff ) {
-			getMap().animateCamera(CameraUpdateFactory.zoomTo(mainMapCameraPosition.zoom - 4f), new GoogleMap.CancelableCallback() {
+		final float maxZoomDiff = 6f;
+		final float minZoomDiff = 2f;
+		final float aveZoomDiff = 4f;
+		float zoomDiff = mainMapCameraPosition.zoom - mMiniMap.getCameraPosition().zoom;
+		if (zoomDiff > maxZoomDiff || zoomDiff < minZoomDiff) {
+			mMiniMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mainMapCameraPosition.target, 
+					mainMapCameraPosition.zoom - aveZoomDiff),
+					new GoogleMap.CancelableCallback() {
 
 				@Override
 				public void onFinish() {
@@ -129,7 +173,7 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 		boolean adjustMap = false;
 
 		LatLngBounds boundsMapRight = mMainMap.getProjection().getVisibleRegion().latLngBounds;
-		LatLngBounds boundsMapLeft = getMap().getProjection().getVisibleRegion().latLngBounds;
+		LatLngBounds boundsMapLeft = mMiniMap.getProjection().getVisibleRegion().latLngBounds;
 
 		LatLng swMapRight = boundsMapRight.southwest;
 		LatLng swMapLeft = boundsMapLeft.southwest;
@@ -163,14 +207,14 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 		}
 
 		if (adjustMap) {
-			getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(swMapLeft, neMapLeft), 0));
+			mMiniMap.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(swMapLeft, neMapLeft), 0));
 		}
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setRetainInstance(true);
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -184,7 +228,12 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 			mZoomedViewPolygon.setFillColor(sharedPreferences.getInt(PREF_VIEW_AREA_FILL_COLOR, DEF_VIEW_AREA_COLOR));
 		}  else if (PREF_VIEW_AREA_STROKE.equals(key) || PREF_VIEW_AREA_STROKE_COLOR.equals(key)) {
 			int strokeColor =  mPrefs.getInt(PREF_VIEW_AREA_STROKE_COLOR, Color.BLACK);
-			float strokeWidth = mPrefs.getBoolean(PREF_VIEW_AREA_STROKE, false) ? DEF_STROKE : NO_STROKE;
+			float strokeWidth;
+			if (mPrefs.getBoolean(PREF_VIEW_AREA_STROKE, false)) {
+				strokeWidth = DEF_STROKE;
+			} else {
+				strokeWidth = NO_STROKE;
+			}
 			mZoomedViewPolygon.setStrokeColor(strokeColor);
 			mZoomedViewPolygon.setStrokeWidth(strokeWidth);
 		}
@@ -193,10 +242,10 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		setUpMap();
+
+		setUpMapIfNeeded();
 	}
-	
+
 
 
 	private List<LatLng> getMainViewRegionPoints() {

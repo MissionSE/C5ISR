@@ -42,7 +42,7 @@ public class MapsExampleActivity extends Activity {
 				} else {
 					Log.d(TAG, "MimiMapFragment exists in fragment manager");
 					FragmentTransaction ft = getFragmentManager().beginTransaction();
-					ft.setCustomAnimations( R.animator.card_flip_right_in, R.animator.card_flip_right_out);
+					ft.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out);
 					if (isChecked) {
 						ft.attach(fragment);
 					} else {

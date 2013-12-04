@@ -19,11 +19,22 @@ import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailed
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MapViewerFragment extends Fragment implements OnSharedPreferenceChangeListener, LocationListener, ConnectionCallbacks, OnConnectionFailedListener {
+/**
+ * Creates a full screen {@link GoogleMap} view with the ability to overlay
+ * fragments in the four corners of the view.  Usually, {@link MiniMapFragment} 
+ * is used in one of the corners to show a zoomed out view of the current view 
+ * region displayed in this {@link GoogleMap} view.
+ */
+public class MapViewerFragment extends Fragment implements
+OnSharedPreferenceChangeListener,
+LocationListener,
+ConnectionCallbacks,
+OnConnectionFailedListener {
 
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
 
@@ -33,28 +44,42 @@ public class MapViewerFragment extends Fragment implements OnSharedPreferenceCha
 	private static final String PREF_CIRCLE_FILL_COLOR = "pref_circle_fill_color";
 	private static final String PREF_CIRCLE_STROKE = "pref_circle_stroke";
 	private static final String PREF_CIRCLE_STROKE_COLOR = "pref_circle_stroke_color";
+	private static final long DEF_LOCATION_REQUEST_INTERVAL = 5000; // 5 seconds
+	private static final long DEF_FASTEST_REQUEST_INTERVAL = 16; // 16ms = 60fps
 
-	// These settings are the same as the settings for the map. They will in fact give you updates
-	// at the maximal rates currently possible.
-	private static final LocationRequest REQUEST = LocationRequest.create().setInterval(5000) // 5 seconds
-			.setFastestInterval(16) // 16ms = 60fps
+
+	/*
+	 * These settings are the same as the settings for the map. They will in
+	 * fact give you updates at the maximal rates currently possible.
+	 */
+	private static final LocationRequest REQUEST = LocationRequest.create()
+			.setInterval(DEF_LOCATION_REQUEST_INTERVAL)
+			.setFastestInterval(DEF_FASTEST_REQUEST_INTERVAL) 
 			.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-	public static MapViewerFragment newInstance(LatLng mockLocation) {
+	/**
+	 * Creates a new instance of the {@link MapViewerFragment} and sets an initial
+	 * location for the map to position the camera at.
+	 * @param initialLatLng initial location to center map camera
+	 * @return a new instance of the {@link MapViewerFragment}
+	 */
+	public static MapViewerFragment newInstance(LatLng initialLatLng) {
 		MapViewerFragment fragment = new MapViewerFragment();
-		fragment.mMockLatLng = mockLocation;
+		fragment.mInitialLatLng = initialLatLng;
 		return fragment;
 	}
 
 	private LocationClient mLocationClient;
 	private GoogleMap mMainMap;
-	private LatLng mMockLatLng;
+	private LatLng mInitialLatLng;
 	private SharedPreferences mPrefs;
 
+	@Override
 	public void onConnected(Bundle arg0) {
 		mLocationClient.requestLocationUpdates(REQUEST, this); // LocationListener
 	}
 
+	@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
 		// Do nothing.
 	}
@@ -76,34 +101,18 @@ public class MapViewerFragment extends Fragment implements OnSharedPreferenceCha
 		return v;
 	}
 
-	/**
-	 * @param fragment
-	 * @param tag
-	 */
 	public void replaceTopLeftCornerFragment(Fragment fragment, String tag) {
 		replaceCornerFragment(R.id.top_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
 	}
 
-	/**
-	 * @param fragment
-	 * @param tag
-	 */
 	public void replaceTopRightCornerFragment(Fragment fragment, String tag) {
 		replaceCornerFragment(R.id.top_right_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
 	}
 
-	/**
-	 * @param fragment
-	 * @param tag
-	 */
 	public void replaceBottomLeftCornerFragment(Fragment fragment, String tag) {
 		replaceCornerFragment(R.id.bottom_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
 	}
 
-	/**
-	 * @param fragment
-	 * @param tag
-	 */
 	public void replaceBottomRightCornerFragment(Fragment fragment, String tag) {
 		replaceCornerFragment(R.id.bottom_right_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
 	}
@@ -133,8 +142,19 @@ public class MapViewerFragment extends Fragment implements OnSharedPreferenceCha
 
 	}
 
+	/**
+	 * Gets the {@link GoogleMap} main map from this fragment.
+	 * @return the main map
+	 */
 	public GoogleMap getMainMap() {
 		return mMainMap;
+	}
+
+	/**
+	 * Animates the camera position to the initial location.
+	 */
+	public void resetLatLng() {
+		mMainMap.animateCamera(CameraUpdateFactory.newLatLng(mInitialLatLng));
 	}
 
 	@Override
@@ -157,7 +177,7 @@ public class MapViewerFragment extends Fragment implements OnSharedPreferenceCha
 		// Do a null check to confirm that we have not already instantiated the map.
 		if (mMainMap == null) {
 			// Try to obtain the map from the SupportMapFragment.
-			mMainMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.main_map)).getMap();
+			mMainMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
 			// Check if we were successful in obtaining the map.
 			if (mMainMap != null) {
 				setUpMap();
@@ -170,9 +190,19 @@ public class MapViewerFragment extends Fragment implements OnSharedPreferenceCha
 
 		int fillColor = mPrefs.getInt(PREF_CIRCLE_FILL_COLOR, DEF_FILL_COLOR);
 		int strokeColor = mPrefs.getInt(PREF_CIRCLE_STROKE_COLOR, Color.BLACK);
-		float strokeWidth = mPrefs.getBoolean(PREF_CIRCLE_STROKE, false) ? DEF_STROKE : NO_STROKE;
+		float strokeWidth;
+		if (mPrefs.getBoolean(PREF_CIRCLE_STROKE, false)) {
+			strokeWidth = DEF_STROKE;
+		} else {
+			strokeWidth = NO_STROKE;
+		}
 	}
 
+	/**
+	 * Enables use of google's {@link LocationClient} service which provides user's
+	 * location based on GPS, WIFI, and/or mobile networks.
+	 * @param enabled whether to enable or disable the service
+	 */
 	public void setMyLocationEnabled(boolean enabled) {
 		if (enabled) {
 			if (mLocationClient == null) {
