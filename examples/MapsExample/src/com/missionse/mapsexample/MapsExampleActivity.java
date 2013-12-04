@@ -1,16 +1,20 @@
 package com.missionse.mapsexample;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.Switch;
 
 import com.missionse.mapviewer.MapViewerFragment;
@@ -19,7 +23,10 @@ import com.missionse.mapviewer.MiniMapFragment;
 public class MapsExampleActivity extends Activity {
 
 	private static final String TAG_MINI_MAP = "mini_map";
-
+	private static final String TAG_MINI_MAP_TOP_LEFT = "mini_map_top_left";
+	private static final String TAG_MINI_MAP_TOP_RIGHT = "mini_map_top_right";
+	private static final String TAG_MINI_MAP_BOTTOM_RIGHT = "mini_map_bottom_right";
+	
 	private MapViewerFragment mMainMapFragment;
 
 	@Override
@@ -37,12 +44,11 @@ public class MapsExampleActivity extends Activity {
 				MiniMapFragment fragment = (MiniMapFragment) fm.findFragmentByTag(TAG_MINI_MAP);
 				if (fragment == null) {
 					Log.d(TAG, "MimiMapFragment does not exist in fragment manager");
-					fragment = MiniMapFragment.newInstance(mMainMapFragment.getMainMap());
 					mMainMapFragment.replaceBottomLeftCornerFragment(fragment, TAG_MINI_MAP);
 				} else {
 					Log.d(TAG, "MimiMapFragment exists in fragment manager");
 					FragmentTransaction ft = getFragmentManager().beginTransaction();
-					ft.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out);
+					ft.setCustomAnimations(R.animator.slide_in, R.animator.slide_out);
 					if (isChecked) {
 						ft.attach(fragment);
 					} else {
@@ -79,6 +85,9 @@ public class MapsExampleActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		boolean enabled = !item.isChecked();
 		switch (item.getItemId()) {
+		case R.id.addMiniMap:
+			addMiniMap();
+			return true;
 		case R.id.myLocation:
 			item.setChecked(enabled);
 			mMainMapFragment.setMyLocationEnabled(enabled);
@@ -91,6 +100,20 @@ public class MapsExampleActivity extends Activity {
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void addMiniMap() {
+		
+		Fragment miniMapFragment = MiniMapFragment.newInstance(mMainMapFragment);
+		if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_TOP_LEFT) == null) {
+			mMainMapFragment.replaceTopLeftCornerFragment(miniMapFragment, TAG_MINI_MAP_TOP_LEFT);
+		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_TOP_RIGHT) == null) {
+			mMainMapFragment.replaceTopRightCornerFragment(miniMapFragment, TAG_MINI_MAP_TOP_RIGHT);
+		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_BOTTOM_RIGHT) == null) {
+			mMainMapFragment.replaceBottomRightCornerFragment(miniMapFragment, TAG_MINI_MAP_BOTTOM_RIGHT);
+		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP) == null) {
+			mMainMapFragment.replaceBottomLeftCornerFragment(miniMapFragment, TAG_MINI_MAP);
 		}
 	}
 

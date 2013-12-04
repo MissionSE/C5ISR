@@ -1,6 +1,10 @@
 package com.missionse.mapviewer;
 
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
@@ -21,7 +25,9 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -34,10 +40,12 @@ public class MapViewerFragment extends Fragment implements
 OnSharedPreferenceChangeListener,
 LocationListener,
 ConnectionCallbacks,
-OnConnectionFailedListener {
+OnConnectionFailedListener,
+OnCameraChangeListener {
+	public static final String FRAGMENT_TAG = "map_viewer_fragment";
 
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
-
+	
 	private static final int DEF_FILL_COLOR = Color.argb(150, 0, 0, 0);
 	private static final float DEF_STROKE = 2f;
 	private static final float NO_STROKE = 0f;
@@ -73,6 +81,7 @@ OnConnectionFailedListener {
 	private GoogleMap mMainMap;
 	private LatLng mInitialLatLng;
 	private SharedPreferences mPrefs;
+	private Set<OnCameraChangeListener> mCameraListeners = new HashSet<OnCameraChangeListener>();
 
 	@Override
 	public void onConnected(Bundle arg0) {
@@ -141,6 +150,14 @@ OnConnectionFailedListener {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void registerOnCameraChangeListener(OnCameraChangeListener listener) {
+		mCameraListeners.add(listener);
+	}
+	
+	public void removeOnCameraChangeListener(OnCameraChangeListener listener) {
+		mCameraListeners.remove(listener);
+	}
 
 	/**
 	 * Gets the {@link GoogleMap} main map from this fragment.
@@ -187,6 +204,7 @@ OnConnectionFailedListener {
 
 	private void setUpMap() {		
 		mMainMap.setMapType(MAP_TYPE_HYBRID);
+		mMainMap.setOnCameraChangeListener(this);
 
 		int fillColor = mPrefs.getInt(PREF_CIRCLE_FILL_COLOR, DEF_FILL_COLOR);
 		int strokeColor = mPrefs.getInt(PREF_CIRCLE_STROKE_COLOR, Color.BLACK);
@@ -220,6 +238,15 @@ OnConnectionFailedListener {
 	@Override
 	public void onDisconnected() {
 		// Do nothing.
+	}
+
+	@Override
+	public void onCameraChange(CameraPosition arg0) {
+		synchronized (mCameraListeners) {
+			for (OnCameraChangeListener listener : mCameraListeners) {
+				listener.onCameraChange(arg0);
+			}
+		}
 	}
 
 }

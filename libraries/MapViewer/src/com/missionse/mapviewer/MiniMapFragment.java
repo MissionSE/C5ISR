@@ -18,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -35,7 +36,10 @@ import com.google.android.gms.maps.model.VisibleRegion;
  * smaller map in order to change the main map to display the desired view area.
  *
  */
-public class MiniMapFragment extends MapFragment implements OnSharedPreferenceChangeListener {
+public class MiniMapFragment extends MapFragment implements 
+OnSharedPreferenceChangeListener,
+OnCameraChangeListener {
+	
 
 	private static final String TAG = MiniMapFragment.class.getSimpleName();
 
@@ -47,6 +51,7 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 	private static final float NO_STROKE = 0f;
 	private static final int DEF_SCREEN_RATIO = 3;
 
+	private MapViewerFragment mMapViewerFragment;
 	private GoogleMap mMainMap;	
 	private GoogleMap mMiniMap;
 
@@ -57,12 +62,12 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 	/**
 	 * Creates a new instance of the {@link MiniMapFragment} and sets the 
 	 * <code>mMainMap</code> which will be used to update this map.
-	 * @param mainMap the {@link GoogleMap} use to update this map
+	 * @param mapViewerFragment the {@link MapViewerFragment} use to update this map
 	 * @return a new instance of the {@link MiniMapFragment}
 	 */
-	public static MiniMapFragment newInstance(GoogleMap mainMap) {
+	public static MiniMapFragment newInstance(MapViewerFragment mapViewerFragment) {
 		MiniMapFragment fragment = new MiniMapFragment();
-		fragment.mMainMap = mainMap;
+		fragment.mMapViewerFragment = mapViewerFragment;
 
 		return fragment;
 	}
@@ -88,6 +93,9 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 	}
 
 	private void setUpMapIfNeeded() {
+		if (mMainMap == null) {
+			mMainMap = mMapViewerFragment.getMainMap();
+		}
 		// Do a null check to confirm that we have not already instantiated the map.
 		if (mMiniMap == null) {
 			// Try to obtain the map.
@@ -114,13 +122,7 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 			}
 		});
 
-		mMainMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-
-			@Override
-			public void onCameraChange(CameraPosition cameraPosition) {
-				animateZoomedView(cameraPosition);
-			}
-		});
+		mMapViewerFragment.registerOnCameraChangeListener(this);
 
 		int fillColor = mPrefs.getInt(PREF_VIEW_AREA_FILL_COLOR, DEF_VIEW_AREA_COLOR);
 
@@ -242,11 +244,16 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		
 		setUpMapIfNeeded();
 	}
 
-
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		
+		mMapViewerFragment.removeOnCameraChangeListener(this);
+	}
 
 	private List<LatLng> getMainViewRegionPoints() {
 		final VisibleRegion mainVR = mMainMap.getProjection().getVisibleRegion();
@@ -257,6 +264,11 @@ public class MiniMapFragment extends MapFragment implements OnSharedPreferenceCh
 		mainVRpoints.add(mainVR.nearLeft);
 
 		return mainVRpoints;
+	}
+
+	@Override
+	public void onCameraChange(CameraPosition cameraPosition) {
+		animateZoomedView(cameraPosition);
 	}
 
 }
