@@ -141,11 +141,13 @@ LocationListener, OnMyLocationButtonClickListener, MapLocationAdder, OnMapLongCl
 			int locationId = location.getId();
 			if (!mLocations.containsKey(locationId)) {
 				Log.d(TAG, "Marker added: " + location);
-				mMarkers.put(locationId, mMap.addMarker(new MarkerOptions().position(location.getLatLng())));
+				mMarkers.put(locationId, mMap.addMarker(
+						new MarkerOptions().position(location.getLatLng()).title(location.getName())));
 			} else {
 				Log.d(TAG, "Marker updated: " + location);
 				Marker marker = mMarkers.get(locationId);
 				marker.setPosition(location.getLatLng());
+				marker.setTitle(location.getName());
 			}
 
 			mLocations.put(locationId, location);
