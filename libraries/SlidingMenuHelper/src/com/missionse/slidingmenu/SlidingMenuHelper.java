@@ -103,7 +103,7 @@ public class SlidingMenuHelper {
 	 * @param type the type of menu (LEFT/RIGHT)
 	 * @param adapter the array adapter to use when populating the list
 	 * @param listener a listener to be called back when a menu item is clicked, can be null
-	 * @return a newly created SlidingMenu
+	 * @return this helper
 	 */
 	public SlidingMenuHelper createCustomMenu(final MenuType type, final ArrayAdapter<?> adapter,
 			final OnMenuClickListener listener) {
@@ -122,6 +122,38 @@ public class SlidingMenuHelper {
 			if (listener != null) {
 				mRightMenuFragment.registerListener(listener);
 			}
+		}
+		return this;
+	}
+
+	/**
+	 * Creates an untitled notification menu, built from the provided adapter. Notification menu items can be swiped
+	 * away to the left or right to be dismissed, in addition to normal selection. NOTE: If the Views you plan to place
+	 * in the menu via your adapter are focusable (such as a Checkbox), then the listener provided via this method will
+	 * NOT be invoked (by design of the Android OS). In this case, you must provide your own mechanism for listening for
+	 * item selection (likely in the adapter itself).
+	 * @param type the type of menu (LEFT/RIGHT)
+	 * @param entries list of String entries to initially populate the menu with
+	 * @param listener a listener to be called back when a menu item is clicked or dismissed, can be null
+	 * @return this helper
+	 */
+	public SlidingMenuHelper createNotificationMenu(final MenuType type, final List<String> entries,
+			final OnNotificationActionListener listener) {
+
+		if (MenuType.LEFT == type) {
+			createLeftMenu(NotificationMenuFragment.class);
+			((NotificationMenuFragment) mLeftMenuFragment).setMenuEntries(entries);
+
+			//			if (listener != null) {
+			//				mLeftMenuFragment.registerListener(listener);
+			//			}
+		} else if (MenuType.RIGHT == type) {
+			createRightMenu(NotificationMenuFragment.class);
+			((NotificationMenuFragment) mRightMenuFragment).setMenuEntries(entries);
+
+			//			if (listener != null) {
+			//				((NotificationMenuFragment) mRightMenuFragment).registerListener(listener);
+			//			}
 		}
 		return this;
 	}
@@ -178,12 +210,12 @@ public class SlidingMenuHelper {
 	 */
 	public void commit() {
 		if (mLeftMenu != null && !mLeftMenuSet) {
-			mLeftMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
+			mLeftMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_CONTENT);
 			mActivity.getFragmentManager().beginTransaction().replace(R.id.left_menu, mLeftMenuFragment).commit();
 			mLeftMenuSet = true;
 		}
 		if (mRightMenu != null && !mRightMenuSet) {
-			mRightMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
+			mRightMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_CONTENT);
 			mActivity.getFragmentManager().beginTransaction().replace(R.id.right_menu, mRightMenuFragment).commit();
 			mRightMenuSet = true;
 		}

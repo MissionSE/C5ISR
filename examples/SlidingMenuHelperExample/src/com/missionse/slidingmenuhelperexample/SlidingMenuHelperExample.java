@@ -141,7 +141,14 @@ public class SlidingMenuHelperExample extends Activity {
 	}
 
 	private void createRightNotificationMenu() {
-
+		// Creating a menu without a shadow or a title, built with an array adapter for custom line items.
+		List<String> notifMenuEntries = new ArrayList<String>();
+		notifMenuEntries.add("Notif WARNING");
+		notifMenuEntries.add("Notif ERROR 1");
+		notifMenuEntries.add("Notif ERROR 2");
+		notifMenuEntries.add("Notif ERROR 3");
+		notifMenuEntries.add("Notif ERROR 4");
+		mSlidingMenuHelper.createNotificationMenu(MenuType.RIGHT, notifMenuEntries, null).commit();
 	}
 
 	/**
