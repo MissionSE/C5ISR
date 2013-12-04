@@ -1,20 +1,16 @@
 package com.missionse.slidingmenu;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import android.app.Activity;
 import android.widget.ArrayAdapter;
 
-import com.jeremyfeinstein.slidingmenu.lib.CustomViewAbove;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 /**
  * Provides an abstracted, easy-to-use API based on the third-party SlidingMenu library.
  */
 public class SlidingMenuHelper {
-
-	private static final int TOUCH_MARGIN = 150; //currently, an arbitrary number of pixels
 
 	/**
 	 * Enumeration denoting the side on which the menu should appear.
@@ -174,44 +170,6 @@ public class SlidingMenuHelper {
 		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 		menu.setBehindWidthRes(R.dimen.default_menu_width);
 		menu.setShadowWidth(0);
-		menu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
-	}
-
-	/**
-	 * Sets the touch mode of the specified menu.
-	 * @param type the menu to change
-	 * @param touchMode the new touch mode to use (TOUCHMODE_MARGIN, TOUCHMODE_FULLSCREEN, TOUCHMODE_NONE)
-	 * @param ignoreMargin whether or not to ignore the margin space. This only matters if TOUCHMODE_FULLSCREEN is used
-	 */
-	public void setTouchMode(final MenuType type, final int touchMode, final boolean ignoreMargin) {
-		if (type == MenuType.LEFT) {
-			mLeftMenu.setTouchModeAbove(touchMode);
-			if (touchMode == SlidingMenu.TOUCHMODE_FULLSCREEN && ignoreMargin) {
-				modifyTouchSlop(mLeftMenu);
-			}
-		} else if (type == MenuType.RIGHT) {
-			mRightMenu.setTouchModeAbove(touchMode);
-			if (touchMode == SlidingMenu.TOUCHMODE_FULLSCREEN && ignoreMargin) {
-				modifyTouchSlop(mRightMenu);
-			}
-		}
-	}
-
-	private void modifyTouchSlop(final SlidingMenu menu) {
-		try {
-			Field customAboveView = menu.getClass().getDeclaredField("mViewAbove");
-			customAboveView.setAccessible(true);
-			CustomViewAbove customAboveViewObject = (CustomViewAbove) customAboveView.get(menu);
-			Field touchSlop = customAboveViewObject.getClass().getDeclaredField("mTouchSlop");
-			touchSlop.setAccessible(true);
-			touchSlop.setInt(customAboveViewObject, TOUCH_MARGIN);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -220,10 +178,12 @@ public class SlidingMenuHelper {
 	 */
 	public void commit() {
 		if (mLeftMenu != null && !mLeftMenuSet) {
+			mLeftMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
 			mActivity.getFragmentManager().beginTransaction().replace(R.id.left_menu, mLeftMenuFragment).commit();
 			mLeftMenuSet = true;
 		}
 		if (mRightMenu != null && !mRightMenuSet) {
+			mRightMenu.attachToActivity(mActivity, SlidingMenu.SLIDING_WINDOW);
 			mActivity.getFragmentManager().beginTransaction().replace(R.id.right_menu, mRightMenuFragment).commit();
 			mRightMenuSet = true;
 		}
