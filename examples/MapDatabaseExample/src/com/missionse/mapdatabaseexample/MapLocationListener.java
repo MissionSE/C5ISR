@@ -7,8 +7,8 @@ import com.missionse.mapdatabaseexample.model.MapLocation;
  */
 public interface MapLocationListener {
 	/**
-	 * Adds a specified location to a map.
-	 * @param location The location to add.
+	 * Notifies a listener that a location is to be processed.
+	 * @param location The location to be handled.
 	 */
-	void addLocation(final MapLocation location);
+	void locationReceived(final MapLocation location);
 }

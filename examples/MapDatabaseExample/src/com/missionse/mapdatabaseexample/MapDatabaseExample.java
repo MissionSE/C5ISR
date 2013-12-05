@@ -5,12 +5,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.missionse.mapdatabaseexample.model.MapLocation;
 import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
 
 /**
  * Provides an activity that displays a map fragment.
  */
-public class MapDatabaseExample extends Activity {
+public class MapDatabaseExample extends Activity implements MapLocationListener {
 	private GoogleMapFragment mMapFragment;
 
 	@Override
@@ -32,11 +33,15 @@ public class MapDatabaseExample extends Activity {
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_refresh:
-				new GetAllLocationsTask(this, mMapFragment).execute();
+				new GetAllLocationsTask(this, this).execute();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
+	@Override
+	public void locationReceived(final MapLocation location) {
+		mMapFragment.addMarker(location);
+	}
 }

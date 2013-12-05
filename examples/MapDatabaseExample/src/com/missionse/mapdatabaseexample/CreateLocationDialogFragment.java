@@ -1,6 +1,8 @@
 package com.missionse.mapdatabaseexample;
 
+import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ public class CreateLocationDialogFragment extends DialogFragment {
 	private Button mCancelButton;
 	private Button mOkButton;
 
+	private Activity mActivity;
 	private String mLatitude;
 	private String mLongitude;
 
@@ -41,6 +44,18 @@ public class CreateLocationDialogFragment extends DialogFragment {
 		fragment.setArguments(bundle);
 
 		return fragment;
+	}
+
+	@Override
+	public void onAttach(final Activity activity) {
+		super.onAttach(activity);
+		mActivity = activity;
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mActivity = null;
 	}
 
 	@Override
@@ -75,11 +90,12 @@ public class CreateLocationDialogFragment extends DialogFragment {
 		mOkButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View v) {
-				GoogleMapFragment mapFragment = (GoogleMapFragment) getFragmentManager().findFragmentById(R.id.content);
-				new CreateLocationTask(getActivity(), mapFragment).execute(
-						mEditText.getText().toString(),
-						mLatitude,
-						mLongitude);
+				if (mActivity != null) {
+					new CreateLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
+							mEditText.getText().toString(),
+							mLatitude,
+							mLongitude);
+				}
 
 				getDialog().dismiss();
 			}

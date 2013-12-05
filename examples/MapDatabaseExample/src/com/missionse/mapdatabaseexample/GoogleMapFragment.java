@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +39,7 @@ import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
  */
 @SuppressLint("UseSparseArrays")
 public class GoogleMapFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
-LocationListener, OnMyLocationButtonClickListener, MapLocationListener, OnMapLongClickListener {
+LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener {
 
 	private static final String TAG = GoogleMapFragment.class.getName();
 
@@ -52,11 +54,24 @@ LocationListener, OnMyLocationButtonClickListener, MapLocationListener, OnMapLon
 			.setFastestInterval(FASTEST_INTERVAL)
 			.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
+	private Activity mActivity;
 	private GoogleMap mMap;
 	private LocationClient mLocationClient;
 	private boolean mFirstLocationChange = true;
 	private final Map<Integer, MapLocation> mLocations = new HashMap<Integer, MapLocation>();
 	private final Map<Integer, Marker> mMarkers = new HashMap<Integer, Marker>();
+
+	@Override
+	public void onAttach(final Activity activity) {
+		super.onAttach(activity);
+		mActivity = activity;
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mActivity = null;
+	}
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -132,11 +147,17 @@ LocationListener, OnMyLocationButtonClickListener, MapLocationListener, OnMapLon
 		mMap.setBuildingsEnabled(true);
 		mMap.setMapType(MAP_TYPE_HYBRID);
 		mMap.setOnMapLongClickListener(this);
-		new GetAllLocationsTask(getActivity(), this).execute();
+
+		if (mActivity != null) {
+			new GetAllLocationsTask((Context) mActivity, (MapLocationListener) mActivity).execute();
+		}
 	}
 
-	@Override
-	public void addLocation(final MapLocation location) {
+	/**
+	 * Creates or updates a marker at the specified location.
+	 * @param location The location for the marker to be placed.
+	 */
+	public void addMarker(final MapLocation location) {
 		if (mMap != null) {
 			int locationId = location.getId();
 			if (!mLocations.containsKey(locationId)) {
