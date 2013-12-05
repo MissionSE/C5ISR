@@ -3,6 +3,7 @@ package com.missionse.mapviewer;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
@@ -51,25 +52,51 @@ OnCameraChangeListener {
 	private static final float NO_STROKE = 0f;
 	private static final int DEF_SCREEN_RATIO = 3;
 
-	private MapViewerFragment mMapViewerFragment;
-	private GoogleMap mMainMap;	
 	private GoogleMap mMiniMap;
+	private Callbacks mCallbacks;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		
+		mCallbacks = (Callbacks) activity;
+		mCallbacks.registerOnCameraChangeListener(this);
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		
+		mCallbacks.deregisterOnCameraChangeListener(this);
+		mCallbacks = null;
+	}
 
 	private Polygon mZoomedViewPolygon;
 
 	private SharedPreferences mPrefs;
-
+	
 	/**
-	 * Creates a new instance of the {@link MiniMapFragment} and sets the 
-	 * <code>mMainMap</code> which will be used to update this map.
-	 * @param mapViewerFragment the {@link MapViewerFragment} use to update this map
-	 * @return a new instance of the {@link MiniMapFragment}
+	 * Required interface for hosting activities.
+	 *
 	 */
-	public static MiniMapFragment newInstance(MapViewerFragment mapViewerFragment) {
-		MiniMapFragment fragment = new MiniMapFragment();
-		fragment.mMapViewerFragment = mapViewerFragment;
-
-		return fragment;
+	public interface Callbacks {
+		
+		/**
+		 * Registers for camera change callback from another {@link GoogleMap}.
+		 * @param listener the listener registering for a callback
+		 */
+		void registerOnCameraChangeListener(OnCameraChangeListener listener);
+		
+		/**
+		 * Deregisters for camera change callback from another {@link GoogleMap}.
+		 * @param listener the listener deregistering for a callback
+		 */
+		void deregisterOnCameraChangeListener(OnCameraChangeListener listener);
+		
+		/**
+		 * @return the main map
+		 */
+		GoogleMap getMainMap();
 	}
 
 	/**
@@ -93,9 +120,6 @@ OnCameraChangeListener {
 	}
 
 	private void setUpMapIfNeeded() {
-		if (mMainMap == null) {
-			mMainMap = mMapViewerFragment.getMainMap();
-		}
 		// Do a null check to confirm that we have not already instantiated the map.
 		if (mMiniMap == null) {
 			// Try to obtain the map.
@@ -112,17 +136,19 @@ OnCameraChangeListener {
 
 		settings.setCompassEnabled(false);
 		settings.setZoomControlsEnabled(false);
+		
+		mCallbacks.registerOnCameraChangeListener(this);
 
 		mMiniMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
 			@Override
 			public void onMapClick(LatLng latLng) {
 				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latLng);
-				mMainMap.animateCamera(cameraUpdate);
+				mCallbacks.getMainMap().animateCamera(cameraUpdate);
 			}
 		});
 
-		mMapViewerFragment.registerOnCameraChangeListener(this);
+		
 
 		int fillColor = mPrefs.getInt(PREF_VIEW_AREA_FILL_COLOR, DEF_VIEW_AREA_COLOR);
 
@@ -174,7 +200,7 @@ OnCameraChangeListener {
 	private void boundZoomedView() {
 		boolean adjustMap = false;
 
-		LatLngBounds boundsMapRight = mMainMap.getProjection().getVisibleRegion().latLngBounds;
+		LatLngBounds boundsMapRight = mCallbacks.getMainMap().getProjection().getVisibleRegion().latLngBounds;
 		LatLngBounds boundsMapLeft = mMiniMap.getProjection().getVisibleRegion().latLngBounds;
 
 		LatLng swMapRight = boundsMapRight.southwest;
@@ -221,6 +247,8 @@ OnCameraChangeListener {
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
+		
+		setUpMapIfNeeded();
 	}
 
 	@Override
@@ -248,15 +276,8 @@ OnCameraChangeListener {
 		setUpMapIfNeeded();
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		
-		mMapViewerFragment.removeOnCameraChangeListener(this);
-	}
-
 	private List<LatLng> getMainViewRegionPoints() {
-		final VisibleRegion mainVR = mMainMap.getProjection().getVisibleRegion();
+		final VisibleRegion mainVR = mCallbacks.getMainMap().getProjection().getVisibleRegion();
 		final List<LatLng> mainVRpoints = new ArrayList<LatLng>();
 		mainVRpoints.add(mainVR.farLeft);
 		mainVRpoints.add(mainVR.farRight);

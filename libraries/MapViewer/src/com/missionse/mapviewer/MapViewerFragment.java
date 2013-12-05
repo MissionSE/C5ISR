@@ -12,6 +12,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -151,11 +152,21 @@ OnCameraChangeListener {
 
 	}
 	
-	public void registerOnCameraChangeListener(OnCameraChangeListener listener) {
+	public void registerOnCameraChangeListener(final OnCameraChangeListener listener) {
 		mCameraListeners.add(listener);
+		
+		Handler handler = new Handler();
+		handler.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				listener.onCameraChange(mMainMap.getCameraPosition());
+			}
+		});
+		
 	}
 	
-	public void removeOnCameraChangeListener(OnCameraChangeListener listener) {
+	public void deregisterOnCameraChangeListener(OnCameraChangeListener listener) {
 		mCameraListeners.remove(listener);
 	}
 

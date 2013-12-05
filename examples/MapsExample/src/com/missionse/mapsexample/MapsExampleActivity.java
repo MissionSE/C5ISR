@@ -8,19 +8,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.Switch;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.missionse.mapviewer.MapViewerFragment;
 import com.missionse.mapviewer.MiniMapFragment;
 
-public class MapsExampleActivity extends Activity {
+public class MapsExampleActivity extends Activity implements MiniMapFragment.Callbacks {
 
 	private static final String TAG_MINI_MAP = "mini_map";
 	private static final String TAG_MINI_MAP_TOP_LEFT = "mini_map_top_left";
@@ -105,7 +104,7 @@ public class MapsExampleActivity extends Activity {
 
 	private void addMiniMap() {
 		
-		Fragment miniMapFragment = MiniMapFragment.newInstance(mMainMapFragment);
+		Fragment miniMapFragment = new MiniMapFragment();
 		if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_TOP_LEFT) == null) {
 			mMainMapFragment.replaceTopLeftCornerFragment(miniMapFragment, TAG_MINI_MAP_TOP_LEFT);
 		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_TOP_RIGHT) == null) {
@@ -115,6 +114,21 @@ public class MapsExampleActivity extends Activity {
 		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP) == null) {
 			mMainMapFragment.replaceBottomLeftCornerFragment(miniMapFragment, TAG_MINI_MAP);
 		}
+	}
+
+	@Override
+	public void registerOnCameraChangeListener(OnCameraChangeListener listener) {
+		mMainMapFragment.registerOnCameraChangeListener(listener);
+	}
+
+	@Override
+	public void deregisterOnCameraChangeListener(OnCameraChangeListener listener) {
+		mMainMapFragment.deregisterOnCameraChangeListener(listener);
+	}
+
+	@Override
+	public GoogleMap getMainMap() {
+		return mMainMapFragment.getMainMap();
 	}
 
 }
