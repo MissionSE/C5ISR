@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.missionse.httpdatabaseconnector.HttpRequestTask;
+import com.missionse.mapdatabaseexample.MapLocationListener;
 import com.missionse.mapdatabaseexample.R;
 
 /**
@@ -21,12 +22,17 @@ public class CreateLocationTask extends HttpRequestTask {
 	private final String mTagLongitude;
 	private final String mCreateLocationURL;
 
+	private final MapLocationListener mLocationListener;
+
 	/**
 	 * Constructor.
 	 * @param context The context of the owner of the task.
+	 * @param locationListener The listener who cares about the locations.
 	 */
-	public CreateLocationTask(final Context context) {
+	public CreateLocationTask(final Context context, final MapLocationListener locationListener) {
 		super(context, "Creating location");
+
+		mLocationListener = locationListener;
 
 		Resources resources = getContext().getResources();
 		mTagName = resources.getString(R.string.tag_name);
@@ -52,5 +58,11 @@ public class CreateLocationTask extends HttpRequestTask {
 		}
 
 		return null;
+	}
+
+	@Override
+	protected void onPostExecute(final String result) {
+		super.onPostExecute(result);
+		new GetAllLocationsTask(getContext(), mLocationListener).execute();
 	}
 }

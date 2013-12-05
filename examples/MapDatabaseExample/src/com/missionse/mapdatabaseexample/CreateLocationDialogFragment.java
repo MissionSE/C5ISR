@@ -15,9 +15,8 @@ import com.missionse.mapdatabaseexample.tasks.CreateLocationTask;
 /**
  * Provides a fragment that is used to create a new map location.
  */
-public class CreateLocationDialogFragment extends DialogFragment implements View.OnClickListener {
+public class CreateLocationDialogFragment extends DialogFragment {
 
-	private static final String TAG = CreateLocationDialogFragment.class.getName();
 	private EditText mEditText;
 	private Button mCancelButton;
 	private Button mOkButton;
@@ -32,7 +31,7 @@ public class CreateLocationDialogFragment extends DialogFragment implements View
 	 * Creates a new CreateLocationDialogFragment, packing the latitude and longitude.
 	 * @param latitude The latitude of the location being created, in degrees.
 	 * @param longitude The longitude of the location being created, in degrees.
-	 * @return a new DeviceListFragment
+	 * @return A new CreateLocationDialogFragment.
 	 */
 	public static CreateLocationDialogFragment newInstance(final double latitude, final double longitude) {
 		CreateLocationDialogFragment fragment = new CreateLocationDialogFragment();
@@ -73,21 +72,22 @@ public class CreateLocationDialogFragment extends DialogFragment implements View
 		});
 
 		mOkButton = (Button) view.findViewById(R.id.ok_button);
-		mOkButton.setOnClickListener(this);
+		mOkButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(final View v) {
+				GoogleMapFragment mapFragment = (GoogleMapFragment) getFragmentManager().findFragmentById(R.id.content);
+				new CreateLocationTask(getActivity(), mapFragment).execute(
+						mEditText.getText().toString(),
+						mLatitude,
+						mLongitude);
+
+				getDialog().dismiss();
+			}
+		});
 
 		getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         getDialog().setTitle(R.string.title_create_location);
 
 		return view;
-	}
-
-	@Override
-	public void onClick(final View v) {
-		new CreateLocationTask(getActivity()).execute(
-				mEditText.getText().toString(),
-				mLatitude,
-				mLongitude);
-
-		getDialog().dismiss();
 	}
 }

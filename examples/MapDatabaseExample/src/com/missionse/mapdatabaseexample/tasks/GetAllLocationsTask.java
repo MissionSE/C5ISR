@@ -12,7 +12,7 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.missionse.httpdatabaseconnector.HttpRequestTask;
-import com.missionse.mapdatabaseexample.MapLocationAdder;
+import com.missionse.mapdatabaseexample.MapLocationListener;
 import com.missionse.mapdatabaseexample.R;
 import com.missionse.mapdatabaseexample.model.MapLocation;
 
@@ -30,18 +30,18 @@ public class GetAllLocationsTask extends HttpRequestTask {
 	private final String mTagLongitude;
 	private final String mGetLocationsURL;
 
-	private final MapLocationAdder mLocationAdder;
+	private final MapLocationListener mLocationListener;
 	private final List<MapLocation> mLocations;
 
 	/**
 	 * Constructor.
 	 * @param context The context of the owner of the task.
-	 * @param locationAdder The list of locations.
+	 * @param locationListener The listener who cares about the locations.
 	 */
-	public GetAllLocationsTask(final Context context, final MapLocationAdder locationAdder) {
+	public GetAllLocationsTask(final Context context, final MapLocationListener locationListener) {
 		super(context, "Getting list of locations");
 
-		mLocationAdder = locationAdder;
+		mLocationListener = locationListener;
 		mLocations = new ArrayList<MapLocation>();
 
 		Resources resources = getContext().getResources();
@@ -85,7 +85,7 @@ public class GetAllLocationsTask extends HttpRequestTask {
 	@Override
 	protected void onPostExecute(final String result) {
 		for (MapLocation location : mLocations) {
-			mLocationAdder.addLocation(location);
+			mLocationListener.addLocation(location);
 		}
 	}
 }

@@ -3,9 +3,9 @@ package com.missionse.mapdatabaseexample;
 import com.missionse.mapdatabaseexample.model.MapLocation;
 
 /**
- * Provides functionality to add a location.
+ * Provides a callback when a location is added.
  */
-public interface MapLocationAdder {
+public interface MapLocationListener {
 	/**
 	 * Adds a specified location to a map.
 	 * @param location The location to add.

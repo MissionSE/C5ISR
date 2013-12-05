@@ -37,7 +37,7 @@ import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
  */
 @SuppressLint("UseSparseArrays")
 public class GoogleMapFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
-LocationListener, OnMyLocationButtonClickListener, MapLocationAdder, OnMapLongClickListener {
+LocationListener, OnMyLocationButtonClickListener, MapLocationListener, OnMapLongClickListener {
 
 	private static final String TAG = GoogleMapFragment.class.getName();
 
