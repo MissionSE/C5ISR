@@ -84,6 +84,7 @@ public class GetAllLocationsTask extends HttpRequestTask {
 
 	@Override
 	protected void onPostExecute(final String result) {
+		super.onPostExecute(result);
 		for (MapLocation location : mLocations) {
 			mLocationListener.locationReceived(location);
 		}

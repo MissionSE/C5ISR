@@ -81,7 +81,15 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener {
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_map, container, false);
+		View view = inflater.inflate(R.layout.fragment_map, null);
+
+		MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+		if (null == mapFragment) {
+			mapFragment = MapFragment.newInstance();
+			getChildFragmentManager().beginTransaction().add(R.id.map, mapFragment).commit();
+		}
+
+		return view;
 	}
 
 	@Override
@@ -90,7 +98,7 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener {
 	}
 
 	@Override
-	public void onLocationChanged(final Location arg0) {
+	public void onLocationChanged(final Location location) {
 		if (mFirstLocationChange) {
 			mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MSE, INITIAL_ZOOM, INITIAL_TILT, INITIAL_BEARING)));
 			mFirstLocationChange = false;
@@ -128,7 +136,7 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener {
 
 	private void setUpMapIfNeeded() {
 		if (mMap == null) {
-			mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+			mMap = ((MapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
 			if (mMap != null) {
 				setUpMap();
 			}
