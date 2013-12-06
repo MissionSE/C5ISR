@@ -1,4 +1,4 @@
-package com.missionse.uiextensions;
+package com.missionse.uiextensions.linearlayout;
 
 import android.content.Context;
 import android.graphics.Point;

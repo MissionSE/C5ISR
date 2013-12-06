@@ -7,15 +7,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 
-import com.missionse.logisticsexample.navdrawer.NavigationDrawerActivity;
-import com.missionse.logisticsexample.navdrawer.NavigationDrawerAdapter;
-import com.missionse.logisticsexample.navdrawer.NavigationDrawerConfiguration;
-import com.missionse.logisticsexample.navdrawer.NavigationDrawerItem;
-import com.missionse.logisticsexample.navdrawer.NavigationDrawerMenuBasic;
-import com.missionse.logisticsexample.navdrawer.NavigationDrawerMenuDropdown;
-import com.missionse.logisticsexample.navdrawer.NavigationDrawerMenuHeader;
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerActivity;
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerAdapter;
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerConfiguration;
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerHeader;
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerSimpleItem;
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerSpinner;
 
 public class LogisticsExample extends NavigationDrawerActivity {
+
+	private ArrayAdapter<String> userAccountActionsAdapter;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -24,27 +26,27 @@ public class LogisticsExample extends NavigationDrawerActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.logistics_example, menu);
 		return true;
 	}
 
 	@Override
-	protected NavigationDrawerConfiguration getNavDrawerConfiguration() {
-		List<String> userEntries = new ArrayList<String>();
-		userEntries.add("Log In");
-		userEntries.add("Add New Account");
-		ArrayAdapter<String> user = new ArrayAdapter<String>(this, R.layout.nav_drawer_header, R.id.navheader_label,
-				userEntries);
+	protected NavigationDrawerConfiguration getNavigationDrawerConfiguration() {
+		//Create spinner entries
+		List<String> userAccountSpinnerEntries = new ArrayList<String>();
+		userAccountSpinnerEntries.add("Log In");
+		userAccountSpinnerEntries.add("Add New Account");
+		userAccountActionsAdapter = new ArrayAdapter<String>(this, R.layout.nav_drawer_header, R.id.navheader_label,
+				userAccountSpinnerEntries);
 
 		NavigationDrawerItem[] menu = new NavigationDrawerItem[] {
-				NavigationDrawerMenuDropdown.create(001, "User Admin", user),
-				NavigationDrawerMenuHeader.create(100, "Navigation"),
-				NavigationDrawerMenuBasic.create(101, "Map", "ic_launcher", true, this),
-				NavigationDrawerMenuBasic.create(102, "Supply List", "ic_launcher", true, this),
-				NavigationDrawerMenuBasic.create(103, "History", "ic_launcher", true, this),
-				NavigationDrawerMenuHeader.create(200, "HEADER"),
-				NavigationDrawerMenuBasic.create(201, "FEATURE", "ic_launcher", true, this) };
+				NavigationDrawerSpinner.create(001, userAccountActionsAdapter),
+				NavigationDrawerHeader.create(100, "Navigation"),
+				NavigationDrawerSimpleItem.create(101, "Map", R.drawable.ic_launcher, true),
+				NavigationDrawerSimpleItem.create(102, "Supply List", R.drawable.ic_launcher, true),
+				NavigationDrawerSimpleItem.create(103, "History", R.drawable.ic_launcher, true),
+				NavigationDrawerHeader.create(200, "HEADER"),
+				NavigationDrawerSimpleItem.create(201, "FEATURE", R.drawable.ic_launcher, true) };
 
 		NavigationDrawerConfiguration navDrawerActivityConfiguration = new NavigationDrawerConfiguration();
 		navDrawerActivityConfiguration.setMainLayout(R.layout.activity_logistics_example);
@@ -54,14 +56,12 @@ public class LogisticsExample extends NavigationDrawerActivity {
 		navDrawerActivityConfiguration.setDrawerShadow(R.drawable.drawer_shadow);
 		navDrawerActivityConfiguration.setDrawerOpenDesc(R.string.app_name);
 		navDrawerActivityConfiguration.setDrawerCloseDesc(R.string.app_name);
-		navDrawerActivityConfiguration
-				.setBaseAdapter(new NavigationDrawerAdapter(this, R.layout.nav_drawer_item, menu));
+		navDrawerActivityConfiguration.setBaseAdapter(new NavigationDrawerAdapter(this, 0, menu));
 		return navDrawerActivityConfiguration;
 	}
 
 	@Override
-	protected void onNavItemSelected(final int id) {
-		// TODO Auto-generated method stub
+	protected void onNavigationItemSelected(final int id) {
 
 	}
 

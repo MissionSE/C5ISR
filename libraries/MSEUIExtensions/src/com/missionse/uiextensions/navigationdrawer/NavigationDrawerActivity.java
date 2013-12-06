@@ -1,4 +1,4 @@
-package com.missionse.logisticsexample.navdrawer;
+package com.missionse.uiextensions.navigationdrawer;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -13,8 +13,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.missionse.logisticsexample.R;
+import com.missionse.uiextensions.R;
 
+/**
+ * A base activity to be extended, provided basic operations and management of a NavigationDrawer.
+ */
 public abstract class NavigationDrawerActivity extends Activity {
 
 	private DrawerLayout mDrawerLayout;
@@ -25,25 +28,26 @@ public abstract class NavigationDrawerActivity extends Activity {
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 
-	private NavigationDrawerConfiguration navConf;
+	private NavigationDrawerConfiguration mNavigationDrawerConfiguration;
 
-	protected abstract NavigationDrawerConfiguration getNavDrawerConfiguration();
+	protected abstract NavigationDrawerConfiguration getNavigationDrawerConfiguration();
 
-	protected abstract void onNavItemSelected(int id);
+	protected abstract void onNavigationItemSelected(int id);
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		navConf = getNavDrawerConfiguration();
+		mNavigationDrawerConfiguration = getNavigationDrawerConfiguration();
 
-		setContentView(navConf.getMainLayout());
+		setContentView(mNavigationDrawerConfiguration.getMainLayout());
 
-		mTitle = mDrawerTitle = getTitle();
+		mDrawerTitle = getTitle();
+		mTitle = mDrawerTitle;
 
-		mDrawerLayout = (DrawerLayout) findViewById(navConf.getDrawerLayoutId());
-		mDrawerList = (ListView) findViewById(navConf.getLeftDrawerId());
-		mDrawerList.setAdapter(navConf.getBaseAdapter());
+		mDrawerLayout = (DrawerLayout) findViewById(mNavigationDrawerConfiguration.getDrawerLayoutId());
+		mDrawerList = (ListView) findViewById(mNavigationDrawerConfiguration.getLeftDrawerId());
+		mDrawerList.setAdapter(mNavigationDrawerConfiguration.getBaseAdapter());
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		initDrawerShadow();
@@ -51,8 +55,8 @@ public abstract class NavigationDrawerActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, getDrawerIcon(), navConf.getDrawerOpenDesc(),
-				navConf.getDrawerCloseDesc()) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, getDrawerIcon(),
+				mNavigationDrawerConfiguration.getDrawerOpenDesc(), mNavigationDrawerConfiguration.getDrawerCloseDesc()) {
 			@Override
 			public void onDrawerClosed(final View view) {
 				getActionBar().setTitle(mTitle);
@@ -69,7 +73,7 @@ public abstract class NavigationDrawerActivity extends Activity {
 	}
 
 	protected void initDrawerShadow() {
-		mDrawerLayout.setDrawerShadow(navConf.getDrawerShadow(), GravityCompat.START);
+		mDrawerLayout.setDrawerShadow(mNavigationDrawerConfiguration.getDrawerShadow(), GravityCompat.START);
 	}
 
 	protected int getDrawerIcon() {
@@ -90,9 +94,9 @@ public abstract class NavigationDrawerActivity extends Activity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(final Menu menu) {
-		if (navConf.getActionMenuItemsToHideWhenDrawerOpen() != null) {
+		if (mNavigationDrawerConfiguration.getActionMenuItemsToHideWhenDrawerOpen() != null) {
 			boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-			for (int iItem : navConf.getActionMenuItemsToHideWhenDrawerOpen()) {
+			for (int iItem : mNavigationDrawerConfiguration.getActionMenuItemsToHideWhenDrawerOpen()) {
 				menu.findItem(iItem).setVisible(!drawerOpen);
 			}
 		}
@@ -101,11 +105,7 @@ public abstract class NavigationDrawerActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		} else {
-			return false;
-		}
+		return mDrawerToggle.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -129,6 +129,9 @@ public abstract class NavigationDrawerActivity extends Activity {
 		return mDrawerToggle;
 	}
 
+	/**
+	 * Listener that selects and item and closes the drawer if necessary.
+	 */
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
@@ -136,14 +139,18 @@ public abstract class NavigationDrawerActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Selects an item based on a position.
+	 * @param position the position
+	 */
 	public void selectItem(final int position) {
-		NavigationDrawerItem selectedItem = navConf.getNavItems()[position];
+		NavigationDrawerItem selectedItem = mNavigationDrawerConfiguration.getNavItems()[position];
 
-		this.onNavItemSelected(selectedItem.getId());
+		onNavigationItemSelected(selectedItem.getId());
 		mDrawerList.setItemChecked(position, true);
 
-		if (selectedItem.updateActionBarTitle()) {
-			setTitle(selectedItem.getLabel());
+		if (selectedItem.willChangeActionBarTitle()) {
+			setTitle(selectedItem.getActionBarTitle());
 		}
 
 		if (this.mDrawerLayout.isDrawerOpen(this.mDrawerList)) {
