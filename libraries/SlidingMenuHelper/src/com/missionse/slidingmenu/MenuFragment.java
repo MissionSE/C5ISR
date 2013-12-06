@@ -1,5 +1,6 @@
 package com.missionse.slidingmenu;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +15,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jeremyfeinstein.slidingmenu.lib.CustomViewAbove;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 /**
  * Base fragment that provides handling of the mTitle and menu click listener when the parent view is created.
  */
 public class MenuFragment extends Fragment {
+
+	private static final int TOUCH_MARGIN = 150; //currently, an arbitrary number of pixels
 
 	private SlidingMenu mSlidingMenu;
 	private ListView mMenuList;
@@ -91,6 +95,35 @@ public class MenuFragment extends Fragment {
 	@SuppressWarnings("rawtypes")
 	public ArrayAdapter getAdapter() {
 		return mAdapter;
+	}
+
+	/**
+	 * Sets the touch mode and adjust margins of the SlidingMenu if necessary.
+	 * @param touchMode what touch mode to use (TOUCHMODE_FULLSCREEN, TOUCHMODE_MARGIN, TOUCHMODE_NONE)
+	 * @param ignoreMargin whether or not to ignore margin touches
+	 */
+	public void setTouchMode(final int touchMode, final boolean ignoreMargin) {
+		mSlidingMenu.setTouchModeAbove(touchMode);
+		if (touchMode == SlidingMenu.TOUCHMODE_FULLSCREEN && ignoreMargin) {
+			modifyTouchSlop();
+		}
+	}
+
+	private void modifyTouchSlop() {
+		try {
+			Field customAboveView = mSlidingMenu.getClass().getDeclaredField("mViewAbove");
+			customAboveView.setAccessible(true);
+			CustomViewAbove customAboveViewObject = (CustomViewAbove) customAboveView.get(mSlidingMenu);
+			Field touchSlop = customAboveViewObject.getClass().getDeclaredField("mTouchSlop");
+			touchSlop.setAccessible(true);
+			touchSlop.setInt(customAboveViewObject, TOUCH_MARGIN);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import com.missionse.httpdatabaseexample.model.Student;
  * Provides a task that creates a student in the database.
  */
 public class CreateStudentTask extends HttpRequestTask {
-	private static final String TAG = GetAllStudentsTask.class.getName();
+	private static final String TAG = CreateStudentTask.class.getName();
 
 	private final String mTagSuccess;
 	private final String mTagFirstName;

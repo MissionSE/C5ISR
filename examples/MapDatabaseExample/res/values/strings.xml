@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MapDatabaseExample</string>
+    <string name="action_refresh">Refresh</string>
+    
+    <string name="tag_success">success</string>
+    <string name="tag_locations">locations</string>
+    <string name="tag_id">id</string>
+    <string name="tag_name">name</string>
+    <string name="tag_latitude">latitude</string>
+    <string name="tag_longitude">longitude</string>
+    
+    <string name="remote_db_path">http://192.168.86.106/</string>
+    
+    <string name="get_all_locations">get_all_locations.php</string>
+    <string name="create_location">create_location.php</string>
+    <string name="edit_location">edit_location.php</string>
+    
+    <string name="title_create_location">Create location</string>
+    <string name="title_edit_location">Edit location</string>
+    <string name="title_latitude">Latitude:</string>
+    <string name="title_longitude">Longitude:</string>
+    <string name="hint_create_location">Enter name of location</string>
+</resources>

@@ -84,13 +84,13 @@ public class SlidingMenuHelperExample extends Activity {
 		 * We want the left menu to appear with a gesture anywhere on the screen, but since we also have a
 		 * NavigationDrawer, we will disallow touches on the margin.
 		 */
-		mSlidingMenuHelper.setTouchMode(MenuType.LEFT, SlidingMenu.TOUCHMODE_FULLSCREEN, true);
+		mSlidingMenuHelper.getLeftMenu().setTouchMode(SlidingMenu.TOUCHMODE_FULLSCREEN, true);
 		mSlidingMenuHelper.commit();
 	}
 
 	private void createRightCustomMenu() {
 		// Creating a menu without a shadow or a title, built with an array adapter for custom line items.
-		final List<String> rightMenuEntries = new ArrayList<String>();
+		List<String> rightMenuEntries = new ArrayList<String>();
 		rightMenuEntries.add("Three");
 		rightMenuEntries.add("Four");
 		CustomAdapter rightMenuAdapter = new CustomAdapter(this, R.layout.custom_menu_entry, rightMenuEntries);
@@ -118,7 +118,6 @@ public class SlidingMenuHelperExample extends Activity {
 		});
 
 		final List<String> adminMenuEntries = new ArrayList<String>();
-		adminMenuEntries.add("Username");
 		adminMenuEntries.add("Add To Right Menu");
 		adminMenuEntries.add("Switch to Notification Menu");
 		adminMenuEntries.add("Switch to Custom Menu");
@@ -142,7 +141,14 @@ public class SlidingMenuHelperExample extends Activity {
 	}
 
 	private void createRightNotificationMenu() {
-
+		// Creating a menu without a shadow or a title, built with an array adapter for custom line items.
+		List<String> notifMenuEntries = new ArrayList<String>();
+		notifMenuEntries.add("Notif WARNING");
+		notifMenuEntries.add("Notif ERROR 1");
+		notifMenuEntries.add("Notif ERROR 2");
+		notifMenuEntries.add("Notif ERROR 3");
+		notifMenuEntries.add("Notif ERROR 4");
+		mSlidingMenuHelper.createNotificationMenu(MenuType.RIGHT, notifMenuEntries, null).commit();
 	}
 
 	/**

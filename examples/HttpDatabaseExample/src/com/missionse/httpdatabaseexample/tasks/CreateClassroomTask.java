@@ -19,7 +19,7 @@ import com.missionse.httpdatabaseexample.model.Classroom;
  * Provides a task that creates a classroom in the database.
  */
 public class CreateClassroomTask extends HttpRequestTask {
-	private static final String TAG = GetAllClassroomsTask.class.getName();
+	private static final String TAG = CreateClassroomTask.class.getName();
 
 	private final String mTagSuccess;
 	private final String mTagName;
