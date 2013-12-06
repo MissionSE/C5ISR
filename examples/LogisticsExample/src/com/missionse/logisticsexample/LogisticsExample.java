@@ -18,10 +18,14 @@ import com.missionse.uiextensions.navigationdrawer.NavigationDrawerSpinner;
 public class LogisticsExample extends NavigationDrawerActivity {
 
 	private ArrayAdapter<String> userAccountActionsAdapter;
+	private MapContainerFragment mapContainer;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		mapContainer = new MapContainerFragment();
+		getFragmentManager().beginTransaction().replace(R.id.content, mapContainer).commit();
 	}
 
 	@Override
@@ -65,4 +69,12 @@ public class LogisticsExample extends NavigationDrawerActivity {
 
 	}
 
+	@Override
+	public void onBackPressed() {
+		if (mapContainer.getCurrentPage() != 0) {
+			mapContainer.setCurrentPage(0);
+		} else {
+			super.onBackPressed();
+		}
+	}
 }
