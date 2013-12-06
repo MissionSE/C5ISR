@@ -12,7 +12,10 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,15 +28,16 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
-import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.missionse.mapdatabaseexample.model.MapLocation;
+import com.missionse.mapdatabaseexample.tasks.DeleteLocationTask;
 import com.missionse.mapdatabaseexample.tasks.EditLocationTask;
 import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
 
@@ -42,7 +46,8 @@ import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
  */
 @SuppressLint("UseSparseArrays")
 public class GoogleMapFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
-LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
+LocationListener, OnMapLongClickListener, OnInfoWindowClickListener,
+OnMarkerDragListener, ActionMode.Callback, OnMapClickListener {
 
 	private static final String TAG = GoogleMapFragment.class.getName();
 
@@ -59,6 +64,8 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 
 	private Activity mActivity;
 	private GoogleMap mMap;
+	private Marker mDraggedMarker;
+	private ActionMode mActionMode;
 	private LocationClient mLocationClient;
 	private boolean mFirstLocationChange = true;
 	private final Map<Integer, MapLocation> mLocations = new HashMap<Integer, MapLocation>();
@@ -93,11 +100,6 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 		}
 
 		return view;
-	}
-
-	@Override
-	public boolean onMyLocationButtonClick() {
-		return false;
 	}
 
 	@Override
@@ -154,12 +156,12 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 
 	private void setUpMap() {
 		mMap.setMyLocationEnabled(true);
-		mMap.setOnMyLocationButtonClickListener(this);
 		mMap.setBuildingsEnabled(true);
 		mMap.setMapType(MAP_TYPE_HYBRID);
 		mMap.setOnMapLongClickListener(this);
 		mMap.setOnInfoWindowClickListener(this);
 		mMap.setOnMarkerDragListener(this);
+		mMap.setOnMapClickListener(this);
 
 		if (mActivity != null) {
 			new GetAllLocationsTask((Context) mActivity, (MapLocationListener) mActivity).execute();
@@ -218,15 +220,9 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 
 	@Override
 	public void onMarkerDragEnd(final Marker marker) {
-		MapLocation location = getLocation(marker);
-		if (location != null) {
-			if (mActivity != null) {
-				new EditLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
-						Integer.toString(location.getId()),
-						location.getName(),
-						Double.toString(marker.getPosition().latitude),
-						Double.toString(marker.getPosition().longitude));
-			}
+		if (mActivity != null) {
+			mDraggedMarker = marker;
+			mActivity.startActionMode(this);
 		}
 	}
 
@@ -244,5 +240,72 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 			}
 		}
 		return location;
+	}
+
+	@Override
+	public boolean onActionItemClicked(final ActionMode actionMode, final MenuItem menuItem) {
+		Log.e(TAG, "onActionItemClicked: " + menuItem.toString());
+		switch (menuItem.getItemId()) {
+			case R.id.action_undo:
+				if (mDraggedMarker != null) {
+					MapLocation location = getLocation(mDraggedMarker);
+					if (location != null) {
+						mDraggedMarker.setPosition(location.getLatLng());
+						mDraggedMarker = null;
+					}
+				}
+				break;
+			case R.id.action_delete:
+				if (mDraggedMarker != null) {
+					MapLocation location = getLocation(mDraggedMarker);
+					if (location != null) {
+						new DeleteLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
+								Integer.toString(location.getId()));
+						mDraggedMarker.remove();
+						mLocations.remove(location.getId());
+						mMarkers.remove(location.getId());
+						mDraggedMarker = null;
+					}
+				}
+				break;
+			default:
+				Log.d(TAG, "Unknown action mode menu item: " + menuItem.toString());
+		}
+
+		actionMode.finish();
+		return true;
+	}
+
+	@Override
+	public boolean onCreateActionMode(final ActionMode actionMode, final Menu menu) {
+		mActionMode = actionMode;
+		mActionMode.getMenuInflater().inflate(R.menu.map_marker_action_bar, menu);
+		return true;
+	}
+
+	@Override
+	public void onDestroyActionMode(final ActionMode actionMode) {
+		if (mDraggedMarker != null) {
+			MapLocation location = getLocation(mDraggedMarker);
+			if (location != null && mActivity != null) {
+					new EditLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
+							Integer.toString(location.getId()),
+							location.getName(),
+							Double.toString(mDraggedMarker.getPosition().latitude),
+							Double.toString(mDraggedMarker.getPosition().longitude));
+			}
+		}
+	}
+
+	@Override
+	public boolean onPrepareActionMode(final ActionMode actionMode, final Menu menu) {
+		return false;
+	}
+
+	@Override
+	public void onMapClick(final LatLng arg0) {
+		if (mActionMode != null) {
+			mActionMode.finish();
+		}
 	}
 }

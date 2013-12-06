@@ -3,6 +3,8 @@
 
     <string name="app_name">MapDatabaseExample</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_delete">Delete</string>
     
     <string name="tag_success">success</string>
     <string name="tag_locations">locations</string>
@@ -16,6 +18,7 @@
     <string name="get_all_locations">get_all_locations.php</string>
     <string name="create_location">create_location.php</string>
     <string name="edit_location">edit_location.php</string>
+    <string name="delete_location">delete_location.php</string>
     
     <string name="title_create_location">Create location</string>
     <string name="title_edit_location">Edit location</string>
