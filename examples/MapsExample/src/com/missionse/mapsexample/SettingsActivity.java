@@ -3,6 +3,9 @@ package com.missionse.mapsexample;
 import android.app.Activity;
 import android.os.Bundle;
 
+/**
+ * Activity for customizing app settings.
+ */
 public class SettingsActivity extends Activity {
 	
 	@Override

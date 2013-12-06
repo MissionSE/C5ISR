@@ -19,6 +19,9 @@ import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.missionse.mapviewer.MapViewerFragment;
 import com.missionse.mapviewer.MiniMapFragment;
 
+/**
+ * Example use of the MapViewer library.
+ */
 public class MapsExampleActivity extends Activity implements MiniMapFragment.Callbacks {
 
 	private static final String TAG_MINI_MAP = "mini_map";
@@ -43,7 +46,7 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 				MiniMapFragment fragment = (MiniMapFragment) fm.findFragmentByTag(TAG_MINI_MAP);
 				if (fragment == null) {
 					Log.d(TAG, "MimiMapFragment does not exist in fragment manager");
-					mMainMapFragment.replaceBottomLeftCornerFragment(fragment, TAG_MINI_MAP);
+					replaceBottomLeftCornerFragment(fragment, TAG_MINI_MAP);
 				} else {
 					Log.d(TAG, "MimiMapFragment exists in fragment manager");
 					FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -70,7 +73,7 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 
 		FragmentManager fm = getFragmentManager();
 		mMainMapFragment = (MapViewerFragment) fm.findFragmentById(R.id.fragmentContainer);
-
+		Log.d(TAG, "mMainMapFragement=" + mMainMapFragment);
 		if (mMainMapFragment == null) {
 			Log.d(TAG, "Creating new MapViewerFragment");
 			mMainMapFragment = new MapViewerFragment();
@@ -106,13 +109,13 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 		
 		Fragment miniMapFragment = new MiniMapFragment();
 		if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_TOP_LEFT) == null) {
-			mMainMapFragment.replaceTopLeftCornerFragment(miniMapFragment, TAG_MINI_MAP_TOP_LEFT);
+			replaceTopLeftCornerFragment(miniMapFragment, TAG_MINI_MAP_TOP_LEFT);
 		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_TOP_RIGHT) == null) {
-			mMainMapFragment.replaceTopRightCornerFragment(miniMapFragment, TAG_MINI_MAP_TOP_RIGHT);
+			replaceTopRightCornerFragment(miniMapFragment, TAG_MINI_MAP_TOP_RIGHT);
 		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_BOTTOM_RIGHT) == null) {
-			mMainMapFragment.replaceBottomRightCornerFragment(miniMapFragment, TAG_MINI_MAP_BOTTOM_RIGHT);
+			replaceBottomRightCornerFragment(miniMapFragment, TAG_MINI_MAP_BOTTOM_RIGHT);
 		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP) == null) {
-			mMainMapFragment.replaceBottomLeftCornerFragment(miniMapFragment, TAG_MINI_MAP);
+			replaceBottomLeftCornerFragment(miniMapFragment, TAG_MINI_MAP);
 		}
 	}
 
@@ -129,6 +132,34 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 	@Override
 	public GoogleMap getMainMap() {
 		return mMainMapFragment.getMainMap();
+	}
+	
+	private void replaceTopLeftCornerFragment(Fragment fragment, String tag) {
+		replaceCornerFragment(R.id.top_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
+	}
+
+	private void replaceTopRightCornerFragment(Fragment fragment, String tag) {
+		replaceCornerFragment(R.id.top_right_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
+	}
+
+	private void replaceBottomLeftCornerFragment(Fragment fragment, String tag) {
+		replaceCornerFragment(R.id.bottom_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
+	}
+
+	private void replaceBottomRightCornerFragment(Fragment fragment, String tag) {
+		replaceCornerFragment(R.id.bottom_right_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
+	}
+
+	private void replaceCornerFragment(int containerViewId, Fragment fragment, String tag, int enter, int exit) {
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.replace(containerViewId, fragment, tag);
+		ft.commit();
+	}
+
+	private void removeCornerFragment(Fragment fragment, int enter, int exit) {
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.remove(fragment);
+		ft.commit();
 	}
 
 }

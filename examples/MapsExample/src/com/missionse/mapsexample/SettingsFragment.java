@@ -3,6 +3,10 @@ package com.missionse.mapsexample;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
+/**
+ * Creates a preferences screen from XML resource.
+ *
+ */
 public class SettingsFragment extends PreferenceFragment {
 	
 	@Override

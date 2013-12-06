@@ -6,9 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -19,14 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -38,11 +34,11 @@ import com.google.android.gms.maps.model.LatLng;
  * region displayed in this {@link GoogleMap} view.
  */
 public class MapViewerFragment extends Fragment implements
-OnSharedPreferenceChangeListener,
+SharedPreferences.OnSharedPreferenceChangeListener,
 LocationListener,
-ConnectionCallbacks,
-OnConnectionFailedListener,
-OnCameraChangeListener {
+GooglePlayServicesClient.ConnectionCallbacks,
+GooglePlayServicesClient.OnConnectionFailedListener,
+GoogleMap.OnCameraChangeListener {
 	public static final String FRAGMENT_TAG = "map_viewer_fragment";
 
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
@@ -82,7 +78,7 @@ OnCameraChangeListener {
 	private GoogleMap mMainMap;
 	private LatLng mInitialLatLng;
 	private SharedPreferences mPrefs;
-	private Set<OnCameraChangeListener> mCameraListeners = new HashSet<OnCameraChangeListener>();
+	private Set<GoogleMap.OnCameraChangeListener> mCameraListeners = new HashSet<GoogleMap.OnCameraChangeListener>();
 
 	@Override
 	public void onConnected(Bundle arg0) {
@@ -111,34 +107,6 @@ OnCameraChangeListener {
 		return v;
 	}
 
-	public void replaceTopLeftCornerFragment(Fragment fragment, String tag) {
-		replaceCornerFragment(R.id.top_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
-	}
-
-	public void replaceTopRightCornerFragment(Fragment fragment, String tag) {
-		replaceCornerFragment(R.id.top_right_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
-	}
-
-	public void replaceBottomLeftCornerFragment(Fragment fragment, String tag) {
-		replaceCornerFragment(R.id.bottom_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
-	}
-
-	public void replaceBottomRightCornerFragment(Fragment fragment, String tag) {
-		replaceCornerFragment(R.id.bottom_right_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
-	}
-
-	private void replaceCornerFragment(int containerViewId, Fragment fragment, String tag, int enter, int exit) {
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(containerViewId, fragment, tag);
-		ft.commit();
-	}
-
-	public void removeCornerFragment(Fragment fragment, int enter, int exit) {
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.remove(fragment);
-		ft.commit();
-	}
-
 	@Override
 	public void onLocationChanged(Location arg0) {
 		// TODO Auto-generated method stub
@@ -152,7 +120,11 @@ OnCameraChangeListener {
 
 	}
 	
-	public void registerOnCameraChangeListener(final OnCameraChangeListener listener) {
+	/**
+	 * Registers a listener for to receive camera change callbacks.
+	 * @param listener the listener
+	 */
+	public void registerOnCameraChangeListener(final GoogleMap.OnCameraChangeListener listener) {
 		mCameraListeners.add(listener);
 		
 		Handler handler = new Handler();
@@ -166,7 +138,11 @@ OnCameraChangeListener {
 		
 	}
 	
-	public void deregisterOnCameraChangeListener(OnCameraChangeListener listener) {
+	/**
+	 * Deregisters a listener to no longer receive camera change callbacks.
+	 * @param listener the listener
+	 */
+	public void deregisterOnCameraChangeListener(final GoogleMap.OnCameraChangeListener listener) {
 		mCameraListeners.remove(listener);
 	}
 
@@ -254,7 +230,7 @@ OnCameraChangeListener {
 	@Override
 	public void onCameraChange(CameraPosition arg0) {
 		synchronized (mCameraListeners) {
-			for (OnCameraChangeListener listener : mCameraListeners) {
+			for (GoogleMap.OnCameraChangeListener listener : mCameraListeners) {
 				listener.onCameraChange(arg0);
 			}
 		}
