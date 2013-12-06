@@ -176,10 +176,10 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 			if (!mLocations.containsKey(locationId)) {
 				Log.d(TAG, "Marker added: " + location);
 				mMarkers.put(locationId, mMap.addMarker(
-					new MarkerOptions()
-						.position(location.getLatLng())
-						.title(location.getName())
-						.draggable(true)));
+						new MarkerOptions()
+								.position(location.getLatLng())
+								.title(location.getName())
+								.draggable(true)));
 			} else {
 				Log.d(TAG, "Marker updated: " + location);
 				Marker marker = mMarkers.get(locationId);
@@ -194,27 +194,21 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 	@Override
 	public void onMapLongClick(final LatLng location) {
 		CreateLocationDialogFragment.newInstance(location.latitude, location.longitude)
-			.show(getFragmentManager(), "create_location");
+				.show(getFragmentManager(), "create_location");
 	}
 
 	@Override
 	public void onInfoWindowClick(final Marker marker) {
-		MapLocation location = null;
-		for (int locationId : mMarkers.keySet()) {
-			if (mMarkers.get(locationId).equals(marker)) {
-				location = mLocations.get(locationId);
-				break;
-			}
-		}
-
+		MapLocation location = getLocation(marker);
 		if (location != null) {
 			EditLocationDialogFragment.newInstance(
-				location.getId(),
-				location.getName(),
-				location.getLatitude(),
-				location.getLongitude())
-					.show(getFragmentManager(), "edit_location");
+					location.getId(),
+					location.getName(),
+					location.getLatitude(),
+					location.getLongitude())
+							.show(getFragmentManager(), "edit_location");
 		}
+		marker.hideInfoWindow();
 	}
 
 	@Override
@@ -224,14 +218,7 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 
 	@Override
 	public void onMarkerDragEnd(final Marker marker) {
-		MapLocation location = null;
-		for (int locationId : mMarkers.keySet()) {
-			if (mMarkers.get(locationId).equals(marker)) {
-				location = mLocations.get(locationId);
-				break;
-			}
-		}
-
+		MapLocation location = getLocation(marker);
 		if (location != null) {
 			if (mActivity != null) {
 				new EditLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
@@ -246,5 +233,16 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 	@Override
 	public void onMarkerDragStart(final Marker marker) {
 
+	}
+
+	private MapLocation getLocation(final Marker marker) {
+		MapLocation location = null;
+		for (int locationId : mMarkers.keySet()) {
+			if (mMarkers.get(locationId).equals(marker)) {
+				location = mLocations.get(locationId);
+				break;
+			}
+		}
+		return location;
 	}
 }

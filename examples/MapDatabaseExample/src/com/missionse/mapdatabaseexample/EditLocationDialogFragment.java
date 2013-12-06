@@ -81,7 +81,8 @@ public class EditLocationDialogFragment extends DialogFragment {
 		View view = inflater.inflate(R.layout.fragment_location_dialog, container);
 		mEditText = (EditText) view.findViewById(R.id.text_name_entry);
 		mEditText.requestFocus();
-		mEditText.setHint(mName);
+		mEditText.setText(mName);
+		mEditText.selectAll();
 
 		TextView latitude = (TextView) view.findViewById(R.id.text_latitude);
 		latitude.setText(getResources().getText(R.string.title_latitude) + " " + mLatitude);

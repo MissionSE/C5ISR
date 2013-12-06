@@ -16,6 +16,9 @@ import com.missionse.mapdatabaseexample.R;
 public class CreateLocationTask extends HttpRequestTask {
 	private static final String TAG = CreateLocationTask.class.getName();
 	private static final int EXPECTED_PARAMETERS = 3;
+	private static final int NAME_PARAMETER = 0;
+	private static final int LATITUDE_PARAMETER = 1;
+	private static final int LONGITUDE_PARAMETER = 2;
 
 	private final String mTagName;
 	private final String mTagLatitude;
@@ -48,9 +51,9 @@ public class CreateLocationTask extends HttpRequestTask {
 			throw new RuntimeException("Invalid number of parameters.");
 		}
 
-		addParameter(mTagName, params[0]);
-		addParameter(mTagLatitude, params[1]);
-		addParameter(mTagLongitude, params[2]);
+		addParameter(mTagName, params[NAME_PARAMETER]);
+		addParameter(mTagLatitude, params[LATITUDE_PARAMETER]);
+		addParameter(mTagLongitude, params[LONGITUDE_PARAMETER]);
 		JSONObject json = makePostRequest(mCreateLocationURL);
 
 		if (json != null) {
