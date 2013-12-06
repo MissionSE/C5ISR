@@ -24,6 +24,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.MapFragment;
@@ -39,7 +40,7 @@ import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
  */
 @SuppressLint("UseSparseArrays")
 public class GoogleMapFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
-LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener {
+LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInfoWindowClickListener {
 
 	private static final String TAG = GoogleMapFragment.class.getName();
 
@@ -155,6 +156,7 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener {
 		mMap.setBuildingsEnabled(true);
 		mMap.setMapType(MAP_TYPE_HYBRID);
 		mMap.setOnMapLongClickListener(this);
+		mMap.setOnInfoWindowClickListener(this);
 
 		if (mActivity != null) {
 			new GetAllLocationsTask((Context) mActivity, (MapLocationListener) mActivity).execute();
@@ -187,5 +189,25 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener {
 	public void onMapLongClick(final LatLng location) {
 		CreateLocationDialogFragment.newInstance(location.latitude, location.longitude)
 			.show(getFragmentManager(), "create_location");
+	}
+
+	@Override
+	public void onInfoWindowClick(final Marker marker) {
+		MapLocation location = null;
+		for (int locationId : mMarkers.keySet()) {
+			if (mMarkers.get(locationId).equals(marker)) {
+				location = mLocations.get(locationId);
+				break;
+			}
+		}
+
+		if (location != null) {
+			EditLocationDialogFragment.newInstance(
+				location.getId(),
+				location.getName(),
+				location.getLatitude(),
+				location.getLongitude())
+					.show(getFragmentManager(), "edit_location");
+		}
 	}
 }
