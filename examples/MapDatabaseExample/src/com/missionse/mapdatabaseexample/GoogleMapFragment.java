@@ -26,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.missionse.mapdatabaseexample.model.MapLocation;
+import com.missionse.mapdatabaseexample.tasks.EditLocationTask;
 import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
 
 /**
@@ -40,7 +42,7 @@ import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
  */
 @SuppressLint("UseSparseArrays")
 public class GoogleMapFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
-LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInfoWindowClickListener {
+LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 
 	private static final String TAG = GoogleMapFragment.class.getName();
 
@@ -157,6 +159,7 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 		mMap.setMapType(MAP_TYPE_HYBRID);
 		mMap.setOnMapLongClickListener(this);
 		mMap.setOnInfoWindowClickListener(this);
+		mMap.setOnMarkerDragListener(this);
 
 		if (mActivity != null) {
 			new GetAllLocationsTask((Context) mActivity, (MapLocationListener) mActivity).execute();
@@ -173,7 +176,10 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 			if (!mLocations.containsKey(locationId)) {
 				Log.d(TAG, "Marker added: " + location);
 				mMarkers.put(locationId, mMap.addMarker(
-						new MarkerOptions().position(location.getLatLng()).title(location.getName())));
+					new MarkerOptions()
+						.position(location.getLatLng())
+						.title(location.getName())
+						.draggable(true)));
 			} else {
 				Log.d(TAG, "Marker updated: " + location);
 				Marker marker = mMarkers.get(locationId);
@@ -209,5 +215,36 @@ LocationListener, OnMyLocationButtonClickListener, OnMapLongClickListener, OnInf
 				location.getLongitude())
 					.show(getFragmentManager(), "edit_location");
 		}
+	}
+
+	@Override
+	public void onMarkerDrag(final Marker marker) {
+
+	}
+
+	@Override
+	public void onMarkerDragEnd(final Marker marker) {
+		MapLocation location = null;
+		for (int locationId : mMarkers.keySet()) {
+			if (mMarkers.get(locationId).equals(marker)) {
+				location = mLocations.get(locationId);
+				break;
+			}
+		}
+
+		if (location != null) {
+			if (mActivity != null) {
+				new EditLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
+						Integer.toString(location.getId()),
+						location.getName(),
+						Double.toString(marker.getPosition().latitude),
+						Double.toString(marker.getPosition().longitude));
+			}
+		}
+	}
+
+	@Override
+	public void onMarkerDragStart(final Marker marker) {
+
 	}
 }
