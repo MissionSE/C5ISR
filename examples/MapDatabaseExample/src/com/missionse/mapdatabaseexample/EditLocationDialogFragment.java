@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,7 @@ import com.missionse.mapdatabaseexample.tasks.EditLocationTask;
 /**
  * Provides a fragment that is used to edit an existing map location.
  */
-public class EditLocationDialogFragment extends DialogFragment {
+public class EditLocationDialogFragment extends DialogFragment implements TextWatcher {
 
 	private EditText mEditText;
 	private Button mCancelButton;
@@ -80,6 +82,7 @@ public class EditLocationDialogFragment extends DialogFragment {
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_location_dialog, container);
 		mEditText = (EditText) view.findViewById(R.id.text_name_entry);
+		mEditText.addTextChangedListener(this);
 		mEditText.requestFocus();
 		mEditText.setText(mName);
 		mEditText.selectAll();
@@ -113,10 +116,34 @@ public class EditLocationDialogFragment extends DialogFragment {
 				getDialog().dismiss();
 			}
 		});
+		setOkButtonState();
 
 		getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         getDialog().setTitle(R.string.title_edit_location);
 
 		return view;
+	}
+
+	private void setOkButtonState() {
+		if (mEditText != null && mOkButton != null) {
+			if (mEditText.getText().length() > 0) {
+				mOkButton.setEnabled(true);
+			} else {
+				mOkButton.setEnabled(false);
+			}
+		}
+	}
+
+	@Override
+	public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+	}
+
+	@Override
+	public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+	}
+
+	@Override
+	public void afterTextChanged(final Editable s) {
+		setOkButtonState();
 	}
 }
