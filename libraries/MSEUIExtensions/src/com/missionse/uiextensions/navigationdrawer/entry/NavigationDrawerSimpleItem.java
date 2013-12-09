@@ -1,7 +1,10 @@
-package com.missionse.uiextensions.navigationdrawer;
+package com.missionse.uiextensions.navigationdrawer.entry;
 
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItemType;
 
 /**
  * Represents a basic menu item for the Navigation Drawer. Typically selects new fragments or activities. Includes an
@@ -83,11 +86,7 @@ public final class NavigationDrawerSimpleItem extends NavigationDrawerItem {
 		return mLabel;
 	}
 
-	/**
-	 * Sets the label to display for this item.
-	 * @param label the String to display
-	 */
-	public void setLabel(final String label) {
+	private void setLabel(final String label) {
 		mLabel = label;
 	}
 
@@ -106,11 +105,7 @@ public final class NavigationDrawerSimpleItem extends NavigationDrawerItem {
 		return mWillChangeActionBarTitle;
 	}
 
-	/**
-	 * Sets whether or not this item will change the title when selected.
-	 * @param change whether or not this item will change the title
-	 */
-	public void setWillChangeActionBarTitle(final boolean change) {
+	private void setWillChangeActionBarTitle(final boolean change) {
 		mWillChangeActionBarTitle = change;
 	}
 
@@ -127,11 +122,7 @@ public final class NavigationDrawerSimpleItem extends NavigationDrawerItem {
 		return mIcon;
 	}
 
-	/**
-	 * Sets the icon to be displayed for this item.
-	 * @param icon the icon
-	 */
-	public void setIcon(final int icon) {
+	private void setIcon(final int icon) {
 		mIcon = icon;
 	}
 }

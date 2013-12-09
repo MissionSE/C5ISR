@@ -1,6 +1,9 @@
-package com.missionse.uiextensions.navigationdrawer;
+package com.missionse.uiextensions.navigationdrawer.entry;
 
 import android.widget.TextView;
+
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItemType;
 
 /**
  * Represents a section header in the Navigation Drawer.
@@ -58,11 +61,7 @@ public final class NavigationDrawerHeader extends NavigationDrawerItem {
 		return mLabel;
 	}
 
-	/**
-	 * Sets the label to the supplied String.
-	 * @param label the label to display for this Header
-	 */
-	public void setLabel(final String label) {
+	private void setLabel(final String label) {
 		this.mLabel = label;
 	}
 

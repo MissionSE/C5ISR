@@ -1,7 +1,11 @@
-package com.missionse.uiextensions.navigationdrawer;
+package com.missionse.uiextensions.navigationdrawer.entry;
 
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItemType;
 
 /**
  * Represents a Spinner widget in a Navigation Drawer.
@@ -33,6 +37,7 @@ public final class NavigationDrawerSpinner extends NavigationDrawerItem {
 
 	public static final NavigationDrawerItemType TYPE = NavigationDrawerItemType.DROPDOWN;
 	private ArrayAdapter<String> mAdapter;
+	private OnItemSelectedListener mListener;
 
 	private NavigationDrawerSpinner() {
 	}
@@ -41,13 +46,16 @@ public final class NavigationDrawerSpinner extends NavigationDrawerItem {
 	 * Creates a new NavigationDrawerSpinner.
 	 * @param id the id of this item
 	 * @param adapter the adapter that will determine what items to show in the spinner
+	 * @param listener the listener notified of item selection in the spinner
 	 * @return a new NavigationDrawerSpinner
 	 */
-	public static NavigationDrawerSpinner create(final int id, final ArrayAdapter<String> adapter) {
-		NavigationDrawerSpinner dropdown = new NavigationDrawerSpinner();
-		dropdown.setId(id);
-		dropdown.setAdapter(adapter);
-		return dropdown;
+	public static NavigationDrawerSpinner create(final int id, final ArrayAdapter<String> adapter,
+			final OnItemSelectedListener listener) {
+		NavigationDrawerSpinner spinner = new NavigationDrawerSpinner();
+		spinner.setId(id);
+		spinner.setAdapter(adapter);
+		spinner.setListener(listener);
+		return spinner;
 	}
 
 	/**
@@ -58,12 +66,20 @@ public final class NavigationDrawerSpinner extends NavigationDrawerItem {
 		return mAdapter;
 	}
 
-	/**
-	 * Sets the adapter to be used to back this Spinner.
-	 * @param adapter the adapter to be used
-	 */
-	public void setAdapter(final ArrayAdapter<String> adapter) {
+	private void setAdapter(final ArrayAdapter<String> adapter) {
 		mAdapter = adapter;
+	}
+
+	/**
+	 * Retrieves the listener to be notified of item selection.
+	 * @return the listener
+	 */
+	public OnItemSelectedListener getListener() {
+		return mListener;
+	}
+
+	private void setListener(final OnItemSelectedListener listener) {
+		mListener = listener;
 	}
 
 	@Override

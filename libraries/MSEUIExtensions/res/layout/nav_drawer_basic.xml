@@ -6,22 +6,21 @@
    android:textAppearance="?android:attr/textAppearanceListItemSmall"
    android:gravity="center_vertical"
    android:paddingRight="10dp"
-   android:minHeight="?android:attr/listPreferredItemHeightSmall"
-   >
+   android:minHeight="?android:attr/listPreferredItemHeightSmall" >
 
     <ImageView
-       android:id="@+id/navmenuitem_icon"
-       android:layout_width="wrap_content"
-       android:layout_height="30dp"
+        android:contentDescription="@string/basic_icon"
+        android:id="@+id/navmenuitem_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
         android:layout_centerVertical="true"
         android:paddingLeft="15dp"/>
 
     <TextView
-       android:id="@+id/navmenuitem_label"
-       android:layout_width="match_parent"
-       android:layout_height="50dp"
-       android:layout_toRightOf="@id/navmenuitem_icon"
-       android:gravity="center_vertical"
-       android:textColor="#FFFFFF"/>
-
+        android:id="@+id/navmenuitem_label"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@id/navmenuitem_icon"
+        android:gravity="center_vertical"
+        android:textColor="#eee"/>
 </RelativeLayout>

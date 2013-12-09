@@ -1,38 +1,22 @@
-package com.missionse.uiextensions.navigationdrawer;
+package com.missionse.uiextensions.navigationdrawer.configuration;
 
 import android.widget.BaseAdapter;
 
-/**
- * A container class that holds all configuration options of the Navigation Drawer, used by the NavigationDrawerActivity
- * when instantiating the NavigationDrawer.
- */
-public class NavigationDrawerConfiguration {
+import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
 
-	private int mMainLayout;
+/**
+ * A container class that holds all configuration options of the Navigation Drawer, used by the DrawerActivity when
+ * instantiating the NavigationDrawer.
+ */
+public class DrawerConfiguration {
+
 	private int mDrawerShadow;
-	private int mDrawerLayoutId;
-	private int mLeftDrawerId;
+	private int mDrawer;
 	private int[] mActionMenuItemsToHideWhenDrawerOpen;
 	private NavigationDrawerItem[] mNavigationDrawerItems;
 	private int mDrawerOpenAccessibilityDescription;
 	private int mDrawerCloseAccessibilityDescription;
 	private BaseAdapter mBaseAdapter;
-
-	/**
-	 * Returns the ID of the layout file that includes the DrawerLayout.
-	 * @return the ID of the layout file
-	 */
-	public int getMainLayout() {
-		return mMainLayout;
-	}
-
-	/**
-	 * Sets the ID of the layout file that contains the DrawerLayout.
-	 * @param mainLayout the ID of the layout file
-	 */
-	public void setMainLayout(final int mainLayout) {
-		mMainLayout = mainLayout;
-	}
 
 	/**
 	 * Gets the resource ID used to draw the Drawer shadow, if any.
@@ -51,35 +35,19 @@ public class NavigationDrawerConfiguration {
 	}
 
 	/**
-	 * Returns the resource ID of the DrawerLayout as defined in the specified layout file.
-	 * @return the resource ID
-	 */
-	public int getDrawerLayoutId() {
-		return mDrawerLayoutId;
-	}
-
-	/**
-	 * Sets the resource ID of the DrawerLayout container as specified in the layout file.
-	 * @param drawerLayoutId the resource ID
-	 */
-	public void setDrawerLayoutId(final int drawerLayoutId) {
-		mDrawerLayoutId = drawerLayoutId;
-	}
-
-	/**
 	 * Gets the resource ID of the ListView that comprises the specific NavigationDrawer within the DrawerLayout.
 	 * @return the resource ID
 	 */
-	public int getLeftDrawerId() {
-		return mLeftDrawerId;
+	public int getDrawer() {
+		return mDrawer;
 	}
 
 	/**
 	 * Sets the resource ID of the ListView that will be the NavigationDrawer within the DrawerLayout.
-	 * @param leftDrawerId the resource ID
+	 * @param leftDrawer the resource ID
 	 */
-	public void setLeftDrawerId(final int leftDrawerId) {
-		mLeftDrawerId = leftDrawerId;
+	public void setDrawer(final int leftDrawer) {
+		mDrawer = leftDrawer;
 	}
 
 	/**
