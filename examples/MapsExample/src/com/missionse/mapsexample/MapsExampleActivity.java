@@ -4,14 +4,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
+import android.widget.SearchView;
 import android.widget.Switch;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -28,13 +29,24 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 	private static final String TAG_MINI_MAP_TOP_LEFT = "mini_map_top_left";
 	private static final String TAG_MINI_MAP_TOP_RIGHT = "mini_map_top_right";
 	private static final String TAG_MINI_MAP_BOTTOM_RIGHT = "mini_map_bottom_right";
-	
+
 	private MapViewerFragment mMainMapFragment;
+	private Menu mOptionsMenu;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.dual_maps_example, menu);
+		super.onCreateOptionsMenu(menu);
+		mOptionsMenu = menu;
+		getMenuInflater().inflate(R.menu.dual_maps_example, menu);
+		MenuItem searchItem = menu.findItem(R.id.menu_search);
+		if (searchItem != null) {
+			SearchView searchView = (SearchView) searchItem.getActionView();
+			if (searchView != null) {
+				SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+				searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+				searchView.setQueryRefinementEnabled(true);
+			}
+		}
 		mMainMapFragment.setMyLocationEnabled(menu.findItem(R.id.myLocation).isChecked());
 
 		Switch miniMapSwitch = (Switch) menu.findItem(R.id.showMiniMap).getActionView().findViewById(R.id.mini_map_switch);
@@ -87,6 +99,9 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 	public boolean onOptionsItemSelected(MenuItem item) {
 		boolean enabled = !item.isChecked();
 		switch (item.getItemId()) {
+		case R.id.menu_search:
+			startSearch(null, false, Bundle.EMPTY, false);
+			return true;
 		case R.id.addMiniMap:
 			addMiniMap();
 			return true;
@@ -106,7 +121,7 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 	}
 
 	private void addMiniMap() {
-		
+
 		Fragment miniMapFragment = new MiniMapFragment();
 		if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_TOP_LEFT) == null) {
 			replaceTopLeftCornerFragment(miniMapFragment, TAG_MINI_MAP_TOP_LEFT);
@@ -133,7 +148,7 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 	public GoogleMap getMainMap() {
 		return mMainMapFragment.getMainMap();
 	}
-	
+
 	private void replaceTopLeftCornerFragment(Fragment fragment, String tag) {
 		replaceCornerFragment(R.id.top_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
 	}

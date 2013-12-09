@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item 
+	<item android:id="@+id/menu_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="Search"
+        android:orderInCategory="0"
+       	android:actionViewClass="android.widget.SearchView"
+        android:showAsAction="ifRoom|collapseActionView" />
+    <item
         android:id="@+id/addMiniMap"
         android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="always"
-        android:title="Add Mini Map" />       
-         <item
+        android:title="Add Mini Map"/>
+    <item
         android:id="@+id/showMiniMap"
+        android:actionLayout="@layout/mini_map_switch"
         android:checkable="true"
         android:checked="false"
         android:icon="@android:drawable/ic_menu_view"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:actionLayout="@layout/mini_map_switch"
         android:title="@string/mini_map"/>
     <item
         android:id="@+id/myLocation"
