@@ -1,10 +1,6 @@
 package com.missionse.mapdatabaseexample;
 
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
@@ -30,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -47,7 +44,7 @@ import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
 @SuppressLint("UseSparseArrays")
 public class GoogleMapFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
 LocationListener, OnMapLongClickListener, OnInfoWindowClickListener,
-OnMarkerDragListener, ActionMode.Callback, OnMapClickListener {
+OnMarkerDragListener, ActionMode.Callback, OnMapClickListener, OnMarkerClickListener {
 
 	private static final String TAG = GoogleMapFragment.class.getName();
 
@@ -64,12 +61,11 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener {
 
 	private Activity mActivity;
 	private GoogleMap mMap;
-	private Marker mDraggedMarker;
+	private Marker mSelectedMarker;
 	private ActionMode mActionMode;
 	private LocationClient mLocationClient;
 	private boolean mFirstLocationChange = true;
-	private final Map<Integer, MapLocation> mLocations = new HashMap<Integer, MapLocation>();
-	private final Map<Integer, Marker> mMarkers = new HashMap<Integer, Marker>();
+	private final MapLocationManager mLocationManager = new MapLocationManager();
 
 	@Override
 	public void onAttach(final Activity activity) {
@@ -162,6 +158,7 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener {
 		mMap.setOnInfoWindowClickListener(this);
 		mMap.setOnMarkerDragListener(this);
 		mMap.setOnMapClickListener(this);
+		mMap.setOnMarkerClickListener(this);
 
 		if (mActivity != null) {
 			new GetAllLocationsTask((Context) mActivity, (MapLocationListener) mActivity).execute();
@@ -175,21 +172,21 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener {
 	public void addMarker(final MapLocation location) {
 		if (mMap != null) {
 			int locationId = location.getId();
-			if (!mLocations.containsKey(locationId)) {
+			if (!mLocationManager.containsLocation(locationId)) {
 				Log.d(TAG, "Marker added: " + location);
-				mMarkers.put(locationId, mMap.addMarker(
+				mLocationManager.put(locationId, mMap.addMarker(
 						new MarkerOptions()
 								.position(location.getLatLng())
 								.title(location.getName())
 								.draggable(true)));
 			} else {
 				Log.d(TAG, "Marker updated: " + location);
-				Marker marker = mMarkers.get(locationId);
+				Marker marker = mLocationManager.getMarker(locationId);
 				marker.setPosition(location.getLatLng());
 				marker.setTitle(location.getName());
 			}
 
-			mLocations.put(locationId, location);
+			mLocationManager.put(locationId, location);
 		}
 	}
 
@@ -201,7 +198,7 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener {
 
 	@Override
 	public void onInfoWindowClick(final Marker marker) {
-		MapLocation location = getLocation(marker);
+		MapLocation location = mLocationManager.getLocation(marker);
 		if (location != null) {
 			EditLocationDialogFragment.newInstance(
 					location.getId(),
@@ -220,9 +217,13 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener {
 
 	@Override
 	public void onMarkerDragEnd(final Marker marker) {
-		if (mActivity != null) {
-			mDraggedMarker = marker;
-			mActivity.startActionMode(this);
+		MapLocation location = mLocationManager.getLocation(marker);
+		if (location != null && mActivity != null) {
+				new EditLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
+						Integer.toString(location.getId()),
+						location.getName(),
+						Double.toString(marker.getPosition().latitude),
+						Double.toString(marker.getPosition().longitude));
 		}
 	}
 
@@ -231,40 +232,31 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener {
 
 	}
 
-	private MapLocation getLocation(final Marker marker) {
-		MapLocation location = null;
-		for (int locationId : mMarkers.keySet()) {
-			if (mMarkers.get(locationId).equals(marker)) {
-				location = mLocations.get(locationId);
-				break;
-			}
-		}
-		return location;
-	}
-
 	@Override
 	public boolean onActionItemClicked(final ActionMode actionMode, final MenuItem menuItem) {
-		Log.e(TAG, "onActionItemClicked: " + menuItem.toString());
 		switch (menuItem.getItemId()) {
-			case R.id.action_undo:
-				if (mDraggedMarker != null) {
-					MapLocation location = getLocation(mDraggedMarker);
+			case R.id.action_edit:
+				if (mSelectedMarker != null) {
+					MapLocation location = mLocationManager.getLocation(mSelectedMarker);
 					if (location != null) {
-						mDraggedMarker.setPosition(location.getLatLng());
-						mDraggedMarker = null;
+						EditLocationDialogFragment.newInstance(
+								location.getId(),
+								location.getName(),
+								location.getLatitude(),
+								location.getLongitude())
+										.show(getFragmentManager(), "edit_location");
 					}
 				}
 				break;
 			case R.id.action_delete:
-				if (mDraggedMarker != null) {
-					MapLocation location = getLocation(mDraggedMarker);
+				if (mSelectedMarker != null) {
+					MapLocation location = mLocationManager.getLocation(mSelectedMarker);
 					if (location != null) {
 						new DeleteLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
 								Integer.toString(location.getId()));
-						mDraggedMarker.remove();
-						mLocations.remove(location.getId());
-						mMarkers.remove(location.getId());
-						mDraggedMarker = null;
+						mSelectedMarker.remove();
+						mLocationManager.remove(location.getId());
+						mLocationManager.remove(location.getId());
 					}
 				}
 				break;
@@ -285,16 +277,7 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener {
 
 	@Override
 	public void onDestroyActionMode(final ActionMode actionMode) {
-		if (mDraggedMarker != null) {
-			MapLocation location = getLocation(mDraggedMarker);
-			if (location != null && mActivity != null) {
-					new EditLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
-							Integer.toString(location.getId()),
-							location.getName(),
-							Double.toString(mDraggedMarker.getPosition().latitude),
-							Double.toString(mDraggedMarker.getPosition().longitude));
-			}
-		}
+		mSelectedMarker = null;
 	}
 
 	@Override
@@ -303,9 +286,23 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener {
 	}
 
 	@Override
-	public void onMapClick(final LatLng arg0) {
+	public void onMapClick(final LatLng location) {
 		if (mActionMode != null) {
 			mActionMode.finish();
 		}
+	}
+
+	@Override
+	public boolean onMarkerClick(final Marker marker) {
+		if (mActionMode != null) {
+			mActionMode.finish();
+		}
+
+		mSelectedMarker = marker;
+		if (mActivity != null) {
+			mActivity.startActionMode(this);
+		}
+
+		return false;
 	}
 }

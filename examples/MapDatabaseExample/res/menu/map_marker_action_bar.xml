@@ -8,10 +8,10 @@
         android:title="@string/action_delete"/>
     
     <item
-        android:id="@+id/action_undo"
-        android:icon="@drawable/ic_action_undo"
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_action_edit"
         android:orderInCategory="100"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/action_undo"/>
+        android:title="@string/action_edit"/>
 
 </menu>
