@@ -36,7 +36,7 @@ public class CreateStudentTask extends HttpRequestTask {
 	 * @param students The list of students.
 	 */
 	public CreateStudentTask(final Context context, final ArrayAdapter<Student> adapter, final List<Student> students) {
-		super(context, "Creating student");
+		super(context, "Unable to save new student.");
 		mStudentListAdapter = adapter;
 		mStudentList = students;
 

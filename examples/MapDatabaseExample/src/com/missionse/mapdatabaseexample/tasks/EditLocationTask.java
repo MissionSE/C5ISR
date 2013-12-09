@@ -35,7 +35,7 @@ public class EditLocationTask extends HttpRequestTask {
 	 * @param locationListener The listener who cares about the locations.
 	 */
 	public EditLocationTask(final Context context, final MapLocationListener locationListener) {
-		super(context, "Modifying location");
+		super(context, "Unable to save location modification.");
 
 		mLocationListener = locationListener;
 

@@ -1,11 +1,13 @@
 package com.missionse.httpdatabaseconnector;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -19,7 +21,6 @@ import android.util.Log;
  * Provides functionality to perform http post and get requests.
  */
 public class HttpClientRequester {
-
 	private static final String TAG = HttpClientRequester.class.getName();
 
 	private final JSONParser mJsonParser;
@@ -53,8 +54,10 @@ public class HttpClientRequester {
 
 			json = mJsonParser.parse(input);
 			input.close();
-		} catch (Exception e) {
-			Log.e(TAG, "Error getting HTTP Get Response: " + e.toString());
+		} catch (ClientProtocolException e) {
+			Log.e(TAG, "Error connecting to HTTP client: " + e.toString());
+		} catch (IOException e) {
+			Log.e(TAG, "Error handling input stream: " + e.toString());
 		}
 
 		return json;
@@ -81,8 +84,10 @@ public class HttpClientRequester {
 
 			json = mJsonParser.parse(input);
 			input.close();
-		} catch (Exception e) {
-			Log.e(TAG, "Error getting HTTP Post Response: " + e.toString());
+		} catch (ClientProtocolException e) {
+			Log.e(TAG, "Error connecting to HTTP client: " + e.toString());
+		} catch (IOException e) {
+			Log.e(TAG, "Error handling input stream: " + e.toString());
 		}
 
 		return json;

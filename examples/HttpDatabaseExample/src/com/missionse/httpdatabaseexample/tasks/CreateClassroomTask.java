@@ -35,7 +35,7 @@ public class CreateClassroomTask extends HttpRequestTask {
 	 * @param classrooms The list of classrooms.
 	 */
 	public CreateClassroomTask(final Context context, final ArrayAdapter<Classroom> adapter, final List<Classroom> classrooms) {
-		super(context, "Creating classroom");
+		super(context, "Unable to save new classroom.");
 		mClassroomListAdapter = adapter;
 		mClassroomList = classrooms;
 

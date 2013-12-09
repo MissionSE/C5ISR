@@ -33,7 +33,7 @@ public class CreateLocationTask extends HttpRequestTask {
 	 * @param locationListener The listener who cares about the locations.
 	 */
 	public CreateLocationTask(final Context context, final MapLocationListener locationListener) {
-		super(context, "Creating location");
+		super(context, "Unable to save location.");
 
 		mLocationListener = locationListener;
 

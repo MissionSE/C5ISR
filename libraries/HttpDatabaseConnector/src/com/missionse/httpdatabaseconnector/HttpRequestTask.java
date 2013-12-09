@@ -18,18 +18,27 @@ public abstract class HttpRequestTask extends AsyncTask<String, String, String> 
 	private final Context mContext;
 	private final String mMessage;
 
-	private Toast mConnectionToast;
+	private boolean mError = false;
 	private List<NameValuePair> mParameters = new ArrayList<NameValuePair>();
 	private HttpClientRequester mHttpRequester = new HttpClientRequester();
 
 	/**
-	 * Constructor.
+	 * Constructor used to create a task with no error message.
 	 * @param context The context of the owner of the task.
-	 * @param loadingMessage The message to display while loading.
 	 */
-	public HttpRequestTask(final Context context, final String loadingMessage) {
+	public HttpRequestTask(final Context context) {
 		mContext = context;
-		mMessage = loadingMessage;
+		mMessage = "";
+	}
+
+	/**
+	 * Constructor used to create a task that displays a toast when an error occurs.
+	 * @param context The context of the owner of the task.
+	 * @param errorMessage The message to display while loading.
+	 */
+	public HttpRequestTask(final Context context, final String errorMessage) {
+		mContext = context;
+		mMessage = errorMessage;
 	}
 
 	protected Context getContext() {
@@ -45,22 +54,27 @@ public abstract class HttpRequestTask extends AsyncTask<String, String, String> 
 	}
 
 	protected JSONObject makeGetRequest(final String url) {
-		return mHttpRequester.makeHttpGetRequest(url, mParameters);
+		JSONObject response = mHttpRequester.makeHttpGetRequest(url, mParameters);
+		if (null == response) {
+			mError = true;
+		}
+		return response;
 	}
 
 	protected JSONObject makePostRequest(final String url) {
-		return mHttpRequester.makeHttpPostRequest(url, mParameters);
-	}
-
-	@Override
-	protected void onPreExecute() {
-		super.onPreExecute();
-		mConnectionToast = Toast.makeText(mContext, mMessage, Toast.LENGTH_LONG);
-		mConnectionToast.show();
+		JSONObject response = mHttpRequester.makeHttpPostRequest(url, mParameters);
+		if (null == response) {
+			mError = true;
+		}
+		return response;
 	}
 
 	@Override
 	protected void onPostExecute(final String result) {
-		mConnectionToast.cancel();
+		super.onPostExecute(result);
+
+		if (mError && !mMessage.equals("")) {
+			Toast.makeText(mContext, mMessage, Toast.LENGTH_SHORT).show();
+		}
 	}
 }

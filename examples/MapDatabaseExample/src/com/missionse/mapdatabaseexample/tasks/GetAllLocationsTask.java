@@ -39,7 +39,7 @@ public class GetAllLocationsTask extends HttpRequestTask {
 	 * @param locationListener The listener who cares about the locations.
 	 */
 	public GetAllLocationsTask(final Context context, final MapLocationListener locationListener) {
-		super(context, "Getting list of locations");
+		super(context, "Unable to retrieve list of locations.");
 
 		mLocationListener = locationListener;
 		mLocations = new ArrayList<MapLocation>();

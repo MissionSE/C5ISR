@@ -1,6 +1,7 @@
 package com.missionse.httpdatabaseconnector;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -13,7 +14,6 @@ import android.util.Log;
  * Provides a parser to generate JSON objects.
  */
 public class JSONParser {
-
 	private static final String TAG = JSONParser.class.getName();
 	private static final int BUFFER_SIZE = 8;
 
@@ -41,14 +41,14 @@ public class JSONParser {
 			}
 
 			json = builder.toString();
-		} catch (Exception e) {
-			Log.e(TAG, "Error converting result " + e.toString());
+		} catch (IOException e) {
+			Log.e(TAG, "Error processing input stream: " + e.toString());
 		}
 
 		try {
 			jsonObject = new JSONObject(json);
 		} catch (JSONException e) {
-			Log.e(TAG, "Error parsing data " + e.toString());
+			Log.e(TAG, "Error parsing JSON: " + e.toString());
 		}
 
 		return jsonObject;

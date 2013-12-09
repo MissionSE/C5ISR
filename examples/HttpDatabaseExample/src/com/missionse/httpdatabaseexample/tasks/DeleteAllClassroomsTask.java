@@ -34,7 +34,7 @@ public class DeleteAllClassroomsTask extends HttpRequestTask {
 	 * @param classrooms The list of classrooms.
 	 */
 	public DeleteAllClassroomsTask(final Context context, final ArrayAdapter<Classroom> adapter, final List<Classroom> classrooms) {
-		super(context, "Deleting all classrooms");
+		super(context, "Unable to save deletion.");
 
 		mClassroomListAdapter = adapter;
 		mClassroomList = classrooms;

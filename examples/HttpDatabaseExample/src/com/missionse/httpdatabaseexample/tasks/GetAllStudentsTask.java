@@ -38,7 +38,7 @@ public class GetAllStudentsTask extends HttpRequestTask {
 	 * @param students The list of students.
 	 */
 	public GetAllStudentsTask(final Context context, final ArrayAdapter<Student> adapter, final List<Student> students) {
-		super(context, "Getting list of students");
+		super(context, "Unable to retrieve list of students.");
 
 		mStudentListAdapter = adapter;
 		mStudentList = students;

@@ -29,7 +29,7 @@ public class DeleteLocationTask extends HttpRequestTask {
 	 * @param locationListener The listener who cares about the locations.
 	 */
 	public DeleteLocationTask(final Context context, final MapLocationListener locationListener) {
-		super(context, "Deleting location");
+		super(context, "Unable to save deletion.");
 
 		mLocationListener = locationListener;
 
