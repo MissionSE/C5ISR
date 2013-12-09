@@ -12,6 +12,7 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.missionse.httpdatabaseconnector.HttpRequestTask;
+import com.missionse.mapdatabaseexample.MapDatabaseExampleActivity;
 import com.missionse.mapdatabaseexample.MapLocationListener;
 import com.missionse.mapdatabaseexample.R;
 import com.missionse.mapdatabaseexample.model.MapLocation;
@@ -56,6 +57,12 @@ public class GetAllLocationsTask extends HttpRequestTask {
 	}
 
 	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+		((MapDatabaseExampleActivity) getContext()).setDatabaseConnectionInProgress(true);
+	}
+
+	@Override
 	protected String doInBackground(final String... params) {
 		JSONObject json = makeGetRequest(mGetLocationsURL);
 		if (json != null) {
@@ -88,5 +95,7 @@ public class GetAllLocationsTask extends HttpRequestTask {
 		for (MapLocation location : mLocations) {
 			mLocationListener.locationReceived(location);
 		}
+
+		((MapDatabaseExampleActivity) getContext()).setDatabaseConnectionInProgress(false);
 	}
 }

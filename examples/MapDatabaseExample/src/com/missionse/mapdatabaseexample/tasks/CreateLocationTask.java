@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.missionse.httpdatabaseconnector.HttpRequestTask;
+import com.missionse.mapdatabaseexample.MapDatabaseExampleActivity;
 import com.missionse.mapdatabaseexample.MapLocationListener;
 import com.missionse.mapdatabaseexample.R;
 
@@ -43,6 +44,12 @@ public class CreateLocationTask extends HttpRequestTask {
 		mTagLongitude = resources.getString(R.string.tag_longitude);
 		mCreateLocationURL = resources.getString(R.string.remote_db_path)
 				+ resources.getString(R.string.create_location);
+	}
+
+	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+		((MapDatabaseExampleActivity) getContext()).setDatabaseConnectionInProgress(true);
 	}
 
 	@Override

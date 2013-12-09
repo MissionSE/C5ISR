@@ -274,7 +274,7 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener, OnMarkerClickList
 	@Override
 	public boolean onCreateActionMode(final ActionMode actionMode, final Menu menu) {
 		mActionMode = actionMode;
-		mActionMode.getMenuInflater().inflate(R.menu.map_marker_action_bar, menu);
+		mActionMode.getMenuInflater().inflate(R.menu.actionbar_edit_marker, menu);
 		return true;
 	}
 
