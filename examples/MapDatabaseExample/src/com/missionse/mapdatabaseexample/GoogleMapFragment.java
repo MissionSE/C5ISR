@@ -207,7 +207,10 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener, OnMarkerClickList
 					location.getLongitude())
 							.show(getFragmentManager(), "edit_location");
 		}
-		marker.hideInfoWindow();
+
+		if (mActionMode != null) {
+			mActionMode.finish();
+		}
 	}
 
 	@Override
@@ -277,6 +280,7 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener, OnMarkerClickList
 
 	@Override
 	public void onDestroyActionMode(final ActionMode actionMode) {
+		mSelectedMarker.hideInfoWindow();
 		mSelectedMarker = null;
 	}
 
