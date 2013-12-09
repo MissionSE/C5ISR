@@ -1,37 +1,40 @@
 package com.missionse.mapsexample;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.FragmentBreadCrumbs;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.SearchView;
 import android.widget.Switch;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
-import com.missionse.mapviewer.MapViewerFragment;
-import com.missionse.mapviewer.MiniMapFragment;
-
 /**
  * Example use of the MapViewer library.
  */
-public class MapsExampleActivity extends Activity implements MiniMapFragment.Callbacks {
+public class MapsExampleActivity extends Activity implements
+MiniMapFragment.Callbacks,
+FragmentManager.OnBackStackChangedListener {
 
 	private static final String TAG_MINI_MAP = "mini_map";
 	private static final String TAG_MINI_MAP_TOP_LEFT = "mini_map_top_left";
 	private static final String TAG_MINI_MAP_TOP_RIGHT = "mini_map_top_right";
 	private static final String TAG_MINI_MAP_BOTTOM_RIGHT = "mini_map_bottom_right";
 
-	private MapViewerFragment mMainMapFragment;
+	private MapViewerFragment mMapViewerFragment;
 	private Menu mOptionsMenu;
+
+	private boolean mPauseBackStackWatcher = false;
+
+	private FragmentBreadCrumbs mFragmentBreadCrumbs;
+	
+	private String mSelectedSupplyName;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,29 +50,14 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 				searchView.setQueryRefinementEnabled(true);
 			}
 		}
-		mMainMapFragment.setMyLocationEnabled(menu.findItem(R.id.myLocation).isChecked());
+		mMapViewerFragment.setMyLocationEnabled(menu.findItem(R.id.myLocation).isChecked());
 
 		Switch miniMapSwitch = (Switch) menu.findItem(R.id.showMiniMap).getActionView().findViewById(R.id.mini_map_switch);
 		miniMapSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				FragmentManager fm = getFragmentManager();
-				MiniMapFragment fragment = (MiniMapFragment) fm.findFragmentByTag(TAG_MINI_MAP);
-				if (fragment == null) {
-					Log.d(TAG, "MimiMapFragment does not exist in fragment manager");
-					replaceBottomLeftCornerFragment(fragment, TAG_MINI_MAP);
-				} else {
-					Log.d(TAG, "MimiMapFragment exists in fragment manager");
-					FragmentTransaction ft = getFragmentManager().beginTransaction();
-					ft.setCustomAnimations(R.animator.slide_in, R.animator.slide_out);
-					if (isChecked) {
-						ft.attach(fragment);
-					} else {
-						ft.detach(fragment);
-					}
-					ft.commit();
-				}
+				//TODO
 			}
 		});
 		return true;
@@ -84,15 +72,29 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		FragmentManager fm = getFragmentManager();
-		mMainMapFragment = (MapViewerFragment) fm.findFragmentById(R.id.fragmentContainer);
-		Log.d(TAG, "mMainMapFragement=" + mMainMapFragment);
-		if (mMainMapFragment == null) {
-			Log.d(TAG, "Creating new MapViewerFragment");
-			mMainMapFragment = new MapViewerFragment();
+		fm.addOnBackStackChangedListener(this);
+
+		mFragmentBreadCrumbs = (FragmentBreadCrumbs) findViewById(R.id.breadcrumbs);
+		mFragmentBreadCrumbs.setActivity(this);
+
+		mMapViewerFragment = (MapViewerFragment) fm.findFragmentByTag("map");
+		if (mMapViewerFragment == null) {
+			mMapViewerFragment = new MapViewerFragment();
+			mMapViewerFragment.setArguments(intentToFragmentArguments(getIntent()));
+
 			fm.beginTransaction()
-			.add(R.id.fragmentContainer, mMainMapFragment)
+			.add(R.id.fragment_container_map, mMapViewerFragment, "map")
 			.commit();
 		}
+
+		findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				clearBackStack(false);
+			}
+		});
+
+		updateBreadCrumbs();
+		onConfigurationChanged(getResources().getConfiguration());
 	}
 
 	@Override
@@ -102,12 +104,9 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 		case R.id.menu_search:
 			startSearch(null, false, Bundle.EMPTY, false);
 			return true;
-		case R.id.addMiniMap:
-			addMiniMap();
-			return true;
 		case R.id.myLocation:
 			item.setChecked(enabled);
-			mMainMapFragment.setMyLocationEnabled(enabled);
+			mMapViewerFragment.setMyLocationEnabled(enabled);
 			return true;
 		case R.id.resetMaps:
 			return true;
@@ -120,61 +119,70 @@ public class MapsExampleActivity extends Activity implements MiniMapFragment.Cal
 		}
 	}
 
-	private void addMiniMap() {
+	void updateBreadCrumbs() {
 
-		Fragment miniMapFragment = new MiniMapFragment();
-		if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_TOP_LEFT) == null) {
-			replaceTopLeftCornerFragment(miniMapFragment, TAG_MINI_MAP_TOP_LEFT);
-		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_TOP_RIGHT) == null) {
-			replaceTopRightCornerFragment(miniMapFragment, TAG_MINI_MAP_TOP_RIGHT);
-		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP_BOTTOM_RIGHT) == null) {
-			replaceBottomRightCornerFragment(miniMapFragment, TAG_MINI_MAP_BOTTOM_RIGHT);
-		} else if (getFragmentManager().findFragmentByTag(TAG_MINI_MAP) == null) {
-			replaceBottomLeftCornerFragment(miniMapFragment, TAG_MINI_MAP);
+		if (getFragmentManager().getBackStackEntryCount() >= 2) {
+			mFragmentBreadCrumbs.setParentTitle(mSelectedSupplyName, mSelectedSupplyName,
+					mFragmentBreadCrumbsClickListener);
+			mFragmentBreadCrumbs.setTitle(R.string.title_supply_detail, R.string.title_supply_detail);
+		} else {
+			mFragmentBreadCrumbs.setParentTitle(null, null, null);
+			mFragmentBreadCrumbs.setTitle(mSelectedSupplyName, mSelectedSupplyName);
 		}
 	}
 
-	@Override
-	public void registerOnCameraChangeListener(OnCameraChangeListener listener) {
-		mMainMapFragment.registerOnCameraChangeListener(listener);
+	private View.OnClickListener mFragmentBreadCrumbsClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			getFragmentManager().popBackStack();
+		}
+	};
+
+	private void clearBackStack(boolean pauseWatcher) {
+		if (pauseWatcher) {
+			mPauseBackStackWatcher = true;
+		}
+
+		FragmentManager fm = getFragmentManager();
+		while (fm.getBackStackEntryCount() > 0) {
+			fm.popBackStackImmediate();
+		}
+
+		if (pauseWatcher) {
+			mPauseBackStackWatcher = false;
+		}
 	}
 
-	@Override
-	public void deregisterOnCameraChangeListener(OnCameraChangeListener listener) {
-		mMainMapFragment.deregisterOnCameraChangeListener(listener);
+	public void onBackStackChanged() {
+		if (mPauseBackStackWatcher) {
+			return;
+		}
+
+		if (getFragmentManager().getBackStackEntryCount() == 0) {
+			showDetailPane(false);
+		}
+
+		updateBreadCrumbs();
 	}
 
-	@Override
-	public GoogleMap getMainMap() {
-		return mMainMapFragment.getMainMap();
+	private void showDetailPane(boolean show) {
+		View detailPopup = findViewById(R.id.map_detail_spacer);
+		if (show != (detailPopup.getVisibility() == View.VISIBLE)) {
+			detailPopup.setVisibility(show ? View.VISIBLE : View.GONE);
+
+			updateMapPadding();
+		}
 	}
 
-	private void replaceTopLeftCornerFragment(Fragment fragment, String tag) {
-		replaceCornerFragment(R.id.top_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
-	}
+	private void updateMapPadding() {
+		// Pan the map left or up depending on the orientation.
+		boolean landscape = getResources().getConfiguration().orientation
+		== Configuration.ORIENTATION_LANDSCAPE;
+		boolean detailShown = findViewById(R.id.map_detail_spacer).getVisibility() == View.VISIBLE;
 
-	private void replaceTopRightCornerFragment(Fragment fragment, String tag) {
-		replaceCornerFragment(R.id.top_right_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
-	}
-
-	private void replaceBottomLeftCornerFragment(Fragment fragment, String tag) {
-		replaceCornerFragment(R.id.bottom_left_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
-	}
-
-	private void replaceBottomRightCornerFragment(Fragment fragment, String tag) {
-		replaceCornerFragment(R.id.bottom_right_container, fragment, tag, android.R.animator.fade_in, android.R.animator.fade_out);
-	}
-
-	private void replaceCornerFragment(int containerViewId, Fragment fragment, String tag, int enter, int exit) {
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(containerViewId, fragment, tag);
-		ft.commit();
-	}
-
-	private void removeCornerFragment(Fragment fragment, int enter, int exit) {
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.remove(fragment);
-		ft.commit();
+		mMapViewerFragment.setCenterPadding(
+				landscape ? (detailShown ? 0.25f : 0f) : 0,
+						landscape ? 0 : (detailShown ? 0.25f : 0));
 	}
 
 }

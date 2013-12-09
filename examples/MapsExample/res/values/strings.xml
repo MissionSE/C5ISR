@@ -7,18 +7,17 @@
     <string name="my_location">My Location</string>
     <string name="mini_map">Mini Map</string>
     <string name="reset">Reset</string>
-    
+    <string name="close_detail_pane">Close</string>
+    <string name="title_supply_detail">Supply Information</string>
     <string name="pref_mini_map">Mini Map</string>
     <string name="pref_mini_map_summ">Show mini map in bottom-left corner</string>
-    
     <string name="pref_view_area">View Area</string>
     <string name="pref_view_area_stroke_summ">Show outline around view area</string>
     <string name="pref_view_area_stroke_color">View Area Stroke Color</string>
-    
     <string name="pref_circle">Circles</string>
     <string name="pref_fill_color">Fill Color</string>
     <string name="pref_stroke"> Stroke</string>
     <string name="pref_circle_stroke_summ">Show outline around circles</string>
     <string name="pref_stroke_color">Stroke Color</string>
-    
+
 </resources>

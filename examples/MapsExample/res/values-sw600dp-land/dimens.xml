@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- UI elements -->
+    <dimen name="track_dropdown_width">400dp</dimen>
+    <dimen name="thickbar_height">134dp</dimen>
+
+</resources>

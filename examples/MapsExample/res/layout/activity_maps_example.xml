@@ -1,4 +1,61 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragmentContainer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <FrameLayout
+        android:id="@+id/fragment_container_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/map_detail_spacer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:padding="@dimen/multipane_half_padding"
+        android:visibility="gone"
+        android:weightSum="2" >
+
+        <RelativeLayout
+            android:id="@+id/map_detail_popup"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/multipane_half_padding"
+            android:layout_marginLeft="@dimen/multipane_half_padding"
+            android:layout_marginRight="@dimen/map_multipane_right_padding"
+            android:layout_marginTop="@dimen/multipane_half_padding"
+            android:layout_weight="1"
+            android:background="@drawable/grey_frame_on_white" >
+
+            <ImageButton
+                android:id="@+id/close_button"
+                android:layout_width="@dimen/action_button_min_width"
+                android:layout_height="@dimen/detail_breadcrumb_height"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="?activatableItemBackground"
+                android:contentDescription="@string/close_detail_pane"
+                android:src="@drawable/ic_close" />
+
+            <android.app.FragmentBreadCrumbs
+                android:id="@+id/breadcrumbs"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/detail_breadcrumb_height"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@id/close_button"
+                android:gravity="center_vertical|left"
+                android:paddingLeft="8dp" />
+
+            <FrameLayout
+                android:id="@+id/fragment_container_detail"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/breadcrumbs" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</merge>

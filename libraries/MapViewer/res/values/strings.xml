@@ -1,5 +1,8 @@
 <resources>
 
     <string name="app_name">MapViewer</string>
+    <string name="map_filtercontrol_3">3</string>
+    <string name="map_filtercontrol_2">2</string>
+    <string name="map_filtercontrol_1">1</string>
 
 </resources>
