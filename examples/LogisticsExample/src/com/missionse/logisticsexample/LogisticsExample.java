@@ -56,6 +56,13 @@ public class LogisticsExample extends DrawerActivity {
 		DrawerConfigurationContainer container = new DrawerConfigurationContainer(R.layout.activity_logistics_example,
 				R.id.drawer_layout);
 
+		createNavigationDrawer(container);
+		createNotificationDrawer(container);
+
+		return container;
+	}
+
+	private void createNavigationDrawer(final DrawerConfigurationContainer container) {
 		//Create spinner entries
 		List<String> userAccountSpinnerEntries = new ArrayList<String>();
 		userAccountSpinnerEntries.add("Logged Out");
@@ -70,29 +77,31 @@ public class LogisticsExample extends DrawerActivity {
 				DrawerSimpleItem.create(102, "Supply List", R.drawable.ebooks, true),
 				DrawerSimpleItem.create(103, "History", R.drawable.analytics, true) };
 
-		DrawerConfiguration navDrawerConfiguration = new DrawerConfiguration();
-		navDrawerConfiguration.setDrawer(R.id.nav_drawer);
-		navDrawerConfiguration.setNavItems(menu);
-		navDrawerConfiguration.setDrawerShadow(R.drawable.drawer_shadow);
-		navDrawerConfiguration.setDrawerOpenDesc(R.string.app_name);
-		navDrawerConfiguration.setDrawerCloseDesc(R.string.app_name);
-		navDrawerConfiguration.setBaseAdapter(new DrawerAdapter(this, 0, menu));
+		DrawerConfiguration configuration = new DrawerConfiguration();
+		configuration.setDrawer(R.id.nav_drawer);
+		configuration.setNavItems(menu);
+		configuration.setDrawerShadow(R.drawable.drawer_shadow);
+		configuration.setDrawerOpenDesc(R.string.app_name);
+		configuration.setDrawerCloseDesc(R.string.app_name);
+		configuration.setBaseAdapter(new DrawerAdapter(this, 0, menu));
 
+		container.setConfiguration(DrawerType.LEFT, configuration);
+	}
+
+	private void createNotificationDrawer(final DrawerConfigurationContainer container) {
 		DrawerItem[] notifications = new DrawerItem[] { DrawerSimpleItem.create(101, "Map", R.drawable.places, true),
 				DrawerSimpleItem.create(102, "Supply List", R.drawable.ebooks, true),
 				DrawerSimpleItem.create(103, "History", R.drawable.analytics, true) };
 
-		DrawerConfiguration notifDrawerConfiguration = new DrawerConfiguration();
-		notifDrawerConfiguration.setDrawer(R.id.notif_drawer);
-		notifDrawerConfiguration.setNavItems(notifications);
-		notifDrawerConfiguration.setDrawerShadow(R.drawable.drawer_shadow);
-		notifDrawerConfiguration.setDrawerOpenDesc(R.string.app_name);
-		notifDrawerConfiguration.setDrawerCloseDesc(R.string.app_name);
-		notifDrawerConfiguration.setBaseAdapter(new DrawerAdapter(this, 0, notifications));
+		DrawerConfiguration configuration = new DrawerConfiguration();
+		configuration.setDrawer(R.id.notif_drawer);
+		configuration.setNavItems(notifications);
+		configuration.setDrawerShadow(R.drawable.drawer_shadow);
+		configuration.setDrawerOpenDesc(R.string.app_name);
+		configuration.setDrawerCloseDesc(R.string.app_name);
+		configuration.setBaseAdapter(new DrawerAdapter(this, 0, notifications));
 
-		container.setConfiguration(DrawerType.LEFT, navDrawerConfiguration);
-		container.setConfiguration(DrawerType.RIGHT, notifDrawerConfiguration);
-		return container;
+		container.setConfiguration(DrawerType.RIGHT, configuration);
 	}
 
 	@Override
