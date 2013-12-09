@@ -2,13 +2,13 @@ package com.missionse.uiextensions.navigationdrawer.entry;
 
 import android.widget.TextView;
 
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItemType;
+import com.missionse.uiextensions.navigationdrawer.DrawerItem;
+import com.missionse.uiextensions.navigationdrawer.DrawerItemType;
 
 /**
  * Represents a section header in the Navigation Drawer.
  */
-public final class NavigationDrawerHeader extends NavigationDrawerItem {
+public final class DrawerHeader extends DrawerItem {
 
 	/**
 	 * Tag object holding all widgets necessary to display this item in a NavigationDrawer.
@@ -33,21 +33,21 @@ public final class NavigationDrawerHeader extends NavigationDrawerItem {
 		}
 	}
 
-	public static final NavigationDrawerItemType TYPE = NavigationDrawerItemType.HEADER;
+	public static final DrawerItemType TYPE = DrawerItemType.HEADER;
 
 	private String mLabel;
 
-	private NavigationDrawerHeader() {
+	private DrawerHeader() {
 	}
 
 	/**
 	 * Creates a new Header.
 	 * @param id the id of the header
 	 * @param label the label to display
-	 * @return a new NavigationDrawerHeader
+	 * @return a new DrawerHeader
 	 */
-	public static NavigationDrawerHeader create(final int id, final String label) {
-		NavigationDrawerHeader header = new NavigationDrawerHeader();
+	public static DrawerHeader create(final int id, final String label) {
+		DrawerHeader header = new DrawerHeader();
 		header.setId(id);
 		header.setLabel(label);
 		return header;
@@ -66,7 +66,7 @@ public final class NavigationDrawerHeader extends NavigationDrawerItem {
 	}
 
 	@Override
-	public NavigationDrawerItemType getType() {
+	public DrawerItemType getType() {
 		return TYPE;
 	}
 

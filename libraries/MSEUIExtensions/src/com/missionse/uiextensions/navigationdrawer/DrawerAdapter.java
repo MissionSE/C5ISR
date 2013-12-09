@@ -6,34 +6,34 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 /**
- * Adapter that converts NavigationDrawerItem constructs to Views to be displayed.
+ * Adapter that converts DrawerItem constructs to Views to be displayed.
  */
-public class NavigationDrawerAdapter extends ArrayAdapter<NavigationDrawerItem> {
+public class DrawerAdapter extends ArrayAdapter<DrawerItem> {
 
-	private NavigationDrawerEntryFactory mEntryFactory;
+	private DrawerEntryFactory mEntryFactory;
 
 	/**
-	 * Creates a new NavigationDrawerAdapter.
+	 * Creates a new DrawerAdapter.
 	 * @param context the parent activity's context
 	 * @param resource NOT USED, should be 0
 	 * @param objects the items to display
 	 */
-	public NavigationDrawerAdapter(final Context context, final int resource, final NavigationDrawerItem[] objects) {
+	public DrawerAdapter(final Context context, final int resource, final DrawerItem[] objects) {
 		super(context, resource, objects);
-		mEntryFactory = new NavigationDrawerEntryFactory(context);
+		mEntryFactory = new DrawerEntryFactory(context);
 	}
 
 	@Override
 	public View getView(final int position, final View convertView, final ViewGroup parent) {
 		View view = null;
-		NavigationDrawerItem menuItem = getItem(position);
-		if (menuItem.getType() == NavigationDrawerItemType.SIMPLE) {
+		DrawerItem menuItem = getItem(position);
+		if (menuItem.getType() == DrawerItemType.SIMPLE) {
 			view = mEntryFactory.getSimpleItemView(convertView, parent, menuItem);
-		} else if (menuItem.getType() == NavigationDrawerItemType.HEADER) {
+		} else if (menuItem.getType() == DrawerItemType.HEADER) {
 			view = mEntryFactory.getHeaderView(convertView, parent, menuItem);
-		} else if (menuItem.getType() == NavigationDrawerItemType.DROPDOWN) {
+		} else if (menuItem.getType() == DrawerItemType.DROPDOWN) {
 			view = mEntryFactory.getSpinnerView(convertView, parent, menuItem);
-		} else if (menuItem.getType() == NavigationDrawerItemType.DIVIDER) {
+		} else if (menuItem.getType() == DrawerItemType.DIVIDER) {
 			view = mEntryFactory.getDividerView(convertView, parent, menuItem);
 		}
 		return view;
@@ -41,7 +41,7 @@ public class NavigationDrawerAdapter extends ArrayAdapter<NavigationDrawerItem> 
 
 	@Override
 	public int getViewTypeCount() {
-		return NavigationDrawerItemType.getNumberOfTypes();
+		return DrawerItemType.getNumberOfTypes();
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.missionse.uiextensions.navigationdrawer.configuration;
 
 import android.widget.BaseAdapter;
 
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
+import com.missionse.uiextensions.navigationdrawer.DrawerItem;
 
 /**
  * A container class that holds all configuration options of the Navigation Drawer, used by the DrawerActivity when
@@ -13,7 +13,7 @@ public class DrawerConfiguration {
 	private int mDrawerShadow;
 	private int mDrawer;
 	private int[] mActionMenuItemsToHideWhenDrawerOpen;
-	private NavigationDrawerItem[] mNavigationDrawerItems;
+	private DrawerItem[] mNavigationDrawerItems;
 	private int mDrawerOpenAccessibilityDescription;
 	private int mDrawerCloseAccessibilityDescription;
 	private BaseAdapter mBaseAdapter;
@@ -70,7 +70,7 @@ public class DrawerConfiguration {
 	 * Gets the NavigationDrawerItems to be displayed in the NavigationDrawer.
 	 * @return an array of the items
 	 */
-	public NavigationDrawerItem[] getNavItems() {
+	public DrawerItem[] getNavItems() {
 		return mNavigationDrawerItems;
 	}
 
@@ -78,7 +78,7 @@ public class DrawerConfiguration {
 	 * Sets the NavigationDrawerItems to be displayed in the NavigationDrawer.
 	 * @param navItems an array of the items
 	 */
-	public void setNavItems(final NavigationDrawerItem[] navItems) {
+	public void setNavItems(final DrawerItem[] navItems) {
 		mNavigationDrawerItems = navItems;
 	}
 
@@ -115,7 +115,7 @@ public class DrawerConfiguration {
 	}
 
 	/**
-	 * Gets the adapter to use to translate NavigationDrawerItem structures to Android widgets.
+	 * Gets the adapter to use to translate DrawerItem structures to Android widgets.
 	 * @return the adapter
 	 */
 	public BaseAdapter getBaseAdapter() {
@@ -123,7 +123,7 @@ public class DrawerConfiguration {
 	}
 
 	/**
-	 * Sets the adapter to use to translate NavigationDrawerItem structures to Android widgets.
+	 * Sets the adapter to use to translate DrawerItem structures to Android widgets.
 	 * @param baseAdapter the adapter
 	 */
 	public void setBaseAdapter(final BaseAdapter baseAdapter) {

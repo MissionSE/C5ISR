@@ -2,13 +2,13 @@ package com.missionse.uiextensions.navigationdrawer.entry;
 
 import android.widget.TextView;
 
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItemType;
+import com.missionse.uiextensions.navigationdrawer.DrawerItem;
+import com.missionse.uiextensions.navigationdrawer.DrawerItemType;
 
 /**
  * Represents a section header in the Navigation Drawer.
  */
-public final class NavigationDrawerDivider extends NavigationDrawerItem {
+public final class DrawerDivider extends DrawerItem {
 
 	/**
 	 * Tag object holding all widgets necessary to display this item in a NavigationDrawer.
@@ -33,24 +33,24 @@ public final class NavigationDrawerDivider extends NavigationDrawerItem {
 		}
 	}
 
-	public static final NavigationDrawerItemType TYPE = NavigationDrawerItemType.DIVIDER;
+	public static final DrawerItemType TYPE = DrawerItemType.DIVIDER;
 
-	private NavigationDrawerDivider() {
+	private DrawerDivider() {
 	}
 
 	/**
 	 * Creates a new Divider.
 	 * @param id the id of the divider
-	 * @return a new NavigationDrawerDivider
+	 * @return a new DrawerDivider
 	 */
-	public static NavigationDrawerDivider create(final int id) {
-		NavigationDrawerDivider divider = new NavigationDrawerDivider();
+	public static DrawerDivider create(final int id) {
+		DrawerDivider divider = new DrawerDivider();
 		divider.setId(id);
 		return divider;
 	}
 
 	@Override
-	public NavigationDrawerItemType getType() {
+	public DrawerItemType getType() {
 		return TYPE;
 	}
 

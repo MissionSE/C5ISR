@@ -12,15 +12,15 @@ import android.widget.ArrayAdapter;
 
 import com.google.android.gms.maps.MapFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerAdapter;
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
+import com.missionse.uiextensions.navigationdrawer.DrawerAdapter;
+import com.missionse.uiextensions.navigationdrawer.DrawerItem;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfiguration;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer.DrawerType;
-import com.missionse.uiextensions.navigationdrawer.entry.NavigationDrawerDivider;
-import com.missionse.uiextensions.navigationdrawer.entry.NavigationDrawerHeader;
-import com.missionse.uiextensions.navigationdrawer.entry.NavigationDrawerSimpleItem;
-import com.missionse.uiextensions.navigationdrawer.entry.NavigationDrawerSpinner;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerDivider;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerHeader;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleItem;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerSpinner;
 
 public class LogisticsExample extends DrawerActivity {
 
@@ -63,12 +63,12 @@ public class LogisticsExample extends DrawerActivity {
 		userAccountActionsAdapter = new ArrayAdapter<String>(this, R.layout.nav_drawer_header, R.id.navheader_label,
 				userAccountSpinnerEntries);
 
-		NavigationDrawerItem[] menu = new NavigationDrawerItem[] {
-				NavigationDrawerSpinner.create(001, userAccountActionsAdapter, userAccountActionsListener),
-				NavigationDrawerDivider.create(002), NavigationDrawerHeader.create(100, "Navigation"),
-				NavigationDrawerSimpleItem.create(101, "Map", R.drawable.places, true),
-				NavigationDrawerSimpleItem.create(102, "Supply List", R.drawable.ebooks, true),
-				NavigationDrawerSimpleItem.create(103, "History", R.drawable.analytics, true) };
+		DrawerItem[] menu = new DrawerItem[] {
+				DrawerSpinner.create(001, userAccountActionsAdapter, userAccountActionsListener),
+				DrawerDivider.create(002), DrawerHeader.create(100, "Navigation"),
+				DrawerSimpleItem.create(101, "Map", R.drawable.places, true),
+				DrawerSimpleItem.create(102, "Supply List", R.drawable.ebooks, true),
+				DrawerSimpleItem.create(103, "History", R.drawable.analytics, true) };
 
 		DrawerConfiguration navDrawerConfiguration = new DrawerConfiguration();
 		navDrawerConfiguration.setDrawer(R.id.nav_drawer);
@@ -76,12 +76,11 @@ public class LogisticsExample extends DrawerActivity {
 		navDrawerConfiguration.setDrawerShadow(R.drawable.drawer_shadow);
 		navDrawerConfiguration.setDrawerOpenDesc(R.string.app_name);
 		navDrawerConfiguration.setDrawerCloseDesc(R.string.app_name);
-		navDrawerConfiguration.setBaseAdapter(new NavigationDrawerAdapter(this, 0, menu));
+		navDrawerConfiguration.setBaseAdapter(new DrawerAdapter(this, 0, menu));
 
-		NavigationDrawerItem[] notifications = new NavigationDrawerItem[] {
-				NavigationDrawerSimpleItem.create(101, "Map", R.drawable.places, true),
-				NavigationDrawerSimpleItem.create(102, "Supply List", R.drawable.ebooks, true),
-				NavigationDrawerSimpleItem.create(103, "History", R.drawable.analytics, true) };
+		DrawerItem[] notifications = new DrawerItem[] { DrawerSimpleItem.create(101, "Map", R.drawable.places, true),
+				DrawerSimpleItem.create(102, "Supply List", R.drawable.ebooks, true),
+				DrawerSimpleItem.create(103, "History", R.drawable.analytics, true) };
 
 		DrawerConfiguration notifDrawerConfiguration = new DrawerConfiguration();
 		notifDrawerConfiguration.setDrawer(R.id.notif_drawer);
@@ -89,7 +88,7 @@ public class LogisticsExample extends DrawerActivity {
 		notifDrawerConfiguration.setDrawerShadow(R.drawable.drawer_shadow);
 		notifDrawerConfiguration.setDrawerOpenDesc(R.string.app_name);
 		notifDrawerConfiguration.setDrawerCloseDesc(R.string.app_name);
-		notifDrawerConfiguration.setBaseAdapter(new NavigationDrawerAdapter(this, 0, notifications));
+		notifDrawerConfiguration.setBaseAdapter(new DrawerAdapter(this, 0, notifications));
 
 		container.setConfiguration(DrawerType.LEFT, navDrawerConfiguration);
 		container.setConfiguration(DrawerType.RIGHT, notifDrawerConfiguration);

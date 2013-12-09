@@ -170,7 +170,7 @@ public abstract class DrawerActivity extends Activity {
 	 * @param position the position
 	 */
 	public void selectLeftItem(final int position) {
-		NavigationDrawerItem selectedItem = mDrawerConfigurations.getLeftConfiguration().getNavItems()[position];
+		DrawerItem selectedItem = mDrawerConfigurations.getLeftConfiguration().getNavItems()[position];
 
 		onNavigationItemSelected(selectedItem.getId());
 		mLeftDrawerList.setItemChecked(position, true);
@@ -189,7 +189,7 @@ public abstract class DrawerActivity extends Activity {
 	 * @param position the position
 	 */
 	public void selectRightItem(final int position) {
-		NavigationDrawerItem selectedItem = mDrawerConfigurations.getRightConfiguration().getNavItems()[position];
+		DrawerItem selectedItem = mDrawerConfigurations.getRightConfiguration().getNavItems()[position];
 
 		onNavigationItemSelected(selectedItem.getId());
 		mRightDrawerList.setItemChecked(position, true);

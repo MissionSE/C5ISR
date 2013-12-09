@@ -3,17 +3,17 @@ package com.missionse.uiextensions.navigationdrawer.entry;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItemType;
+import com.missionse.uiextensions.navigationdrawer.DrawerItem;
+import com.missionse.uiextensions.navigationdrawer.DrawerItemType;
 
 /**
  * Represents a basic menu item for the Navigation Drawer. Typically selects new fragments or activities. Includes an
  * icon, and text.
  */
-public final class NavigationDrawerSimpleItem extends NavigationDrawerItem {
+public final class DrawerSimpleItem extends DrawerItem {
 
 	/**
-	 * The Tag to hold all widget information needed to display a NavigationDrawerSimpleItem.
+	 * The Tag to hold all widget information needed to display a DrawerSimpleItem.
 	 */
 	public static class Holder {
 		private TextView mLabel;
@@ -52,25 +52,25 @@ public final class NavigationDrawerSimpleItem extends NavigationDrawerItem {
 		}
 	}
 
-	public static final NavigationDrawerItemType TYPE = NavigationDrawerItemType.SIMPLE;
+	public static final DrawerItemType TYPE = DrawerItemType.SIMPLE;
 	private String mLabel;
 	private int mIcon;
 	private boolean mWillChangeActionBarTitle;
 
-	private NavigationDrawerSimpleItem() {
+	private DrawerSimpleItem() {
 	}
 
 	/**
-	 * Creates a new NavigationDrawerSimpleItem.
+	 * Creates a new DrawerSimpleItem.
 	 * @param id the id of the new SimpleItem
 	 * @param label the label to display
 	 * @param iconResource the icon, if available, to display. Use -1 for no icon
 	 * @param updateActionBarTitle whether or not this item should update the ActionBar title when selected
-	 * @return a new NavigationDrawerSimpleItem
+	 * @return a new DrawerSimpleItem
 	 */
-	public static NavigationDrawerSimpleItem create(final int id, final String label, final int iconResource,
+	public static DrawerSimpleItem create(final int id, final String label, final int iconResource,
 			final boolean updateActionBarTitle) {
-		NavigationDrawerSimpleItem item = new NavigationDrawerSimpleItem();
+		DrawerSimpleItem item = new DrawerSimpleItem();
 		item.setId(id);
 		item.setLabel(label);
 		item.setIcon(iconResource);
@@ -91,7 +91,7 @@ public final class NavigationDrawerSimpleItem extends NavigationDrawerItem {
 	}
 
 	@Override
-	public NavigationDrawerItemType getType() {
+	public DrawerItemType getType() {
 		return TYPE;
 	}
 

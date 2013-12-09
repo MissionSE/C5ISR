@@ -3,7 +3,7 @@ package com.missionse.uiextensions.navigationdrawer;
 /**
  * A base Navigation Drawer item.
  */
-public abstract class NavigationDrawerItem {
+public abstract class DrawerItem {
 
 	private int mId;
 
@@ -27,7 +27,7 @@ public abstract class NavigationDrawerItem {
 	 * Returns the type of this item.
 	 * @return the type
 	 */
-	public abstract NavigationDrawerItemType getType();
+	public abstract DrawerItemType getType();
 
 	/**
 	 * Returns whether or not this item is able to be selected.

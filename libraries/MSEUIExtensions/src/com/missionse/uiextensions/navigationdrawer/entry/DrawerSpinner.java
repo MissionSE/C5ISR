@@ -4,16 +4,16 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItem;
-import com.missionse.uiextensions.navigationdrawer.NavigationDrawerItemType;
+import com.missionse.uiextensions.navigationdrawer.DrawerItem;
+import com.missionse.uiextensions.navigationdrawer.DrawerItemType;
 
 /**
  * Represents a Spinner widget in a Navigation Drawer.
  */
-public final class NavigationDrawerSpinner extends NavigationDrawerItem {
+public final class DrawerSpinner extends DrawerItem {
 
 	/**
-	 * Tag object holding all necessary widgets to display this NavigationDrawerSpinner.
+	 * Tag object holding all necessary widgets to display this DrawerSpinner.
 	 */
 	public static class Holder {
 		private Spinner mSpinner;
@@ -35,23 +35,23 @@ public final class NavigationDrawerSpinner extends NavigationDrawerItem {
 		}
 	}
 
-	public static final NavigationDrawerItemType TYPE = NavigationDrawerItemType.DROPDOWN;
+	public static final DrawerItemType TYPE = DrawerItemType.DROPDOWN;
 	private ArrayAdapter<String> mAdapter;
 	private OnItemSelectedListener mListener;
 
-	private NavigationDrawerSpinner() {
+	private DrawerSpinner() {
 	}
 
 	/**
-	 * Creates a new NavigationDrawerSpinner.
+	 * Creates a new DrawerSpinner.
 	 * @param id the id of this item
 	 * @param adapter the adapter that will determine what items to show in the spinner
 	 * @param listener the listener notified of item selection in the spinner
-	 * @return a new NavigationDrawerSpinner
+	 * @return a new DrawerSpinner
 	 */
-	public static NavigationDrawerSpinner create(final int id, final ArrayAdapter<String> adapter,
+	public static DrawerSpinner create(final int id, final ArrayAdapter<String> adapter,
 			final OnItemSelectedListener listener) {
-		NavigationDrawerSpinner spinner = new NavigationDrawerSpinner();
+		DrawerSpinner spinner = new DrawerSpinner();
 		spinner.setId(id);
 		spinner.setAdapter(adapter);
 		spinner.setListener(listener);
@@ -83,7 +83,7 @@ public final class NavigationDrawerSpinner extends NavigationDrawerItem {
 	}
 
 	@Override
-	public NavigationDrawerItemType getType() {
+	public DrawerItemType getType() {
 		return TYPE;
 	}
 
