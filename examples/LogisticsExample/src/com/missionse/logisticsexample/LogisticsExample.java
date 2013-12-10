@@ -99,7 +99,7 @@ public class LogisticsExample extends DrawerActivity {
 		DrawerConfiguration configuration = new DrawerConfiguration();
 		configuration.setDrawer(R.id.nav_drawer);
 		configuration.setNavigationItems(menu);
-		configuration.setDrawerShadow(R.drawable.drawer_shadow);
+		configuration.setDrawerShadow(R.drawable.drawer_shadow_left);
 		configuration.setDrawerOpenDesc(R.string.app_name);
 		configuration.setDrawerCloseDesc(R.string.app_name);
 		configuration.setBaseAdapter(new DrawerAdapter(this, 0, menu));
@@ -116,7 +116,7 @@ public class LogisticsExample extends DrawerActivity {
 		DrawerConfiguration configuration = new DrawerConfiguration();
 		configuration.setDrawer(R.id.notif_drawer);
 		configuration.setNavigationItems(notifications);
-		configuration.setDrawerShadow(R.drawable.drawer_shadow);
+		configuration.setDrawerShadow(R.drawable.drawer_shadow_right);
 		configuration.setDrawerOpenDesc(R.string.app_name);
 		configuration.setDrawerCloseDesc(R.string.app_name);
 		rightDrawerAdapter = new DrawerAdapter(this, 0, notifications);
