@@ -33,9 +33,7 @@
                 android:layout_height="@dimen/detail_breadcrumb_height"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:background="?activatableItemBackground"
-                android:contentDescription="@string/close_detail_pane"
-                android:src="@drawable/ic_close" />
+                android:contentDescription="@string/close_detail_pane" />
 
             <android.app.FragmentBreadCrumbs
                 android:id="@+id/breadcrumbs"

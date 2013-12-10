@@ -2,23 +2,45 @@ package com.missionse.mapviewer;
 
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
+import android.provider.ContactsContract.Contacts;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,27 +48,27 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
-import com.google.android.apps.iosched.R;
-import com.google.android.apps.iosched.ui.MapFragment.MarkerModel;
-import com.google.android.apps.iosched.ui.MapFragment.MarkerQuery;
-import com.google.android.apps.iosched.util.MapUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.Projection;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
 
 /**
  * Creates a full screen {@link GoogleMap} view with the ability to overlay
@@ -60,10 +82,16 @@ LocationListener,
 GooglePlayServicesClient.ConnectionCallbacks,
 GooglePlayServicesClient.OnConnectionFailedListener,
 GoogleMap.OnCameraChangeListener, 
-GoogleMap.OnInfoWindowClickListener {
+GoogleMap.OnInfoWindowClickListener,
+LoaderCallbacks<Cursor> {
 
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
 
+	private static final String PREF_VIEW_AREA_FILL_COLOR = "pref_view_area_fill_color";
+	private static final String PREF_VIEW_AREA_STROKE = "pref_view_area_stroke";
+	private static final String PREF_VIEW_AREA_STROKE_COLOR = "pref_view_area_stroke_color";
+	private static final int DEF_VIEW_AREA_COLOR = Color.argb(150, 0, 0, 0);
+	private static final int DEF_SCREEN_RATIO = 3;
 	private static final int DEF_FILL_COLOR = Color.argb(150, 0, 0, 0);
 	private static final float DEF_STROKE = 2f;
 	private static final float NO_STROKE = 0f;
@@ -72,7 +100,8 @@ GoogleMap.OnInfoWindowClickListener {
 	private static final String PREF_CIRCLE_STROKE_COLOR = "pref_circle_stroke_color";
 	private static final long DEF_LOCATION_REQUEST_INTERVAL = 5000; // 5 seconds
 	private static final long DEF_FASTEST_REQUEST_INTERVAL = 16; // 16ms = 60fps
-
+	private static final String GEOCODE_BASE_URL = "http://maps.googleapis.com/maps/api/geocode/xml?address=";
+	private static final String GEOCODE_SENSOR_URL = "&sensor=true";
 
 	/*
 	 * These settings are the same as the settings for the map. They will in
@@ -96,7 +125,7 @@ GoogleMap.OnInfoWindowClickListener {
 	}
 
 	private MapView mMapOverview;
-
+	private Polygon mOverviewPolygon;
 	private LocationClient mLocationClient;
 	private GoogleMap mMainMap;
 	private GoogleMap mMiniMap;
@@ -105,14 +134,14 @@ GoogleMap.OnInfoWindowClickListener {
 	private Set<GoogleMap.OnCameraChangeListener> mCameraListeners = new HashSet<GoogleMap.OnCameraChangeListener>();
 
 	private ArrayList<Button> mFilterButtons = new ArrayList<Button>();
-	private View mFilterControls;
+	private LinearLayout mFilterControls;
 
 	// Markers stored by id
 	private HashMap<String, MarkerModel> mMarkers = null;
 	// Markers stored by floor
 	private ArrayList<ArrayList<Marker>> mMarkersFilter = null;
 
-	private boolean mMarkersLoaded = false;
+	private boolean mMarkersLoaded = true;
 
 	// Cached size of view
 	private int mWidth, mHeight;
@@ -141,7 +170,7 @@ GoogleMap.OnInfoWindowClickListener {
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-
+		setRetainInstance(true);
 		clearMap();
 
 		// get DPI
@@ -149,9 +178,6 @@ GoogleMap.OnInfoWindowClickListener {
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
-		//TODO need to instantiate
-		//		mMapOverview = findViewById(R.id.map_overview); 
-		mMapOverview.onCreate(savedInstanceState);
 	}
 
 	@Override
@@ -163,7 +189,14 @@ GoogleMap.OnInfoWindowClickListener {
 
 		layout.addView(mapView, 0);
 
-		mFilterControls = layout.findViewById(R.id.map_filtercontrol);
+		mMapOverview = (MapView) v.findViewById(R.id.map_overview);
+		mMapOverview.onCreate(savedInstanceState);
+		//		View containerParentView = (View) container.getParent();
+		//		mMapOverview.setLayoutParams(new FrameLayout.LayoutParams(
+		//				containerParentView.getWidth() / DEF_SCREEN_RATIO, 
+		//				containerParentView.getHeight() / DEF_SCREEN_RATIO));
+		//		
+		mFilterControls = (LinearLayout) layout.findViewById(R.id.map_filtercontrols);
 
 		// setup filter button handlers
 		mFilterButtons.add((Button) v.findViewById(R.id.map_filter1));
@@ -188,6 +221,7 @@ GoogleMap.OnInfoWindowClickListener {
 					@SuppressLint("NewApi")
 					@Override
 					public void onGlobalLayout() {
+						Log.d(TAG, "In onGlobalLayout...");
 						final View v = getView();
 						mHeight = v.getHeight();
 						mWidth = v.getWidth();
@@ -207,6 +241,12 @@ GoogleMap.OnInfoWindowClickListener {
 				});
 
 		setUpMapIfNeeded();
+
+		// load all markers
+		LoaderManager lm = getActivity().getLoaderManager();
+		lm.initLoader(StructuredPostal.TYPE_HOME, null, this);
+//		lm.initLoader(StructuredPostal.TYPE_WORK, null, this);
+//		lm.initLoader(StructuredPostal.TYPE_OTHER, null, this);
 
 		return v;
 	}
@@ -298,54 +338,6 @@ GoogleMap.OnInfoWindowClickListener {
 
 	}
 
-	// Loaders
-    private void onMarkerLoaderComplete(Cursor cursor) {
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                // get data
-                String id = cursor.getString(MarkerQuery.MARKER_ID);
-                int floor = cursor.getInt(MarkerQuery.MARKER_FLOOR);
-                float lat = cursor.getFloat(MarkerQuery.MARKER_LATITUDE);
-                float lon = cursor.getFloat(MarkerQuery.MARKER_LONGITUDE);
-                String type = cursor.getString(MarkerQuery.MARKER_TYPE);
-                String label = cursor.getString(MarkerQuery.MARKER_LABEL);
-                String track = cursor.getString(MarkerQuery.MARKER_TRACK);
-
-                BitmapDescriptor icon = null;
-                if (TYPE_SESSION.equals(type)) {
-                    icon = BitmapDescriptorFactory.fromResource(R.drawable.marker_session);
-                } else if (TYPE_SANDBOX.equals(type)) {
-                    icon = BitmapDescriptorFactory.fromResource(R.drawable.marker_sandbox);
-                } else if (TYPE_LABEL.equals(type)) {
-                    Bitmap b = MapUtils.createTextLabel(label, mDPI);
-                    if (b != null) {
-                        icon = BitmapDescriptorFactory.fromBitmap(b);
-                    }
-                }
-
-                // add marker to map
-                if (icon != null) {
-                    Marker m = mMainMap.addMarker(
-                            new MarkerOptions().position(new LatLng(lat, lon)).title(id)
-                                    .snippet(type).icon(icon)
-                                    .visible(false));
-
-                    MarkerModel model = new MarkerModel(id, floor, type, label, track, m);
-
-                    mMarkersFloor.get(floor).add(m);
-                    mMarkers.put(id, model);
-                }
-
-                cursor.moveToNext();
-            }
-            // no more markers to load
-            mMarkersLoaded = true;
-            enableFloors();
-        }
-
-    }
-
 	@Override
 	public void onConnected(Bundle arg0) {
 		mLocationClient.requestLocationUpdates(REQUEST, this); // LocationListener
@@ -428,6 +420,7 @@ GoogleMap.OnInfoWindowClickListener {
 	@Override
 	public void onPause() {
 		super.onPause();
+		mMapOverview.onPause();
 		//		mPrefs.unregisterOnSharedPreferenceChangeListener(this);
 		if (mLocationClient != null) {
 			mLocationClient.disconnect();
@@ -437,18 +430,43 @@ GoogleMap.OnInfoWindowClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		mMapOverview.onResume();
 		//		mPrefs.registerOnSharedPreferenceChangeListener(this);
 		setUpMapIfNeeded();
+	}
+
+	@Override
+	public void onDestroy() {
+		mMapOverview.onDestroy();
+		super.onDestroy();
+	}
+
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		mMapOverview.onLowMemory();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		mMapOverview.onSaveInstanceState(outState);
 	}
 
 	private void setUpMapIfNeeded() {
 		// Do a null check to confirm that we have not already instantiated the map.
 		if (mMainMap == null) {
 			// Try to obtain the map from the SupportMapFragment.
-			mMainMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
+			mMainMap = getMap();
 			// Check if we were successful in obtaining the map.
 			if (mMainMap != null) {
 				setUpMap();
+			}
+		}
+		if (mMiniMap == null) {
+			mMiniMap = mMapOverview.getMap();
+			if (mMiniMap != null) {
+				setUpOverviewMap();
 			}
 		}
 	}
@@ -456,6 +474,9 @@ GoogleMap.OnInfoWindowClickListener {
 	private void setUpMap() {		
 		mMainMap.setMapType(MAP_TYPE_HYBRID);
 		mMainMap.setOnCameraChangeListener(this);
+
+		UiSettings settings = mMainMap.getUiSettings();
+		settings.setZoomControlsEnabled(false);
 
 		int fillColor = mPrefs.getInt(PREF_CIRCLE_FILL_COLOR, DEF_FILL_COLOR);
 		int strokeColor = mPrefs.getInt(PREF_CIRCLE_STROKE_COLOR, Color.BLACK);
@@ -465,6 +486,39 @@ GoogleMap.OnInfoWindowClickListener {
 		} else {
 			strokeWidth = NO_STROKE;
 		}
+	}
+
+	private void setUpOverviewMap() {
+		UiSettings settings = mMiniMap.getUiSettings();
+
+		settings.setCompassEnabled(false);
+		settings.setZoomControlsEnabled(false);
+
+		mMiniMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+			@Override
+			public void onMapClick(LatLng latLng) {
+				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latLng);
+				mMainMap.animateCamera(cameraUpdate);
+			}
+		});
+
+		int fillColor = mPrefs.getInt(PREF_VIEW_AREA_FILL_COLOR, DEF_VIEW_AREA_COLOR);
+
+		float strokeWidth;
+		if (mPrefs.getBoolean(PREF_VIEW_AREA_STROKE, false)) {
+			strokeWidth = DEF_STROKE;
+		} else {
+			strokeWidth = NO_STROKE;
+		}
+
+		int strokeColor = mPrefs.getInt(PREF_VIEW_AREA_STROKE_COLOR, DEF_VIEW_AREA_COLOR);
+
+		mOverviewPolygon = mMiniMap.addPolygon(new PolygonOptions()
+		.addAll(getMainViewRegionPoints())
+		.fillColor(fillColor)
+		.strokeWidth(strokeWidth)
+		.strokeColor(strokeColor));
 	}
 
 	/**
@@ -492,10 +546,11 @@ GoogleMap.OnInfoWindowClickListener {
 	}
 
 	@Override
-	public void onCameraChange(CameraPosition arg0) {
+	public void onCameraChange(CameraPosition cameraPosition) {
+		animateZoomedView(cameraPosition);
 		synchronized (mCameraListeners) {
 			for (GoogleMap.OnCameraChangeListener listener : mCameraListeners) {
-				listener.onCameraChange(arg0);
+				listener.onCameraChange(cameraPosition);
 			}
 		}
 	}
@@ -517,4 +572,213 @@ GoogleMap.OnInfoWindowClickListener {
 		}
 	}
 
+	private void animateZoomedView(CameraPosition mainMapCameraPosition) {
+
+		final float maxZoomDiff = 6f;
+		final float minZoomDiff = 2f;
+		final float aveZoomDiff = 4f;
+		float zoomDiff = mainMapCameraPosition.zoom - mMiniMap.getCameraPosition().zoom;
+		if (zoomDiff > maxZoomDiff || zoomDiff < minZoomDiff) {
+			mMiniMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mainMapCameraPosition.target, 
+					mainMapCameraPosition.zoom - aveZoomDiff),
+					new GoogleMap.CancelableCallback() {
+
+				@Override
+				public void onFinish() {
+					boundZoomedView();
+				}
+
+				@Override
+				public void onCancel() {
+					// Do nothing.
+				}
+
+			});
+		} else {
+			boundZoomedView();
+		}
+
+		mOverviewPolygon.setPoints(getMainViewRegionPoints());
+	}
+
+	private void boundZoomedView() {
+		boolean adjustMap = false;
+
+		LatLngBounds boundsMapRight = mMainMap.getProjection().getVisibleRegion().latLngBounds;
+		LatLngBounds boundsMapLeft = mMiniMap.getProjection().getVisibleRegion().latLngBounds;
+
+		LatLng swMapRight = boundsMapRight.southwest;
+		LatLng swMapLeft = boundsMapLeft.southwest;
+
+		LatLng neMapRight = boundsMapRight.northeast;
+		LatLng neMapLeft = boundsMapLeft.northeast;
+
+		double diff;
+		if (swMapLeft.latitude > swMapRight.latitude) {
+			diff = swMapLeft.latitude - swMapRight.latitude;
+			swMapLeft = new LatLng(swMapRight.latitude, swMapLeft.longitude);
+			neMapLeft = new LatLng(neMapLeft.latitude - diff, neMapLeft.longitude);
+			adjustMap = true;
+		} else if (neMapRight.latitude > neMapLeft.latitude) {
+			diff = neMapRight.latitude - neMapLeft.latitude;
+			neMapLeft = new LatLng(neMapRight.latitude, neMapLeft.longitude);
+			swMapLeft = new LatLng(swMapLeft.latitude + diff, swMapLeft.longitude);
+			adjustMap = true;
+		}
+
+		if (swMapLeft.longitude > swMapRight.longitude) {
+			diff = swMapLeft.longitude - swMapRight.longitude;
+			swMapLeft = new LatLng(swMapLeft.latitude, swMapRight.longitude);
+			neMapLeft = new LatLng(neMapLeft.latitude, neMapLeft.longitude - diff);
+			adjustMap = true;
+		} else if (neMapRight.longitude > neMapLeft.longitude) {
+			diff = neMapRight.longitude - neMapLeft.longitude;
+			neMapLeft = new LatLng(neMapLeft.latitude, neMapRight.longitude);
+			swMapLeft = new LatLng(swMapLeft.latitude, swMapLeft.longitude + diff);
+			adjustMap = true;
+		}
+
+		if (adjustMap) {
+			mMiniMap.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(swMapLeft, neMapLeft), 0));
+		}
+	}
+
+	private List<LatLng> getMainViewRegionPoints() {
+		final VisibleRegion mainVR = mMainMap.getProjection().getVisibleRegion();
+		final List<LatLng> mainVRpoints = new ArrayList<LatLng>();
+		mainVRpoints.add(mainVR.farLeft);
+		mainVRpoints.add(mainVR.farRight);
+		mainVRpoints.add(mainVR.nearRight);
+		mainVRpoints.add(mainVR.nearLeft);
+
+		return mainVRpoints;
+	}
+
+	// These are the Contacts rows that we will retrieve.
+	static final String[] CONTACTS_SUMMARY_PROJECTION = new String[] {
+		Contacts._ID,
+		Contacts.DISPLAY_NAME,
+		Contacts.CONTACT_STATUS,
+		Contacts.LOOKUP_KEY,
+		StructuredPostal.FORMATTED_ADDRESS
+	};
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		// This is called when a new Loader needs to be created. This
+		// sample only has one Loader, so we don't care about the ID.
+		// First, pick the base URI to use depending on whether we are
+		// currently filtering.
+		Uri baseUri = ContactsContract.Data.CONTENT_URI;
+
+		int type = id;
+		// Now create and return a CursorLoader that will take care of
+		// creating a Cursor for the data being displayed.
+		String select = "((" + Contacts.DISPLAY_NAME + " NOTNULL) AND ("
+				+ StructuredPostal.CITY + " NOTNULL) AND ("
+				+ Contacts.DISPLAY_NAME + " != '') AND (" 
+				+ StructuredPostal.TYPE + " = " + type + "))";
+
+		return new CursorLoader(getActivity(), baseUri,
+				null, select, null, null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		if (cursor != null && cursor.getCount() > 0) {
+			int type = loader.getId();
+
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				// get data
+				String address = cursor.getString(cursor.getColumnIndex(StructuredPostal.FORMATTED_ADDRESS));
+				address = address.replace("\n", "+");
+				address = address.replace(" ", "+");
+				String name = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
+				
+				try {
+					Log.d(TAG, "name=" + name);
+					Log.d(TAG, "address=" + address);
+					String urlString = GEOCODE_BASE_URL + address + GEOCODE_SENSOR_URL;
+					Log.d(TAG, "urlString=" + urlString);
+					JSONObject json = getJson(urlString);
+					Log.d(TAG, "json=" + json);
+//					JSONArray jsonArray = new JSONArray(page);
+//					for (int i = 0 ; i < jsonArray.length(); i++ ) {
+//						JSONObject entry = (JSONObject) jsonArray.get(i);
+//						
+//					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Log.e(TAG, e.toString());
+				}
+
+//				Marker m = mMainMap.addMarker(
+//						new MarkerOptions().position(new LatLng(lat, lon)).title(id)
+//						.snippet(type).icon(icon)
+//						.visible(false));
+//
+//				MarkerModel model = new MarkerModel(id, floor, type, label, track, m);
+//
+//				mMarkersFloor.get(floor).add(m);
+//				mMarkers.put(id, model);
+				cursor.moveToNext();
+			}
+			// no more markers to load
+			mMarkersLoaded = true;
+			enableMarkers();
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+public static JSONObject getJson(String url){
+		
+		InputStream is = null;
+		String result = "";
+		JSONObject jsonObject = null;
+		
+		// HTTP
+		try {	    	
+			HttpClient httpclient = new DefaultHttpClient(); // for port 80 requests!
+			HttpGet httppost = new HttpGet(url);
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+			is = entity.getContent();
+		} catch(Exception e) {
+			Log.e(TAG, "Error in HTTP Client", e);
+			return null;
+		}
+	    
+		// Read response to string
+		try {	    	
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is,"utf-8"),8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();	            
+		} catch(Exception e) {
+			Log.e(TAG, "Error reading buffer", e);
+			return null;
+		}
+ 
+		// Convert string to object
+		Log.d(TAG, "result=" + result);
+		try {
+			jsonObject = new JSONObject(result);            
+		} catch(JSONException e) {
+			Log.e(TAG, "Error converting to jsonobject", e);
+			return null;
+		}
+    
+		return jsonObject;
+ 
+	}
 }

@@ -15,11 +15,13 @@ import android.widget.CompoundButton;
 import android.widget.SearchView;
 import android.widget.Switch;
 
+import com.missionse.mapviewer.MapViewerFragment;
+
 /**
  * Example use of the MapViewer library.
  */
 public class MapsExampleActivity extends Activity implements
-MiniMapFragment.Callbacks,
+MapViewerFragment.Callbacks,
 FragmentManager.OnBackStackChangedListener {
 
 	private static final String TAG_MINI_MAP = "mini_map";
@@ -80,7 +82,7 @@ FragmentManager.OnBackStackChangedListener {
 		mMapViewerFragment = (MapViewerFragment) fm.findFragmentByTag("map");
 		if (mMapViewerFragment == null) {
 			mMapViewerFragment = new MapViewerFragment();
-			mMapViewerFragment.setArguments(intentToFragmentArguments(getIntent()));
+//			mMapViewerFragment.setArguments(intentToFragmentArguments(getIntent()));
 
 			fm.beginTransaction()
 			.add(R.id.fragment_container_map, mMapViewerFragment, "map")
@@ -122,9 +124,10 @@ FragmentManager.OnBackStackChangedListener {
 	void updateBreadCrumbs() {
 
 		if (getFragmentManager().getBackStackEntryCount() >= 2) {
+			String title = getString(R.string.title_supply_detail);
 			mFragmentBreadCrumbs.setParentTitle(mSelectedSupplyName, mSelectedSupplyName,
 					mFragmentBreadCrumbsClickListener);
-			mFragmentBreadCrumbs.setTitle(R.string.title_supply_detail, R.string.title_supply_detail);
+			mFragmentBreadCrumbs.setTitle(title, title);
 		} else {
 			mFragmentBreadCrumbs.setParentTitle(null, null, null);
 			mFragmentBreadCrumbs.setTitle(mSelectedSupplyName, mSelectedSupplyName);
@@ -183,6 +186,12 @@ FragmentManager.OnBackStackChangedListener {
 		mMapViewerFragment.setCenterPadding(
 				landscape ? (detailShown ? 0.25f : 0f) : 0,
 						landscape ? 0 : (detailShown ? 0.25f : 0));
+	}
+
+	@Override
+	public void onLocationSelected(String locationId, String locationTitle) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
