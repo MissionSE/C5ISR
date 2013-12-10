@@ -1,7 +1,6 @@
 package com.missionse.mapdatabaseexample;
 
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -41,7 +40,6 @@ import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
 /**
  * Provides a fragment that displays a map.
  */
-@SuppressLint("UseSparseArrays")
 public class GoogleMapFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
 LocationListener, OnMapLongClickListener, OnInfoWindowClickListener,
 OnMarkerDragListener, ActionMode.Callback, OnMapClickListener, OnMarkerClickListener {

@@ -3,6 +3,7 @@ package com.missionse.logisticsexample;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -11,7 +12,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.google.android.gms.maps.MapFragment;
+import com.missionse.logisticsexample.map.LogisticsMap;
+import com.missionse.logisticsexample.map.MapViewerFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.DrawerAdapter;
 import com.missionse.uiextensions.navigationdrawer.DrawerItem;
@@ -26,9 +28,11 @@ import com.missionse.uiextensions.navigationdrawer.entry.DrawerSpinner;
 import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
 
 public class LogisticsExample extends DrawerActivity {
-
 	private ArrayAdapter<String> userAccountActionsAdapter;
 	private DrawerAdapter rightDrawerAdapter;
+
+	private LogisticsMap mLogisticsMap;
+	private MapViewerFragment mMapViewerFragment;
 
 	private OnItemSelectedListener userAccountActionsListener = new OnItemSelectedListener() {
 		@Override
@@ -38,15 +42,26 @@ public class LogisticsExample extends DrawerActivity {
 
 		@Override
 		public void onNothingSelected(final AdapterView<?> parent) {
-			//Nothing to do.
 		}
 	};
+
+	public LogisticsExample() {
+		mLogisticsMap = new LogisticsMap(this);
+	}
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getFragmentManager().beginTransaction().replace(R.id.content, new MapFragment()).commit();
+		FragmentManager fragmentManager = getFragmentManager();
+		mMapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
+		if (mMapViewerFragment == null) {
+			mMapViewerFragment = new MapViewerFragment();
+			mMapViewerFragment.setMapLoadedListener(mLogisticsMap);
+			fragmentManager.beginTransaction()
+					.add(R.id.content, mMapViewerFragment, "map")
+					.commit();
+		}
 	}
 
 	@Override
@@ -67,7 +82,6 @@ public class LogisticsExample extends DrawerActivity {
 	}
 
 	private void createNavigationDrawer(final DrawerConfigurationContainer container) {
-		//Create spinner entries
 		List<String> userAccountSpinnerEntries = new ArrayList<String>();
 		userAccountSpinnerEntries.add("Logged Out");
 		userAccountSpinnerEntries.add("Log In");

@@ -3,6 +3,16 @@
 
     <string name="app_name">Logistics Example</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+
+    <string name="tag_success">success</string>
+    <string name="tag_locations">locations</string>
+    <string name="tag_id">id</string>
+    <string name="tag_name">name</string>
+    <string name="tag_latitude">latitude</string>
+    <string name="tag_longitude">longitude</string>
+    
+    <string name="remote_db_path">http://192.168.86.79/</string>
+    
+    <string name="get_all_locations">get_all_locations.php</string>
 
 </resources>
