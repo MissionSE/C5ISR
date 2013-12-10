@@ -56,7 +56,11 @@ public class DrawerEntryFactory {
 		}
 
 		holder.getTextView().setText(basicItem.getLabel());
-		holder.getImageView().setImageResource(basicItem.getIcon());
+		if (basicItem.getIcon() != 0) {
+			holder.getImageView().setImageResource(basicItem.getIcon());
+		} else {
+			holder.getImageView().setVisibility(View.GONE);
+		}
 
 		return convertView;
 	}
