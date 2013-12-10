@@ -51,38 +51,71 @@ public abstract class DrawerActivity extends Activity {
 
 		DrawerConfiguration leftDrawerConfiguration = mDrawerConfigurations.getLeftConfiguration();
 		if (leftDrawerConfiguration != null) {
-			mLeftDrawerList = (ListView) findViewById(leftDrawerConfiguration.getDrawer());
-			mLeftDrawerList.setAdapter(leftDrawerConfiguration.getBaseAdapter());
-			mLeftDrawerList.setOnItemClickListener(new LeftDrawerItemClickListener());
-			mDrawerLayout.setDrawerShadow(leftDrawerConfiguration.getDrawerShadow(), Gravity.START);
-
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-			getActionBar().setHomeButtonEnabled(true);
-
-			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, getDrawerIcon(),
-					leftDrawerConfiguration.getDrawerOpenDesc(), leftDrawerConfiguration.getDrawerCloseDesc()) {
-				@Override
-				public void onDrawerClosed(final View view) {
-					getActionBar().setTitle(mCurrentTitle);
-					invalidateOptionsMenu();
-				}
-
-				@Override
-				public void onDrawerOpened(final View drawerView) {
-					getActionBar().setTitle(mDefaultTitle);
-					invalidateOptionsMenu();
-				}
-			};
-			mDrawerLayout.setDrawerListener(mDrawerToggle);
+			createLeftDrawer(leftDrawerConfiguration);
 		}
 
 		DrawerConfiguration rightDrawerConfiguration = mDrawerConfigurations.getRightConfiguration();
 		if (rightDrawerConfiguration != null) {
-			mRightDrawerList = (ListView) findViewById(rightDrawerConfiguration.getDrawer());
-			mRightDrawerList.setAdapter(rightDrawerConfiguration.getBaseAdapter());
-			mRightDrawerList.setOnItemClickListener(new RightDrawerItemClickListener());
-			mDrawerLayout.setDrawerShadow(rightDrawerConfiguration.getDrawerShadow(), Gravity.END);
+			createRightDrawer(rightDrawerConfiguration);
 		}
+
+		onConfigurationComplete();
+	}
+
+	private void createLeftDrawer(final DrawerConfiguration drawerConfiguration) {
+		mLeftDrawerList = (ListView) findViewById(drawerConfiguration.getDrawer());
+		mLeftDrawerList.setAdapter(drawerConfiguration.getBaseAdapter());
+		mLeftDrawerList.setOnItemClickListener(new DrawerItemClickListener(mLeftDrawerList, mDrawerConfigurations
+				.getLeftConfiguration()));
+		mDrawerLayout.setDrawerShadow(drawerConfiguration.getDrawerShadow(), Gravity.START);
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, getDrawerIcon(),
+				drawerConfiguration.getDrawerOpenDesc(), drawerConfiguration.getDrawerCloseDesc()) {
+			@Override
+			public void onDrawerClosed(final View view) {
+				getActionBar().setTitle(mCurrentTitle);
+				invalidateOptionsMenu();
+			}
+
+			@Override
+			public void onDrawerOpened(final View drawerView) {
+				getActionBar().setTitle(mDefaultTitle);
+				invalidateOptionsMenu();
+			}
+		};
+
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+	}
+
+	private void createRightDrawer(final DrawerConfiguration drawerConfiguration) {
+		mRightDrawerList = (ListView) findViewById(drawerConfiguration.getDrawer());
+		mRightDrawerList.setAdapter(drawerConfiguration.getBaseAdapter());
+		mRightDrawerList.setOnItemClickListener(new DrawerItemClickListener(mRightDrawerList, mDrawerConfigurations
+				.getRightConfiguration()));
+		mDrawerLayout.setDrawerShadow(drawerConfiguration.getDrawerShadow(), Gravity.END);
+	}
+
+	protected void onConfigurationComplete() {
+
+	}
+
+	protected DrawerLayout getDrawerLayout() {
+		return mDrawerLayout;
+	}
+
+	protected ListView getLeftDrawerList() {
+		return mLeftDrawerList;
+	}
+
+	protected ListView getRightDrawerList() {
+		return mRightDrawerList;
+	}
+
+	protected ActionBarDrawerToggle getDrawerToggle() {
+		return mDrawerToggle;
 	}
 
 	protected int getDrawerIcon() {
@@ -132,74 +165,50 @@ public abstract class DrawerActivity extends Activity {
 			} else {
 				mDrawerLayout.openDrawer(mLeftDrawerList);
 			}
+			if (mDrawerLayout.isDrawerOpen(mRightDrawerList)) {
+				mDrawerLayout.closeDrawer(mRightDrawerList);
+			}
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
-	protected DrawerLayout getDrawerLayout() {
-		return mDrawerLayout;
-	}
-
-	protected ActionBarDrawerToggle getDrawerToggle() {
-		return mDrawerToggle;
-	}
-
 	/**
 	 * Listener that selects an item and closes the left drawer if necessary.
 	 */
-	private class LeftDrawerItemClickListener implements ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+		private ListView mDrawerList;
+		private DrawerConfiguration mDrawerConfiguration;
+
+		public DrawerItemClickListener(final ListView drawerList, final DrawerConfiguration drawerConfiguration) {
+			mDrawerList = drawerList;
+			mDrawerConfiguration = drawerConfiguration;
+		}
+
 		@Override
 		public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-			selectLeftItem(position);
+			selectItem(position, mDrawerList, mDrawerConfiguration);
 		}
 	}
 
 	/**
-	 * Listener that selects an item and closes the right drawer if necessary.
-	 */
-	private class RightDrawerItemClickListener implements ListView.OnItemClickListener {
-		@Override
-		public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-			selectRightItem(position);
-		}
-	}
-
-	/**
-	 * Selects an item based on a position.
+	 * Selects an item in a Drawer.
 	 * @param position the position
+	 * @param drawerList the ListView that on which the selected item exists
+	 * @param drawerConfiguration the configuration holding the overall list of widgets populating the ListView
 	 */
-	public void selectLeftItem(final int position) {
-		DrawerItem selectedItem = mDrawerConfigurations.getLeftConfiguration().getNavItems()[position];
+	public void selectItem(final int position, final ListView drawerList, final DrawerConfiguration drawerConfiguration) {
+		DrawerItem selectedItem = drawerConfiguration.getNavigationItems().get(position);
 
 		onNavigationItemSelected(selectedItem.getId());
-		mLeftDrawerList.setItemChecked(position, true);
+		drawerList.setItemChecked(position, true);
 
 		if (selectedItem.willChangeActionBarTitle()) {
 			setTitle(selectedItem.getActionBarTitle());
 		}
 
-		if (this.mDrawerLayout.isDrawerOpen(mLeftDrawerList)) {
-			mDrawerLayout.closeDrawer(mLeftDrawerList);
-		}
-	}
-
-	/**
-	 * Selects an item based on a position.
-	 * @param position the position
-	 */
-	public void selectRightItem(final int position) {
-		DrawerItem selectedItem = mDrawerConfigurations.getRightConfiguration().getNavItems()[position];
-
-		onNavigationItemSelected(selectedItem.getId());
-		mRightDrawerList.setItemChecked(position, true);
-
-		if (selectedItem.willChangeActionBarTitle()) {
-			setTitle(selectedItem.getActionBarTitle());
-		}
-
-		if (this.mDrawerLayout.isDrawerOpen(mRightDrawerList)) {
-			mDrawerLayout.closeDrawer(mRightDrawerList);
+		if (mDrawerLayout.isDrawerOpen(drawerList)) {
+			mDrawerLayout.closeDrawer(drawerList);
 		}
 	}
 

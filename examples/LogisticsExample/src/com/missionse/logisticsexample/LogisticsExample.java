@@ -9,11 +9,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.android.gms.maps.MapFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.DrawerAdapter;
 import com.missionse.uiextensions.navigationdrawer.DrawerItem;
+import com.missionse.uiextensions.navigationdrawer.compatibility.DrawerSwipeToDismissTouchListener;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfiguration;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer.DrawerType;
@@ -21,10 +23,12 @@ import com.missionse.uiextensions.navigationdrawer.entry.DrawerDivider;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerHeader;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleItem;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSpinner;
+import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
 
 public class LogisticsExample extends DrawerActivity {
 
 	private ArrayAdapter<String> userAccountActionsAdapter;
+	private DrawerAdapter rightDrawerAdapter;
 
 	private OnItemSelectedListener userAccountActionsListener = new OnItemSelectedListener() {
 		@Override
@@ -70,16 +74,17 @@ public class LogisticsExample extends DrawerActivity {
 		userAccountActionsAdapter = new ArrayAdapter<String>(this, R.layout.nav_drawer_header, R.id.navheader_label,
 				userAccountSpinnerEntries);
 
-		DrawerItem[] menu = new DrawerItem[] {
-				DrawerSpinner.create(001, userAccountActionsAdapter, userAccountActionsListener),
-				DrawerDivider.create(002), DrawerHeader.create(100, "Navigation"),
-				DrawerSimpleItem.create(101, "Map", R.drawable.places, true),
-				DrawerSimpleItem.create(102, "Supply List", R.drawable.ebooks, true),
-				DrawerSimpleItem.create(103, "History", R.drawable.analytics, true) };
+		List<DrawerItem> menu = new ArrayList<DrawerItem>();
+		menu.add(DrawerSpinner.create(001, userAccountActionsAdapter, userAccountActionsListener));
+		menu.add(DrawerDivider.create(002));
+		menu.add(DrawerHeader.create(100, "Navigation"));
+		menu.add(DrawerSimpleItem.create(101, "Map", R.drawable.places, true));
+		menu.add(DrawerSimpleItem.create(102, "Supply List", R.drawable.ebooks, true));
+		menu.add(DrawerSimpleItem.create(103, "History", R.drawable.analytics, true));
 
 		DrawerConfiguration configuration = new DrawerConfiguration();
 		configuration.setDrawer(R.id.nav_drawer);
-		configuration.setNavItems(menu);
+		configuration.setNavigationItems(menu);
 		configuration.setDrawerShadow(R.drawable.drawer_shadow);
 		configuration.setDrawerOpenDesc(R.string.app_name);
 		configuration.setDrawerCloseDesc(R.string.app_name);
@@ -89,19 +94,43 @@ public class LogisticsExample extends DrawerActivity {
 	}
 
 	private void createNotificationDrawer(final DrawerConfigurationContainer container) {
-		DrawerItem[] notifications = new DrawerItem[] { DrawerSimpleItem.create(101, "Map", R.drawable.places, true),
-				DrawerSimpleItem.create(102, "Supply List", R.drawable.ebooks, true),
-				DrawerSimpleItem.create(103, "History", R.drawable.analytics, true) };
+		List<DrawerItem> notifications = new ArrayList<DrawerItem>();
+		notifications.add(DrawerSimpleItem.create(101, "Map", R.drawable.places, false));
+		notifications.add(DrawerSimpleItem.create(102, "Supply List", R.drawable.ebooks, false));
+		notifications.add(DrawerSimpleItem.create(103, "History", R.drawable.analytics, false));
 
 		DrawerConfiguration configuration = new DrawerConfiguration();
 		configuration.setDrawer(R.id.notif_drawer);
-		configuration.setNavItems(notifications);
+		configuration.setNavigationItems(notifications);
 		configuration.setDrawerShadow(R.drawable.drawer_shadow);
 		configuration.setDrawerOpenDesc(R.string.app_name);
 		configuration.setDrawerCloseDesc(R.string.app_name);
-		configuration.setBaseAdapter(new DrawerAdapter(this, 0, notifications));
+		rightDrawerAdapter = new DrawerAdapter(this, 0, notifications);
+		configuration.setBaseAdapter(rightDrawerAdapter);
 
 		container.setConfiguration(DrawerType.RIGHT, configuration);
+	}
+
+	@Override
+	protected void onConfigurationComplete() {
+		DrawerSwipeToDismissTouchListener touchListener = new DrawerSwipeToDismissTouchListener(getDrawerLayout(),
+				getRightDrawerList(), new SwipeToDismissListener() {
+					@Override
+					public boolean canDismiss(final int position) {
+						return true;
+					}
+
+					@Override
+					public void onDismiss(final ListView listView, final int[] reverseSortedPositions) {
+						for (int position : reverseSortedPositions) {
+							rightDrawerAdapter.remove(rightDrawerAdapter.getItem(position));
+						}
+						rightDrawerAdapter.notifyDataSetChanged();
+					}
+				});
+
+		getRightDrawerList().setOnTouchListener(touchListener);
+		getRightDrawerList().setOnScrollListener(touchListener.makeScrollListener());
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.missionse.uiextensions.navigationdrawer;
 
+import java.util.List;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +18,10 @@ public class DrawerAdapter extends ArrayAdapter<DrawerItem> {
 	 * Creates a new DrawerAdapter.
 	 * @param context the parent activity's context
 	 * @param resource NOT USED, should be 0
-	 * @param objects the items to display
+	 * @param items the items to display
 	 */
-	public DrawerAdapter(final Context context, final int resource, final DrawerItem[] objects) {
-		super(context, resource, objects);
+	public DrawerAdapter(final Context context, final int resource, final List<DrawerItem> items) {
+		super(context, resource, items);
 		mEntryFactory = new DrawerEntryFactory(context);
 	}
 

@@ -1,5 +1,7 @@
 package com.missionse.uiextensions.navigationdrawer.configuration;
 
+import java.util.List;
+
 import android.widget.BaseAdapter;
 
 import com.missionse.uiextensions.navigationdrawer.DrawerItem;
@@ -13,7 +15,7 @@ public class DrawerConfiguration {
 	private int mDrawerShadow;
 	private int mDrawer;
 	private int[] mActionMenuItemsToHideWhenDrawerOpen;
-	private DrawerItem[] mNavigationDrawerItems;
+	private List<DrawerItem> mNavigationDrawerItems;
 	private int mDrawerOpenAccessibilityDescription;
 	private int mDrawerCloseAccessibilityDescription;
 	private BaseAdapter mBaseAdapter;
@@ -70,16 +72,16 @@ public class DrawerConfiguration {
 	 * Gets the NavigationDrawerItems to be displayed in the NavigationDrawer.
 	 * @return an array of the items
 	 */
-	public DrawerItem[] getNavItems() {
+	public List<DrawerItem> getNavigationItems() {
 		return mNavigationDrawerItems;
 	}
 
 	/**
 	 * Sets the NavigationDrawerItems to be displayed in the NavigationDrawer.
-	 * @param navItems an array of the items
+	 * @param navigationItems an array of the items
 	 */
-	public void setNavItems(final DrawerItem[] navItems) {
-		mNavigationDrawerItems = navItems;
+	public void setNavigationItems(final List<DrawerItem> navigationItems) {
+		mNavigationDrawerItems = navigationItems;
 	}
 
 	/**
