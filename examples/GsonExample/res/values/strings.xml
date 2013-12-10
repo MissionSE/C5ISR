@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">GsonExample</string>
+
+     <string-array name="cities">
+        <item>New York</item>
+        <item>Trenton</item>
+        <item>Florida</item>
+    </string-array>
+    
+    
+</resources>
