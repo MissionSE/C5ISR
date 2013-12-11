@@ -1,27 +1,23 @@
 package com.missionse.databaseexample.Model;
 
-import org.orman.mapper.Model;
-import org.orman.mapper.annotation.Entity;
-import org.orman.mapper.annotation.ManyToOne;
-import org.orman.mapper.annotation.PrimaryKey;
-
-// BEGIN MODEL CODE
+import com.j256.ormlite.field.DatabaseField;
 
 /**
  * A Student.
  */
-@Entity
-public class Student extends Model<Student> {
+public class Student {
 
-	@PrimaryKey(autoIncrement = true)
-	public int id;
+	@DatabaseField(generatedId = true, columnName = "_id")
+	private int mId;
 
-	public String mFirstName;
+	@DatabaseField(columnName = "firstname")
+	private String mFirstName;
 
-	public String mLastName;
+	@DatabaseField(columnName = "lastname")
+	private String mLastName;
 
-	@ManyToOne
-	public Classroom mClassroom;
+	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "classroom_id")
+	private Classroom mClassroom;
 
 	/**
 	 * Creates a new Student.
@@ -33,6 +29,53 @@ public class Student extends Model<Student> {
 	public String toString() {
 		return "[Student] " + mFirstName + " " + mLastName;
 	}
-}
 
-// END MODEL CODE
+	/**
+	 * @return the mId
+	 */
+	public int getId() {
+		return mId;
+	}
+
+	/**
+	 * @return the mFirstName
+	 */
+	public String getFirstName() {
+		return mFirstName;
+	}
+
+	/**
+	 * @param firstName the mFirstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.mFirstName = firstName;
+	}
+
+	/**
+	 * @return the mLastName
+	 */
+	public String getLastName() {
+		return mLastName;
+	}
+
+	/**
+	 * @param lastName the mLastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.mLastName = lastName;
+	}
+
+	/**
+	 * @return the mClassroom
+	 */
+	public Classroom getClassroom() {
+		return mClassroom;
+	}
+
+	/**
+	 * @param classRoom the mClassroom to set
+	 */
+	public void setClassroom(Classroom classRoom) {
+		this.mClassroom = classRoom;
+	}
+}

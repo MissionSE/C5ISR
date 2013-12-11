@@ -1,27 +1,23 @@
 package com.missionse.databaseexample.Model;
 
-import org.orman.mapper.EntityList;
-import org.orman.mapper.Model;
-import org.orman.mapper.annotation.Entity;
-import org.orman.mapper.annotation.OneToMany;
-import org.orman.mapper.annotation.PrimaryKey;
+import java.util.Collection;
 
-// BEGIN MODEL CODE
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 
 /**
  * A Classroom.
  */
-@Entity
-public class Classroom extends Model<Classroom> {
+public class Classroom {
 
-	@PrimaryKey(autoIncrement = true)
-	public int id;
+	@DatabaseField(generatedId = true, columnName = "_id")
+	private int mId;
 
-	public String mClassRoomName;
+	@DatabaseField(columnName = "name")
+	private String mClassRoomName;
 
-	@OneToMany(toType = Student.class, onField = "mClassroom")
-	public EntityList<Classroom, Student> students = new EntityList<Classroom, Student>(Classroom.class, Student.class,
-			this);
+	@ForeignCollectionField
+	private Collection<Student> mStudents;
 
 	/**
 	 * Creates a new Classroom.
@@ -33,6 +29,41 @@ public class Classroom extends Model<Classroom> {
 	public String toString() {
 		return "[Classroom] " + mClassRoomName;
 	}
-}
 
-// END MODEL CODE
+	/**
+	 * @return the mId
+	 */
+	public int getId() {
+		return mId;
+	}
+
+	/**
+	 * @return the mClassRoomName
+	 */
+	public String getClassRoomName() {
+		return mClassRoomName;
+	}
+
+	/**
+	 * @param classRoomName the mClassRoomName to set
+	 */
+	public void setClassRoomName(String classRoomName) {
+		this.mClassRoomName = classRoomName;
+	}
+
+	/**
+	 * @return the mStudents
+	 */
+	public Collection<Student> getStudents() {
+		return mStudents;
+	}
+
+	/**
+	 * @param students the mStudents to set
+	 */
+	public void setStudents(Collection<Student> students) {
+		this.mStudents = students;
+	}
+	
+	
+}

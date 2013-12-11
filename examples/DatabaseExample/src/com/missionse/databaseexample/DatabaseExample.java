@@ -10,11 +10,12 @@ import com.missionse.uiextensions.viewpager.ZoomOutPageTransformer;
 /**
  * Acts as the entry point to the DatabaseExample application. Sets up the fragments and ViewPager.
  */
-public class DatabaseExample extends Activity {
+public class DatabaseExample extends Activity implements IDatabaseAccess {
 
 	private ViewPager mViewPager;
 	private StudentListFragment mStudentListFragment;
 	private ClassroomListFragment mClassroomListFragment;
+	private DatabaseHelper mHelper;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -23,6 +24,7 @@ public class DatabaseExample extends Activity {
 
 		mStudentListFragment = new StudentListFragment();
 		mClassroomListFragment = new ClassroomListFragment();
+		mHelper = new DatabaseHelper(this);
 
 		SectionFragmentPagerAdapter pagerAdapter = new SectionFragmentPagerAdapter(getFragmentManager());
 		pagerAdapter.setPage(0, "Student List", mStudentListFragment);
@@ -30,5 +32,10 @@ public class DatabaseExample extends Activity {
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setAdapter(pagerAdapter);
 		mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+	}
+
+	@Override
+	public DatabaseHelper getDBHelper() {
+		return mHelper;
 	}
 }

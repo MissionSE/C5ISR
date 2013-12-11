@@ -1,13 +1,15 @@
 package com.missionse.databaseexample;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import org.orman.mapper.Model;
-
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +29,7 @@ public class ClassroomListFragment extends Fragment {
 
 	private ArrayAdapter<Classroom> mListAdapter;
 	private final List<Classroom> mClassrooms = new ArrayList<Classroom>();
+	private IDatabaseAccess mDBAccess;
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class ClassroomListFragment extends Fragment {
 			}
 		});
 
-		mListAdapter.addAll(Model.fetchAll(Classroom.class));
+		mListAdapter.addAll(queryAll());
 
 		return contentView;
 	}
@@ -61,20 +64,51 @@ public class ClassroomListFragment extends Fragment {
 	private void createNewClassroom() {
 		Random random = new Random();
 		Classroom classroom = new Classroom();
-		classroom.mClassRoomName = "Classroom#" + random.nextInt(MAX_CLASSROOMS);
-		classroom.insert();
+		classroom.setClassRoomName("Classroom#" + random.nextInt(MAX_CLASSROOMS));
+		
+		try {
+			mDBAccess.getDBHelper().getClassRoomDao().create(classroom);
+		} catch (SQLException sql){
+			Log.e("ClassRoomFragment", "Create", sql);
+		}
 
 		mClassrooms.clear();
-		mClassrooms.addAll(Model.fetchAll(Classroom.class));
+		mClassrooms.addAll(queryAll());
 		mListAdapter.notifyDataSetChanged();
 	}
 
 	private void clearAllClassrooms() {
-		for (Classroom classroom : Model.fetchAll(Classroom.class)) {
-			classroom.delete();
+		for (Classroom classroom : queryAll()) {
+			try {
+				mDBAccess.getDBHelper().getClassRoomDao().delete(classroom);
+			} catch (SQLException sql){
+				Log.e("ClassRoomFragment", "Delete", sql);
+			}
+
 		}
 
 		mClassrooms.clear();
 		mListAdapter.notifyDataSetChanged();
 	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			mDBAccess = (IDatabaseAccess) activity;
+		} catch (ClassCastException exception) {
+			Log.e("ClassRoomFragment", "Unable to attach DBAccess. ", exception);
+		}
+	}
+	
+	private List<Classroom> queryAll() {
+		try {
+			return mDBAccess.getDBHelper().getClassRoomDao().queryForAll();
+		} catch (SQLException sql) {
+			Log.e("ClassRoomFragment", "QueryAll", sql);
+			return Collections.emptyList();
+		}
+	}
+	
+	
 }
