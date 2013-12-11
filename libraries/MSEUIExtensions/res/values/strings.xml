@@ -3,5 +3,9 @@
 
     <!-- Content Descriptions -->
     <string name="basic_icon">Icon for a basic navigation drawer entry.</string>
+    
+    <!-- Accessibility -->
+    <string name="drawer_open">Drawer Opening</string>
+    <string name="drawer_close">Drawer Closing</string>
 
 </resources>
