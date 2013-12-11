@@ -14,6 +14,7 @@ import com.missionse.logisticsexample.map.MapViewerFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.compatibility.DrawerSwipeToDismissTouchListener;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleItem;
 import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
 
 /**
@@ -23,6 +24,9 @@ import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
 public class LogisticsExample extends DrawerActivity {
 	private LogisticsDrawerFactory mDrawerFactory;
 	private LogisticsMap mLogisticsMap;
+
+	private static final int INITIAL_NOTIF = 300;
+	private static int mNotificationCount = INITIAL_NOTIF;
 
 	/**
 	 * Constructs a new LogisticsExample.
@@ -53,7 +57,13 @@ public class LogisticsExample extends DrawerActivity {
 
 	@Override
 	protected DrawerConfigurationContainer getDrawerConfigurations() {
-		mDrawerFactory.setUserAccountActionsListener(new OnItemSelectedListener() {
+		return mDrawerFactory.createDrawers();
+	}
+
+	@Override
+	protected void onDrawerConfigurationComplete() {
+
+		mDrawerFactory.addNavigationMenuItems(getLeftDrawerAdapter(), new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
 
@@ -63,12 +73,6 @@ public class LogisticsExample extends DrawerActivity {
 			public void onNothingSelected(final AdapterView<?> parent) {
 			}
 		});
-
-		return mDrawerFactory.createDrawers();
-	}
-
-	@Override
-	protected void onConfigurationComplete() {
 
 		DrawerSwipeToDismissTouchListener touchListener = new DrawerSwipeToDismissTouchListener(getDrawerLayout(),
 				getRightDrawerList(), new SwipeToDismissListener() {
@@ -80,10 +84,9 @@ public class LogisticsExample extends DrawerActivity {
 					@Override
 					public void onDismiss(final ListView listView, final int[] reverseSortedPositions) {
 						for (int position : reverseSortedPositions) {
-							mDrawerFactory.getRightDrawerAdapter().remove(
-									mDrawerFactory.getRightDrawerAdapter().getItem(position));
+							getRightDrawerAdapter().remove(getRightDrawerAdapter().getItem(position));
 						}
-						mDrawerFactory.getRightDrawerAdapter().notifyDataSetChanged();
+						getRightDrawerAdapter().notifyDataSetChanged();
 					}
 				});
 
@@ -93,7 +96,10 @@ public class LogisticsExample extends DrawerActivity {
 
 	@Override
 	protected void onNavigationItemSelected(final int id) {
-
+		if (id == LogisticsDrawerFactory.UPDATE_HISTORY) {
+			getRightDrawerAdapter().add(
+					DrawerSimpleItem.create(mNotificationCount, "Notif " + ++mNotificationCount, 0, false));
+		}
 	}
 
 	@Override

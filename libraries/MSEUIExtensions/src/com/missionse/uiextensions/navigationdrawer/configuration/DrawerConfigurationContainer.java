@@ -30,12 +30,10 @@ public class DrawerConfigurationContainer {
 
 	/**
 	 * Saves the configuration for a given Drawer.
-	 * @param type which side this configuration applies to
 	 * @param configuration the configuration
 	 */
-	public void setConfiguration(final DrawerType type, final DrawerConfiguration configuration) {
-
-		mConfigurations.put(type, configuration);
+	public void addConfiguration(final DrawerConfiguration configuration) {
+		mConfigurations.put(configuration.getType(), configuration);
 	}
 
 	/**

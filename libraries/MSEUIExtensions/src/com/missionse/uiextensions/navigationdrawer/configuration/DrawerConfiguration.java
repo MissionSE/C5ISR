@@ -1,10 +1,12 @@
 package com.missionse.uiextensions.navigationdrawer.configuration;
 
-import java.util.List;
-
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.widget.BaseAdapter;
 
-import com.missionse.uiextensions.navigationdrawer.DrawerItem;
+import com.missionse.uiextensions.R;
+import com.missionse.uiextensions.navigationdrawer.DrawerAdapter;
+import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer.DrawerType;
 
 /**
  * A container class that holds all configuration options of the Navigation Drawer, used by the DrawerActivity when
@@ -12,13 +14,44 @@ import com.missionse.uiextensions.navigationdrawer.DrawerItem;
  */
 public class DrawerConfiguration {
 
+	private DrawerType mType;
 	private int mDrawerShadow;
 	private int mDrawer;
 	private int[] mActionMenuItemsToHideWhenDrawerOpen;
-	private List<DrawerItem> mNavigationDrawerItems;
 	private int mDrawerOpenAccessibilityDescription;
 	private int mDrawerCloseAccessibilityDescription;
 	private BaseAdapter mBaseAdapter;
+	private Drawable mDivider;
+
+	/**
+	 * Constructs a new DrawerConfiguration with default settings.
+	 * @param type the type of drawer (LEFT/RIGHT)
+	 * @param context the context of the parent activity
+	 */
+	public DrawerConfiguration(final DrawerType type, final Context context) {
+		mType = type;
+		setDefaults(context);
+	}
+
+	private void setDefaults(final Context context) {
+		if (mType == DrawerType.LEFT) {
+			setDrawerShadow(R.drawable.drawer_shadow_left);
+		} else {
+			setDrawerShadow(R.drawable.drawer_shadow_right);
+		}
+
+		setDrawerOpenDesc(R.string.drawer_open);
+		setDrawerCloseDesc(R.string.drawer_close);
+		setBaseAdapter(new DrawerAdapter(context));
+	}
+
+	/**
+	 * Retrieves the type of this DrawerConfiguration.
+	 * @return the type (LEFT/RIGHT)
+	 */
+	public DrawerType getType() {
+		return mType;
+	}
 
 	/**
 	 * Gets the resource ID used to draw the Drawer shadow, if any.
@@ -37,7 +70,7 @@ public class DrawerConfiguration {
 	}
 
 	/**
-	 * Gets the resource ID of the ListView that comprises the specific NavigationDrawer within the DrawerLayout.
+	 * Gets the resource ID of the ListView that comprises the specific drawer within the DrawerLayout.
 	 * @return the resource ID
 	 */
 	public int getDrawer() {
@@ -45,11 +78,11 @@ public class DrawerConfiguration {
 	}
 
 	/**
-	 * Sets the resource ID of the ListView that will be the NavigationDrawer within the DrawerLayout.
-	 * @param leftDrawer the resource ID
+	 * Sets the resource ID of the ListView that will be the drawer within the DrawerLayout.
+	 * @param drawer the resource ID
 	 */
-	public void setDrawer(final int leftDrawer) {
-		mDrawer = leftDrawer;
+	public void setDrawer(final int drawer) {
+		mDrawer = drawer;
 	}
 
 	/**
@@ -66,22 +99,6 @@ public class DrawerConfiguration {
 	 */
 	public void setActionMenuItemsToHideWhenDrawerOpen(final int[] actionMenuItemsToHideWhenDrawerOpen) {
 		this.mActionMenuItemsToHideWhenDrawerOpen = actionMenuItemsToHideWhenDrawerOpen;
-	}
-
-	/**
-	 * Gets the NavigationDrawerItems to be displayed in the NavigationDrawer.
-	 * @return an array of the items
-	 */
-	public List<DrawerItem> getNavigationItems() {
-		return mNavigationDrawerItems;
-	}
-
-	/**
-	 * Sets the NavigationDrawerItems to be displayed in the NavigationDrawer.
-	 * @param navigationItems an array of the items
-	 */
-	public void setNavigationItems(final List<DrawerItem> navigationItems) {
-		mNavigationDrawerItems = navigationItems;
 	}
 
 	/**
@@ -130,5 +147,21 @@ public class DrawerConfiguration {
 	 */
 	public void setBaseAdapter(final BaseAdapter baseAdapter) {
 		mBaseAdapter = baseAdapter;
+	}
+
+	/**
+	 * Retrieves the divider to be displayed between each list item.
+	 * @return the divider drawable
+	 */
+	public Drawable getDivider() {
+		return mDivider;
+	}
+
+	/**
+	 * Sets the divider drawable to be used between each list item.
+	 * @param divider the drawable to use
+	 */
+	public void setDivider(final Drawable divider) {
+		mDivider = divider;
 	}
 }
