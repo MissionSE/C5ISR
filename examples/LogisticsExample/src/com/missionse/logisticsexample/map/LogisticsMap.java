@@ -49,8 +49,7 @@ public class LogisticsMap implements MapLoadedListener, MapLocationListener {
 				mLocationManager.put(locationId, mMap.addMarker(
 						new MarkerOptions()
 								.position(location.getLatLng())
-								.title(location.getName())
-								.draggable(true)));
+								.title(location.getName())));
 			} else {
 				Marker marker = mLocationManager.getMarker(locationId);
 				marker.setPosition(location.getLatLng());
