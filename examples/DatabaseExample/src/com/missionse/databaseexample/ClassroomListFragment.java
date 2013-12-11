@@ -68,7 +68,7 @@ public class ClassroomListFragment extends Fragment {
 		
 		try {
 			mDBAccess.getDBHelper().getClassRoomDao().create(classroom);
-		} catch (SQLException sql){
+		} catch (SQLException sql) {
 			Log.e("ClassRoomFragment", "Create", sql);
 		}
 
@@ -81,7 +81,7 @@ public class ClassroomListFragment extends Fragment {
 		for (Classroom classroom : queryAll()) {
 			try {
 				mDBAccess.getDBHelper().getClassRoomDao().delete(classroom);
-			} catch (SQLException sql){
+			} catch (SQLException sql) {
 				Log.e("ClassRoomFragment", "Delete", sql);
 			}
 
