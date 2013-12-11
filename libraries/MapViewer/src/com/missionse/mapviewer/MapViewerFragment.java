@@ -5,18 +5,19 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URLEncoder;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +33,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -42,6 +44,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.Contacts;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,10 +65,12 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
@@ -100,7 +105,7 @@ LoaderCallbacks<Cursor> {
 	private static final String PREF_CIRCLE_STROKE_COLOR = "pref_circle_stroke_color";
 	private static final long DEF_LOCATION_REQUEST_INTERVAL = 5000; // 5 seconds
 	private static final long DEF_FASTEST_REQUEST_INTERVAL = 16; // 16ms = 60fps
-	private static final String GEOCODE_BASE_URL = "http://maps.googleapis.com/maps/api/geocode/xml?address=";
+	private static final String GEOCODE_BASE_URL = "http://maps.googleapis.com/maps/api/geocode/json?address=";
 	private static final String GEOCODE_SENSOR_URL = "&sensor=true";
 
 	/*
@@ -133,15 +138,15 @@ LoaderCallbacks<Cursor> {
 	private SharedPreferences mPrefs;
 	private Set<GoogleMap.OnCameraChangeListener> mCameraListeners = new HashSet<GoogleMap.OnCameraChangeListener>();
 
-	private ArrayList<Button> mFilterButtons = new ArrayList<Button>();
+	private SparseArray<Button> mFilterButtons = new SparseArray<Button>();
 	private LinearLayout mFilterControls;
 
 	// Markers stored by id
 	private HashMap<String, MarkerModel> mMarkers = null;
 	// Markers stored by floor
-	private ArrayList<ArrayList<Marker>> mMarkersFilter = null;
+	private SparseArray<ArrayList<Marker>> mMarkersFilter = null;
 
-	private boolean mMarkersLoaded = true;
+	private boolean mMarkersLoaded = false;
 
 	// Cached size of view
 	private int mWidth, mHeight;
@@ -199,20 +204,34 @@ LoaderCallbacks<Cursor> {
 		mFilterControls = (LinearLayout) layout.findViewById(R.id.map_filtercontrols);
 
 		// setup filter button handlers
-		mFilterButtons.add((Button) v.findViewById(R.id.map_filter1));
-		mFilterButtons.add((Button) v.findViewById(R.id.map_filter2));
-		mFilterButtons.add((Button) v.findViewById(R.id.map_filter3));
+		mFilterButtons.put(StructuredPostal.TYPE_HOME, (Button) v.findViewById(R.id.map_filter1));
+		mFilterButtons.put(StructuredPostal.TYPE_WORK, (Button) v.findViewById(R.id.map_filter2));
+		mFilterButtons.put(StructuredPostal.TYPE_OTHER, (Button) v.findViewById(R.id.map_filter3));
 
-		for (int i = 0; i < mFilterButtons.size(); i++) {
-			final int j = i;
-			mFilterButtons.get(i).setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showMarkers(j);
-				}
-			});
-		}
-
+		Button button = mFilterButtons.get(StructuredPostal.TYPE_HOME);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showMarkers(StructuredPostal.TYPE_HOME);
+			}
+		});
+		
+		button = mFilterButtons.get(StructuredPostal.TYPE_WORK);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showMarkers(StructuredPostal.TYPE_WORK);
+			}
+		});
+		
+		button = mFilterButtons.get(StructuredPostal.TYPE_OTHER);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showMarkers(StructuredPostal.TYPE_OTHER);
+			}
+		});
+		
 		// get the height and width of the view
 		mapView.getViewTreeObserver().addOnGlobalLayoutListener(
 				new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -245,8 +264,8 @@ LoaderCallbacks<Cursor> {
 		// load all markers
 		LoaderManager lm = getActivity().getLoaderManager();
 		lm.initLoader(StructuredPostal.TYPE_HOME, null, this);
-//		lm.initLoader(StructuredPostal.TYPE_WORK, null, this);
-//		lm.initLoader(StructuredPostal.TYPE_OTHER, null, this);
+		lm.initLoader(StructuredPostal.TYPE_WORK, null, this);
+		lm.initLoader(StructuredPostal.TYPE_OTHER, null, this);
 
 		return v;
 	}
@@ -270,14 +289,24 @@ LoaderCallbacks<Cursor> {
 
 	private void showMarkers(int filter) {
 		// show all markers
+		boolean visible = false;
 		for (Marker m : mMarkersFilter.get(filter)) {
-			boolean visible = !m.isVisible();
+			visible = !m.isVisible();
 			m.setVisible(visible);
 		}
 		// mark button active
-		mFilterButtons.get(filter).setBackgroundResource(R.drawable.map_filter_button_active_background);
-		mFilterButtons.get(filter).setTextColor(getResources().getColor(
-				R.color.map_filterselect_active));
+		int backgroundResource;
+		int textColorResource;
+		if (visible) {
+			backgroundResource = R.drawable.map_filter_button_active_background;
+			textColorResource = R.color.map_filterselect_active;
+		} else {
+			backgroundResource = R.drawable.map_filter_button_background;
+			textColorResource = R.color.map_filterselect_inactive;
+		}
+		mFilterButtons.get(filter).setBackgroundResource(backgroundResource);
+		mFilterButtons.get(filter).setTextColor(getResources().getColor(textColorResource));
+
 	}
 
 	/**
@@ -294,15 +323,15 @@ LoaderCallbacks<Cursor> {
 	}
 
 	private void showAllMarkers() {
-		for (int i = 0; i < mMarkersFilter.size(); i++) {
-			showMarkers(i);
-		}
+		showMarkers(StructuredPostal.TYPE_HOME);
+		showMarkers(StructuredPostal.TYPE_WORK);
+		showMarkers(StructuredPostal.TYPE_OTHER);
 	}
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		final String locationId = marker.getTitle();
-		mCallbacks.onLocationSelected(locationId, mMarkers.get(locationId).label);
+		mCallbacks.onLocationSelected(locationId, mMarkers.get(locationId).name);
 	}
 
 	private void centerMap(LatLng position) {
@@ -360,7 +389,11 @@ LoaderCallbacks<Cursor> {
 		}
 
 		mMarkers = new HashMap<String, MarkerModel>();
-		mMarkersFilter = new ArrayList<ArrayList<Marker>>();
+		mMarkersFilter = new SparseArray<ArrayList<Marker>>();
+
+		mMarkersFilter.put(StructuredPostal.TYPE_HOME, new ArrayList<Marker>());
+		mMarkersFilter.put(StructuredPostal.TYPE_WORK, new ArrayList<Marker>());
+		mMarkersFilter.put(StructuredPostal.TYPE_OTHER, new ArrayList<Marker>());
 	}
 
 	@Override
@@ -561,13 +594,13 @@ LoaderCallbacks<Cursor> {
 	public static class MarkerModel {
 		String id;
 		String type;
-		String label;
+		String name;
 		Marker marker;
 
-		public MarkerModel(String id, String type, String label, Marker marker) {
+		public MarkerModel(String id, String type, String name, Marker marker) {
 			this.id = id;
 			this.type = type;
-			this.label = label;
+			this.name = name;
 			this.marker = marker;
 		}
 	}
@@ -684,49 +717,11 @@ LoaderCallbacks<Cursor> {
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+	public void onLoadFinished(Loader<Cursor> loader, final Cursor cursor) {
 		if (cursor != null && cursor.getCount() > 0) {
-			int type = loader.getId();
-
-			cursor.moveToFirst();
-			while (!cursor.isAfterLast()) {
-				// get data
-				String address = cursor.getString(cursor.getColumnIndex(StructuredPostal.FORMATTED_ADDRESS));
-				address = address.replace("\n", "+");
-				address = address.replace(" ", "+");
-				String name = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
-				
-				try {
-					Log.d(TAG, "name=" + name);
-					Log.d(TAG, "address=" + address);
-					String urlString = GEOCODE_BASE_URL + address + GEOCODE_SENSOR_URL;
-					Log.d(TAG, "urlString=" + urlString);
-					JSONObject json = getJson(urlString);
-					Log.d(TAG, "json=" + json);
-//					JSONArray jsonArray = new JSONArray(page);
-//					for (int i = 0 ; i < jsonArray.length(); i++ ) {
-//						JSONObject entry = (JSONObject) jsonArray.get(i);
-//						
-//					}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					Log.e(TAG, e.toString());
-				}
-
-//				Marker m = mMainMap.addMarker(
-//						new MarkerOptions().position(new LatLng(lat, lon)).title(id)
-//						.snippet(type).icon(icon)
-//						.visible(false));
-//
-//				MarkerModel model = new MarkerModel(id, floor, type, label, track, m);
-//
-//				mMarkersFloor.get(floor).add(m);
-//				mMarkers.put(id, model);
-				cursor.moveToNext();
-			}
-			// no more markers to load
-			mMarkersLoaded = true;
-			enableMarkers();
+			final int type = loader.getId();
+			Log.d(TAG, "onLoadFinished: type=" + type + ", count=" + cursor.getCount());
+			BackgroundExecutor.execute(new SomeHeavyOperation(this, cursor, type));
 		}
 	}
 
@@ -736,12 +731,12 @@ LoaderCallbacks<Cursor> {
 
 	}
 
-public static JSONObject getJson(String url){
-		
+	public static JSONObject getJson(String url){
+
 		InputStream is = null;
 		String result = "";
-		JSONObject jsonObject = null;
-		
+		JSONObject json = null;
+
 		// HTTP
 		try {	    	
 			HttpClient httpclient = new DefaultHttpClient(); // for port 80 requests!
@@ -753,7 +748,7 @@ public static JSONObject getJson(String url){
 			Log.e(TAG, "Error in HTTP Client", e);
 			return null;
 		}
-	    
+
 		// Read response to string
 		try {	    	
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is,"utf-8"),8);
@@ -768,17 +763,110 @@ public static JSONObject getJson(String url){
 			Log.e(TAG, "Error reading buffer", e);
 			return null;
 		}
- 
+
 		// Convert string to object
-		Log.d(TAG, "result=" + result);
 		try {
-			jsonObject = new JSONObject(result);            
+			json = new JSONObject(result);
 		} catch(JSONException e) {
 			Log.e(TAG, "Error converting to jsonobject", e);
+			Log.e(TAG, "result=" + result.toString());
 			return null;
 		}
-    
-		return jsonObject;
- 
+
+		return json;
+
+	}
+
+	public static class BackgroundExecutor {
+		private static final Executor instance = Executors.newSingleThreadExecutor();
+
+		public static void execute(Runnable command) {
+			instance.execute(command);
+		}
+	}
+
+	//SomeHeavyOperation.java
+	public class SomeHeavyOperation implements Runnable {
+		private final WeakReference<MapViewerFragment> ref;
+		private final Cursor cursor;
+		private final int type;
+
+		public SomeHeavyOperation(MapViewerFragment owner, Cursor cursor, int type) {
+			// Unlike inner class we do not store strong reference to Activity here
+			this.ref = new WeakReference<MapViewerFragment>(owner);
+			this.cursor = cursor;
+			this.type = type;
+		}
+
+		public void run() {
+			// It's time to notify Activity
+			final MapViewerFragment owner = ref.get();
+			// Already died reference
+			if (owner == null) return;
+
+			// Perform your heavy operation
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				// get data
+				String address = cursor.getString(cursor.getColumnIndex(StructuredPostal.FORMATTED_ADDRESS));
+				address = address.replace("\n", "+");
+				address = address.replace(" ", "+");
+				final String name = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
+				final String id = cursor.getString(cursor.getColumnIndex(Contacts._ID));
+
+				try {
+					String urlString = GEOCODE_BASE_URL + address + GEOCODE_SENSOR_URL;
+					JSONArray jsonResults = getJson(urlString).getJSONArray("results");
+					JSONObject json = jsonResults.getJSONObject(0);
+					JSONObject jsonGeometry = json.getJSONObject("geometry");
+					JSONObject jsonLocation = jsonGeometry.getJSONObject("location");
+					final double lat = jsonLocation.getDouble("lat");
+					final double lng = jsonLocation.getDouble("lng");
+
+					// Perform notification in UI thread
+					owner.getActivity().runOnUiThread(new Runnable() {
+						public void run() {
+							owner.addMarker(id, type, name, lat, lng);
+						}
+					});
+
+				} catch (Exception e) {
+					Log.e(TAG, "Error creating marker", e);
+				}
+				cursor.moveToNext();
+			}
+
+			mMarkersLoaded = true;
+
+			// Perform notification in UI thread
+			owner.getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+					owner.enableMarkers();
+				}
+			});
+		}
+	}
+
+	public void addMarker(String id, int type, String name, double lat, double lng) {
+		float hue = 0f;
+		switch (type) {
+		case StructuredPostal.TYPE_HOME:
+			hue = BitmapDescriptorFactory.HUE_BLUE;
+			break;
+		case StructuredPostal.TYPE_WORK:
+			hue = BitmapDescriptorFactory.HUE_RED;
+			break;
+		case StructuredPostal.TYPE_OTHER:
+			hue = BitmapDescriptorFactory.HUE_YELLOW;
+			break;
+		}
+		Marker m = mMainMap.addMarker(
+				new MarkerOptions().position(new LatLng(lat, lng)).title(name)
+				.snippet(Integer.toString(type)).icon(BitmapDescriptorFactory.defaultMarker(hue)).visible(false));
+
+		MarkerModel model = new MarkerModel(id, Integer.toString(type), name, m);
+
+		mMarkersFilter.get(type).add(m);
+		mMarkers.put(id, model);
 	}
 }
