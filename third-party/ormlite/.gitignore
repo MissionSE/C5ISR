@@ -1,0 +1,6 @@
+#Ignore everything...
+*
+#...but the archive(s), this gitignore, and the requisite README.
+!README.md
+!.gitignore
+!*.jar
