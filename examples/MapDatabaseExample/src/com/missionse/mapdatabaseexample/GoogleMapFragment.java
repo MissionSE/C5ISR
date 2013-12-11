@@ -15,18 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -40,17 +34,20 @@ import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
 /**
  * Provides a fragment that displays a map.
  */
-public class GoogleMapFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener,
-LocationListener, OnMapLongClickListener, OnInfoWindowClickListener,
-OnMarkerDragListener, ActionMode.Callback, OnMapClickListener, OnMarkerClickListener {
+public class GoogleMapFragment extends Fragment implements
+		ActionMode.Callback,
+		GoogleMap.OnInfoWindowClickListener,
+		GoogleMap.OnMapLongClickListener,
+		GoogleMap.OnMapClickListener,
+		GoogleMap.OnMarkerClickListener,
+		GoogleMap.OnMarkerDragListener,
+		GooglePlayServicesClient.ConnectionCallbacks,
+		GooglePlayServicesClient.OnConnectionFailedListener,
+		LocationListener {
 
 	private static final String TAG = GoogleMapFragment.class.getName();
 
-	private static final LatLng MSE = new LatLng(39.974552, -74.976844);
 	private static final float INITIAL_ZOOM = 17.5f;
-	private static final float INITIAL_TILT = 0.0f;
-	private static final float INITIAL_BEARING = 27.0f;
-
 	private static final long UPDATE_INTERVAL = 5000;
 	private static final long FASTEST_INTERVAL = 16;
 	private static final LocationRequest REQUEST = LocationRequest.create().setInterval(UPDATE_INTERVAL)
@@ -99,7 +96,9 @@ OnMarkerDragListener, ActionMode.Callback, OnMapClickListener, OnMarkerClickList
 	@Override
 	public void onLocationChanged(final Location location) {
 		if (mFirstLocationChange) {
-			mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MSE, INITIAL_ZOOM, INITIAL_TILT, INITIAL_BEARING)));
+			mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(
+					new LatLng(location.getLatitude(), location.getLongitude()),
+					INITIAL_ZOOM)));
 			mFirstLocationChange = false;
 		}
 	}

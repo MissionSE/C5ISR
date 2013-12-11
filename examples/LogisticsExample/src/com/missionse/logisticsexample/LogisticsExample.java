@@ -22,9 +22,7 @@ import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
  */
 public class LogisticsExample extends DrawerActivity {
 	private LogisticsDrawerFactory mDrawerFactory;
-
 	private LogisticsMap mLogisticsMap;
-	private MapViewerFragment mMapViewerFragment;
 
 	/**
 	 * Constructs a new LogisticsExample.
@@ -39,11 +37,11 @@ public class LogisticsExample extends DrawerActivity {
 		super.onCreate(savedInstanceState);
 
 		FragmentManager fragmentManager = getFragmentManager();
-		mMapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
-		if (mMapViewerFragment == null) {
-			mMapViewerFragment = new MapViewerFragment();
-			mMapViewerFragment.setMapLoadedListener(mLogisticsMap);
-			fragmentManager.beginTransaction().add(R.id.content, mMapViewerFragment, "map").commit();
+		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
+		if (mapViewerFragment == null) {
+			mapViewerFragment = new MapViewerFragment();
+			mapViewerFragment.setMapLoadedListener(mLogisticsMap);
+			fragmentManager.beginTransaction().add(R.id.content, mapViewerFragment, "map").commit();
 		}
 	}
 
