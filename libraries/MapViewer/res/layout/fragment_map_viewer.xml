@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
     android:orientation="horizontal" >
 
-    <fragment
-        android:id="@+id/main_map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        class="com.google.android.gms.maps.MapFragment" />
+    <com.google.android.gms.maps.MapView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map_overview"
+        android:layout_width="300dp"
+        android:layout_height="180dp"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp" />
 
-    <FrameLayout
-        android:id="@+id/top_left_container"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/map_filtercontrols"
+        android:layout_width="56dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:animateLayoutChanges="true" />
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/map_filter_layout_background"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:visibility="invisible" >
 
-    <FrameLayout
-        android:id="@+id/top_right_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:animateLayoutChanges="true" />
+        <Button
+            android:id="@+id/map_filter3"
+            style="@style/MapFilterSelectorButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/map_filtercontrol_3" />
 
-    <FrameLayout
-        android:id="@+id/bottom_left_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:animateLayoutChanges="true" />
+        <Button
+            android:id="@+id/map_filter2"
+            style="@style/MapFilterSelectorButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/map_filtercontrol_2" />
 
-    <FrameLayout
-        android:id="@+id/bottom_right_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:animateLayoutChanges="true" />
+        <Button
+            android:id="@+id/map_filter1"
+            style="@style/MapFilterSelectorButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/map_filtercontrol_1" />
+    </LinearLayout>
 
-</RelativeLayout>
+</FrameLayout>

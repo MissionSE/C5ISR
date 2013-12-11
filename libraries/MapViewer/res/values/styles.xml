@@ -16,5 +16,12 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    
+    <style name="MapFilterSelectorButton" parent="android:Widget.Button">
+        <item name="android:background">@drawable/map_filter_button_background</item>
+        <item name="android:minWidth">40dp</item>
+        <item name="android:textColor">@color/map_filterselect_inactive</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
 
 </resources>
