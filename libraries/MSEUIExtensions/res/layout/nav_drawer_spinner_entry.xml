@@ -5,12 +5,12 @@
     <TextView 
         android:id="@+id/navheader_label"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="match_parent"
 	    android:gravity="center_vertical"
 	    android:padding="10dp"
+	    android:background="#222"
 	    android:textAllCaps="true"
-	    android:textStyle="bold"
-	    android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
+	    android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
 	    android:textColor="#eee" >
 	</TextView>
 </LinearLayout>

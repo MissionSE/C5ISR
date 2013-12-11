@@ -8,7 +8,7 @@ import com.missionse.uiextensions.navigationdrawer.DrawerItemType;
 /**
  * Represents a section header in the Navigation Drawer.
  */
-public final class DrawerDivider extends DrawerItem {
+public final class DrawerPaddedDivider extends DrawerItem {
 
 	/**
 	 * Tag object holding all widgets necessary to display this item in a NavigationDrawer.
@@ -33,9 +33,9 @@ public final class DrawerDivider extends DrawerItem {
 		}
 	}
 
-	public static final DrawerItemType TYPE = DrawerItemType.DIVIDER;
+	public static final DrawerItemType TYPE = DrawerItemType.PADDEDDIVIDER;
 
-	private DrawerDivider() {
+	private DrawerPaddedDivider() {
 	}
 
 	/**
@@ -43,8 +43,8 @@ public final class DrawerDivider extends DrawerItem {
 	 * @param id the id of the divider
 	 * @return a new DrawerPaddedDivider
 	 */
-	public static DrawerDivider create(final int id) {
-		DrawerDivider divider = new DrawerDivider();
+	public static DrawerPaddedDivider create(final int id) {
+		DrawerPaddedDivider divider = new DrawerPaddedDivider();
 		divider.setId(id);
 		return divider;
 	}

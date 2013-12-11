@@ -14,7 +14,7 @@ import com.missionse.logisticsexample.map.MapViewerFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.compatibility.DrawerSwipeToDismissTouchListener;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
-import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleItem;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerComplexItem;
 import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
 
 /**
@@ -98,7 +98,9 @@ public class LogisticsExample extends DrawerActivity {
 	protected void onNavigationItemSelected(final int id) {
 		if (id == LogisticsDrawerFactory.UPDATE_HISTORY) {
 			getRightDrawerAdapter().add(
-					DrawerSimpleItem.create(mNotificationCount, "Notif " + ++mNotificationCount, 0, false));
+					DrawerComplexItem.create(++mNotificationCount, "Notif " + mNotificationCount,
+							"This is a subtitle, with extra detail about this notification.",
+							R.drawable.ic_action_error, false));
 		}
 	}
 

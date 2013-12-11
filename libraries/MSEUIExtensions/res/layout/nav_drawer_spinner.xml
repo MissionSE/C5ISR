@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
    android:layout_width="match_parent"
    android:layout_height="wrap_content"
-   android:background="?android:attr/activatedBackgroundIndicator"
-   android:textAppearance="?android:attr/textAppearanceListItemSmall"
-   android:gravity="center_vertical"
-   android:paddingRight="10dp"
-   android:minHeight="?android:attr/listPreferredItemHeightSmall"
-   >
+   android:padding="5dp" >
 
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:popupBackground="#444"
-        android:textColor="#eee" />
-
-</RelativeLayout>
+        android:popupBackground="#444" />
+</LinearLayout>

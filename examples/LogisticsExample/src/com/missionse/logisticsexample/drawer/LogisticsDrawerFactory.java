@@ -15,6 +15,7 @@ import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigura
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer.DrawerType;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerDivider;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerHeader;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerPaddedDivider;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleItem;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSpinner;
 
@@ -73,17 +74,24 @@ public class LogisticsDrawerFactory {
 	 */
 	public void addNavigationMenuItems(final DrawerAdapter adapter, final OnItemSelectedListener listener) {
 		List<String> userAccountSpinnerEntries = new ArrayList<String>();
-		userAccountSpinnerEntries.add("Logged Out");
-		userAccountSpinnerEntries.add("Log In");
+		userAccountSpinnerEntries.add(mContext.getResources().getString(R.string.user_loggedout));
+		userAccountSpinnerEntries.add(mContext.getResources().getString(R.string.user_login));
 
 		List<DrawerItem> menu = new ArrayList<DrawerItem>();
 		menu.add(DrawerSpinner.create(USER_ACCOUNT_ACTIONS, new ArrayAdapter<String>(mContext,
-				R.layout.nav_drawer_header, R.id.navheader_label, userAccountSpinnerEntries), listener));
+				R.layout.nav_drawer_spinner_entry, R.id.navheader_label, userAccountSpinnerEntries), listener));
+		menu.add(DrawerPaddedDivider.create(DIVIDER));
+		menu.add(DrawerHeader.create(NAVIGATION_HEADER, mContext.getResources().getString(R.string.drawer_navigation)));
 		menu.add(DrawerDivider.create(DIVIDER));
-		menu.add(DrawerHeader.create(NAVIGATION_HEADER, "Navigation"));
-		menu.add(DrawerSimpleItem.create(MAP, "Map", R.drawable.places, true));
-		menu.add(DrawerSimpleItem.create(SUPPLY_LIST, "Supply List", R.drawable.ebooks, true));
-		menu.add(DrawerSimpleItem.create(UPDATE_HISTORY, "History", R.drawable.analytics, true));
+		menu.add(DrawerSimpleItem.create(MAP, mContext.getResources().getString(R.string.drawer_map),
+				R.drawable.places, true));
+		menu.add(DrawerDivider.create(DIVIDER));
+		menu.add(DrawerSimpleItem.create(SUPPLY_LIST, mContext.getResources().getString(R.string.drawer_supplylist),
+				R.drawable.ebooks, true));
+		menu.add(DrawerDivider.create(DIVIDER));
+		menu.add(DrawerSimpleItem.create(UPDATE_HISTORY, mContext.getResources().getString(R.string.drawer_orders),
+				R.drawable.analytics, true));
+		menu.add(DrawerDivider.create(DIVIDER));
 
 		for (DrawerItem item : menu) {
 			adapter.add(item);

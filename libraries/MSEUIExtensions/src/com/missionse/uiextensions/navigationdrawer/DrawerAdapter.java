@@ -29,10 +29,14 @@ public class DrawerAdapter extends ArrayAdapter<DrawerItem> {
 		DrawerItem menuItem = getItem(position);
 		if (menuItem.getType() == DrawerItemType.SIMPLE) {
 			view = mEntryFactory.getSimpleItemView(convertView, parent, menuItem);
+		} else if (menuItem.getType() == DrawerItemType.COMPLEX) {
+			view = mEntryFactory.getComplexItemView(convertView, parent, menuItem);
 		} else if (menuItem.getType() == DrawerItemType.HEADER) {
 			view = mEntryFactory.getHeaderView(convertView, parent, menuItem);
 		} else if (menuItem.getType() == DrawerItemType.DROPDOWN) {
 			view = mEntryFactory.getSpinnerView(convertView, parent, menuItem);
+		} else if (menuItem.getType() == DrawerItemType.PADDEDDIVIDER) {
+			view = mEntryFactory.getPaddedDividerView(convertView, parent, menuItem);
 		} else if (menuItem.getType() == DrawerItemType.DIVIDER) {
 			view = mEntryFactory.getDividerView(convertView, parent, menuItem);
 		}

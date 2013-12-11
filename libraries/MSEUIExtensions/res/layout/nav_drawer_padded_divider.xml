@@ -7,6 +7,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#444">
+        android:layout_margin="10dp"
+        android:background="#666">
     </View>
 </RelativeLayout>

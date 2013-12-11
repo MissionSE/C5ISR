@@ -21,7 +21,7 @@
         android:background="#222" />
     <!-- The Notification Drawer -->
     <ListView android:id="@+id/notif_drawer"
-        android:layout_width="240dp"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:choiceMode="singleChoice"

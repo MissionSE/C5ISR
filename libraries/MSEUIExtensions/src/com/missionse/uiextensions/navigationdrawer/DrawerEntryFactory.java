@@ -9,6 +9,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.missionse.uiextensions.R;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerComplexItem;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerHeader;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleItem;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSpinner;
@@ -58,6 +59,46 @@ public class DrawerEntryFactory {
 		holder.getTextView().setText(basicItem.getLabel());
 		if (basicItem.getIcon() != 0) {
 			holder.getImageView().setImageResource(basicItem.getIcon());
+		} else {
+			holder.getImageView().setVisibility(View.GONE);
+		}
+
+		return convertView;
+	}
+
+	/**
+	 * Creates the view to represent a DrawerSimpleItem.
+	 * @param convertView the view to populate
+	 * @param parentView the parent view
+	 * @param navDrawerItem the item on which to base the created View
+	 * @return a View to be displayed in the NavigationDrawer
+	 */
+	public View getComplexItemView(View convertView, final ViewGroup parentView, final DrawerItem navDrawerItem) {
+		DrawerComplexItem complexItem = (DrawerComplexItem) navDrawerItem;
+		DrawerComplexItem.Holder holder = null;
+
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.nav_drawer_complex, parentView, false);
+			TextView labelView = (TextView) convertView.findViewById(R.id.navmenuitem_label);
+			TextView subtitleView = (TextView) convertView.findViewById(R.id.navmenuitem_subtitle);
+			ImageView iconView = (ImageView) convertView.findViewById(R.id.navmenuitem_icon);
+
+			holder = new DrawerComplexItem.Holder();
+			holder.setTextView(labelView);
+			holder.setSubtitleTextView(subtitleView);
+			holder.setImageView(iconView);
+
+			convertView.setTag(holder);
+		}
+
+		if (holder == null) {
+			holder = (DrawerComplexItem.Holder) convertView.getTag();
+		}
+
+		holder.getTextView().setText(complexItem.getLabel());
+		holder.getSubtitleTextView().setText(complexItem.getSubtitle());
+		if (complexItem.getIcon() != 0) {
+			holder.getImageView().setImageResource(complexItem.getIcon());
 		} else {
 			holder.getImageView().setVisibility(View.GONE);
 		}
@@ -119,6 +160,21 @@ public class DrawerEntryFactory {
 		}
 		holder.getSpinner().setAdapter(navDrawerSpinner.getAdapter());
 		holder.getSpinner().setOnItemSelectedListener(navDrawerSpinner.getListener());
+
+		return convertView;
+	}
+
+	/**
+	 * Creates the view to represent a DrawerSpinner.
+	 * @param convertView the view to populate
+	 * @param parentView the parent view
+	 * @param navDrawerItem the item on which to base the created View
+	 * @return a View to be displayed in the NavigationDrawer
+	 */
+	public View getPaddedDividerView(View convertView, final ViewGroup parentView, final DrawerItem navDrawerItem) {
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.nav_drawer_padded_divider, parentView, false);
+		}
 
 		return convertView;
 	}
