@@ -22,6 +22,7 @@ public class DrawerConfiguration {
 	private int mDrawerCloseAccessibilityDescription;
 	private BaseAdapter mBaseAdapter;
 	private Drawable mDivider;
+	private boolean mShouldCloseOnSelect;
 
 	/**
 	 * Constructs a new DrawerConfiguration with default settings.
@@ -43,6 +44,8 @@ public class DrawerConfiguration {
 		setDrawerOpenDesc(R.string.drawer_open);
 		setDrawerCloseDesc(R.string.drawer_close);
 		setBaseAdapter(new DrawerAdapter(context));
+
+		mShouldCloseOnSelect = true;
 	}
 
 	/**
@@ -163,5 +166,21 @@ public class DrawerConfiguration {
 	 */
 	public void setDivider(final Drawable divider) {
 		mDivider = divider;
+	}
+
+	/**
+	 * Sets whether or not this drawer should close when an item is selected.
+	 * @param shouldClose whether or not to close
+	 */
+	public void setShouldCloseOnSelect(final boolean shouldClose) {
+		mShouldCloseOnSelect = shouldClose;
+	}
+
+	/**
+	 * Retrieves whether or not this drawer should close when an item is selected.
+	 * @return whether or not to close
+	 */
+	public boolean shouldCloseOnSelect() {
+		return mShouldCloseOnSelect;
 	}
 }

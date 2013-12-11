@@ -78,6 +78,15 @@ public abstract class DrawerActivity extends Activity {
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, getDrawerIcon(),
 				drawerConfiguration.getDrawerOpenDesc(), drawerConfiguration.getDrawerCloseDesc()) {
 			@Override
+			public void onDrawerSlide(final View view, final float slideOffset) {
+				if (view == mLeftDrawerList) {
+					mDrawerLayout.setScrimColor(getResources().getColor(R.color.default_scrim));
+				} else if (view == mRightDrawerList) {
+					mDrawerLayout.setScrimColor(getResources().getColor(R.color.transparent_Scrim));
+				}
+			}
+
+			@Override
 			public void onDrawerClosed(final View view) {
 				getActionBar().setTitle(mCurrentTitle);
 				invalidateOptionsMenu();
@@ -218,9 +227,14 @@ public abstract class DrawerActivity extends Activity {
 			setTitle(selectedItem.getActionBarTitle());
 		}
 
-		if (mDrawerLayout.isDrawerOpen(drawerList)) {
-			mDrawerLayout.closeDrawer(drawerList);
+		if ((drawerList == mLeftDrawerList && mDrawerConfigurations.getLeftConfiguration().shouldCloseOnSelect())
+				|| (drawerList == mRightDrawerList && mDrawerConfigurations.getRightConfiguration()
+						.shouldCloseOnSelect())) {
+			if (mDrawerLayout.isDrawerOpen(drawerList)) {
+				mDrawerLayout.closeDrawer(drawerList);
+			}
 		}
+
 	}
 
 	@Override

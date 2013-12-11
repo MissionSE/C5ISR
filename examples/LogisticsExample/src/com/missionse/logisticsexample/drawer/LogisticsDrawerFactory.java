@@ -64,6 +64,7 @@ public class LogisticsDrawerFactory {
 	private void createNotificationDrawer(final DrawerConfigurationContainer container) {
 		DrawerConfiguration configuration = new DrawerConfiguration(DrawerType.RIGHT, mContext);
 		configuration.setDrawer(R.id.notif_drawer);
+		configuration.setShouldCloseOnSelect(false);
 		container.addConfiguration(configuration);
 	}
 
