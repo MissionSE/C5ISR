@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
 /**
- * Generic Supply.
+ * Mapping between an item id and its name.
  */
-public class Supply extends DBEntity {
+public class ItemName extends DBEntity {
 	
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("name")
@@ -17,7 +17,7 @@ public class Supply extends DBEntity {
 	/**
 	 * Empty constructor. 
 	 */
-	public Supply() { }
+	public ItemName() { }
 
 	/**
 	 * @return the mName

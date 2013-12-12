@@ -12,12 +12,14 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.missionse.logisticsexample.model.InventoryItem;
+import com.missionse.logisticsexample.model.ItemName;
 import com.missionse.logisticsexample.model.Order;
-import com.missionse.logisticsexample.model.InventorySupply;
-import com.missionse.logisticsexample.model.SupplySite;
-import com.missionse.logisticsexample.model.mappings.OrderToSupply;
+import com.missionse.logisticsexample.model.OrderItem;
+import com.missionse.logisticsexample.model.Site;
+import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
+import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
 import com.missionse.logisticsexample.model.mappings.SiteToOrder;
-import com.missionse.logisticsexample.model.mappings.SiteToSupply;
 
 /**
  * Represents the offline database. 
@@ -29,13 +31,27 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static final String DATABASE_NAME = "mylocaldatabase.db";
 	private static final int DATABASE_VERSION = 1;
 
-	private Dao<SupplySite, Integer> mSiteDao = null;
+	private Dao<Site, Integer> mSiteDao = null;
 	private Dao<Order, Integer> mOrderDao = null;
-	private Dao<InventorySupply, Integer> mSupplyDao = null;
 	
-	private Dao<OrderToSupply, Integer> mOrderToSupplyDao = null;
+	private Dao<ItemName, Integer> mItemNameDao = null;
+	private Dao<InventoryItem, Integer> mInventoryItemDao = null;
+	private Dao<OrderItem, Integer> mOrderItemDao = null;
+	
+	private Dao<OrderToOrderItem, Integer> mOrderToOrderItemDao = null;
 	private Dao<SiteToOrder, Integer> mSiteToOrderDao = null;
-	private Dao<SiteToSupply, Integer> mSiteToSupplyDao = null;
+	private Dao<SiteToInventoryItem, Integer> mSiteToInventoryItemDao = null;
+	
+	public static final Class<?>[] DB_CLASSES = {
+		ItemName.class,
+		InventoryItem.class,
+		OrderItem.class,
+		Order.class,
+		Site.class,
+		OrderToOrderItem.class,
+		SiteToOrder.class,
+		SiteToInventoryItem.class
+	};
 	
 	private boolean mInit = false;
 
@@ -51,12 +67,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
 		try {
 			Log.i(DatabaseHelper.class.getName(), "onCreate");
-			TableUtils.createTable(connectionSource, InventorySupply.class);
-			TableUtils.createTable(connectionSource, Order.class);
-			TableUtils.createTable(connectionSource, SupplySite.class);
-			TableUtils.createTable(connectionSource, OrderToSupply.class);
-			TableUtils.createTable(connectionSource, SiteToOrder.class);
-			TableUtils.createTable(connectionSource, SiteToSupply.class);
+			for (Class<?> clazz : DB_CLASSES) {
+				Log.d("DatabaseHelper", "Creating>: " + clazz.getSimpleName());
+				TableUtils.createTable(connectionSource, clazz);
+			}
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
@@ -67,12 +81,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
 		try {
 			Log.i(DatabaseHelper.class.getName(), "onUpgrade");
-			TableUtils.dropTable(connectionSource, InventorySupply.class, true);
-			TableUtils.dropTable(connectionSource, Order.class, true);
-			TableUtils.dropTable(connectionSource, SupplySite.class, true);
-			TableUtils.dropTable(connectionSource, OrderToSupply.class, true);
-			TableUtils.dropTable(connectionSource, SiteToOrder.class, true);
-			TableUtils.dropTable(connectionSource, SiteToSupply.class, true);
+			for (Class<?> clazz : DB_CLASSES) {
+				Log.d("DatabaseHelper", "Dropping>: " + clazz.getSimpleName());
+				TableUtils.dropTable(connectionSource, clazz, true);
+			}
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
@@ -85,12 +97,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public void initialize() {
 		try {
-			mSiteDao = getDao(SupplySite.class);
+			mSiteDao = getDao(Site.class);
 			mOrderDao = getDao(Order.class);
-			mSupplyDao = getDao(InventorySupply.class);
-			mOrderToSupplyDao = getDao(OrderToSupply.class);
+			
+			mItemNameDao = getDao(ItemName.class);
+			mInventoryItemDao = getDao(InventoryItem.class);
+			mOrderItemDao = getDao(OrderItem.class);
+			
+			mOrderToOrderItemDao = getDao(OrderToOrderItem.class);
 			mSiteToOrderDao = getDao(SiteToOrder.class);
-			mSiteToSupplyDao = getDao(SiteToSupply.class);
+			mSiteToInventoryItemDao = getDao(SiteToInventoryItem.class);
 			mInit = true;
 		} catch (Exception dao) {
 			Log.e("DatabaseHelper", "INIT", dao);
@@ -103,37 +119,40 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		super.close();
 		mSiteDao = null;
 		mOrderDao = null;
-		mSupplyDao = null;
-		mOrderToSupplyDao = null;
+		mItemNameDao = null;
+		mInventoryItemDao = null;
+		mOrderItemDao = null;
+		mOrderToOrderItemDao = null;
 		mSiteToOrderDao = null;
-		mSiteToSupplyDao = null;
+		mSiteToInventoryItemDao = null;
+		mInit = false;
 	}
 	
 	/////////////////////////////////////////////////////////
-	// InventorySupply Site Methods
+	// Site Methods
 	/////////////////////////////////////////////////////////
 	
 	/**
 	 * Create a new supply site in the database. 
-	 * @param site - {@link SupplySite}
+	 * @param site - {@link Site}
 	 */
-	public void createNewSupplySite(SupplySite site) {
+	public void create(Site site) {
 		
 	}
 	
 	/**
 	 * Update the current supply site. 
-	 * @param site - {@link SupplySite}
+	 * @param site - {@link Site}
 	 */
-	public void updateSupplySite(SupplySite site) {
+	public void update(Site site) {
 		
 	}
 	
 	/**
 	 * delete the current supply site. 
-	 * @param site - {@link SupplySite}
+	 * @param site - {@link Site}
 	 */
-	public void deleteSupplySite(SupplySite site) {
+	public void delete(Site site) {
 		
 	}
 	
@@ -142,7 +161,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @param site - child site
 	 * @return null if no parent is currently assigned
 	 */
-	public SupplySite getSiteParent(SupplySite site) {
+	public Site getSiteParent(Site site) {
 		return null;
 	}
 	
@@ -151,7 +170,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @param site - site that contains the supplies
 	 * @return - list of supplies
 	 */
-	public List<InventorySupply> getSupplies(SupplySite site) {
+	public List<InventoryItem> getSupplies(Site site) {
 		return Collections.emptyList();
 	}
 	
@@ -160,7 +179,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @param site  - site that contains the orders
 	 * @return - list of supplies
 	 */
-	public List<Order> getOrders(SupplySite site) {
+	public List<Order> getOrders(Site site) {
 		return Collections.emptyList();
 	}
 	
@@ -171,7 +190,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Create a new Order. 
 	 * @param order - {@link Order}
 	 */
-	public void createNewOrder(Order order) {
+	public void create(Order order) {
 		
 	}
 	
@@ -179,7 +198,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Update an Order. 
 	 * @param order - {@link Order}
 	 */
-	public void updateOrder(Order order) {
+	public void update(Order order) {
 		
 	}
 	
@@ -187,7 +206,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Delete an order. 
 	 * @param order - {@link Order}
 	 */
-	public void deleteOrder(Order order) {
+	public void delete(Order order) {
 		
 	}
 	
@@ -196,35 +215,63 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @param order - order
 	 * @return - list of supplies
 	 */
-	public List<InventorySupply> getSupplies(Order order) {
+	public List<InventoryItem> getSupplies(Order order) {
 		return Collections.emptyList();
 	}
 	
 	/////////////////////////////////////////////////////////
-	// InventorySupply Methods
+	// InventoryItem Methods
 	/////////////////////////////////////////////////////////
 	/**
-	 * Create a new InventorySupply.
-	 * @param supply - {@link InventorySupply}
+	 * Create a new InventoryItem.
+	 * @param supply - {@link InventoryItem}
 	 */
-	public void createNewSupply(InventorySupply supply) {
+	public void create(InventoryItem supply) {
 		
 	}
 	
 	/**
-	 * Update a InventorySupply.
-	 * @param supply - {@link InventorySupply}
+	 * Update a InventoryItem.
+	 * @param supply - {@link InventoryItem}
 	 */
-	public void updateSupply(InventorySupply supply) {
+	public void update(InventoryItem supply) {
 		
 	}	
 	
 	/**
-	 * Delete a InventorySupply.
-	 * @param supply - {@link InventorySupply}
+	 * Delete a InventoryItem.
+	 * @param supply - {@link InventoryItem}
 	 */
-	public void deleteSupply(InventorySupply supply) {
+	public void delete(InventoryItem supply) {
 		
 	}
+	
+	/////////////////////////////////////////////////////////
+	// OrderItem Methods
+	/////////////////////////////////////////////////////////
+	/**
+	* Create a new OrderItem.
+	* @param supply - {@link OrderItem}
+	*/
+	public void create(OrderItem supply) {
+	
+	}
+	
+	/**
+	* Update a OrderItem.
+	* @param supply - {@link OrderItem}
+	*/
+	public void update(OrderItem supply) {
+	
+	}	
+	
+	/**
+	* Delete a OrderItem.
+	* @param supply - {@link OrderItem}
+	*/
+	public void delete(OrderItem supply) {
+	
+	}
+	
 
 }
