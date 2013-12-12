@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.missionse.logisticsexample.R;
+import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.DrawerAdapter;
 import com.missionse.uiextensions.navigationdrawer.DrawerItem;
+import com.missionse.uiextensions.navigationdrawer.compatibility.DrawerSwipeToDismissTouchListener;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfiguration;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer.DrawerType;
@@ -18,6 +24,7 @@ import com.missionse.uiextensions.navigationdrawer.entry.DrawerHeader;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerPaddedDivider;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleItem;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSpinner;
+import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
 
 /**
  * Creates the two requisite Drawers, the left NavigationDrawer, and the right NotificationDrawer.
@@ -98,5 +105,48 @@ public class LogisticsDrawerFactory {
 		for (DrawerItem item : menu) {
 			adapter.add(item);
 		}
+	}
+
+	/**
+	 * Called when the DrawerActivity has finished configuring the drawers, and is now ready for post-actions.
+	 * @param activity the parent activity
+	 */
+	public void onDrawerConfigurationComplete(final DrawerActivity activity) {
+		//		for (int i = 200; i < 210; ++i) {
+		//			activity.getRightDrawerAdapter().add(
+		//					DrawerComplexItem.create(i, "Notif " + i,
+		//							"This is a subtitle, with extra detail about this notification.",
+		//							R.drawable.ic_action_error, false));
+		//		}
+
+		DrawerSwipeToDismissTouchListener touchListener = new DrawerSwipeToDismissTouchListener(
+				activity.getDrawerLayout(), activity.getRightDrawerList(), new SwipeToDismissListener() {
+					@Override
+					public boolean canDismiss(final int position) {
+						return true;
+					}
+
+					@Override
+					public void onDismiss(final ListView listView, final int[] reverseSortedPositions) {
+						for (int position : reverseSortedPositions) {
+							if (activity.getRightDrawerAdapter().getCount() > position) {
+								activity.getRightDrawerAdapter().remove(
+										activity.getRightDrawerAdapter().getItem(position));
+							}
+						}
+						activity.getRightDrawerAdapter().notifyDataSetChanged();
+					}
+				});
+
+		activity.getRightDrawerList().setOnTouchListener(touchListener);
+		activity.getRightDrawerList().setOnScrollListener(touchListener.makeScrollListener());
+
+		TextView emptyView = (TextView) activity.findViewById(R.id.empty_notif_drawer);
+		activity.getRightDrawerList().setEmptyView(emptyView);
+		emptyView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(final View v) {
+			}
+		});
 	}
 }

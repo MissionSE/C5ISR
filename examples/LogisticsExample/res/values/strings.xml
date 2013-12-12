@@ -2,8 +2,14 @@
 <resources>
 
     <string name="app_name">Logistics Example</string>
+    
+    <!-- Overflow menu -->
     <string name="action_settings">Settings</string>
+    <string name="action_feedback">Send feedback</string>
+    <string name="action_help">Help</string>
+    <string name="action_licenses">Licenses</string>
 
+    <!-- JSON tags -->
     <string name="tag_success">success</string>
     <string name="tag_locations">locations</string>
     <string name="tag_id">id</string>
@@ -11,8 +17,8 @@
     <string name="tag_latitude">latitude</string>
     <string name="tag_longitude">longitude</string>
     
+    <!-- DB Configuration -->
     <string name="remote_db_path">http://192.168.86.79/</string>
-    
     <string name="get_all_locations">get_all_locations.php</string>
     
     <!-- Navigation Drawer -->
@@ -24,5 +30,8 @@
     <!-- Users Account Actions Spinner -->
     <string name="user_loggedout">Logged Out</string>
     <string name="user_login">Log In</string>
+    
+    <!-- Notifications -->
+    <string name="no_unread_notifications">No Unread Notifications</string>
 
 </resources>

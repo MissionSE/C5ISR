@@ -6,16 +6,13 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ListView;
 
 import com.missionse.logisticsexample.drawer.LogisticsDrawerFactory;
 import com.missionse.logisticsexample.map.LogisticsMap;
 import com.missionse.logisticsexample.map.MapViewerFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
-import com.missionse.uiextensions.navigationdrawer.compatibility.DrawerSwipeToDismissTouchListener;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerComplexItem;
-import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
 
 /**
  * Main entry point to the Logistics application. Instantiates the two drawers, and loads the initial fragment into the
@@ -62,13 +59,7 @@ public class LogisticsExample extends DrawerActivity {
 
 	@Override
 	protected void onDrawerConfigurationComplete() {
-
-		for (int i = 100; i < 110; ++i) {
-			getRightDrawerAdapter().add(
-					DrawerComplexItem.create(++mNotificationCount, "Notif " + mNotificationCount,
-							"This is a subtitle, with extra detail about this notification.",
-							R.drawable.ic_action_error, false));
-		}
+		mDrawerFactory.onDrawerConfigurationComplete(this);
 
 		mDrawerFactory.addNavigationMenuItems(getLeftDrawerAdapter(), new OnItemSelectedListener() {
 			@Override
@@ -80,25 +71,6 @@ public class LogisticsExample extends DrawerActivity {
 			public void onNothingSelected(final AdapterView<?> parent) {
 			}
 		});
-
-		DrawerSwipeToDismissTouchListener touchListener = new DrawerSwipeToDismissTouchListener(getDrawerLayout(),
-				getRightDrawerList(), new SwipeToDismissListener() {
-					@Override
-					public boolean canDismiss(final int position) {
-						return true;
-					}
-
-					@Override
-					public void onDismiss(final ListView listView, final int[] reverseSortedPositions) {
-						for (int position : reverseSortedPositions) {
-							getRightDrawerAdapter().remove(getRightDrawerAdapter().getItem(position));
-						}
-						getRightDrawerAdapter().notifyDataSetChanged();
-					}
-				});
-
-		getRightDrawerList().setOnTouchListener(touchListener);
-		getRightDrawerList().setOnScrollListener(touchListener.makeScrollListener());
 	}
 
 	@Override

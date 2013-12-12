@@ -117,23 +117,43 @@ public abstract class DrawerActivity extends Activity {
 
 	}
 
-	protected DrawerLayout getDrawerLayout() {
+	/**
+	 * Retrieves the underlying main root layout, the DrawerLayout, used to create the NavigationDrawers.
+	 * @return the DrawerLayout
+	 */
+	public DrawerLayout getDrawerLayout() {
 		return mDrawerLayout;
 	}
 
-	protected ListView getLeftDrawerList() {
+	/**
+	 * Retrieves the ListView created for the left drawer.
+	 * @return the ListView
+	 */
+	public ListView getLeftDrawerList() {
 		return mLeftDrawerList;
 	}
 
-	protected DrawerAdapter getLeftDrawerAdapter() {
+	/**
+	 * Retrieves the adapter used to populate the ListView comprising the left drawer.
+	 * @return the ArrayAdapter
+	 */
+	public DrawerAdapter getLeftDrawerAdapter() {
 		return (DrawerAdapter) mDrawerConfigurations.getLeftConfiguration().getBaseAdapter();
 	}
 
-	protected ListView getRightDrawerList() {
+	/**
+	 * Retrieves the ListView created for the right drawer.
+	 * @return the ListView
+	 */
+	public ListView getRightDrawerList() {
 		return mRightDrawerList;
 	}
 
-	protected DrawerAdapter getRightDrawerAdapter() {
+	/**
+	 * Retrieves the adapter used to populate the ListView comprising the right drawer.
+	 * @return the ArrayAdapter
+	 */
+	public DrawerAdapter getRightDrawerAdapter() {
 		return (DrawerAdapter) mDrawerConfigurations.getRightConfiguration().getBaseAdapter();
 	}
 

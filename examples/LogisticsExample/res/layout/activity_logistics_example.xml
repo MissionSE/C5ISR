@@ -21,13 +21,28 @@
         android:dividerHeight="0dp"
         android:background="#222" />
     <!-- The Notification Drawer -->
-    <ListView android:id="@+id/notif_drawer"
+    <RelativeLayout
         android:layout_width="320dp"
         android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#222" />
-
+        android:layout_gravity="end" >  
+        <ListView android:id="@+id/notif_drawer"
+	        android:layout_width="320dp"
+	        android:layout_height="match_parent"
+	        android:choiceMode="singleChoice"
+	        android:divider="@android:color/transparent"
+	        android:dividerHeight="0dp"
+	        android:background="#222" />
+        <TextView android:id="@+id/empty_notif_drawer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?@android:attr/textAppearanceMedium"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:text="@string/no_unread_notifications"
+            android:visibility="gone"
+            android:background="@color/default_dark"
+            android:textColor="#eee"
+            android:gravity="center_vertical|center_horizontal" >
+        </TextView>
+    </RelativeLayout>
 </com.missionse.uiextensions.navigationdrawer.compatibility.SwipeToDismissDrawerLayout>
