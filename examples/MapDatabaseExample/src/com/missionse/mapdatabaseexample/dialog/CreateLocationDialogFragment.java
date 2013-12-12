@@ -1,4 +1,4 @@
-package com.missionse.mapdatabaseexample;
+package com.missionse.mapdatabaseexample.dialog;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.missionse.mapdatabaseexample.R;
+import com.missionse.mapdatabaseexample.map.MapLocationListener;
 import com.missionse.mapdatabaseexample.tasks.CreateLocationTask;
 
 /**

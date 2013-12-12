@@ -1,6 +1,5 @@
-package com.missionse.mapdatabaseexample;
+package com.missionse.mapdatabaseexample.map;
 
-import com.missionse.mapdatabaseexample.model.MapLocation;
 
 /**
  * Provides a callback when a location is added.

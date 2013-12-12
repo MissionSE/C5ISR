@@ -1,27 +1,43 @@
 package com.missionse.mapdatabaseexample;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.missionse.mapdatabaseexample.model.MapLocation;
+import com.missionse.mapdatabaseexample.map.DatabaseMap;
+import com.missionse.mapdatabaseexample.map.MapLocation;
+import com.missionse.mapdatabaseexample.map.MapLocationListener;
+import com.missionse.mapdatabaseexample.map.MapViewerFragment;
 import com.missionse.mapdatabaseexample.tasks.GetAllLocationsTask;
 
 /**
  * Provides an activity that displays a map fragment.
  */
 public class MapDatabaseExampleActivity extends Activity implements MapLocationListener {
-	private GoogleMapFragment mMapFragment;
+	private DatabaseMap mDatabaseMap;
 	private Menu mOptionsMenu;
+
+	/**
+	 * Constructor.
+	 */
+	public MapDatabaseExampleActivity() {
+		mDatabaseMap = new DatabaseMap(this);
+	}
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map_database_example);
 
-		mMapFragment = new GoogleMapFragment();
-		getFragmentManager().beginTransaction().replace(R.id.content, mMapFragment).commit();
+		FragmentManager fragmentManager = getFragmentManager();
+		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
+		if (mapViewerFragment == null) {
+			mapViewerFragment = new MapViewerFragment();
+			mapViewerFragment.setMapLoadedListener(mDatabaseMap);
+			fragmentManager.beginTransaction().add(R.id.content, mapViewerFragment, "map").commit();
+		}
 	}
 
 	@Override
@@ -42,11 +58,6 @@ public class MapDatabaseExampleActivity extends Activity implements MapLocationL
 		}
 	}
 
-	@Override
-	public void locationReceived(final MapLocation location) {
-		mMapFragment.addMarker(location);
-	}
-
 	/**
 	 * Shows a progress bar in the menu bar when a database connection is in progress.
 	 * @param inProgress Whether the database connection is in progress.
@@ -62,5 +73,10 @@ public class MapDatabaseExampleActivity extends Activity implements MapLocationL
 				}
 			}
 		}
+	}
+
+	@Override
+	public void locationReceived(final MapLocation location) {
+		mDatabaseMap.addMarker(location);
 	}
 }

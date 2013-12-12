@@ -1,4 +1,4 @@
-package com.missionse.mapdatabaseexample;
+package com.missionse.mapdatabaseexample.map;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,6 @@ import java.util.Map;
 import android.annotation.SuppressLint;
 
 import com.google.android.gms.maps.model.Marker;
-import com.missionse.mapdatabaseexample.model.MapLocation;
 
 /**
  * Provides a container for map locations and their associated markers.

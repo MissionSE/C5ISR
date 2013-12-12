@@ -13,9 +13,9 @@ import android.util.Log;
 
 import com.missionse.httpdatabaseconnector.HttpRequestTask;
 import com.missionse.mapdatabaseexample.MapDatabaseExampleActivity;
-import com.missionse.mapdatabaseexample.MapLocationListener;
 import com.missionse.mapdatabaseexample.R;
-import com.missionse.mapdatabaseexample.model.MapLocation;
+import com.missionse.mapdatabaseexample.map.MapLocation;
+import com.missionse.mapdatabaseexample.map.MapLocationListener;
 
 /**
  * Provides a task that gets all locations in the database.

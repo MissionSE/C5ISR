@@ -1,4 +1,4 @@
-package com.missionse.mapdatabaseexample.model;
+package com.missionse.mapdatabaseexample.map;
 
 import com.google.android.gms.maps.model.LatLng;
 
