@@ -103,7 +103,7 @@ public class SwipeToDismissTouchListener implements OnTouchListener {
 
 		switch (motionEvent.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
-				handleDownMotionEvent(motionEvent);
+				touchConsumed = handleDownMotionEvent(motionEvent);
 				break;
 			case MotionEvent.ACTION_CANCEL:
 				if (mVelocityTracker != null) {
@@ -126,7 +126,7 @@ public class SwipeToDismissTouchListener implements OnTouchListener {
 		return touchConsumed;
 	}
 
-	private void handleDownMotionEvent(final MotionEvent motionEvent) {
+	private boolean handleDownMotionEvent(final MotionEvent motionEvent) {
 		if (!mPaused) {
 			// TODO: ensure this is a finger, and set a flag
 			// Find the child mView that was touched (perform a hit test)
@@ -151,11 +151,13 @@ public class SwipeToDismissTouchListener implements OnTouchListener {
 				if (mListener.canDismiss(mDownPosition)) {
 					mVelocityTracker = VelocityTracker.obtain();
 					mVelocityTracker.addMovement(motionEvent);
+					return true;
 				} else {
 					mDownView = null;
 				}
 			}
 		}
+		return false;
 	}
 
 	private void handleCancelMotionEvent() {

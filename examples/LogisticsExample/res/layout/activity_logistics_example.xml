@@ -1,4 +1,4 @@
-<com.missionse.uiextensions.navigationdrawer.compatibility.SwipeToDismissSafeDrawerLayout
+<com.missionse.uiextensions.navigationdrawer.compatibility.SwipeToDismissDrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
@@ -30,4 +30,4 @@
         android:dividerHeight="0dp"
         android:background="#222" />
 
-</com.missionse.uiextensions.navigationdrawer.compatibility.SwipeToDismissSafeDrawerLayout>
+</com.missionse.uiextensions.navigationdrawer.compatibility.SwipeToDismissDrawerLayout>

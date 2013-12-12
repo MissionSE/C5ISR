@@ -11,31 +11,32 @@ import android.view.MotionEvent;
  * 
  * See this link for more detail: https://github.com/chrisbanes/PhotoView/issues/72
  */
-public class SwipeToDismissSafeDrawerLayout extends DrawerLayout {
+public class SwipeToDismissDrawerLayout extends DrawerLayout {
+
 	/**
-	 * Creates a new SwipeToDismissSafeDrawerLayout.
+	 * Creates a new SwipeToDismissDrawerLayout.
 	 * @param context overall application context
 	 */
-	public SwipeToDismissSafeDrawerLayout(final Context context) {
+	public SwipeToDismissDrawerLayout(final Context context) {
 		super(context);
 	}
 
 	/**
-	 * Creates a new SwipeToDismissSafeDrawerLayout.
+	 * Creates a new SwipeToDismissDrawerLayout.
 	 * @param context overall application context
 	 * @param attrs attributes to apply on creation
 	 */
-	public SwipeToDismissSafeDrawerLayout(final Context context, final AttributeSet attrs) {
+	public SwipeToDismissDrawerLayout(final Context context, final AttributeSet attrs) {
 		super(context, attrs);
 	}
 
 	/**
-	 * Creates a new SwipeToDismissSafeDrawerLayout.
+	 * Creates a new SwipeToDismissDrawerLayout.
 	 * @param context overall application context
 	 * @param attrs attributes to apply on creation
 	 * @param defStyle defined style?
 	 */
-	public SwipeToDismissSafeDrawerLayout(final Context context, final AttributeSet attrs, final int defStyle) {
+	public SwipeToDismissDrawerLayout(final Context context, final AttributeSet attrs, final int defStyle) {
 		super(context, attrs, defStyle);
 	}
 
@@ -48,4 +49,5 @@ public class SwipeToDismissSafeDrawerLayout extends DrawerLayout {
 			return false;
 		}
 	}
+
 }
