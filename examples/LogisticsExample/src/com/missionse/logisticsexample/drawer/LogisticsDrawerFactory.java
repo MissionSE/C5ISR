@@ -65,6 +65,7 @@ public class LogisticsDrawerFactory {
 		DrawerConfiguration configuration = new DrawerConfiguration(DrawerType.RIGHT, mContext);
 		configuration.setDrawer(R.id.notif_drawer);
 		configuration.setShouldCloseOnSelect(false);
+		configuration.setScrimColor(mContext.getResources().getColor(R.color.transparent_scrim));
 		container.addConfiguration(configuration);
 	}
 

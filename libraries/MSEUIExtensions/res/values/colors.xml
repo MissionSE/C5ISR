@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="default_list_divider">#bbb</color>
-    <color name="default_scrim">#66000000</color>
-    <color name="transparent_Scrim">#00ffffff</color>
+    <color name="default_scrim">#55000000</color>
+    <color name="transparent_scrim">#00ffffff</color>
 </resources>

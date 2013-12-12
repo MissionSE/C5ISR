@@ -63,6 +63,13 @@ public class LogisticsExample extends DrawerActivity {
 	@Override
 	protected void onDrawerConfigurationComplete() {
 
+		for (int i = 100; i < 110; ++i) {
+			getRightDrawerAdapter().add(
+					DrawerComplexItem.create(++mNotificationCount, "Notif " + mNotificationCount,
+							"This is a subtitle, with extra detail about this notification.",
+							R.drawable.ic_action_error, false));
+		}
+
 		mDrawerFactory.addNavigationMenuItems(getLeftDrawerAdapter(), new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {

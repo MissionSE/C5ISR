@@ -80,9 +80,9 @@ public abstract class DrawerActivity extends Activity {
 			@Override
 			public void onDrawerSlide(final View view, final float slideOffset) {
 				if (view == mLeftDrawerList) {
-					mDrawerLayout.setScrimColor(getResources().getColor(R.color.default_scrim));
+					mDrawerLayout.setScrimColor(mDrawerConfigurations.getLeftConfiguration().getScrimColor());
 				} else if (view == mRightDrawerList) {
-					mDrawerLayout.setScrimColor(getResources().getColor(R.color.transparent_Scrim));
+					mDrawerLayout.setScrimColor(mDrawerConfigurations.getRightConfiguration().getScrimColor());
 				}
 			}
 

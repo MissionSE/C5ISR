@@ -23,6 +23,7 @@ public class DrawerConfiguration {
 	private BaseAdapter mBaseAdapter;
 	private Drawable mDivider;
 	private boolean mShouldCloseOnSelect;
+	private int mScrimColor;
 
 	/**
 	 * Constructs a new DrawerConfiguration with default settings.
@@ -46,6 +47,7 @@ public class DrawerConfiguration {
 		setBaseAdapter(new DrawerAdapter(context));
 
 		mShouldCloseOnSelect = true;
+		mScrimColor = R.color.default_scrim;
 	}
 
 	/**
@@ -182,5 +184,21 @@ public class DrawerConfiguration {
 	 */
 	public boolean shouldCloseOnSelect() {
 		return mShouldCloseOnSelect;
+	}
+
+	/**
+	 * Sets the scrim Color to the specific color.
+	 * @param color resource ID of the scrim color
+	 */
+	public void setScrimColor(final int color) {
+		mScrimColor = color;
+	}
+
+	/**
+	 * Retrieves the scrim color.
+	 * @return the scrim color
+	 */
+	public int getScrimColor() {
+		return mScrimColor;
 	}
 }
