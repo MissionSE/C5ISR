@@ -9,7 +9,7 @@
 
 		require_once __DIR__ . '/db_connect.php';
 		$db = new DB_CONNECT();
-		$result = mysql_query("UPDATE locations SET name='$name', latitude='$latitude', longitude='$longitude' WHERE id='$id'");
+		$result = mysql_query("UPDATE locations SET name='$name', latitude='$latitude', longitude='$longitude', updated_at=NOW() WHERE id='$id'");
 
 		if ($result) {
 			$response["success"] = 1;
