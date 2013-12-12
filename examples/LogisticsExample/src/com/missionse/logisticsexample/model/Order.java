@@ -8,13 +8,13 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 
 /**
- * Represents an order from a {@link SupplySite}.
+ * Represents an order from a {@link Site}.
  */
 public class Order extends DBEntity {	
 
 	@Expose(serialize = true, deserialize = true)
-	@SerializedName("timestamp")
-	@DatabaseField(dataType = DataType.DATE, columnName = "timestamp")
+	@SerializedName("order_at")
+	@DatabaseField(dataType = DataType.DATE, columnName = "order_at")
 	private Date mTimeStamp;
 	
 	@Expose(serialize = true, deserialize = true)

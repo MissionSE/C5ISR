@@ -9,7 +9,7 @@ import com.j256.ormlite.field.DatabaseField;
  * @author rvieras
  *
  */
-public class SupplySite extends DBEntity {
+public class Site extends DBEntity {
 	
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("name")
@@ -17,13 +17,13 @@ public class SupplySite extends DBEntity {
 	private String mName;
 	
 	@Expose(serialize = true, deserialize = true)
-	@SerializedName("lat")
-	@DatabaseField(columnName = "lat")
+	@SerializedName("latitude")
+	@DatabaseField(columnName = "latitude")
 	private double mLatitude;
 	
 	@Expose(serialize = true, deserialize = true)
-	@SerializedName("lng")
-	@DatabaseField(columnName = "lng")
+	@SerializedName("longitude")
+	@DatabaseField(columnName = "longitude")
 	private double mLongitude; 
 	
 	@Expose(serialize = true, deserialize = true)
@@ -34,7 +34,7 @@ public class SupplySite extends DBEntity {
 	/**
 	 * Default constructor.  Needed for ORM library.
 	 */
-	public SupplySite() { }
+	public Site() { }
 
 	/**
 	 * @return the mName
