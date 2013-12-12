@@ -12,10 +12,10 @@ import com.missionse.logisticsexample.drawer.LogisticsDrawerFactory;
 import com.missionse.logisticsexample.map.LogisticsMap;
 import com.missionse.logisticsexample.map.MapViewerFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
-import com.missionse.uiextensions.navigationdrawer.compatibility.DrawerSwipeToDismissTouchListener;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerComplexItem;
 import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
+import com.missionse.uiextensions.touchlistener.SwipeToDismissTouchListener;
 
 /**
  * Main entry point to the Logistics application. Instantiates the two drawers, and loads the initial fragment into the
@@ -81,8 +81,8 @@ public class LogisticsExample extends DrawerActivity {
 			}
 		});
 
-		DrawerSwipeToDismissTouchListener touchListener = new DrawerSwipeToDismissTouchListener(getDrawerLayout(),
-				getRightDrawerList(), new SwipeToDismissListener() {
+		SwipeToDismissTouchListener touchListener = new SwipeToDismissTouchListener(getRightDrawerList(),
+				new SwipeToDismissListener() {
 					@Override
 					public boolean canDismiss(final int position) {
 						return true;
