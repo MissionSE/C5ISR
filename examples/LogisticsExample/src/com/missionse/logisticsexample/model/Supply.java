@@ -8,7 +8,6 @@ import com.j256.ormlite.field.DatabaseField;
  *
  */
 public class Supply {
-	
 	@DatabaseField(generatedId = true, columnName = "_id")
 	private int mId;
 	
@@ -16,7 +15,16 @@ public class Supply {
 	private String mName;
 	
 	@DatabaseField(columnName = "amount")
-	private double mAmout;
+	private double mAmount;
+	
+	@DatabaseField(columnName = "maxamount")
+	private double mMaxAmount;
+	
+	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "order_id")
+	private Order mOrder;
+	
+	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "site_id")
+	private SupplySite mSite;
 	
 	/**
 	 * Default constructor needed by ORM library. 
@@ -38,17 +46,17 @@ public class Supply {
 	}
 
 	/**
-	 * @return the mAmout
+	 * @return the mAmount
 	 */
-	public double getAmout() {
-		return mAmout;
+	public double getAmount() {
+		return mAmount;
 	}
 
 	/**
-	 * @param amout the mAmout to set
+	 * @param amount the mAmount to set
 	 */
-	public void setAmout(double amout) {
-		this.mAmout = amout;
+	public void setAmout(double amount) {
+		this.mAmount = amount;
 	}
 
 	/**
@@ -56,5 +64,19 @@ public class Supply {
 	 */
 	public int getId() {
 		return mId;
+	}
+	
+	/**
+	 * @return the mMaxAmount
+	 */
+	public double getMaxAmount() {
+		return mMaxAmount;
+	}
+
+	/**
+	 * @param maxAmount the mMaxAmount to set
+	 */
+	public void setMaxAmout(double maxAmount) {
+		this.mMaxAmount = maxAmount;
 	}
 }

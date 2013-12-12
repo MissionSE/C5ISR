@@ -1,6 +1,6 @@
 package com.missionse.logisticsexample.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Collection;
 
 import com.j256.ormlite.field.DataType;
@@ -12,15 +12,14 @@ import com.j256.ormlite.field.ForeignCollectionField;
  * @author rvieras
  *
  */
-public class Order {
-	
+public class Order {	
 	@DatabaseField(generatedId = true, columnName = "_id")
 	private int mId;
-	
-	@ForeignCollectionField(columnName = "supply_id")
+
+	@ForeignCollectionField()
 	private Collection<Supply> mSupplies;
 	
-	@DatabaseField(columnName = "timestamp")
+	@DatabaseField(dataType = DataType.DATE, columnName = "timestamp")
 	private Date mTimeStamp;
 	
 	@DatabaseField(dataType = DataType.ENUM_INTEGER, columnName = "severity")
@@ -28,6 +27,9 @@ public class Order {
 	
 	@DatabaseField(dataType = DataType.ENUM_INTEGER, columnName = "status")
 	private Status mStatus;
+	
+	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "site_id")
+	private SupplySite mSite;
 	
 	/**
 	 * Empty constructor.  Needed for the ORM library.
