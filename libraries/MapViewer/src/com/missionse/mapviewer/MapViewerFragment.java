@@ -2,49 +2,28 @@ package com.missionse.mapviewer;
 
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.LoaderManager;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
-import android.provider.ContactsContract.Contacts;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,8 +66,7 @@ LocationListener,
 GooglePlayServicesClient.ConnectionCallbacks,
 GooglePlayServicesClient.OnConnectionFailedListener,
 GoogleMap.OnCameraChangeListener, 
-GoogleMap.OnInfoWindowClickListener,
-LoaderCallbacks<Cursor> {
+GoogleMap.OnInfoWindowClickListener {
 
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
 
@@ -105,8 +83,6 @@ LoaderCallbacks<Cursor> {
 	private static final String PREF_CIRCLE_STROKE_COLOR = "pref_circle_stroke_color";
 	private static final long DEF_LOCATION_REQUEST_INTERVAL = 5000; // 5 seconds
 	private static final long DEF_FASTEST_REQUEST_INTERVAL = 16; // 16ms = 60fps
-	private static final String GEOCODE_BASE_URL = "http://maps.googleapis.com/maps/api/geocode/json?address=";
-	private static final String GEOCODE_SENSOR_URL = "&sensor=true";
 
 	/*
 	 * These settings are the same as the settings for the map. They will in
@@ -146,6 +122,7 @@ LoaderCallbacks<Cursor> {
 	// Markers stored by floor
 	private SparseArray<ArrayList<Marker>> mMarkersFilter = null;
 
+	private SparseBooleanArray mFilterLoaded = new SparseBooleanArray();
 	private boolean mMarkersLoaded = false;
 
 	// Cached size of view
@@ -159,7 +136,7 @@ LoaderCallbacks<Cursor> {
 	private float mDPI = 0;
 
 	public interface Callbacks {
-		public void onLocationSelected(String locationId, String locationTitle);
+		void onLocationSelected(String locationId, String locationTitle);
 	}
 
 	private static Callbacks sDummyCallbacks = new Callbacks() {
@@ -191,16 +168,15 @@ LoaderCallbacks<Cursor> {
 
 		View v = inflater.inflate(R.layout.fragment_map_viewer, container, false);
 		FrameLayout layout = (FrameLayout) v.findViewById(R.id.map_container);
+		
+		Log.d(TAG, "layout.w=" + layout.getWidth());
+		Log.d(TAG, "layout.h=" + layout.getHeight());
 
 		layout.addView(mapView, 0);
 
 		mMapOverview = (MapView) v.findViewById(R.id.map_overview);
 		mMapOverview.onCreate(savedInstanceState);
-		//		View containerParentView = (View) container.getParent();
-		//		mMapOverview.setLayoutParams(new FrameLayout.LayoutParams(
-		//				containerParentView.getWidth() / DEF_SCREEN_RATIO, 
-		//				containerParentView.getHeight() / DEF_SCREEN_RATIO));
-		//		
+
 		mFilterControls = (LinearLayout) layout.findViewById(R.id.map_filtercontrols);
 
 		// setup filter button handlers
@@ -215,7 +191,7 @@ LoaderCallbacks<Cursor> {
 				showMarkers(StructuredPostal.TYPE_HOME);
 			}
 		});
-		
+
 		button = mFilterButtons.get(StructuredPostal.TYPE_WORK);
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -223,7 +199,7 @@ LoaderCallbacks<Cursor> {
 				showMarkers(StructuredPostal.TYPE_WORK);
 			}
 		});
-		
+
 		button = mFilterButtons.get(StructuredPostal.TYPE_OTHER);
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -231,7 +207,7 @@ LoaderCallbacks<Cursor> {
 				showMarkers(StructuredPostal.TYPE_OTHER);
 			}
 		});
-		
+
 		// get the height and width of the view
 		mapView.getViewTreeObserver().addOnGlobalLayoutListener(
 				new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -260,12 +236,6 @@ LoaderCallbacks<Cursor> {
 				});
 
 		setUpMapIfNeeded();
-
-		// load all markers
-		LoaderManager lm = getActivity().getLoaderManager();
-		lm.initLoader(StructuredPostal.TYPE_HOME, null, this);
-		lm.initLoader(StructuredPostal.TYPE_WORK, null, this);
-		lm.initLoader(StructuredPostal.TYPE_OTHER, null, this);
 
 		return v;
 	}
@@ -306,7 +276,6 @@ LoaderCallbacks<Cursor> {
 		}
 		mFilterButtons.get(filter).setBackgroundResource(backgroundResource);
 		mFilterButtons.get(filter).setTextColor(getResources().getColor(textColorResource));
-
 	}
 
 	/**
@@ -315,23 +284,22 @@ LoaderCallbacks<Cursor> {
 	 * shown.
 	 */
 	private void enableMarkers() {
-		if (mMarkersLoaded && mWidth > 0 && mHeight > 0) {
-			mFilterControls.setVisibility(View.VISIBLE);
-
-			showAllMarkers();
+		for (int i = 0; i < mFilterLoaded.size(); i++) {
+			Boolean value = mFilterLoaded.valueAt(i);
+			if (value == null || value.booleanValue() == false) {
+				return;
+			}
 		}
-	}
-
-	private void showAllMarkers() {
-		showMarkers(StructuredPostal.TYPE_HOME);
-		showMarkers(StructuredPostal.TYPE_WORK);
-		showMarkers(StructuredPostal.TYPE_OTHER);
+		
+		if (mWidth > 0 && mHeight > 0) {
+			mFilterControls.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		final String locationId = marker.getTitle();
-		mCallbacks.onLocationSelected(locationId, mMarkers.get(locationId).name);
+		//		mCallbacks.onLocationSelected(locationId, mMarkers.get(locationId).mName);
 	}
 
 	private void centerMap(LatLng position) {
@@ -592,16 +560,12 @@ LoaderCallbacks<Cursor> {
 	 * A structure to store information about a Marker.
 	 */
 	public static class MarkerModel {
-		String id;
-		String type;
-		String name;
-		Marker marker;
+		MarkerOptions mOptions;
+		Marker mMarker;
 
-		public MarkerModel(String id, String type, String name, Marker marker) {
-			this.id = id;
-			this.type = type;
-			this.name = name;
-			this.marker = marker;
+		public MarkerModel(MarkerOptions options, Marker marker) {
+			mOptions = options;
+			mMarker = marker;
 		}
 	}
 
@@ -687,186 +651,24 @@ LoaderCallbacks<Cursor> {
 		return mainVRpoints;
 	}
 
-	// These are the Contacts rows that we will retrieve.
-	static final String[] CONTACTS_SUMMARY_PROJECTION = new String[] {
-		Contacts._ID,
-		Contacts.DISPLAY_NAME,
-		Contacts.CONTACT_STATUS,
-		Contacts.LOOKUP_KEY,
-		StructuredPostal.FORMATTED_ADDRESS
-	};
+	public void addPendingMarkers(int type, Map<String, MarkerOptions> pendingMarkers) {
 
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		// This is called when a new Loader needs to be created. This
-		// sample only has one Loader, so we don't care about the ID.
-		// First, pick the base URI to use depending on whether we are
-		// currently filtering.
-		Uri baseUri = ContactsContract.Data.CONTENT_URI;
-
-		int type = id;
-		// Now create and return a CursorLoader that will take care of
-		// creating a Cursor for the data being displayed.
-		String select = "((" + Contacts.DISPLAY_NAME + " NOTNULL) AND ("
-				+ StructuredPostal.CITY + " NOTNULL) AND ("
-				+ Contacts.DISPLAY_NAME + " != '') AND (" 
-				+ StructuredPostal.TYPE + " = " + type + "))";
-
-		return new CursorLoader(getActivity(), baseUri,
-				null, select, null, null);
+		for (Entry<String, MarkerOptions> options : pendingMarkers.entrySet()) {
+			addMarker(type, options.getValue());
+		}
+		
+		mFilterLoaded.put(type, true);
+		showMarkers(type);
+		enableMarkers();
 	}
 
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, final Cursor cursor) {
-		if (cursor != null && cursor.getCount() > 0) {
-			final int type = loader.getId();
-			Log.d(TAG, "onLoadFinished: type=" + type + ", count=" + cursor.getCount());
-			BackgroundExecutor.execute(new SomeHeavyOperation(this, cursor, type));
-		}
-	}
+	private void addMarker(int type, MarkerOptions options) {
+		
+		Marker m = mMainMap.addMarker(options);
 
-	@Override
-	public void onLoaderReset(Loader<Cursor> arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public static JSONObject getJson(String url){
-
-		InputStream is = null;
-		String result = "";
-		JSONObject json = null;
-
-		// HTTP
-		try {	    	
-			HttpClient httpclient = new DefaultHttpClient(); // for port 80 requests!
-			HttpGet httppost = new HttpGet(url);
-			HttpResponse response = httpclient.execute(httppost);
-			HttpEntity entity = response.getEntity();
-			is = entity.getContent();
-		} catch(Exception e) {
-			Log.e(TAG, "Error in HTTP Client", e);
-			return null;
-		}
-
-		// Read response to string
-		try {	    	
-			BufferedReader reader = new BufferedReader(new InputStreamReader(is,"utf-8"),8);
-			StringBuilder sb = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			is.close();
-			result = sb.toString();	            
-		} catch(Exception e) {
-			Log.e(TAG, "Error reading buffer", e);
-			return null;
-		}
-
-		// Convert string to object
-		try {
-			json = new JSONObject(result);
-		} catch(JSONException e) {
-			Log.e(TAG, "Error converting to jsonobject", e);
-			Log.e(TAG, "result=" + result.toString());
-			return null;
-		}
-
-		return json;
-
-	}
-
-	public static class BackgroundExecutor {
-		private static final Executor instance = Executors.newSingleThreadExecutor();
-
-		public static void execute(Runnable command) {
-			instance.execute(command);
-		}
-	}
-
-	//SomeHeavyOperation.java
-	public class SomeHeavyOperation implements Runnable {
-		private final WeakReference<MapViewerFragment> ref;
-		private final Cursor cursor;
-		private final int type;
-
-		public SomeHeavyOperation(MapViewerFragment owner, Cursor cursor, int type) {
-			// Unlike inner class we do not store strong reference to Activity here
-			this.ref = new WeakReference<MapViewerFragment>(owner);
-			this.cursor = cursor;
-			this.type = type;
-		}
-
-		public void run() {
-			// It's time to notify Activity
-			final MapViewerFragment owner = ref.get();
-			// Already died reference
-			if (owner == null) return;
-
-			// Perform your heavy operation
-			cursor.moveToFirst();
-			while (!cursor.isAfterLast()) {
-				// get data
-				String address = cursor.getString(cursor.getColumnIndex(StructuredPostal.FORMATTED_ADDRESS));
-				address = address.replace("\n", "+");
-				address = address.replace(" ", "+");
-				final String name = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
-				final String id = cursor.getString(cursor.getColumnIndex(Contacts._ID));
-
-				try {
-					String urlString = GEOCODE_BASE_URL + address + GEOCODE_SENSOR_URL;
-					JSONArray jsonResults = getJson(urlString).getJSONArray("results");
-					JSONObject json = jsonResults.getJSONObject(0);
-					JSONObject jsonGeometry = json.getJSONObject("geometry");
-					JSONObject jsonLocation = jsonGeometry.getJSONObject("location");
-					final double lat = jsonLocation.getDouble("lat");
-					final double lng = jsonLocation.getDouble("lng");
-
-					// Perform notification in UI thread
-					owner.getActivity().runOnUiThread(new Runnable() {
-						public void run() {
-							owner.addMarker(id, type, name, lat, lng);
-						}
-					});
-
-				} catch (Exception e) {
-					Log.e(TAG, "Error creating marker", e);
-				}
-				cursor.moveToNext();
-			}
-
-			mMarkersLoaded = true;
-
-			// Perform notification in UI thread
-			owner.getActivity().runOnUiThread(new Runnable() {
-				public void run() {
-					owner.enableMarkers();
-				}
-			});
-		}
-	}
-
-	public void addMarker(String id, int type, String name, double lat, double lng) {
-		float hue = 0f;
-		switch (type) {
-		case StructuredPostal.TYPE_HOME:
-			hue = BitmapDescriptorFactory.HUE_BLUE;
-			break;
-		case StructuredPostal.TYPE_WORK:
-			hue = BitmapDescriptorFactory.HUE_RED;
-			break;
-		case StructuredPostal.TYPE_OTHER:
-			hue = BitmapDescriptorFactory.HUE_YELLOW;
-			break;
-		}
-		Marker m = mMainMap.addMarker(
-				new MarkerOptions().position(new LatLng(lat, lng)).title(name)
-				.snippet(Integer.toString(type)).icon(BitmapDescriptorFactory.defaultMarker(hue)).visible(false));
-
-		MarkerModel model = new MarkerModel(id, Integer.toString(type), name, m);
+		MarkerModel model = new MarkerModel(options, m);
 
 		mMarkersFilter.get(type).add(m);
-		mMarkers.put(id, model);
+		mMarkers.put(options.getSnippet(), model);
 	}
 }

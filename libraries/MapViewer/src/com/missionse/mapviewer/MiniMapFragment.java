@@ -110,7 +110,7 @@ OnCameraChangeListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
-
+ 
 		View containerParentView = (View) container.getParent();
 		v.setLayoutParams(new FrameLayout.LayoutParams(
 				containerParentView.getWidth() / DEF_SCREEN_RATIO, 

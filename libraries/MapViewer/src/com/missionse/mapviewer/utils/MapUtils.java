@@ -20,7 +20,7 @@ import android.graphics.Rect;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class MapUtils {
+public final class MapUtils {
 
     private static final String TILE_PATH = "maptiles";
     private static final String PREF_MYLOCATION_ENABLED = "map_mylocation_enabled";
@@ -33,6 +33,8 @@ public class MapUtils {
     private static final int LABEL_TEXTSIZE = 14;
     private static Paint mLabelOutlinePaint = null;
     private static Paint mLabelTextPaint;
+    
+    private MapUtils() { };
 
     private static void setupLabels() {
         float strokeWidth = LABEL_OUTLINEWIDTH * mDPI;
@@ -166,12 +168,12 @@ public class MapUtils {
 
     public static boolean getMyLocationEnabled(final Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean(PREF_MYLOCATION_ENABLED,false);
+        return sp.getBoolean(PREF_MYLOCATION_ENABLED, false);
     }
 
     public static void setMyLocationEnabled(final Context context, final boolean enableMyLocation) {
-        Log.d(TAG,"Set my location enabled: "+enableMyLocation);
+        Log.d(TAG, "Set my location enabled: " + enableMyLocation);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putBoolean(PREF_MYLOCATION_ENABLED,enableMyLocation).commit();
+        sp.edit().putBoolean(PREF_MYLOCATION_ENABLED, enableMyLocation).commit();
     }
 }

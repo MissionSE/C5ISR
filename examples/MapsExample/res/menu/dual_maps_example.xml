@@ -7,20 +7,6 @@
        	android:actionViewClass="android.widget.SearchView"
         android:showAsAction="ifRoom|collapseActionView" />
     <item
-        android:id="@+id/addMiniMap"
-        android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="always"
-        android:title="Add Mini Map"/>
-    <item
-        android:id="@+id/showMiniMap"
-        android:actionLayout="@layout/mini_map_switch"
-        android:checkable="true"
-        android:checked="false"
-        android:icon="@android:drawable/ic_menu_view"
-        android:orderInCategory="100"
-        android:showAsAction="always"
-        android:title="@string/mini_map"/>
-    <item
         android:id="@+id/myLocation"
         android:checkable="true"
         android:checked="false"
