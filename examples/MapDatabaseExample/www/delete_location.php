@@ -5,7 +5,7 @@
 		$id = mysql_real_escape_string($_POST['id']);
 
 		require_once __DIR__ . '/db_connect.php';	
-		$db = new DB_CONNECT();
+		$db = new DatabaseConnector();
 		$result = mysql_query("DELETE FROM locations WHERE id='$id'");
 	
 		if (mysql_affected_rows() > 0) {

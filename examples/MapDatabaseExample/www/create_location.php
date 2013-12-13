@@ -7,7 +7,7 @@
 		$longitude = mysql_real_escape_string($_POST['longitude']);
 
 		require_once __DIR__ . '/db_connect.php';
-		$db = new DB_CONNECT();
+		$db = new DatabaseConnector();
 		$result = mysql_query("INSERT INTO locations(name, latitude, longitude) VALUES('$name', '$latitude', '$longitude')");
 
 		if ($result) {

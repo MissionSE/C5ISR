@@ -1,6 +1,6 @@
 <?php
-	$tablename = "locations";
-	$columns = array("id", "name", "latitude", "longitude");
+	$tablename = "order_items";
+	$columns = array("id", "name_id", "quantity");
 
 	require_once __DIR__ . '/db_access.php';
 	$db = new DatabaseAccessor();
