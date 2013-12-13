@@ -8,19 +8,19 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+/**
+ * An extension of an ImageView that displays an animated .gif file.
+ */
 public class GifImageView extends ImageView {
 
 	private InputStream mStream;
-
 	private boolean mIsPlayingGif = false;
-
 	private GifDecoder mGifDecoder;
-
 	private Bitmap mTmpBitmap;
 
-	final Handler mHandler = new Handler();
+	private final Handler mHandler = new Handler();
 
-	final Runnable mUpdateResults = new Runnable() {
+	private final Runnable mUpdateResults = new Runnable() {
 		@Override
 		public void run() {
 			if (mTmpBitmap != null && !mTmpBitmap.isRecycled()) {
@@ -29,25 +29,44 @@ public class GifImageView extends ImageView {
 		}
 	};
 
+	/**
+	 * Constructs a new GifImageView.
+	 * @param context parent activity's context
+	 */
 	public GifImageView(final Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Constructs a new GifImageView.
+	 * @param context parent activity's context
+	 * @param attrs attributes to apply on construction
+	 */
 	public GifImageView(final Context context, final AttributeSet attrs) {
 		super(context, attrs);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Constructs a new GifImageView.
+	 * @param context parent activity's context
+	 * @param attrs attributes to apply on construction
+	 * @param defStyle the defined style?
+	 */
 	public GifImageView(final Context context, final AttributeSet attrs, final int defStyle) {
 		super(context, attrs, defStyle);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Sets the InputStream (the raw .gif file) to use as the source to be played.
+	 * @param stream the input stream
+	 */
 	public void setInputStream(final InputStream stream) {
 		mStream = stream;
 	}
 
+	/**
+	 * Plays the .gif animation indefinitely.
+	 */
 	public void playGif() {
 		mGifDecoder = new GifDecoder();
 		mGifDecoder.read(mStream);
@@ -79,8 +98,10 @@ public class GifImageView extends ImageView {
 		}).start();
 	}
 
+	/**
+	 * Stops rendering.
+	 */
 	public void stopRendering() {
 		mIsPlayingGif = true;
 	}
-
 }
