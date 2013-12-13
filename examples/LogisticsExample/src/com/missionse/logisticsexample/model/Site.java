@@ -77,4 +77,18 @@ public class Site extends DBEntity {
 	public void setLongitude(double longitude) {
 		this.mLongitude = longitude;
 	}
+	
+	/**
+	 * @return a 'int' that represents the database id of the parent class. 
+	 */
+	public int getParentId() {
+		return mParentId;
+	}
+	
+	/**
+	 * @param id - the id of the parent.
+	 */
+	public void setParentId(int id) {
+		mParentId = id;
+	}
 }

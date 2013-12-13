@@ -17,14 +17,14 @@ public class DBEntity {
 	/**
 	 * @return the mId
 	 */
-	public int getmId() {
+	public int getId() {
 		return mId;
 	}
 
 	/**
 	 * @param id the mId to set
 	 */
-	public void setmId(int id) {
+	public void setId(int id) {
 		this.mId = id;
 	}
 

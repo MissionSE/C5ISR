@@ -2,6 +2,7 @@ package com.missionse.logisticsexample.database;
 
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
@@ -163,7 +164,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return null if no parent is currently assigned
 	 */
 	public Site getSiteParent(Site site) {
-		return null;
+		Site parent = null;
+		try {
+			parent = mSiteDao.queryForId(site.getParentId());
+		} catch (SQLException e) {	e.printStackTrace(); }
+		return parent;
 	}
 	
 	/**
@@ -172,7 +177,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return - list of supplies
 	 */
 	public List<InventoryItem> getSupplies(Site site) {
-		return Collections.emptyList();
+		List<InventoryItem> inventoryItems = new LinkedList<InventoryItem>();
+		try {
+			List<SiteToInventoryItem> siteToInvItem =
+					mSiteToInventoryItemDao.queryBuilder().where()
+						.eq("site_id", site.getId()).query();
+			for (SiteToInventoryItem stii : siteToInvItem) {
+				inventoryItems.add(mInventoryItemDao.queryForId(stii.getItemId()));
+			}
+			
+		} catch (SQLException e) { e.printStackTrace(); }
+		return inventoryItems;
 	}
 	
 	/**
@@ -181,7 +196,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return - list of supplies
 	 */
 	public List<MyOrder> getOrders(Site site) {
-		return Collections.emptyList();
+		List<MyOrder> orders = new LinkedList<MyOrder>();
+		try {
+			List<SiteToOrder> siteToOrder =
+					mSiteToOrderDao.queryBuilder().where()
+						.eq("site_id", site.getId()).query();
+			for (SiteToOrder sto : siteToOrder) {
+				orders.add(mOrderDao.queryForId(sto.getOrderId()));
+			}
+			
+		} catch (SQLException e) { e.printStackTrace(); }
+		return orders;
 	}
 	
 	/////////////////////////////////////////////////////////
@@ -214,10 +239,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	/**
 	 * Get a list of supplies current in this order.
 	 * @param myOrder - order
-	 * @return - list of supplies
+	 * @return - list of order items
 	 */
-	public List<InventoryItem> getSupplies(MyOrder myOrder) {
-		return Collections.emptyList();
+	public List<OrderItem> getSupplies(MyOrder myOrder) {
+		List<OrderItem> items = new LinkedList<OrderItem>(); 
+		try {
+			List<OrderToOrderItem> orderToOrderItem =
+					mOrderToOrderItemDao.queryBuilder().where()
+						.eq("order_id", myOrder.getId()).query();
+			for (OrderToOrderItem otoi : orderToOrderItem) {
+				items.add(mOrderItemDao.queryForId(otoi.getItemId()));
+			}
+			
+		} catch (SQLException e) { e.printStackTrace(); }		
+		return items;
 	}
 	
 	/////////////////////////////////////////////////////////
