@@ -57,4 +57,20 @@ public class DrawerAdapter extends ArrayAdapter<DrawerItem> {
 	public boolean isEnabled(final int position) {
 		return getItem(position).isSelectable();
 	}
+
+	/**
+	 * Returns the position in the underlying data structure of this adapter that matches this id.
+	 * @param id ID of the drawer item
+	 * @return the position in the underlaying data structure of this adapter
+	 */
+	public int getPosition(final int id) {
+		if (getCount() > 0) {
+			for (int index = 0; index < getCount(); ++index) {
+				if (getItem(index).getId() == id) {
+					return index;
+				}
+			}
+		}
+		return -1;
+	}
 }

@@ -17,6 +17,7 @@ import com.missionse.logisticsexample.drawer.LogisticsDrawerFactory;
 import com.missionse.logisticsexample.map.LogisticsMap;
 import com.missionse.logisticsexample.map.MapViewerFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
+import com.missionse.uiextensions.navigationdrawer.DrawerAdapter;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerComplexItem;
 import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
@@ -49,6 +50,11 @@ public class LogisticsExample extends DrawerActivity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		mDbHelper = new DatabaseHelper(this);
+		mDbHelper.initialize();
+	}
+
+	private void displayMap() {
 		FragmentManager fragmentManager = getFragmentManager();
 		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
 		if (mapViewerFragment == null) {
@@ -56,8 +62,6 @@ public class LogisticsExample extends DrawerActivity {
 			mapViewerFragment.setMapLoadedListener(mLogisticsMap);
 			fragmentManager.beginTransaction().add(R.id.content, mapViewerFragment, "map").commit();
 		}
-		mDbHelper = new DatabaseHelper(this);
-		mDbHelper.initialize();
 	}
 
 	@Override
@@ -133,11 +137,14 @@ public class LogisticsExample extends DrawerActivity {
 			public void onNothingSelected(final AdapterView<?> parent) {
 			}
 		});
+
+		selectItem(((DrawerAdapter) getLeftDrawerList().getAdapter()).getPosition(LogisticsDrawerFactory.MAP),
+				getLeftDrawerList());
 	}
 
 	@Override
 	protected void onNavigationItemSelected(final int id) {
-		if (id == LogisticsDrawerFactory.UPDATE_HISTORY) {
+		if (id == LogisticsDrawerFactory.MAP) {
 			getRightDrawerAdapter().add(
 					DrawerComplexItem.create(++mCurrentNotificationId, "[SEVERE] [" + mCurrentNotificationId + "]",
 							"This is a severe notification. This is extra detail about this notification.",
@@ -152,6 +159,8 @@ public class LogisticsExample extends DrawerActivity {
 							R.drawable.ic_action_about, false));
 
 			adjustNotificationActionBar();
+
+			displayMap();
 		}
 	}
 

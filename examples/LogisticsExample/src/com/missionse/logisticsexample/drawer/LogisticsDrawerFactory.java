@@ -33,8 +33,8 @@ public class LogisticsDrawerFactory {
 	public static final int DIVIDER = 002;
 	public static final int NAVIGATION_HEADER = 100;
 	public static final int MAP = 101;
-	public static final int SUPPLY_LIST = 102;
-	public static final int UPDATE_HISTORY = 103;
+	public static final int LOCATION_LIST = 102;
+	public static final int ORDER_LIST = 103;
 
 	private Context mContext;
 
@@ -93,10 +93,10 @@ public class LogisticsDrawerFactory {
 		menu.add(DrawerSimpleItem.create(MAP, mContext.getResources().getString(R.string.drawer_map),
 				R.drawable.places, true));
 		menu.add(DrawerDivider.create(DIVIDER));
-		menu.add(DrawerSimpleItem.create(SUPPLY_LIST, mContext.getResources().getString(R.string.drawer_supplylist),
-				R.drawable.ebooks, true));
+		menu.add(DrawerSimpleItem.create(LOCATION_LIST,
+				mContext.getResources().getString(R.string.drawer_locationlist), R.drawable.ebooks, true));
 		menu.add(DrawerDivider.create(DIVIDER));
-		menu.add(DrawerSimpleItem.create(UPDATE_HISTORY, mContext.getResources().getString(R.string.drawer_orders),
+		menu.add(DrawerSimpleItem.create(ORDER_LIST, mContext.getResources().getString(R.string.drawer_orderlist),
 				R.drawable.analytics, true));
 		menu.add(DrawerDivider.create(DIVIDER));
 
