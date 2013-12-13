@@ -1,7 +1,6 @@
 package com.missionse.logisticsexample.database;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,10 +8,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.missionse.logisticsexample.model.InventoryItem;
 import com.missionse.logisticsexample.model.ItemName;
 import com.missionse.logisticsexample.model.MyOrder;
@@ -21,6 +23,7 @@ import com.missionse.logisticsexample.model.Site;
 import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
 import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
 import com.missionse.logisticsexample.model.mappings.SiteToOrder;
+import com.missionse.logisticsexample.model.orm.SiteResponse;
 
 /**
  * Represents the offline database. 
@@ -43,6 +46,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<SiteToOrder, Integer> mSiteToOrderDao = null;
 	private Dao<SiteToInventoryItem, Integer> mSiteToInventoryItemDao = null;
 	
+	private Context mContext;
+	
 	public static final Class<?>[] DB_CLASSES = {
 		ItemName.class,
 		InventoryItem.class,
@@ -62,6 +67,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		mContext = context;
 	}
 
 	@Override
@@ -309,5 +315,26 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	
 	}
 	
+	/**
+	 * Temp method to test ION.
+	 */
+	public void callDatabase() {
+		 Ion.with(mContext, "http://192.168.86.137/get_all_sites.php")
+		    .as(new TypeToken<SiteResponse>() { })
+		    .setCallback(new FutureCallback<SiteResponse>() {
+		       @Override
+		        public void onCompleted(Exception e, SiteResponse site) {
+		    	   if (e == null) {
+		    	   Log.d("DatabaseHelper", "Succuess>: " + site.isSuccess());
+		    	   Log.d("DatabaseHelper", "Message>: " + site.getMessage());
+		    	   for (Site s : site.getSites()) {
+		    		   Log.d("DatabaseHelper", "Site Name>: " + s.getName());
+		    	   }
+		    	   } else {
+		    		   e.printStackTrace();
+		    	   }
+		       }
+		    });
+	}
 
 }

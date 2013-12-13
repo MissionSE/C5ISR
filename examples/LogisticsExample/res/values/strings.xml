@@ -19,8 +19,10 @@
     <string name="tag_longitude">longitude</string>
     
     <!-- DB Configuration -->
-    <string name="remote_db_path">http://192.168.86.79/</string>
+    <string name="remote_db_path">http://192.168.86.137/</string>
+    <string name="map_db_path">http://192.168.86.137:8080/</string>
     <string name="get_all_locations">get_all_locations.php</string>
+    
     
     <!-- Navigation Drawer -->
     <string name="drawer_navigation">Navigation</string>

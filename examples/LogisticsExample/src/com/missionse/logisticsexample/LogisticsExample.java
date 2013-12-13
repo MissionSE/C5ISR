@@ -44,14 +44,13 @@ public class LogisticsExample extends DrawerActivity {
 	public LogisticsExample() {
 		mLogisticsMap = new LogisticsMap(this);
 		mDrawerFactory = new LogisticsDrawerFactory(this);
+		mDbHelper = new DatabaseHelper(this);	
+		mDbHelper.initialize();
 	}
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		mDbHelper = new DatabaseHelper(this);
-		mDbHelper.initialize();
 	}
 
 	private void displayMap() {
