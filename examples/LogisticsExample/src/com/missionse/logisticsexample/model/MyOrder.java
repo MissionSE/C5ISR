@@ -6,15 +6,16 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.missionse.logisticsexample.model.orm.MyDatePersister;
 
 /**
  * Represents an order from a {@link Site}.
  */
-public class Order extends DBEntity {	
+public class MyOrder extends DBEntity {	
 
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("order_at")
-	@DatabaseField(dataType = DataType.DATE, columnName = "order_at")
+	@DatabaseField(columnName = "order_at",  persisterClass = MyDatePersister.class)
 	private Date mTimeStamp;
 	
 	@Expose(serialize = true, deserialize = true)
@@ -30,7 +31,12 @@ public class Order extends DBEntity {
 	/**
 	 * Empty constructor.  Needed for the ORM library.
 	 */
-	public Order() { }
+	public MyOrder() { 
+		mTimeStamp = new Date();
+		mSeverity = Severity.NORMAL;
+		mStatus = Status.INCOMPLETE;
+		
+	}
 
 	/**
 	 * @return the mTimeStamp

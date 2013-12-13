@@ -1,5 +1,7 @@
 package com.missionse.logisticsexample;
 
+import java.sql.SQLException;
+
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,9 +9,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+import com.missionse.logisticsexample.database.DatabaseHelper;
 import com.missionse.logisticsexample.drawer.LogisticsDrawerFactory;
 import com.missionse.logisticsexample.map.LogisticsMap;
 import com.missionse.logisticsexample.map.MapViewerFragment;
+import com.missionse.logisticsexample.model.MyOrder;
+import com.missionse.logisticsexample.model.Site;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerComplexItem;
@@ -24,6 +29,8 @@ public class LogisticsExample extends DrawerActivity {
 
 	private static final int INITIAL_NOTIF = 300;
 	private static int mNotificationCount = INITIAL_NOTIF;
+	
+	private DatabaseHelper mDbHelper;
 
 	/**
 	 * Constructs a new LogisticsExample.
@@ -44,6 +51,8 @@ public class LogisticsExample extends DrawerActivity {
 			mapViewerFragment.setMapLoadedListener(mLogisticsMap);
 			fragmentManager.beginTransaction().add(R.id.content, mapViewerFragment, "map").commit();
 		}
+		mDbHelper = new DatabaseHelper(this);
+		mDbHelper.initialize();
 	}
 
 	@Override

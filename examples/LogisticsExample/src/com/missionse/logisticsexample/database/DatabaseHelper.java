@@ -14,7 +14,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.missionse.logisticsexample.model.InventoryItem;
 import com.missionse.logisticsexample.model.ItemName;
-import com.missionse.logisticsexample.model.Order;
+import com.missionse.logisticsexample.model.MyOrder;
 import com.missionse.logisticsexample.model.OrderItem;
 import com.missionse.logisticsexample.model.Site;
 import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
@@ -32,7 +32,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 
 	private Dao<Site, Integer> mSiteDao = null;
-	private Dao<Order, Integer> mOrderDao = null;
+	private Dao<MyOrder, Integer> mOrderDao = null;
 	
 	private Dao<ItemName, Integer> mItemNameDao = null;
 	private Dao<InventoryItem, Integer> mInventoryItemDao = null;
@@ -46,7 +46,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		ItemName.class,
 		InventoryItem.class,
 		OrderItem.class,
-		Order.class,
+		MyOrder.class,
 		Site.class,
 		OrderToOrderItem.class,
 		SiteToOrder.class,
@@ -96,9 +96,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Perform necessary initialization procedures. 
 	 */
 	public void initialize() {
+		Log.d(DatabaseHelper.class.getName(), "Initialize");
 		try {
 			mSiteDao = getDao(Site.class);
-			mOrderDao = getDao(Order.class);
+			mOrderDao = getDao(MyOrder.class);
 			
 			mItemNameDao = getDao(ItemName.class);
 			mInventoryItemDao = getDao(InventoryItem.class);
@@ -179,43 +180,43 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @param site  - site that contains the orders
 	 * @return - list of supplies
 	 */
-	public List<Order> getOrders(Site site) {
+	public List<MyOrder> getOrders(Site site) {
 		return Collections.emptyList();
 	}
 	
 	/////////////////////////////////////////////////////////
-	// Order Methods
+	// MyOrder Methods
 	/////////////////////////////////////////////////////////
 	/**
-	 * Create a new Order. 
-	 * @param order - {@link Order}
+	 * Create a new MyOrder. 
+	 * @param myOrder - {@link MyOrder}
 	 */
-	public void create(Order order) {
+	public void create(MyOrder myOrder) {
 		
 	}
 	
 	/**
-	 * Update an Order. 
-	 * @param order - {@link Order}
+	 * Update an MyOrder. 
+	 * @param myOrder - {@link MyOrder}
 	 */
-	public void update(Order order) {
+	public void update(MyOrder myOrder) {
 		
 	}
 	
 	/**
 	 * Delete an order. 
-	 * @param order - {@link Order}
+	 * @param myOrder - {@link MyOrder}
 	 */
-	public void delete(Order order) {
+	public void delete(MyOrder myOrder) {
 		
 	}
 	
 	/**
 	 * Get a list of supplies current in this order.
-	 * @param order - order
+	 * @param myOrder - order
 	 * @return - list of supplies
 	 */
-	public List<InventoryItem> getSupplies(Order order) {
+	public List<InventoryItem> getSupplies(MyOrder myOrder) {
 		return Collections.emptyList();
 	}
 	

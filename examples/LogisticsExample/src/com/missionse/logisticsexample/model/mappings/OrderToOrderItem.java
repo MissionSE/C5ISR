@@ -6,7 +6,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.missionse.logisticsexample.model.DBEntity;
 
 /**
- * Mapping from and {@link com.missionse.logisticsexample.model.Order} to a {@link com.missionse.logisticsexample.model.OrderItem}.
+ * Mapping from and {@link com.missionse.logisticsexample.model.MyOrder} to a {@link com.missionse.logisticsexample.model.OrderItem}.
  */
 public class OrderToOrderItem extends DBEntity {
 	
