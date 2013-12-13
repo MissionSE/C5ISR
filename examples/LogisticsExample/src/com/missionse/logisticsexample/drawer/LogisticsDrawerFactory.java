@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -110,14 +108,10 @@ public class LogisticsDrawerFactory {
 	/**
 	 * Called when the DrawerActivity has finished configuring the drawers, and is now ready for post-actions.
 	 * @param activity the parent activity
+	 * @param activityListener listener, defined by the parent activity, that should be called back when we are finished
 	 */
-	public void onDrawerConfigurationComplete(final DrawerActivity activity) {
-		//		for (int i = 200; i < 210; ++i) {
-		//			activity.getRightDrawerAdapter().add(
-		//					DrawerComplexItem.create(i, "Notif " + i,
-		//							"This is a subtitle, with extra detail about this notification.",
-		//							R.drawable.ic_action_error, false));
-		//		}
+	public void onDrawerConfigurationComplete(final DrawerActivity activity,
+			final SwipeToDismissListener activityListener) {
 
 		DrawerSwipeToDismissTouchListener touchListener = new DrawerSwipeToDismissTouchListener(
 				activity.getDrawerLayout(), activity.getRightDrawerList(), new SwipeToDismissListener() {
@@ -127,14 +121,15 @@ public class LogisticsDrawerFactory {
 					}
 
 					@Override
-					public void onDismiss(final ListView listView, final int[] reverseSortedPositions) {
-						for (int position : reverseSortedPositions) {
+					public void onDismiss(final ListView listView, final int[] positions) {
+						for (int position : positions) {
 							if (activity.getRightDrawerAdapter().getCount() > position) {
 								activity.getRightDrawerAdapter().remove(
 										activity.getRightDrawerAdapter().getItem(position));
 							}
 						}
 						activity.getRightDrawerAdapter().notifyDataSetChanged();
+						activityListener.onDismiss(listView, positions);
 					}
 				});
 
@@ -143,10 +138,5 @@ public class LogisticsDrawerFactory {
 
 		TextView emptyView = (TextView) activity.findViewById(R.id.empty_notif_drawer);
 		activity.getRightDrawerList().setEmptyView(emptyView);
-		emptyView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(final View v) {
-			}
-		});
 	}
 }
