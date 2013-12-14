@@ -3,11 +3,14 @@ package com.missionse.mapviewer;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -45,7 +48,7 @@ OnCameraChangeListener {
 		super.onAttach(activity);
 		
 		mCallbacks = (Callbacks) activity;
-		mCallbacks.registerOnCameraChangeListener(this);
+//		mCallbacks.registerOnCameraChangeListener(this);
 	}
 
 	@Override
@@ -54,6 +57,13 @@ OnCameraChangeListener {
 		
 		mCallbacks.deregisterOnCameraChangeListener(this);
 		mCallbacks = null;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		mCallbacks.registerOnCameraChangeListener(this);
 	}
 
 	private Polygon mZoomedViewPolygon;
@@ -85,6 +95,8 @@ OnCameraChangeListener {
 		 * @return the polygon options for the view region
 		 */
 		PolygonOptions getViewPolygonOptions();
+		
+		double getDisplayPercentage();
 	}
 
 	/**
@@ -99,10 +111,30 @@ OnCameraChangeListener {
 			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
  
-		View containerParentView = (View) container.getParent();
-		v.setLayoutParams(new FrameLayout.LayoutParams(
-				containerParentView.getWidth() / DEF_SCREEN_RATIO, 
-				containerParentView.getHeight() / DEF_SCREEN_RATIO));
+		v.getViewTreeObserver().addOnGlobalLayoutListener(
+				new ViewTreeObserver.OnGlobalLayoutListener() {
+
+					@SuppressWarnings("deprecation")
+					@SuppressLint("NewApi")
+					@Override
+					public void onGlobalLayout() {
+						final View v = getView();
+						
+						FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) v.getLayoutParams();
+						layoutParams.width = (int) (v.getWidth() * mCallbacks.getDisplayPercentage());
+						layoutParams.height = (int) (v.getHeight() * mCallbacks.getDisplayPercentage());
+						v.setLayoutParams(layoutParams);
+						
+						if (v.getViewTreeObserver().isAlive()) {
+							// remove this layout listener
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+								v.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+							} else {
+								v.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+							}
+						}
+					}
+				});
 
 		return v;
 	}
