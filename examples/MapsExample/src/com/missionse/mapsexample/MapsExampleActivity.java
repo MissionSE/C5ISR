@@ -1,9 +1,9 @@
 package com.missionse.mapsexample;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -17,8 +17,10 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -37,6 +39,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.GeocodeResponse;
@@ -52,9 +55,17 @@ import com.missionse.mapviewer.MapViewerFragment;
 public class MapsExampleActivity extends Activity implements
 MapViewerFragment.Callbacks,
 FragmentManager.OnBackStackChangedListener,
-LoaderCallbacks<Cursor> {
+LoaderCallbacks<Cursor>,
+SharedPreferences.OnSharedPreferenceChangeListener {
 
 	private static final Executor BACKGROUND_EXECUTOR = Executors.newSingleThreadExecutor();
+
+	private static final String PREF_VIEW_AREA_FILL_COLOR = "pref_view_area_fill_color";
+	private static final String PREF_VIEW_AREA_STROKE = "pref_view_area_stroke";
+	private static final String PREF_VIEW_AREA_STROKE_COLOR = "pref_view_area_stroke_color";
+	private static final int DEF_VIEW_AREA_COLOR = Color.argb(150, 0, 0, 0);
+	private static final float DEF_STROKE = 2f;
+	private static final float NO_STROKE = 0f;
 
 	private MapViewerFragment mMapViewerFragment;
 	private Menu mOptionsMenu;
@@ -62,9 +73,10 @@ LoaderCallbacks<Cursor> {
 	private boolean mPauseBackStackWatcher = false;
 
 	private FragmentBreadCrumbs mFragmentBreadCrumbs;
-
+	private SharedPreferences mPrefs;
 	private String mSelectedSupplyName;
-	
+	private PolygonOptions mViewPolygonOptions;
+
 	private SparseArray<Map<String, MarkerOptions>> contactLocations = new SparseArray<Map<String, MarkerOptions>>();
 
 	@Override
@@ -94,6 +106,9 @@ LoaderCallbacks<Cursor> {
 		setContentView(R.layout.activity_maps_example);
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		mPrefs.registerOnSharedPreferenceChangeListener(this);
+
 		FragmentManager fm = getFragmentManager();
 		fm.addOnBackStackChangedListener(this);
 
@@ -118,6 +133,10 @@ LoaderCallbacks<Cursor> {
 
 		updateBreadCrumbs();
 		onConfigurationChanged(getResources().getConfiguration());
+
+		loadContactMarkers(StructuredPostal.TYPE_HOME);
+		loadContactMarkers(StructuredPostal.TYPE_WORK);
+		loadContactMarkers(StructuredPostal.TYPE_OTHER);
 
 		if (savedInstanceState == null) {
 			// load all markers
@@ -285,22 +304,29 @@ LoaderCallbacks<Cursor> {
 				});
 				return;
 			}
-			
 			final Map<String, MarkerOptions> pendingMarkers = contactLocations.get(mType);
-			
 
 			// Perform your heavy operation
 			mCursor.moveToFirst();
 			while (!mCursor.isAfterLast()) {
 				// get data
 				String address = mCursor.getString(mCursor.getColumnIndex(StructuredPostal.FORMATTED_ADDRESS));
-				address = address.replace("\n", "+");
-				address = address.replace(" ", "+");
+				String urlAddress = address.replace("\n", "+");
+				urlAddress = urlAddress.replace(" ", "+");
 				final String name = mCursor.getString(mCursor.getColumnIndex(Contacts.DISPLAY_NAME));
 				final String id = mCursor.getString(mCursor.getColumnIndex(Contacts._ID));
 
+				mCursor.moveToNext();
+
+				synchronized (contactLocations) {
+					if (pendingMarkers.containsKey(id)) {
+						Log.d(TAG, "Skipping id=" + id + ", name=" + name);
+						continue;
+					}
+				}
+
 				Geocoder geocoder = new Geocoder();
-				GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(address).setLanguage("en").getGeocoderRequest();
+				GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(urlAddress).setLanguage("en").getGeocoderRequest();
 				GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
 
 				if (geocoderResponse.getStatus().equals(GeocoderStatus.OK)) {
@@ -320,7 +346,6 @@ LoaderCallbacks<Cursor> {
 					Log.e(TAG, "Geocoder request failed: status=" + geocoderResponse.getStatus()
 							+ "\n\taddress=" + address);
 				}
-				mCursor.moveToNext();
 			}
 
 			MapsExampleActivity.this.runOnUiThread(new Runnable() {
@@ -336,11 +361,11 @@ LoaderCallbacks<Cursor> {
 		NetworkInfo ni = cm.getActiveNetworkInfo();
 		return (ni != null);
 	}
-	
+
 	private void toastMessage(CharSequence msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
-	
+
 	public static class AddressStore {
 		Map<String, MarkerOptions> addressMarkers;
 
@@ -348,9 +373,61 @@ LoaderCallbacks<Cursor> {
 			this.addressMarkers = addressMarkers;
 		}
 	}
-	
+
 	private void loadContactMarkers(int type) {
-		Ion.getDefault(this)
+		AddressStore as;
+		try {
+			as = Ion.getDefault(this).store().get(Integer.toString(type), AddressStore.class).get();
+			if (as != null) {
+				contactLocations.put(type, as.addressMarkers);
+			} else {
+				contactLocations.put(type, new HashMap<String, MarkerOptions>());
+			}
+		} catch (InterruptedException e) {
+			Log.e(TAG, "Error reading cache.", e);
+		} catch (ExecutionException e) {
+			Log.e(TAG, "Error reading cache.", e);
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		storeContactMarkers();
+	}
+
+	private void storeContactMarkers() {
+		synchronized (contactLocations) {
+			for (int i = 0; i < contactLocations.size(); i++) {
+
+				try {
+					Ion.getDefault(this).store().put(Integer.toString(contactLocations.keyAt(i)), 
+							new AddressStore(contactLocations.valueAt(i)), AddressStore.class).get();
+				} catch (InterruptedException e) {
+					Log.e(TAG, "Error storing cache.", e);
+				} catch (ExecutionException e) {
+					Log.e(TAG, "Error storing cache.", e);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		if (PREF_VIEW_AREA_FILL_COLOR.equals(key)) {
+//			mViewPolygonOptions.setFillColor(sharedPreferences.getInt(PREF_VIEW_AREA_FILL_COLOR, DEF_VIEW_AREA_COLOR));
+		}  else if (PREF_VIEW_AREA_STROKE.equals(key) || PREF_VIEW_AREA_STROKE_COLOR.equals(key)) {
+			int strokeColor =  mPrefs.getInt(PREF_VIEW_AREA_STROKE_COLOR, Color.BLACK);
+			float strokeWidth;
+			if (mPrefs.getBoolean(PREF_VIEW_AREA_STROKE, false)) {
+				strokeWidth = DEF_STROKE;
+			} else {
+				strokeWidth = NO_STROKE;
+			}
+//			mZoomedViewPolygon.setStrokeColor(strokeColor);
+//			mZoomedViewPolygon.setStrokeWidth(strokeWidth);
+		}
 	}
 
 }
