@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +13,9 @@ import android.widget.FrameLayout;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -35,23 +31,12 @@ import com.google.android.gms.maps.model.VisibleRegion;
  * as a {@link GoogleMap.OnCameraChangeListener} to keep it's view region in sync with the 
  * main map.  It also listens for clicks as a {@link GoogleMap.OnMapClickListener} on the
  * smaller map in order to change the main map to display the desired view area.
- *
  */
 public class MiniMapFragment extends MapFragment implements 
-OnSharedPreferenceChangeListener,
 OnCameraChangeListener {
-	
-
 	private static final String TAG = MiniMapFragment.class.getSimpleName();
-
-	private static final String PREF_VIEW_AREA_FILL_COLOR = "pref_view_area_fill_color";
-	private static final String PREF_VIEW_AREA_STROKE = "pref_view_area_stroke";
-	private static final String PREF_VIEW_AREA_STROKE_COLOR = "pref_view_area_stroke_color";
-	private static final int DEF_VIEW_AREA_COLOR = Color.argb(150, 0, 0, 0);
-	private static final float DEF_STROKE = 2f;
-	private static final float NO_STROKE = 0f;
 	private static final int DEF_SCREEN_RATIO = 3;
-
+	
 	private GoogleMap mMiniMap;
 	private Callbacks mCallbacks;
 
@@ -73,8 +58,6 @@ OnCameraChangeListener {
 
 	private Polygon mZoomedViewPolygon;
 
-	private SharedPreferences mPrefs;
-	
 	/**
 	 * Required interface for hosting activities.
 	 *
@@ -97,6 +80,11 @@ OnCameraChangeListener {
 		 * @return the main map
 		 */
 		GoogleMap getMainMap();
+		
+		/**
+		 * @return the polygon options for the view region
+		 */
+		PolygonOptions getViewPolygonOptions();
 	}
 
 	/**
@@ -147,25 +135,10 @@ OnCameraChangeListener {
 				mCallbacks.getMainMap().animateCamera(cameraUpdate);
 			}
 		});
-
 		
-
-		int fillColor = mPrefs.getInt(PREF_VIEW_AREA_FILL_COLOR, DEF_VIEW_AREA_COLOR);
-
-		float strokeWidth;
-		if (mPrefs.getBoolean(PREF_VIEW_AREA_STROKE, false)) {
-			strokeWidth = DEF_STROKE;
-		} else {
-			strokeWidth = NO_STROKE;
-		}
-
-		int strokeColor = mPrefs.getInt(PREF_VIEW_AREA_STROKE_COLOR, DEF_VIEW_AREA_COLOR);
-
-		mZoomedViewPolygon = mMiniMap.addPolygon(new PolygonOptions()
-		.addAll(getMainViewRegionPoints())
-		.fillColor(fillColor)
-		.strokeWidth(strokeWidth)
-		.strokeColor(strokeColor));
+		PolygonOptions options = mCallbacks.getViewPolygonOptions();
+		options.addAll(getMainViewRegionPoints());
+		mZoomedViewPolygon = mMiniMap.addPolygon(options);
 	}
 
 	private void animateZoomedView(CameraPosition mainMapCameraPosition) {
@@ -245,28 +218,7 @@ OnCameraChangeListener {
 
 		setRetainInstance(true);
 
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		mPrefs.registerOnSharedPreferenceChangeListener(this);
-		
 		setUpMapIfNeeded();
-	}
-
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		if (PREF_VIEW_AREA_FILL_COLOR.equals(key)) {
-			mZoomedViewPolygon.setFillColor(sharedPreferences.getInt(PREF_VIEW_AREA_FILL_COLOR, DEF_VIEW_AREA_COLOR));
-		}  else if (PREF_VIEW_AREA_STROKE.equals(key) || PREF_VIEW_AREA_STROKE_COLOR.equals(key)) {
-			int strokeColor =  mPrefs.getInt(PREF_VIEW_AREA_STROKE_COLOR, Color.BLACK);
-			float strokeWidth;
-			if (mPrefs.getBoolean(PREF_VIEW_AREA_STROKE, false)) {
-				strokeWidth = DEF_STROKE;
-			} else {
-				strokeWidth = NO_STROKE;
-			}
-			mZoomedViewPolygon.setStrokeColor(strokeColor);
-			mZoomedViewPolygon.setStrokeWidth(strokeWidth);
-		}
 	}
 
 	@Override
@@ -290,6 +242,18 @@ OnCameraChangeListener {
 	@Override
 	public void onCameraChange(CameraPosition cameraPosition) {
 		animateZoomedView(cameraPosition);
+	}
+	
+	public void setViewFillColor(int fillColor) {
+		this.mZoomedViewPolygon.setFillColor(fillColor);
+	}
+	
+	public void setViewStrokeColor(int strokeColor) {
+		this.mZoomedViewPolygon.setStrokeColor(strokeColor);
+	}
+	
+	public void setViewStrokeWidth(float strokeWidth) {
+		this.mZoomedViewPolygon.setStrokeWidth(strokeWidth);
 	}
 
 }
