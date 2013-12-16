@@ -6,50 +6,56 @@ import com.j256.ormlite.field.DatabaseField;
 import com.missionse.logisticsexample.model.DBEntity;
 
 /**
- * Mapping from and {@link com.missionse.logisticsexample.model.MyOrder} to a {@link com.missionse.logisticsexample.model.OrderItem}.
+ * Mapping from and {@link com.missionse.logisticsexample.model.Order} to a
+ * {@link com.missionse.logisticsexample.model.OrderItem}.
  */
 public class OrderToOrderItem extends DBEntity {
-	
+
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("order_id")
 	@DatabaseField(columnName = "order_id")
 	private int mOrderId;
-	
+
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("item_id")
 	@DatabaseField(columnName = "item_id")
 	private int mItemId;
-	
-	/**
-	 * Empty constructor. 
-	 */
-	public OrderToOrderItem() { }
 
 	/**
-	 * @return the mOrderId
+	 * Empty constructor.
+	 */
+	public OrderToOrderItem() {
+	}
+
+	/**
+	 * Gets the order id for this mapping.
+	 * @return the order id
 	 */
 	public int getOrderId() {
 		return mOrderId;
 	}
 
 	/**
-	 * @param orderId the mOrderId to set
+	 * Sets the order id for this mapping.
+	 * @param orderId the order id to set
 	 */
-	public void setOrderId(int orderId) {
-		this.mOrderId = orderId;
+	public void setOrderId(final int orderId) {
+		mOrderId = orderId;
 	}
 
 	/**
-	 * @return the mItemId
+	 * Gets the item id for this mapping.
+	 * @return the item id
 	 */
 	public int getItemId() {
 		return mItemId;
 	}
 
 	/**
-	 * @param itemId the mItemId to set
+	 * Sets the item id for this mapping.
+	 * @param itemId the item id to set
 	 */
-	public void setItemId(int itemId) {
-		this.mItemId = itemId;
+	public void setItemId(final int itemId) {
+		mItemId = itemId;
 	}
 }

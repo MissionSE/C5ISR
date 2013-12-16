@@ -5,90 +5,97 @@ import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
 /**
- * Represents a location on a map that contains supplies. 
- * @author rvieras
- *
+ * Represents a location on a map that contains supplies.
  */
 public class Site extends DBEntity {
-	
+
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("name")
 	@DatabaseField(columnName = "name")
 	private String mName;
-	
+
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("latitude")
 	@DatabaseField(columnName = "latitude")
 	private double mLatitude;
-	
+
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("longitude")
 	@DatabaseField(columnName = "longitude")
-	private double mLongitude; 
-	
+	private double mLongitude;
+
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("parent_id")
 	@DatabaseField(columnName = "parent_id")
 	private int mParentId;
-	
-	/**
-	 * Default constructor.  Needed for ORM library.
-	 */
-	public Site() { }
 
 	/**
-	 * @return the mName
+	 * Default constructor. Needed for ORM library.
+	 */
+	public Site() {
+	}
+
+	/**
+	 * Retrieves the name of this site.
+	 * @return the name
 	 */
 	public String getName() {
 		return mName;
 	}
 
 	/**
-	 * @param name the mName to set
+	 * Sets the name of this site.
+	 * @param name the name to set
 	 */
-	public void setName(String name) {
-		this.mName = name;
+	public void setName(final String name) {
+		mName = name;
 	}
 
 	/**
-	 * @return the mLatitude
+	 * Retrieves the latitude of this site.
+	 * @return the latitude
 	 */
 	public double getLatitude() {
 		return mLatitude;
 	}
 
 	/**
-	 * @param latitude the mLatitude to set
+	 * Sets the latitude of this site.
+	 * @param latitude the latitude to set
 	 */
-	public void setLatitude(double latitude) {
-		this.mLatitude = latitude;
+	public void setLatitude(final double latitude) {
+		mLatitude = latitude;
 	}
 
 	/**
-	 * @return the mLongitude
+	 * Retrieves the longitude of this site.
+	 * @return the longitude
 	 */
 	public double getLongitude() {
 		return mLongitude;
 	}
 
 	/**
-	 * @param longitude the mLongitude to set
+	 * Sets the longitude of this site.
+	 * @param longitude the longitude to set
 	 */
-	public void setLongitude(double longitude) {
-		this.mLongitude = longitude;
+	public void setLongitude(final double longitude) {
+		mLongitude = longitude;
 	}
-	
+
 	/**
-	 * @return a 'int' that represents the database id of the parent class. 
+	 * Retrieves the id of the parent associated with this site.
+	 * @return the id
 	 */
 	public int getParentId() {
 		return mParentId;
 	}
-	
+
 	/**
-	 * @param id - the id of the parent.
+	 * Sets the parent id stored with this site to link it to its parent.
+	 * @param id the parent's id
 	 */
-	public void setParentId(int id) {
+	public void setParentId(final int id) {
 		mParentId = id;
 	}
 }

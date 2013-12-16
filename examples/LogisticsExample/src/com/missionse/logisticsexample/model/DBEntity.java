@@ -5,28 +5,28 @@ import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
 /**
- * Database entity. 
+ * Database entity.
  */
 public class DBEntity {
-	
+
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("_id")
 	@DatabaseField(generatedId = true, columnName = "_id")
 	private int mId;
-	
+
 	/**
-	 * @return the mId
+	 * Returns the id.
+	 * @return the id
 	 */
 	public int getId() {
 		return mId;
 	}
 
 	/**
-	 * @param id the mId to set
+	 * Sets the id.
+	 * @param id the id to set
 	 */
-	public void setId(int id) {
-		this.mId = id;
+	public void setId(final int id) {
+		mId = id;
 	}
-
-
 }

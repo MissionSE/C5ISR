@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName;
 import com.missionse.logisticsexample.model.Site;
 
 /**
- * Site reponse.
+ * Response for query for available sites.
  */
 public class SiteResponse extends Response {
-	
+
 	@SerializedName("sites")
 	private List<Site> mSites;
 
@@ -23,7 +23,7 @@ public class SiteResponse extends Response {
 	/**
 	 * @param sites the mSites to set
 	 */
-	public void setSites(List<Site> sites) {
+	public void setSites(final List<Site> sites) {
 		this.mSites = sites;
 	}
 }

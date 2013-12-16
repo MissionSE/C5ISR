@@ -1,10 +1,8 @@
 package com.missionse.logisticsexample.model;
+
 /**
- * Used to characterize the current status of an {@link MyOrder}.
- * @author rvieras
- *
+ * Used to characterize the current status of an {@link Order}.
  */
 public enum Status {
-	INCOMPLETE,
-	COMPLETED,
+	INCOMPLETE, COMPLETED
 }

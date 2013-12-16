@@ -6,77 +6,82 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.missionse.logisticsexample.model.orm.MyDatePersister;
+import com.missionse.logisticsexample.model.orm.DatePersister;
 
 /**
  * Represents an order from a {@link Site}.
  */
-public class MyOrder extends DBEntity {	
+public class Order extends DBEntity {
 
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("order_at")
-	@DatabaseField(columnName = "order_at",  persisterClass = MyDatePersister.class)
+	@DatabaseField(columnName = "order_at", persisterClass = DatePersister.class)
 	private Date mTimeStamp;
-	
+
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("severity")
 	@DatabaseField(dataType = DataType.ENUM_INTEGER, columnName = "severity")
 	private Severity mSeverity;
-	
+
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("status")
 	@DatabaseField(dataType = DataType.ENUM_INTEGER, columnName = "status")
 	private Status mStatus;
 
 	/**
-	 * Empty constructor.  Needed for the ORM library.
+	 * Empty constructor. Needed for the ORM library.
 	 */
-	public MyOrder() { 
+	public Order() {
 		mTimeStamp = new Date();
 		mSeverity = Severity.NORMAL;
 		mStatus = Status.INCOMPLETE;
-		
 	}
 
 	/**
-	 * @return the mTimeStamp
+	 * Retrieves the timestamp on this order.
+	 * @return the timestamp
 	 */
 	public Date getTimeStamp() {
 		return mTimeStamp;
 	}
 
 	/**
-	 * @param timeStamp the mTimeStamp to set
+	 * Sets the timestamp of this order.
+	 * @param timeStamp the timestamp to set
 	 */
-	public void setTimeStamp(Date timeStamp) {
-		this.mTimeStamp = timeStamp;
+	public void setTimeStamp(final Date timeStamp) {
+		mTimeStamp = timeStamp;
 	}
 
 	/**
-	 * @return the mSeverity
+	 * Gets the severity of this order.
+	 * @return the severity
 	 */
 	public Severity getSeverity() {
 		return mSeverity;
 	}
 
 	/**
-	 * @param severity the mSeverity to set
+	 * Sets the severity of this order.
+	 * @param severity the severity to set
 	 */
-	public void setSeverity(Severity severity) {
-		this.mSeverity = severity;
+	public void setSeverity(final Severity severity) {
+		mSeverity = severity;
 	}
 
 	/**
-	 * @return the mStatus
+	 * Retrieves the status of this order.
+	 * @return the status
 	 */
 	public Status getStatus() {
 		return mStatus;
 	}
 
 	/**
-	 * @param status the mStatus to set
+	 * Sets the status of this order.
+	 * @param status the status to set
 	 */
-	public void setStatus(Status status) {
-		this.mStatus = status;
+	public void setStatus(final Status status) {
+		mStatus = status;
 	}
 }

@@ -64,11 +64,11 @@ public class LogisticsExample extends DrawerActivity {
 	}
 
 	private void displayLocationDatabase() {
-		FragmentManager fragmentManager = getFragmentManager();
+
 	}
 
 	private void displayOrderDatabase() {
-		FragmentManager fragmentManager = getFragmentManager();
+
 	}
 
 	@Override
@@ -76,7 +76,6 @@ public class LogisticsExample extends DrawerActivity {
 		getMenuInflater().inflate(R.menu.menu_activity_logistics_example, menu);
 
 		MenuItem notificationCountItem = menu.findItem(R.id.action_notification);
-		//notificationCountItem.setIcon(mNotificationBackground);
 		View notificationView = notificationCountItem.getActionView();
 		Button notificationButton = (Button) notificationView.findViewById(R.id.action_bar_notification_count);
 		notificationButton.setBackground(getResources().getDrawable(mNotificationBackground));

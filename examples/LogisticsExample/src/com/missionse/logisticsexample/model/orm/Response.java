@@ -3,44 +3,46 @@ package com.missionse.logisticsexample.model.orm;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Base class sever response with json.
+ * Base class server response with json.
  */
 public class Response {
-	
+
 	@SerializedName("success")
 	private int mSuccess;
-	
+
 	@SerializedName("message")
 	private String mMessage;
 
 	/**
-	 * @return the mSuccess
+	 * Determines whether or not the associated action was successful.
+	 * @return the success
 	 */
 	public boolean isSuccess() {
 		return mSuccess > 0;
 	}
 
 	/**
-	 * @param success the mSuccess to set
+	 * Sets the success of the associated action.
+	 * @param success the success of the action
 	 */
-	public void setSuccess(int success) {
-		this.mSuccess = success;
+	public void setSuccess(final int success) {
+		mSuccess = success;
 	}
 
 	/**
-	 * @return the mMessage
+	 * Retrieves the message for this response.
+	 * @return the message
 	 */
 	public String getMessage() {
 		return mMessage;
 	}
 
 	/**
-	 * @param message the mMessage to set
+	 * Sets the message for this response.
+	 * @param message the message to use
 	 */
-	public void setMessage(String message) {
-		this.mMessage = message;
+	public void setMessage(final String message) {
+		mMessage = message;
 	}
-	
-	
 
 }
