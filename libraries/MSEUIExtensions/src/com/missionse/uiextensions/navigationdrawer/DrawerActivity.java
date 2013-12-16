@@ -78,22 +78,25 @@ public abstract class DrawerActivity extends Activity {
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, getDrawerIcon(),
 				drawerConfiguration.getDrawerOpenDesc(), drawerConfiguration.getDrawerCloseDesc()) {
 			@Override
-			public void onDrawerSlide(final View view, final float slideOffset) {
-				if (view == mLeftDrawerList) {
+			public void onDrawerSlide(final View drawerView, final float slideOffset) {
+				super.onDrawerSlide(drawerView, slideOffset);
+				if (drawerView == mDrawerLayout.getChildAt(1)) {
 					mDrawerLayout.setScrimColor(mDrawerConfigurations.getLeftConfiguration().getScrimColor());
-				} else if (view == mRightDrawerList) {
+				} else if (drawerView == mDrawerLayout.getChildAt(2)) {
 					mDrawerLayout.setScrimColor(mDrawerConfigurations.getRightConfiguration().getScrimColor());
 				}
 			}
 
 			@Override
-			public void onDrawerClosed(final View view) {
+			public void onDrawerClosed(final View drawerView) {
+				super.onDrawerClosed(drawerView);
 				getActionBar().setTitle(mCurrentTitle);
 				invalidateOptionsMenu();
 			}
 
 			@Override
 			public void onDrawerOpened(final View drawerView) {
+				super.onDrawerOpened(drawerView);
 				getActionBar().setTitle(mDefaultTitle);
 				invalidateOptionsMenu();
 			}
@@ -157,9 +160,9 @@ public abstract class DrawerActivity extends Activity {
 		return (DrawerAdapter) mDrawerConfigurations.getRightConfiguration().getBaseAdapter();
 	}
 
-	protected ActionBarDrawerToggle getDrawerToggle() {
-		return mDrawerToggle;
-	}
+	//	protected ActionBarDrawerToggle getDrawerToggle() {
+	//		return mDrawerToggle;
+	//	}
 
 	protected int getDrawerIcon() {
 		return R.drawable.ic_drawer;
@@ -197,7 +200,10 @@ public abstract class DrawerActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		return mDrawerToggle.onOptionsItemSelected(item);
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

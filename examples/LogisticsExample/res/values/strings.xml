@@ -38,5 +38,11 @@
     <string name="notification_no_unread">No Unread Notifications</string>
     <string name="notification_none">0</string>
     <string name="notification_previously_read">Previously Read</string>
+    
+    <!-- Content Descriptions -->
+    <string name="action_search">Search</string>
+    
+    <!-- Fragment: Database Viewer -->
+    <string name="search_hint">Search Database</string>
 
 </resources>

@@ -1,7 +1,7 @@
 package com.missionse.logisticsexample;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.missionse.logisticsexample.database.DatabaseHelper;
+import com.missionse.logisticsexample.databaseview.DatabaseViewContainerFragment;
+import com.missionse.logisticsexample.databaseview.SiteListFragment;
 import com.missionse.logisticsexample.drawer.LogisticsDrawerFactory;
 import com.missionse.logisticsexample.map.LogisticsMap;
 import com.missionse.logisticsexample.map.MapViewerFragment;
@@ -48,23 +50,30 @@ public class LogisticsExample extends DrawerActivity {
 		mDbHelper.initialize();
 	}
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
-
 	private void displayMap() {
 		FragmentManager fragmentManager = getFragmentManager();
 		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
 		if (mapViewerFragment == null) {
 			mapViewerFragment = new MapViewerFragment();
 			mapViewerFragment.setMapLoadedListener(mLogisticsMap);
-			fragmentManager.beginTransaction().add(R.id.content, mapViewerFragment, "map").commit();
 		}
+		fragmentManager.beginTransaction().replace(R.id.content, mapViewerFragment, "map").commit();
 	}
 
-	private void displayLocationDatabase() {
-
+	private void displaySiteDatabase() {
+		FragmentManager fragmentManager = getFragmentManager();
+		SiteListFragment siteListFragment = (SiteListFragment) fragmentManager.findFragmentByTag("sitelist");
+		if (siteListFragment == null) {
+			siteListFragment = new SiteListFragment();
+		}
+		DatabaseViewContainerFragment containerFragment = (DatabaseViewContainerFragment) fragmentManager
+				.findFragmentByTag("container");
+		if (containerFragment == null) {
+			containerFragment = new DatabaseViewContainerFragment();
+			containerFragment.setLeftFragment(siteListFragment, "sitelist");
+			containerFragment.setRightFragment(new Fragment(), "something");
+		}
+		fragmentManager.beginTransaction().replace(R.id.content, containerFragment, "container").commit();
 	}
 
 	private void displayOrderDatabase() {
@@ -97,17 +106,19 @@ public class LogisticsExample extends DrawerActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_settings:
-				break;
-			case R.id.action_feedback:
-				break;
-			case R.id.action_help:
-				break;
-			case R.id.action_licenses:
-				break;
-			default:
-				break;
+		if (!super.onOptionsItemSelected(item)) {
+			switch (item.getItemId()) {
+				case R.id.action_settings:
+					break;
+				case R.id.action_feedback:
+					break;
+				case R.id.action_help:
+					break;
+				case R.id.action_licenses:
+					break;
+				default:
+					break;
+			}
 		}
 		return true;
 	}
@@ -144,8 +155,13 @@ public class LogisticsExample extends DrawerActivity {
 			}
 		});
 
-		selectItem(((DrawerAdapter) getLeftDrawerList().getAdapter()).getPosition(LogisticsDrawerFactory.MAP),
+		//		selectItem(((DrawerAdapter) getLeftDrawerList().getAdapter()).getPosition(LogisticsDrawerFactory.MAP),
+		//				getLeftDrawerList());
+
+		selectItem(
+				((DrawerAdapter) getLeftDrawerList().getAdapter()).getPosition(LogisticsDrawerFactory.LOCATION_LIST),
 				getLeftDrawerList());
+
 	}
 
 	@Override
@@ -168,7 +184,7 @@ public class LogisticsExample extends DrawerActivity {
 
 			displayMap();
 		} else if (id == LogisticsDrawerFactory.LOCATION_LIST) {
-			displayLocationDatabase();
+			displaySiteDatabase();
 		} else if (id == LogisticsDrawerFactory.ORDER_LIST) {
 			displayOrderDatabase();
 		}
