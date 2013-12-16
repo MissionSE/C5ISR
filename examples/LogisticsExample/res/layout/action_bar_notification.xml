@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/notif_count"
+	android:id="@+id/action_bar_notification_count"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:minWidth="32dp"
 	android:minHeight="32dp"
-	android:text="@string/initial_notif_count"
+	android:text="@string/notification_none"
 	android:textSize="18sp"
 	android:textColor="@android:color/white"
 	android:textStyle="bold"

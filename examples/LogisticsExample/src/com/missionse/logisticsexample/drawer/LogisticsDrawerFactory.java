@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -62,13 +65,13 @@ public class LogisticsDrawerFactory {
 
 	private void createNavigationDrawer(final DrawerConfigurationContainer container) {
 		DrawerConfiguration configuration = new DrawerConfiguration(DrawerType.LEFT, mContext);
-		configuration.setDrawer(R.id.nav_drawer);
+		configuration.setDrawer(R.id.navigation_drawer);
 		container.addConfiguration(configuration);
 	}
 
 	private void createNotificationDrawer(final DrawerConfigurationContainer container) {
 		DrawerConfiguration configuration = new DrawerConfiguration(DrawerType.RIGHT, mContext);
-		configuration.setDrawer(R.id.notif_drawer);
+		configuration.setDrawer(R.id.notification_drawer);
 		configuration.setShouldCloseOnSelect(false);
 		configuration.setScrimColor(mContext.getResources().getColor(R.color.transparent_scrim));
 		container.addConfiguration(configuration);
@@ -136,7 +139,19 @@ public class LogisticsDrawerFactory {
 		activity.getRightDrawerList().setOnTouchListener(touchListener);
 		activity.getRightDrawerList().setOnScrollListener(touchListener.makeScrollListener());
 
-		TextView emptyView = (TextView) activity.findViewById(R.id.empty_notif_drawer);
+		TextView emptyView = (TextView) activity.findViewById(R.id.notification_no_unread);
 		activity.getRightDrawerList().setEmptyView(emptyView);
+
+		preparePreviouslyReadFeature(activity);
+	}
+
+	private void preparePreviouslyReadFeature(final DrawerActivity activity) {
+		Button previouslyReadNotifications = (Button) activity.findViewById(R.id.notification_previously_read);
+		previouslyReadNotifications.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(final View v) {
+
+			}
+		});
 	}
 }

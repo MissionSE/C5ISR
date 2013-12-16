@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="end"
+    android:background="@color/default_very_dark_gray"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1">
+        <ListView android:id="@+id/notification_drawer"
+             android:layout_width="320dp"
+             android:layout_height="wrap_content"
+             android:choiceMode="singleChoice"
+             android:divider="@android:color/transparent"
+             android:dividerHeight="0dp" />
+        <TextView android:id="@+id/notification_no_unread"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:textAppearance="?@android:attr/textAppearanceMedium"
+             android:textStyle="bold"
+             android:textAllCaps="true"
+             android:text="@string/notification_no_unread"
+             android:visibility="gone"
+             android:textColor="#eee"
+             android:gravity="center_vertical|center_horizontal" >
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View
+            android:background="@color/light_gray"
+            android:layout_height="1px"
+            android:layout_width="match_parent" />
+        <Button
+            android:id="@+id/notification_previously_read"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/notification_previously_read"
+            android:text="@string/notification_previously_read"
+            android:textAppearance="?@android:attr/textAppearanceSmall"
+            android:textAllCaps="true"
+            android:gravity="left|center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textStyle="bold"
+            android:textColor="#eee"
+            android:drawableRight="@drawable/ic_action_time" >
+        </Button>
+    </LinearLayout>   
+</LinearLayout>

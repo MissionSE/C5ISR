@@ -36,7 +36,7 @@ public class LogisticsExample extends DrawerActivity {
 	private static int mCurrentNotificationId = INITIAL_NOTIFICATION_ID;
 	private static int mNotificationCount = 0;
 	private static int mNotificationBackground = R.drawable.notification_action_bar_zero;
-	private static int mNotificationTextColor = R.color.default_dark;
+	private static int mNotificationTextColor = R.color.default_very_dark_gray;
 
 	/**
 	 * Constructs a new LogisticsExample.
@@ -44,7 +44,7 @@ public class LogisticsExample extends DrawerActivity {
 	public LogisticsExample() {
 		mLogisticsMap = new LogisticsMap(this);
 		mDrawerFactory = new LogisticsDrawerFactory(this);
-		mDbHelper = new DatabaseHelper(this);	
+		mDbHelper = new DatabaseHelper(this);
 		mDbHelper.initialize();
 	}
 
@@ -63,14 +63,22 @@ public class LogisticsExample extends DrawerActivity {
 		}
 	}
 
+	private void displayLocationDatabase() {
+		FragmentManager fragmentManager = getFragmentManager();
+	}
+
+	private void displayOrderDatabase() {
+		FragmentManager fragmentManager = getFragmentManager();
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.logistics_example, menu);
+		getMenuInflater().inflate(R.menu.menu_activity_logistics_example, menu);
 
 		MenuItem notificationCountItem = menu.findItem(R.id.action_notification);
 		//notificationCountItem.setIcon(mNotificationBackground);
 		View notificationView = notificationCountItem.getActionView();
-		Button notificationButton = (Button) notificationView.findViewById(R.id.notif_count);
+		Button notificationButton = (Button) notificationView.findViewById(R.id.action_bar_notification_count);
 		notificationButton.setBackground(getResources().getDrawable(mNotificationBackground));
 		notificationButton.setText(String.valueOf(mNotificationCount));
 		notificationButton.setTextColor(getResources().getColor(mNotificationTextColor));
@@ -160,6 +168,10 @@ public class LogisticsExample extends DrawerActivity {
 			adjustNotificationActionBar();
 
 			displayMap();
+		} else if (id == LogisticsDrawerFactory.LOCATION_LIST) {
+			displayLocationDatabase();
+		} else if (id == LogisticsDrawerFactory.ORDER_LIST) {
+			displayOrderDatabase();
 		}
 	}
 
@@ -170,7 +182,7 @@ public class LogisticsExample extends DrawerActivity {
 			mNotificationTextColor = R.color.white;
 		} else {
 			mNotificationBackground = R.drawable.notification_action_bar_zero;
-			mNotificationTextColor = R.color.default_dark;
+			mNotificationTextColor = R.color.default_very_dark_gray;
 		}
 		invalidateOptionsMenu();
 	}

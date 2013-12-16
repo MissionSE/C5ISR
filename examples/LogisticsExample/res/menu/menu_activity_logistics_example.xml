@@ -3,7 +3,7 @@
     <item
 		android:id="@+id/action_notification"
 		android:actionLayout="@layout/action_bar_notification"
-		android:title="@string/action_notification"
+		android:title="@string/menu_notification"
 		android:showAsAction="always">
 	</item>
     
@@ -11,21 +11,21 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:title="@string/menu_settings"/>
     <item
         android:id="@+id/action_feedback"
         android:orderInCategory="101"
         android:showAsAction="never"
-        android:title="@string/action_feedback"/>
+        android:title="@string/menu_feedback"/>
     <item
         android:id="@+id/action_help"
         android:orderInCategory="102"
         android:showAsAction="never"
-        android:title="@string/action_help"/>
+        android:title="@string/menu_help"/>
     <item
         android:id="@+id/action_licenses"
         android:orderInCategory="103"
         android:showAsAction="never"
-        android:title="@string/action_licenses"/>
+        android:title="@string/menu_licenses"/>
 
 </menu>

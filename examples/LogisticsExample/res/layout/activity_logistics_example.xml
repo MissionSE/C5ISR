@@ -12,37 +12,8 @@
         android:layout_height="match_parent" />
     
     <!-- The Navigation Drawer -->
-    <ListView android:id="@+id/nav_drawer"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#222" />
+    <include layout="@layout/drawer_navigation" />
     <!-- The Notification Drawer -->
-    <RelativeLayout
-        android:layout_width="320dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="end" >  
-        <ListView android:id="@+id/notif_drawer"
-	        android:layout_width="320dp"
-	        android:layout_height="match_parent"
-	        android:choiceMode="singleChoice"
-	        android:divider="@android:color/transparent"
-	        android:dividerHeight="0dp"
-	        android:background="#222" />
-        <TextView android:id="@+id/empty_notif_drawer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textAppearance="?@android:attr/textAppearanceMedium"
-            android:textStyle="bold"
-            android:textAllCaps="true"
-            android:text="@string/no_unread_notifications"
-            android:visibility="gone"
-            android:background="@color/default_dark"
-            android:textColor="#eee"
-            android:gravity="center_vertical|center_horizontal" >
-        </TextView>
-    </RelativeLayout>
+    <include layout="@layout/drawer_notification" />
+    
 </com.missionse.uiextensions.navigationdrawer.compatibility.SwipeToDismissDrawerLayout>
