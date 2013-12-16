@@ -9,7 +9,7 @@
 
 		public function query_database($query) {
 			$result = mysql_query($query) or die(mysql_error());
-			
+
 			return $result;
 		}
 
@@ -82,6 +82,28 @@
 					}
 				} else {
 					$response["message"] = mysql_error();
+				}
+			} else {
+				$response["message"] = "Required field(s) missing.";
+			}
+
+			$response["success"] = $success;
+			return $response;
+		}
+
+		public function delete_item($tablename) {
+			$response = array();
+			$success = 0;
+
+			$post_data = $this->get_post_data(["id"]);
+			$id = $post_data["id"];
+			if ($id) {
+				$query = "DELETE FROM $tablename WHERE id='$id'";
+				$result = $this->query_database($query);
+				if (mysql_affected_rows() > 0) {
+					$success = 1;
+				} else {
+					$response["message"] = "Item with id $id not found.";
 				}
 			} else {
 				$response["message"] = "Required field(s) missing.";
