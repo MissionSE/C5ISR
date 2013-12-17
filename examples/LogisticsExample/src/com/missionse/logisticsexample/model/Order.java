@@ -6,11 +6,13 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import com.missionse.logisticsexample.model.orm.DatePersister;
 
 /**
  * Represents an order from a {@link Site}.
  */
+@DatabaseTable(tableName = "myorders")
 public class Order extends DBEntity {
 
 	@Expose(serialize = true, deserialize = true)
@@ -83,5 +85,16 @@ public class Order extends DBEntity {
 	 */
 	public void setStatus(final Status status) {
 		mStatus = status;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder();
+		string.append("Order>: ");
+		string.append(" id = " + getId());
+		string.append(" timestamp = " + mTimeStamp);
+		string.append(" severity = " + mSeverity);
+		string.append(" status = " + mStatus);
+		return string.toString();
 	}
 }

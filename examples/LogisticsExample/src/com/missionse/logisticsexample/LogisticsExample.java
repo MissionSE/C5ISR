@@ -1,6 +1,10 @@
 package com.missionse.logisticsexample;
 
+import java.util.Timer;
+
 import android.app.FragmentManager;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,10 +16,20 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.missionse.logisticsexample.database.DatabaseHelper;
+import com.missionse.logisticsexample.database.DatabaseUpdateThread;
+import com.missionse.logisticsexample.database.OnDatabaseUpdate;
 import com.missionse.logisticsexample.databaseview.SiteViewerContainerFragment;
 import com.missionse.logisticsexample.drawer.LogisticsDrawerFactory;
 import com.missionse.logisticsexample.map.LogisticsMap;
 import com.missionse.logisticsexample.map.MapViewerFragment;
+import com.missionse.logisticsexample.model.InventoryItem;
+import com.missionse.logisticsexample.model.ItemName;
+import com.missionse.logisticsexample.model.Order;
+import com.missionse.logisticsexample.model.OrderItem;
+import com.missionse.logisticsexample.model.Site;
+import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
+import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
+import com.missionse.logisticsexample.model.mappings.SiteToOrder;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.DrawerAdapter;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
@@ -26,11 +40,17 @@ import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
  * Main entry point to the Logistics application. Instantiates the two drawers, and loads the initial fragment into the
  * content space.
  */
-public class LogisticsExample extends DrawerActivity {
+public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate {
+	private static final String LOG_TAG = "LogisticsExample";
+	
 	private LogisticsDrawerFactory mDrawerFactory;
 	private LogisticsMap mLogisticsMap;
 
 	private DatabaseHelper mDbHelper;
+	private DatabaseUpdateThread mDbUpdater;
+	private Timer mDbPeriodic;
+	private static final long DELAY_BEFORE_FIRST_RUN_IN_MS = 500;
+	private static final long INTERVAL_BETWEEN_RUNS_IN_MS = 4000;
 
 	private static final int INITIAL_NOTIFICATION_ID = 300;
 	private static int mCurrentNotificationId = INITIAL_NOTIFICATION_ID;
@@ -47,6 +67,18 @@ public class LogisticsExample extends DrawerActivity {
 		mDbHelper = new DatabaseHelper(this);
 		mDbHelper.initialize();
 	}
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mDbUpdater = new DatabaseUpdateThread(this, mDbHelper);
+		mDbPeriodic = new Timer();
+		mDbPeriodic.schedule(mDbUpdater, 
+				DELAY_BEFORE_FIRST_RUN_IN_MS,
+				INTERVAL_BETWEEN_RUNS_IN_MS);
+	}
+
+
 
 	private void displayMap() {
 		FragmentManager fragmentManager = getFragmentManager();
@@ -193,4 +225,34 @@ public class LogisticsExample extends DrawerActivity {
 		}
 		invalidateOptionsMenu();
 	}
+
+	@Override
+	public void onDatabaseUpdate(DatabaseHelper helper) {
+		Log.d("LogisticsExample", "ON DATABASE UPDATE CALLED");
+		for (ItemName i : mDbHelper.fetchAll(ItemName.class)) {
+			Log.d(LOG_TAG, i.toString());
+		}
+		for (InventoryItem i : mDbHelper.fetchAll(InventoryItem.class)) {
+			Log.d(LOG_TAG, i.toString()); 
+		}
+		for (Order i : mDbHelper.fetchAll(Order.class)) {
+			Log.d(LOG_TAG, i.toString()); 
+		}
+		for (OrderItem i : mDbHelper.fetchAll(OrderItem.class)) {
+			Log.d(LOG_TAG, i.toString()); 
+		}
+		for (Site i : mDbHelper.fetchAll(Site.class)) {
+			Log.d(LOG_TAG, i.toString()); 
+		}
+		for (OrderToOrderItem i : mDbHelper.fetchAll(OrderToOrderItem.class)) {
+			Log.d(LOG_TAG, i.toString()); 
+		}
+		for (SiteToInventoryItem i : mDbHelper.fetchAll(SiteToInventoryItem.class)) {
+			Log.d(LOG_TAG, i.toString()); 
+		}
+		for (SiteToOrder i : mDbHelper.fetchAll(SiteToOrder.class)) {
+			Log.d(LOG_TAG, i.toString()); 
+		}
+	}
+
 }

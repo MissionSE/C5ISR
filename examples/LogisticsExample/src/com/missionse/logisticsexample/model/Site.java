@@ -98,4 +98,16 @@ public class Site extends DBEntity {
 	public void setParentId(final int id) {
 		mParentId = id;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder();
+		string.append("Site>: ");
+		string.append(" id = " + getId());
+		string.append(" name = " + mName);
+		string.append(" lat = " + mLatitude);
+		string.append(" lng = " + mLongitude);
+		string.append(" parentId = " + mParentId);
+		return string.toString();
+	}
 }

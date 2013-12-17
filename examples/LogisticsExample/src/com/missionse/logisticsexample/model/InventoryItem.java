@@ -77,4 +77,15 @@ public class InventoryItem extends DBEntity {
 	public void setNameId(final int nameId) {
 		mNameId = nameId;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder();
+		string.append("InventoryItem>: ");
+		string.append(" id = " + getId());
+		string.append(" quantity = " + this.mQuantity);
+		string.append(" maxium = " + this.mMaximum);
+		string.append(" nameid = " + this.mNameId);
+		return string.toString();
+	}
 }

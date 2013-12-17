@@ -1,6 +1,7 @@
 package com.missionse.logisticsexample.database;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<Site, Integer> mSiteDao = null;
 	private Dao<Order, Integer> mOrderDao = null;
 
-	//private Dao<ItemName, Integer> mItemNameDao = null;
+	private Dao<ItemName, Integer> mItemNameDao = null;
 	private Dao<InventoryItem, Integer> mInventoryItemDao = null;
 	private Dao<OrderItem, Integer> mOrderItemDao = null;
 
@@ -97,7 +98,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			mSiteDao = getDao(Site.class);
 			mOrderDao = getDao(Order.class);
 
-			//mItemNameDao = getDao(ItemName.class);
+			mItemNameDao = getDao(ItemName.class);
 			mInventoryItemDao = getDao(InventoryItem.class);
 			mOrderItemDao = getDao(OrderItem.class);
 
@@ -114,12 +115,25 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		super.close();
 		mSiteDao = null;
 		mOrderDao = null;
-		//mItemNameDao = null;
+		mItemNameDao = null;
 		mInventoryItemDao = null;
 		mOrderItemDao = null;
 		mOrderToOrderItemDao = null;
 		mSiteToOrderDao = null;
 		mSiteToInventoryItemDao = null;
+	}
+	
+	/**
+	 * Grab a list of a specific class.
+	 * @param <T> - the type 
+	 * @param clazz - the class
+	 * @return - list of type <T>
+	 */
+	public <T> List<T> fetchAll(Class<T> clazz) {
+		try {
+			return getDao(clazz).queryForAll();
+		} catch (SQLException sqlException) { sqlException.printStackTrace(); }
+		return Collections.emptyList();
 	}
 
 	/////////////////////////////////////////////////////////
@@ -326,4 +340,59 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		});
 	}
 
+	/**
+	 * @return the mSiteDao
+	 */
+	public Dao<Site, Integer> getSiteDao() {
+		return mSiteDao;
+	}
+
+	/**
+	 * @return the mOrderDao
+	 */
+	public Dao<Order, Integer> getOrderDao() {
+		return mOrderDao;
+	}
+
+	/**
+	 * @return the mInventoryItemDao
+	 */
+	public Dao<InventoryItem, Integer> getInventoryItemDao() {
+		return mInventoryItemDao;
+	}
+
+	/**
+	 * @return the mOrderItemDao
+	 */
+	public Dao<OrderItem, Integer> getOrderItemDao() {
+		return mOrderItemDao;
+	}
+
+	/**
+	 * @return the mOrderToOrderItemDao
+	 */
+	public Dao<OrderToOrderItem, Integer> getOrderToOrderItemDao() {
+		return mOrderToOrderItemDao;
+	}
+
+	/**
+	 * @return the mSiteToOrderDao
+	 */
+	public Dao<SiteToOrder, Integer> getSiteToOrderDao() {
+		return mSiteToOrderDao;
+	}
+
+	/**
+	 * @return the mSiteToInventoryItemDao
+	 */
+	public Dao<SiteToInventoryItem, Integer> getSiteToInventoryItemDao() {
+		return mSiteToInventoryItemDao;
+	}
+
+	/**
+	 * @return the mItemNameDao
+	 */
+	public Dao<ItemName, Integer> getItemNameDao() {
+		return mItemNameDao;
+	}
 }
