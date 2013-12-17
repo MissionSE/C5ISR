@@ -21,6 +21,7 @@ import android.widget.Filter;
 import android.widget.TextView;
 
 import com.missionse.logisticsexample.R;
+import com.missionse.logisticsexample.database.DatabaseHelper;
 import com.missionse.logisticsexample.model.Site;
 
 /**
@@ -31,23 +32,7 @@ public class SiteListFragment extends DatabaseEntryListFragment {
 	private SiteAdapter mSiteAdapter;
 	private int mSelectedPosition = -1;
 	private SiteViewerContainerFragment mContainer;
-
-	private static final String LEXICON = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-	private static final java.util.Random RANDOM = new java.util.Random();
-	private static final int NAME_LENGTH = 5;
-	private static final int MAX_NAMES = 30;
-
-	private static String randomIdentifier() {
-		StringBuilder builder = new StringBuilder();
-		while (builder.toString().length() == 0) {
-			int length = RANDOM.nextInt(NAME_LENGTH) + NAME_LENGTH;
-			for (int i = 0; i < length; i++) {
-				builder.append(LEXICON.charAt(RANDOM.nextInt(LEXICON.length())));
-			}
-		}
-		return builder.toString();
-	}
+	private DatabaseHelper mDatabaseHelper;
 
 	/**
 	 * Attaches a parent container to this fragment, to be called back on certain events.
@@ -57,19 +42,20 @@ public class SiteListFragment extends DatabaseEntryListFragment {
 		mContainer = container;
 	}
 
+	/**
+	 * Sets the DatabaseHelper, allowing database access.
+	 * @param databaseHelper the database helper
+	 */
+	public void setDatabaseHelper(final DatabaseHelper databaseHelper) {
+		mDatabaseHelper = databaseHelper;
+	}
+
 	@Override
 	public StickyListHeadersAdapter getEntryAdapter() {
 		mSiteAdapter = new SiteAdapter(getActivity(), R.layout.list_entry, R.layout.list_entry_header);
-
-		List<String> siteNames = new ArrayList<String>();
-		for (int count = 0; count < MAX_NAMES; count++) {
-			siteNames.add(randomIdentifier());
-
-		}
-		Collections.sort(siteNames);
-		for (String name : siteNames) {
-			Site site = new Site();
-			site.setName(name);
+		List<Site> sites = mDatabaseHelper.fetchAll(Site.class);
+		Collections.sort(sites);
+		for (Site site : sites) {
 			mSiteAdapter.add(site);
 		}
 		return mSiteAdapter;

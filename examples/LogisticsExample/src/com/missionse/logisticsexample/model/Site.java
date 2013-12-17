@@ -7,7 +7,7 @@ import com.j256.ormlite.field.DatabaseField;
 /**
  * Represents a location on a map that contains supplies.
  */
-public class Site extends DBEntity {
+public class Site extends DBEntity implements Comparable<Object> {
 
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("name")
@@ -98,7 +98,7 @@ public class Site extends DBEntity {
 	public void setParentId(final int id) {
 		mParentId = id;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
@@ -109,5 +109,18 @@ public class Site extends DBEntity {
 		string.append(" lng = " + mLongitude);
 		string.append(" parentId = " + mParentId);
 		return string.toString();
+	}
+
+	@Override
+	public int compareTo(final Object another) {
+		if (another != null) {
+			if (getClass() == another.getClass()) {
+				return getName().compareTo(((Site) another).getName());
+			} else {
+				return 1;
+			}
+		} else {
+			return 1;
+		}
 	}
 }

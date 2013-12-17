@@ -15,6 +15,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.missionse.logisticsexample.database.DatabaseAccessor;
 import com.missionse.logisticsexample.database.DatabaseHelper;
 import com.missionse.logisticsexample.database.DatabaseUpdateThread;
 import com.missionse.logisticsexample.database.OnDatabaseUpdate;
@@ -40,7 +41,7 @@ import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
  * Main entry point to the Logistics application. Instantiates the two drawers, and loads the initial fragment into the
  * content space.
  */
-public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate {
+public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate, DatabaseAccessor {
 	private static final String LOG_TAG = "LogisticsExample";
 
 	private LogisticsDrawerFactory mDrawerFactory;
@@ -83,21 +84,46 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 			mapViewerFragment = new MapViewerFragment();
 			mapViewerFragment.setMapLoadedListener(mLogisticsMap);
 		}
-		fragmentManager.beginTransaction().replace(R.id.content, mapViewerFragment, "map").commit();
+		fragmentManager.beginTransaction().replace(R.id.content, mapViewerFragment, "map").addToBackStack("map")
+				.commit();
 	}
 
 	private void displaySiteDatabase() {
 		FragmentManager fragmentManager = getFragmentManager();
 		SiteViewerContainerFragment containerFragment = (SiteViewerContainerFragment) fragmentManager
-				.findFragmentByTag("container");
+				.findFragmentByTag("sitecontainer");
 		if (containerFragment == null) {
 			containerFragment = new SiteViewerContainerFragment();
 		}
-		fragmentManager.beginTransaction().replace(R.id.content, containerFragment, "container").commit();
+		fragmentManager.beginTransaction().replace(R.id.content, containerFragment, "sitecontainer")
+				.addToBackStack("sitecontainer").commit();
 	}
 
 	private void displayOrderDatabase() {
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		syncNavigationDrawerWithContent();
+	}
+
+	private void syncNavigationDrawerWithContent() {
+		FragmentManager fragmentManager = getFragmentManager();
+		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
+		if (mapViewerFragment != null && mapViewerFragment.isVisible()) {
+			selectItem(((DrawerAdapter) getLeftDrawerList().getAdapter()).getPosition(LogisticsDrawerFactory.MAP),
+					getLeftDrawerList());
+		}
+		SiteViewerContainerFragment siteContainerFragment = (SiteViewerContainerFragment) fragmentManager
+				.findFragmentByTag("container");
+		if (siteContainerFragment != null && siteContainerFragment.isVisible()) {
+			selectItem(
+					((DrawerAdapter) getLeftDrawerList().getAdapter())
+							.getPosition(LogisticsDrawerFactory.LOCATION_LIST),
+					getLeftDrawerList());
+		}
 	}
 
 	@Override
@@ -246,4 +272,8 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 		}
 	}
 
+	@Override
+	public DatabaseHelper getHelper() {
+		return mDbHelper;
+	}
 }
