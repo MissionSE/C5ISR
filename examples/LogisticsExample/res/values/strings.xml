@@ -27,7 +27,7 @@
     <!-- Navigation Drawer -->
     <string name="drawer_navigation">Navigation</string>
     <string name="drawer_map">Map</string>
-    <string name="drawer_locationlist">Location Database</string>
+    <string name="drawer_locationlist">Site Database</string>
     <string name="drawer_orderlist">Order Database</string>
     
     <!-- Users Account Actions Spinner -->
@@ -44,5 +44,6 @@
     
     <!-- Fragment: Database Viewer -->
     <string name="search_hint">Search Database</string>
+    <string name="nothing_selected">Select an item on the left to see details.</string>
 
 </resources>

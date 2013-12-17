@@ -30,6 +30,7 @@ public class SiteListFragment extends DatabaseEntryListFragment {
 
 	private SiteAdapter mSiteAdapter;
 	private int mSelectedPosition = -1;
+	private SiteViewerContainerFragment mContainer;
 
 	private static final String LEXICON = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -46,6 +47,14 @@ public class SiteListFragment extends DatabaseEntryListFragment {
 			}
 		}
 		return builder.toString();
+	}
+
+	/**
+	 * Attaches a parent container to this fragment, to be called back on certain events.
+	 * @param container the parent container
+	 */
+	public void setContainer(final SiteViewerContainerFragment container) {
+		mContainer = container;
 	}
 
 	@Override
@@ -90,6 +99,7 @@ public class SiteListFragment extends DatabaseEntryListFragment {
 	public void onItemSelected(final int position) {
 		mSelectedPosition = position;
 		getEntryList().invalidate();
+		mContainer.displaySite(mSiteAdapter.getItem(position));
 	}
 
 	/**
