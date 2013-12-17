@@ -35,9 +35,9 @@ public class MapDatabaseExampleActivity extends Activity implements MapLocationL
 		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
 		if (mapViewerFragment == null) {
 			mapViewerFragment = new MapViewerFragment();
-			mapViewerFragment.setMapLoadedListener(mDatabaseMap);
-			fragmentManager.beginTransaction().add(R.id.content, mapViewerFragment, "map").commit();
 		}
+		mapViewerFragment.setMapLoadedListener(mDatabaseMap);
+		fragmentManager.beginTransaction().replace(R.id.content, mapViewerFragment, "map").commitAllowingStateLoss();
 	}
 
 	@Override

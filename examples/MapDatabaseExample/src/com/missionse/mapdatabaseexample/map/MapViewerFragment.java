@@ -16,7 +16,6 @@ public class MapViewerFragment extends MapFragment {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
 
 		setUpMapIfNeeded();
 	}
