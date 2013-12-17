@@ -17,8 +17,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         mListView = (ViewGroup) findViewById(R.id.list);
 
-        addDemo("Maps Example", MapsExampleActivity.class);
-        addDemo("Maps Overview", OverviewMapsActivity.class);
+        addDemo("Map Filtering", MapFilteringActivity.class);
+        addDemo("Maps Overview", MapOverviewActivity.class);
+        addDemo("Settings Example", MapSettingsActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {

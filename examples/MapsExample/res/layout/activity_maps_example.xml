@@ -1,11 +1,20 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MapsExampleActivity" >
+    tools:context=".MapFilteringActivity" >
 
     <FrameLayout
-        android:id="@+id/fragment_container_map"
+        android:id="@+id/fragment_container_map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container_map_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/map_overview_border" />
 
     <LinearLayout
         android:id="@+id/map_detail_spacer"
@@ -37,25 +46,48 @@
                 android:layout_alignParentTop="true"
                 android:contentDescription="@string/close_detail_pane" />
 
-            <android.app.FragmentBreadCrumbs
-                android:id="@+id/breadcrumbs"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/detail_breadcrumb_height"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@id/close_button"
-                android:gravity="center_vertical|left"
-                android:paddingLeft="8dp" />
-
             <FrameLayout
                 android:id="@+id/fragment_container_detail"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/breadcrumbs" />
+                android:layout_alignParentRight="true" />
         </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/map_filtercontrols"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/map_filter_layout_background"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:visibility="invisible" >
+
+        <Button
+            android:id="@+id/map_filter3"
+            style="@style/MapFilterSelectorButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/map_filtercontrol_3" />
+
+        <Button
+            android:id="@+id/map_filter2"
+            style="@style/MapFilterSelectorButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/map_filtercontrol_2" />
+
+        <Button
+            android:id="@+id/map_filter1"
+            style="@style/MapFilterSelectorButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/map_filtercontrol_1" />
     </LinearLayout>
 
 </merge>

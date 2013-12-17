@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.missionse.mapsexample"
     android:versionCode="1"
@@ -22,7 +22,6 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
     <!-- End of copy. -->
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -43,12 +42,27 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!--
+                 Add intent-filter for search intent action and specify searchable configuration
+                 via meta-data tag. This allows this activity to receive search intents via the
+                 system hooks. In this sample this is only used on older OS versions (pre-Honeycomb)
+                 via the activity search dialog. See the Search API guide for more information:
+                 http://developer.android.com/guide/topics/search/search-dialog.html
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_contacts" />
         </activity>
-        <activity android:name=".MapsExampleActivity" />
-        <activity android:name=".OverviewMapsActivity" />
+        <activity android:name=".MapFilteringActivity" />
+        <activity android:name=".MapOverviewActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/action_settings" />
+        <activity android:name=".MapSettingsActivity" />
     </application>
 
 </manifest>

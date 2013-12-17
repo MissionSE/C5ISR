@@ -11,8 +11,8 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.missionse.mapviewer.MiniMapFragment;
 
-public class OverviewMapsActivity extends Activity implements MiniMapFragment.Callbacks {
-	private static final String TAG = OverviewMapsActivity.class.getSimpleName();
+public class MapOverviewActivity extends Activity implements MiniMapFragment.Callbacks {
+	private static final String TAG = MapOverviewActivity.class.getSimpleName();
 	
 	private MapFragment mMapFragment;
 	private MiniMapFragment mMiniMapFragment;
@@ -50,7 +50,9 @@ public class OverviewMapsActivity extends Activity implements MiniMapFragment.Ca
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maps_overview);
 		
-		mViewPolygonOptions = new PolygonOptions().fillColor(Color.argb((int) (255 * 0.75), 0, 0, 0)).strokeWidth(0);
+		mViewPolygonOptions = new PolygonOptions()
+		.fillColor(Color.argb((int) (255 * 0.75), 0, 0, 0))
+		.strokeWidth(0);
 		
 		getMapViewerFragment();
 		setUpMiniMapFragment();

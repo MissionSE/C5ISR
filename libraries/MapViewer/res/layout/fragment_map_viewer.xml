@@ -1,51 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/map_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal" >
-
-    <com.google.android.gms.maps.MapView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/map_overview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="15dp" />
-    
-    <LinearLayout
-        android:id="@+id/map_filtercontrols"
-        android:layout_width="56dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|right"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/map_filter_layout_background"
-        android:orientation="vertical"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:visibility="invisible" >
-
-        <Button
-            android:id="@+id/map_filter3"
-            style="@style/MapFilterSelectorButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/map_filtercontrol_3" />
-
-        <Button
-            android:id="@+id/map_filter2"
-            style="@style/MapFilterSelectorButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/map_filtercontrol_2" />
-
-        <Button
-            android:id="@+id/map_filter1"
-            style="@style/MapFilterSelectorButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/map_filtercontrol_1" />
-    </LinearLayout>
 
 </FrameLayout>
