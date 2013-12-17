@@ -186,8 +186,10 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 			@Override
 			public void onDismiss(final ListView listView, final int[] positions) {
 				adjustNotificationActionBar();
+				for (int position : positions) {
+					listView.setItemChecked(position, false);
+				}
 			}
-
 		});
 
 		mDrawerFactory.addNavigationMenuItems(getLeftDrawerAdapter(), new OnItemSelectedListener() {

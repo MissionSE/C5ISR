@@ -160,10 +160,6 @@ public abstract class DrawerActivity extends Activity {
 		return (DrawerAdapter) mDrawerConfigurations.getRightConfiguration().getBaseAdapter();
 	}
 
-	//	protected ActionBarDrawerToggle getDrawerToggle() {
-	//		return mDrawerToggle;
-	//	}
-
 	protected int getDrawerIcon() {
 		return R.drawable.ic_drawer;
 	}
