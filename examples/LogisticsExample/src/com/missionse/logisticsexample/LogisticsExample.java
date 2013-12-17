@@ -42,7 +42,7 @@ import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
  */
 public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate {
 	private static final String LOG_TAG = "LogisticsExample";
-	
+
 	private LogisticsDrawerFactory mDrawerFactory;
 	private LogisticsMap mLogisticsMap;
 
@@ -67,18 +67,14 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 		mDbHelper = new DatabaseHelper(this);
 		mDbHelper.initialize();
 	}
-	
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDbUpdater = new DatabaseUpdateThread(this, mDbHelper);
 		mDbPeriodic = new Timer();
-		mDbPeriodic.schedule(mDbUpdater, 
-				DELAY_BEFORE_FIRST_RUN_IN_MS,
-				INTERVAL_BETWEEN_RUNS_IN_MS);
+		mDbPeriodic.schedule(mDbUpdater, DELAY_BEFORE_FIRST_RUN_IN_MS, INTERVAL_BETWEEN_RUNS_IN_MS);
 	}
-
-
 
 	private void displayMap() {
 		FragmentManager fragmentManager = getFragmentManager();
@@ -179,13 +175,8 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 			}
 		});
 
-		//		selectItem(((DrawerAdapter) getLeftDrawerList().getAdapter()).getPosition(LogisticsDrawerFactory.MAP),
-		//				getLeftDrawerList());
-
-		selectItem(
-				((DrawerAdapter) getLeftDrawerList().getAdapter()).getPosition(LogisticsDrawerFactory.LOCATION_LIST),
+		selectItem(((DrawerAdapter) getLeftDrawerList().getAdapter()).getPosition(LogisticsDrawerFactory.MAP),
 				getLeftDrawerList());
-
 	}
 
 	@Override
@@ -227,31 +218,31 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 	}
 
 	@Override
-	public void onDatabaseUpdate(DatabaseHelper helper) {
+	public void onDatabaseUpdate(final DatabaseHelper helper) {
 		Log.d("LogisticsExample", "ON DATABASE UPDATE CALLED");
 		for (ItemName i : mDbHelper.fetchAll(ItemName.class)) {
 			Log.d(LOG_TAG, i.toString());
 		}
 		for (InventoryItem i : mDbHelper.fetchAll(InventoryItem.class)) {
-			Log.d(LOG_TAG, i.toString()); 
+			Log.d(LOG_TAG, i.toString());
 		}
 		for (Order i : mDbHelper.fetchAll(Order.class)) {
-			Log.d(LOG_TAG, i.toString()); 
+			Log.d(LOG_TAG, i.toString());
 		}
 		for (OrderItem i : mDbHelper.fetchAll(OrderItem.class)) {
-			Log.d(LOG_TAG, i.toString()); 
+			Log.d(LOG_TAG, i.toString());
 		}
 		for (Site i : mDbHelper.fetchAll(Site.class)) {
-			Log.d(LOG_TAG, i.toString()); 
+			Log.d(LOG_TAG, i.toString());
 		}
 		for (OrderToOrderItem i : mDbHelper.fetchAll(OrderToOrderItem.class)) {
-			Log.d(LOG_TAG, i.toString()); 
+			Log.d(LOG_TAG, i.toString());
 		}
 		for (SiteToInventoryItem i : mDbHelper.fetchAll(SiteToInventoryItem.class)) {
-			Log.d(LOG_TAG, i.toString()); 
+			Log.d(LOG_TAG, i.toString());
 		}
 		for (SiteToOrder i : mDbHelper.fetchAll(SiteToOrder.class)) {
-			Log.d(LOG_TAG, i.toString()); 
+			Log.d(LOG_TAG, i.toString());
 		}
 	}
 
