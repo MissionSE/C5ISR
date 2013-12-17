@@ -3,15 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:baselineAligned="false" >
+    android:baselineAligned="false"
+    android:background="@color/very_light_gray"
+    android:padding="5dp" >
     <FrameLayout
         android:id="@+id/database_list"
         android:layout_height="match_parent"
         android:layout_width="0dip"
-        android:layout_weight="0.4" />
+        android:layout_weight="0.4"
+        android:padding="5dp" />
     <FrameLayout
         android:id="@+id/database_detail"
         android:layout_height="match_parent"
         android:layout_width="0dip"
-        android:layout_weight="0.6" />
+        android:layout_weight="0.6"
+        android:padding="5dp" />
 </LinearLayout>

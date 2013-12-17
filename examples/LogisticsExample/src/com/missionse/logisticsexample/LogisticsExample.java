@@ -1,6 +1,5 @@
 package com.missionse.logisticsexample;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.view.Gravity;
 import android.view.Menu;
@@ -13,8 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.missionse.logisticsexample.database.DatabaseHelper;
-import com.missionse.logisticsexample.databaseview.DatabaseViewContainerFragment;
-import com.missionse.logisticsexample.databaseview.SiteListFragment;
+import com.missionse.logisticsexample.databaseview.SiteViewerContainerFragment;
 import com.missionse.logisticsexample.drawer.LogisticsDrawerFactory;
 import com.missionse.logisticsexample.map.LogisticsMap;
 import com.missionse.logisticsexample.map.MapViewerFragment;
@@ -62,16 +60,10 @@ public class LogisticsExample extends DrawerActivity {
 
 	private void displaySiteDatabase() {
 		FragmentManager fragmentManager = getFragmentManager();
-		SiteListFragment siteListFragment = (SiteListFragment) fragmentManager.findFragmentByTag("sitelist");
-		if (siteListFragment == null) {
-			siteListFragment = new SiteListFragment();
-		}
-		DatabaseViewContainerFragment containerFragment = (DatabaseViewContainerFragment) fragmentManager
+		SiteViewerContainerFragment containerFragment = (SiteViewerContainerFragment) fragmentManager
 				.findFragmentByTag("container");
 		if (containerFragment == null) {
-			containerFragment = new DatabaseViewContainerFragment();
-			containerFragment.setLeftFragment(siteListFragment, "sitelist");
-			containerFragment.setRightFragment(new Fragment(), "something");
+			containerFragment = new SiteViewerContainerFragment();
 		}
 		fragmentManager.beginTransaction().replace(R.id.content, containerFragment, "container").commit();
 	}
