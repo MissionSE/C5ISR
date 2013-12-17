@@ -11,7 +11,7 @@ public class DBEntity {
 
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("id")
-	@DatabaseField(generatedId = true, columnName = "_id")
+	@DatabaseField(id = true, columnName = "_id")
 	private int mId;
 
 	/**
