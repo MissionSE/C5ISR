@@ -35,4 +35,13 @@ public class ItemName extends DBEntity {
 	public void setName(final String name) {
 		mName = name;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder();
+		string.append("ItemName>: ");
+		string.append(" id = " + getId());
+		string.append(" name = " + mName);
+		return string.toString();
+	}
 }

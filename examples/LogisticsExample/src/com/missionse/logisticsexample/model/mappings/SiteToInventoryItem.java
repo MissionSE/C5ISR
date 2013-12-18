@@ -3,12 +3,13 @@ package com.missionse.logisticsexample.model.mappings;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
+import com.missionse.logisticsexample.model.DBEntity;
 
 /**
  * Mapping a {@link com.missionse.logisticsexample.model.Site} to a inventory
  * {@link com.missionse.logisticsexample.model.InventoryItem}.
  */
-public class SiteToInventoryItem {
+public class SiteToInventoryItem extends DBEntity {
 
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("site_id")
@@ -56,5 +57,15 @@ public class SiteToInventoryItem {
 	 */
 	public void setItemId(final int itemId) {
 		mItemId = itemId;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder();
+		string.append("SiteToInventoryItem>: ");
+		string.append(" id = " + getId());
+		string.append(" site_id = " + this.mSiteId);
+		string.append(" order_id = " + this.mItemId);
+		return string.toString();
 	}
 }

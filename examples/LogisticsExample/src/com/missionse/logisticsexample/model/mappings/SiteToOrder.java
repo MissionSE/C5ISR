@@ -57,4 +57,14 @@ public class SiteToOrder extends DBEntity {
 	public void setSiteId(final int siteId) {
 		mSiteId = siteId;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder();
+		string.append("SiteToOrder>: ");
+		string.append(" id = " + getId());
+		string.append(" site_id = " + this.mSiteId);
+		string.append(" order_id = " + this.mOrderId);
+		return string.toString();
+	}
 }

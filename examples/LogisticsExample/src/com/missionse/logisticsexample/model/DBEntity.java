@@ -10,8 +10,8 @@ import com.j256.ormlite.field.DatabaseField;
 public class DBEntity {
 
 	@Expose(serialize = true, deserialize = true)
-	@SerializedName("_id")
-	@DatabaseField(generatedId = true, columnName = "_id")
+	@SerializedName("id")
+	@DatabaseField(id = true, columnName = "_id")
 	private int mId;
 
 	/**

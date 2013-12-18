@@ -58,4 +58,14 @@ public class OrderToOrderItem extends DBEntity {
 	public void setItemId(final int itemId) {
 		mItemId = itemId;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder();
+		string.append("OrderToOrderItem>: ");
+		string.append(" id = " + getId());
+		string.append(" site_id = " + this.mItemId);
+		string.append(" order_id = " + this.mOrderId);
+		return string.toString();
+	}
 }
