@@ -22,6 +22,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
@@ -165,6 +166,16 @@ OnCameraChangeListener {
 			public void onMapClick(LatLng latLng) {
 				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latLng);
 				mCallbacks.getMainMap().animateCamera(cameraUpdate);
+			}
+		});
+		
+		mMiniMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+			
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(marker.getPosition());
+				mCallbacks.getMainMap().animateCamera(cameraUpdate);
+				return true;
 			}
 		});
 		

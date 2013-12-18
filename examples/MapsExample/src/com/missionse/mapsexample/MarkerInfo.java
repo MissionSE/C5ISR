@@ -119,6 +119,24 @@ public class MarkerInfo {
 		}
 		return typeString;
 	}
+	
+	public static int getTypeResource(int type) {
+		int typeRes;
+		switch (type) {
+		case StructuredPostal.TYPE_HOME:
+			typeRes = R.drawable.rose_dot;
+			break;
+		case StructuredPostal.TYPE_WORK:
+			typeRes = R.drawable.blue_dot;
+			break;
+		case StructuredPostal.TYPE_OTHER:
+			typeRes = R.drawable.yellow_dot;
+			break;
+		default:
+			typeRes = R.drawable.blue_dot;
+		}
+		return typeRes;
+	}
 
 	/**
 	 * @return marker options set to this marker info's properties
@@ -130,6 +148,14 @@ public class MarkerInfo {
 		.position(new LatLng(mLat, mLng))
 		.snippet(getTypeAsString(mType))
 		.title(mTitle)
+		.visible(false);
+	}
+	
+	public MarkerOptions getOverviewMarkerOptions() {
+		return new MarkerOptions()
+		.draggable(false)
+		.icon(BitmapDescriptorFactory.fromResource(MarkerInfo.getTypeResource(mType)))
+		.position(new LatLng(mLat, mLng))
 		.visible(false);
 	}
 

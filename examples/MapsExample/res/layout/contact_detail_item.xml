@@ -57,8 +57,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:layout_gravity="center"
-            android:contentDescription="@string/address_button_description"
-            style="@style/addressButton"/>
+            android:contentDescription="@string/address_button_description"/>
 
     </LinearLayout>
 

@@ -36,9 +36,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
@@ -48,7 +50,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.GeocodeResponse;
@@ -102,9 +106,9 @@ GoogleMap.OnInfoWindowClickListener {
 			}
 			final Map<ContactAddressKey, MarkerInfo> pendingMarkers = mMarkerTypeMap
 					.get(mType);
-			
+
 			Log.d(TAG, "Loaded " + pendingMarkers.size() + " pending markers for type=" + mType);
-			
+
 			final float markerHue = getMarkerTypeHue(mType);
 
 			// Perform your heavy operation
@@ -158,7 +162,6 @@ GoogleMap.OnInfoWindowClickListener {
 							+ address);
 				}
 			}
-			
 
 			Log.d(TAG, "Finished loading contacts from cursor for type=" + mType);
 
@@ -289,6 +292,7 @@ GoogleMap.OnInfoWindowClickListener {
 	private MapViewerFragment mMapViewerFragment;
 	private Map<Marker, MarkerInfo> mMarkerInfoMap = new HashMap<Marker, MarkerInfo>();
 	private MarkerManager mMarkerManager;
+	private MarkerManager mOverviewMarkerManager;
 	private SparseArray<Map<ContactAddressKey, MarkerInfo>> mMarkerTypeMap = new SparseArray<Map<ContactAddressKey, MarkerInfo>>();
 	private MiniMapFragment mMiniMapFragment;
 	private Menu mOptionsMenu;
@@ -333,7 +337,9 @@ GoogleMap.OnInfoWindowClickListener {
 
 	@Override
 	public void mapCreated(GoogleMap map) {
-		mMarkerManager = new MarkerManager(map);
+//		mMarkerManager = new MarkerManager(map);
+		//TODO bad place to do this
+//		mOverviewMarkerManager = new MarkerManager(mMiniMapFragment.getMap());
 	}
 
 	@Override
@@ -380,6 +386,27 @@ GoogleMap.OnInfoWindowClickListener {
 
 		return true;
 	}
+	
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        boolean landscape = (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
+
+        LinearLayout spacerView = (LinearLayout) findViewById(R.id.map_detail_spacer);
+        spacerView.setOrientation(landscape ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
+        spacerView.setGravity(landscape ? Gravity.END : Gravity.BOTTOM);
+
+        View popupView = findViewById(R.id.map_detail_popup);
+        LinearLayout.LayoutParams popupLayoutParams = (LinearLayout.LayoutParams)
+                popupView.getLayoutParams();
+        popupLayoutParams.width = landscape ? 0 : ViewGroup.LayoutParams.MATCH_PARENT;
+        popupLayoutParams.height = landscape ? ViewGroup.LayoutParams.MATCH_PARENT : 0;
+        popupView.setLayoutParams(popupLayoutParams);
+
+        popupView.requestLayout();
+
+        updateMapPadding();
+    }
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
@@ -390,7 +417,7 @@ GoogleMap.OnInfoWindowClickListener {
 		if (markerInfo != null) {
 			final Uri uri = getLookupUri(markerInfo.getContactId(),
 					markerInfo.getLookupKey());
-			ContactDetailFragment fragment = new ContactDetailFragment();
+			ContactDetailFragment fragment = ContactDetailFragment.newInstance(uri);
 
 			showDetails(fragment, uri);
 		} else {
@@ -453,16 +480,23 @@ GoogleMap.OnInfoWindowClickListener {
 		Log.d(TAG, "Started adding markers for type=" + type);
 		String addressType = MarkerInfo.getTypeAsString(type);
 		MarkerManager.Collection markerCollection = mMarkerManager.getCollection(addressType);
+		MarkerManager.Collection overviewMarkerCollection = mOverviewMarkerManager.getCollection(addressType);
 
 		if (markerCollection == null) {
 			markerCollection = mMarkerManager.newCollection(addressType);
 		}
+		if (overviewMarkerCollection == null) {
+			overviewMarkerCollection = mOverviewMarkerManager.newCollection(addressType);
+		}
 
 		for (Entry<ContactAddressKey, MarkerInfo> markerInfo : pendingMarkers
 				.entrySet()) {
+			MarkerOptions options = markerInfo.getValue().getMarkerOptions();
 			Marker marker = markerCollection
-					.addMarker(markerInfo.getValue().getMarkerOptions());
+					.addMarker(options);
 			mMarkerInfoMap.put(marker, markerInfo.getValue());
+			MarkerOptions overviewOptions = markerInfo.getValue().getOverviewMarkerOptions();
+			overviewMarkerCollection.addMarker(overviewOptions);
 		}
 
 		mFilterLoaded.put(type, true);
@@ -542,7 +576,7 @@ GoogleMap.OnInfoWindowClickListener {
 			if (markerInfos == null) {
 				markerInfos = new HashSet<MarkerInfo>();
 			}
-			
+
 			Map<ContactAddressKey, MarkerInfo> markerMap = new HashMap<ContactAddressKey, MarkerInfo>();
 			for (MarkerInfo markerInfo : markerInfos) {
 				markerMap.put(new ContactAddressKey(markerInfo), markerInfo);
@@ -633,15 +667,14 @@ GoogleMap.OnInfoWindowClickListener {
 	private void showDetailPane(boolean show) {
 		View detailPopup = findViewById(R.id.map_detail_spacer);
 		if (show != (detailPopup.getVisibility() == View.VISIBLE)) {
-			detailPopup.setVisibility(show ? View.VISIBLE : View.GONE);
-			// TODO
-			// int visibility;
-			// if (show) {
-			// visibility = View.VISIBLE;
-			// } else {
-			// visibility = View.GONE;
-			// }
-			// detailPopup.setVisibility(visibility);
+
+			int visibility;
+			if (show) {
+				visibility = View.VISIBLE;
+			} else {
+				visibility = View.GONE;
+			}
+			detailPopup.setVisibility(visibility);
 
 			updateMapPadding();
 		}
@@ -649,11 +682,12 @@ GoogleMap.OnInfoWindowClickListener {
 
 	private void showDetails(Fragment fragment, Uri uri) {
 		// Show the session details
+		clearBackStack(true);
 		showDetailPane(true);
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		intent.putExtra(ContactDetailFragment.EXTRA_VARIABLE_HEIGHT_HEADER,
-				true);
-		fragment.setArguments(intentToFragmentArguments(intent));
+		//		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		//		intent.putExtra(ContactDetailFragment.EXTRA_VARIABLE_HEIGHT_HEADER,
+		//				true);
+		//		fragment.setArguments(intentToFragmentArguments(intent));
 		getFragmentManager().beginTransaction()
 		.replace(R.id.fragment_container_detail, fragment)
 		.addToBackStack(null).commit();
@@ -663,6 +697,11 @@ GoogleMap.OnInfoWindowClickListener {
 		// show all markers
 		boolean visible = false;
 		for (Marker m : mMarkerManager.getCollection(
+				MarkerInfo.getTypeAsString(type)).getMarkers()) {
+			visible = !m.isVisible();
+			m.setVisible(visible);
+		}
+		for (Marker m : mOverviewMarkerManager.getCollection(
 				MarkerInfo.getTypeAsString(type)).getMarkers()) {
 			visible = !m.isVisible();
 			m.setVisible(visible);
@@ -686,7 +725,7 @@ GoogleMap.OnInfoWindowClickListener {
 		TypeToken<Collection<MarkerInfo>> typeToken = new TypeToken<Collection<MarkerInfo>>() { };
 		synchronized (mMarkerTypeMap) {
 			for (int i = 0; i < mMarkerTypeMap.size(); i++) {
-				
+
 				try {
 					Ion.getDefault(this)
 					.store()
@@ -717,7 +756,7 @@ GoogleMap.OnInfoWindowClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_maps_example);
+		setContentView(R.layout.activity_maps_filtering);
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -788,6 +827,17 @@ GoogleMap.OnInfoWindowClickListener {
 	protected void onPause() {
 		super.onPause();
 		storeContactMarkers();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (mMarkerManager == null) {
+			mMarkerManager = new MarkerManager(getMainMap());
+		}
+		if (mOverviewMarkerManager == null) {
+			mOverviewMarkerManager = new MarkerManager(mMiniMapFragment.getMap());
+		}
 	}
 
 	@Override
