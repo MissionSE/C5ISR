@@ -16,7 +16,13 @@ import com.missionse.logisticsexample.R;
 public abstract class DatabaseEntryDetailFragment extends Fragment {
 
 	private TextView mEntryTitleView;
-	private TextView mEntryContentView;
+	private TextView mEntryTitleIdView;
+
+	private TextView mEntryContentBasicView;
+	private TextView mEntryContentParentView;
+	private TextView mEntryContentInventoryView;
+	private TextView mEntryContentOrdersView;
+
 	private TextView mNothingSelectedView;
 
 	private LinearLayout mEntryDetailContent;
@@ -30,11 +36,43 @@ public abstract class DatabaseEntryDetailFragment extends Fragment {
 	}
 
 	/**
-	 * Sets the content text to be displayed.
-	 * @param contentText the text to be displayed in the content slot
+	 * Sets the id to appear in the title.
+	 * @param idText the id to be displayed
 	 */
-	public void setContent(final CharSequence contentText) {
-		mEntryContentView.setText(contentText);
+	public void setTitleId(final CharSequence idText) {
+		mEntryTitleIdView.setText(idText);
+	}
+
+	/**
+	 * Sets the basic content text to be displayed.
+	 * @param basicContentText the text to be displayed in the content slot
+	 */
+	public void setBasicContent(final CharSequence basicContentText) {
+		mEntryContentBasicView.setText(basicContentText);
+	}
+
+	/**
+	 * Sets the parent content text to be displayed.
+	 * @param parentContentText the text to be displayed in the content slot
+	 */
+	public void setParentContent(final CharSequence parentContentText) {
+		mEntryContentParentView.setText(parentContentText);
+	}
+
+	/**
+	 * Sets the inventory content text to be displayed.
+	 * @param inventoryContentText the text to be displayed in the content slot
+	 */
+	public void setInventoryContent(final CharSequence inventoryContentText) {
+		mEntryContentInventoryView.setText(inventoryContentText);
+	}
+
+	/**
+	 * Sets the order content text to be displayed.
+	 * @param orderContentText the text to be displayed in the content slot
+	 */
+	public void setOrdersContent(final CharSequence orderContentText) {
+		mEntryContentOrdersView.setText(orderContentText);
 	}
 
 	/**
@@ -58,8 +96,12 @@ public abstract class DatabaseEntryDetailFragment extends Fragment {
 		View contentView = inflater.inflate(R.layout.fragment_database_entry_detail, parent, false);
 
 		mEntryTitleView = (TextView) contentView.findViewById(R.id.entry_detail_title);
+		mEntryTitleIdView = (TextView) contentView.findViewById(R.id.entry_detail_id);
 
-		mEntryContentView = (TextView) contentView.findViewById(R.id.entry_detail_content);
+		mEntryContentBasicView = (TextView) contentView.findViewById(R.id.entry_detail_basic_info);
+		mEntryContentParentView = (TextView) contentView.findViewById(R.id.entry_detail_parent_info);
+		mEntryContentInventoryView = (TextView) contentView.findViewById(R.id.entry_detail_inventory);
+		mEntryContentOrdersView = (TextView) contentView.findViewById(R.id.entry_detail_orders);
 
 		mNothingSelectedView = (TextView) contentView.findViewById(R.id.nothing_selected);
 

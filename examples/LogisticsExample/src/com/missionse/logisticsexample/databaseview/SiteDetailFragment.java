@@ -1,5 +1,11 @@
 package com.missionse.logisticsexample.databaseview;
 
+import java.util.List;
+
+import com.missionse.logisticsexample.database.DatabaseAccessor;
+import com.missionse.logisticsexample.database.DatabaseHelper;
+import com.missionse.logisticsexample.model.InventoryItem;
+import com.missionse.logisticsexample.model.Order;
 import com.missionse.logisticsexample.model.Site;
 
 /**
@@ -8,23 +14,53 @@ import com.missionse.logisticsexample.model.Site;
  */
 public class SiteDetailFragment extends DatabaseEntryDetailFragment {
 
-	private Site mShownSite;
-
 	/**
 	 * Displays the provided site, creating text content to represent the site.
 	 * @param site the site to display
 	 */
 	public void displaySite(final Site site) {
-		mShownSite = site;
-		setTitleText(mShownSite.getName());
+		DatabaseHelper databaseHelper = ((DatabaseAccessor) getActivity()).getHelper();
 
-		String content = "";
-		content += "ID: " + mShownSite.getId() + "\n";
-		content += "Parent ID: " + mShownSite.getParentId() + "\n";
-		content += "Latitude: " + mShownSite.getLatitude() + "\n";
-		content += "Longitude: " + mShownSite.getLongitude() + "\n";
+		List<Order> orders = databaseHelper.getOrders(site);
+		List<InventoryItem> supplies = databaseHelper.getSupplies(site);
 
-		setContent(content);
+		setTitleText(site.getName());
+		setTitleId("" + site.getId());
+
+		String basicContent = "";
+		basicContent += "Latitude: " + site.getLatitude() + "\n";
+		basicContent += "Longitude: " + site.getLongitude() + "\n";
+		basicContent += "# of Orders: " + orders.size() + "\n";
+		basicContent += "# of Unique Supplies: " + supplies.size() + "\n";
+
+		setBasicContent(basicContent.trim());
+
+		Site parentSite = databaseHelper.getSiteParent(site);
+		String parentContent = "";
+		if (parentSite != null) {
+			parentContent += "ID: " + parentSite.getId() + "\n";
+			parentContent += "Name: " + parentSite.getName() + "\n";
+		} else {
+			parentContent += "ID: N/A\n";
+			parentContent += "Name: N/A\n";
+		}
+		setParentContent(parentContent.trim());
+
+		String inventoryContent = "";
+		for (InventoryItem item : supplies) {
+			inventoryContent += " (" + item.getNameId() + "):\n";
+			inventoryContent += "\tCurrent/Max: " + item.getQuantity() + "/" + item.getMaxAmount() + "\n";
+		}
+		setInventoryContent(inventoryContent.trim());
+
+		String orderContent = "";
+		for (Order order : orders) {
+			orderContent += "ID: " + order.getId() + " (" + order.getTimeStamp() + "):\n";
+			orderContent += "\tStatus: " + order.getStatus() + "\n";
+			orderContent += "\tSeverity: " + order.getSeverity() + "\n";
+		}
+		setOrdersContent(orderContent.trim());
+
 		showContentViews();
 	}
 

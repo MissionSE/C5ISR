@@ -46,5 +46,9 @@
     <!-- Fragment: Database Viewer -->
     <string name="search_hint">Search Database</string>
     <string name="nothing_selected">Select an item on the left to see details.</string>
+    <string name="entry_detail_basic_header">General Information</string>
+    <string name="entry_detail_parent_header">Parent Information</string>
+    <string name="entry_detail_inventory_header">Inventory</string>
+    <string name="entry_detail_orders_header">Orders</string>
 
 </resources>

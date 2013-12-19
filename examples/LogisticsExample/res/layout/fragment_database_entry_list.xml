@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:hint="@string/search_hint"
-            android:imeOptions="actionDone" >
+            android:imeOptions="actionDone|flagNoExtractUi|flagNoFullscreen" >
         </EditText>
     </LinearLayout>
     <se.emilsjolander.stickylistheaders.StickyListHeadersListView
