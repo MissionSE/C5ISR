@@ -41,6 +41,7 @@
     
     <!-- Content Descriptions -->
     <string name="action_search">Search</string>
+    <string name="action_dismiss_all">Dismiss All Notifications</string>
     
     <!-- Fragment: Database Viewer -->
     <string name="search_hint">Search Database</string>

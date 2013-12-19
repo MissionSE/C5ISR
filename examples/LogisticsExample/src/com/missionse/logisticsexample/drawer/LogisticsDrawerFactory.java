@@ -6,7 +6,6 @@ import java.util.List;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -80,16 +79,15 @@ public class LogisticsDrawerFactory {
 	/**
 	 * Sets up the Navigation menu items, which remain unchanged.
 	 * @param adapter the adapter to add items to
-	 * @param listener provides callbacks when spinner entries for the user account are clicked
 	 */
-	public void addNavigationMenuItems(final DrawerAdapter adapter, final OnItemSelectedListener listener) {
+	public void addNavigationMenuItems(final DrawerAdapter adapter) {
 		List<String> userAccountSpinnerEntries = new ArrayList<String>();
 		userAccountSpinnerEntries.add(mContext.getResources().getString(R.string.user_loggedout));
 		userAccountSpinnerEntries.add(mContext.getResources().getString(R.string.user_login));
 
 		List<DrawerItem> menu = new ArrayList<DrawerItem>();
 		menu.add(DrawerSpinner.create(USER_ACCOUNT_ACTIONS, new ArrayAdapter<String>(mContext,
-				R.layout.nav_drawer_spinner_entry, R.id.navheader_label, userAccountSpinnerEntries), listener));
+				R.layout.nav_drawer_spinner_entry, R.id.navheader_label, userAccountSpinnerEntries), null));
 		menu.add(DrawerPaddedDivider.create(DIVIDER));
 		menu.add(DrawerHeader.create(NAVIGATION_HEADER, mContext.getResources().getString(R.string.drawer_navigation)));
 		menu.add(DrawerDivider.create(DIVIDER));

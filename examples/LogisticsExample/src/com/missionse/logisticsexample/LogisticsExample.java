@@ -10,8 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -32,7 +30,6 @@ import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
 import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
 import com.missionse.logisticsexample.model.mappings.SiteToOrder;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
-import com.missionse.uiextensions.navigationdrawer.DrawerAdapter;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerComplexItem;
 import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
@@ -43,6 +40,8 @@ import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
  */
 public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate, DatabaseAccessor {
 	private static final String LOG_TAG = "LogisticsExample";
+
+	private static final boolean DEBUG = false;
 
 	private LogisticsDrawerFactory mDrawerFactory;
 	private LogisticsMap mLogisticsMap;
@@ -113,17 +112,21 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 		FragmentManager fragmentManager = getFragmentManager();
 		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
 		if (mapViewerFragment != null && mapViewerFragment.isVisible()) {
-			selectItem(((DrawerAdapter) getLeftDrawerList().getAdapter()).getPosition(LogisticsDrawerFactory.MAP),
-					getLeftDrawerList());
+			selectItem(getLeftDrawerAdapter().getPosition(LogisticsDrawerFactory.MAP), getLeftDrawerList());
 		}
 		SiteViewerContainerFragment siteContainerFragment = (SiteViewerContainerFragment) fragmentManager
 				.findFragmentByTag("container");
 		if (siteContainerFragment != null && siteContainerFragment.isVisible()) {
-			selectItem(
-					((DrawerAdapter) getLeftDrawerList().getAdapter())
-							.getPosition(LogisticsDrawerFactory.LOCATION_LIST),
-					getLeftDrawerList());
+			selectItem(getLeftDrawerAdapter().getPosition(LogisticsDrawerFactory.LOCATION_LIST), getLeftDrawerList());
 		}
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(final Menu menu) {
+		MenuItem dismissAll = menu.findItem(R.id.action_dismiss_all);
+		dismissAll.setVisible(getDrawerLayout().isDrawerOpen(Gravity.END));
+
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -154,6 +157,11 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		if (!super.onOptionsItemSelected(item)) {
 			switch (item.getItemId()) {
+				case R.id.action_dismiss_all:
+					getRightDrawerAdapter().clear();
+					getRightDrawerAdapter().notifyDataSetChanged();
+					adjustNotificationActionBar();
+					break;
 				case R.id.action_settings:
 					break;
 				case R.id.action_feedback:
@@ -192,19 +200,9 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 			}
 		});
 
-		mDrawerFactory.addNavigationMenuItems(getLeftDrawerAdapter(), new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
+		mDrawerFactory.addNavigationMenuItems(getLeftDrawerAdapter());
 
-			}
-
-			@Override
-			public void onNothingSelected(final AdapterView<?> parent) {
-			}
-		});
-
-		selectItem(((DrawerAdapter) getLeftDrawerList().getAdapter()).getPosition(LogisticsDrawerFactory.MAP),
-				getLeftDrawerList());
+		selectItem(getLeftDrawerAdapter().getPosition(LogisticsDrawerFactory.MAP), getLeftDrawerList());
 	}
 
 	@Override
@@ -248,6 +246,12 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 	@Override
 	public void onDatabaseUpdate(final DatabaseHelper helper) {
 		Log.d("LogisticsExample", "ON DATABASE UPDATE CALLED");
+		if (DEBUG) {
+			logDatabase();
+		}
+	}
+
+	private void logDatabase() {
 		for (ItemName i : mDbHelper.fetchAll(ItemName.class)) {
 			Log.d(LOG_TAG, i.toString());
 		}
