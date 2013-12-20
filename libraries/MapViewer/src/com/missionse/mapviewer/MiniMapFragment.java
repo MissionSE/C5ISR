@@ -39,23 +39,62 @@ import com.google.android.gms.maps.model.VisibleRegion;
 public class MiniMapFragment extends MapFragment implements 
 OnCameraChangeListener {
 	private static final String TAG = MiniMapFragment.class.getSimpleName();
-	private static final int DEF_SCREEN_RATIO = 3;
-	
+	private static final String KEY_DISPLAY_PERCENT = "key_display_percent";
+	private static final String KEY_VIEW_FILL_COLOR = "key_view_fill_color";
+	private static final String KEY_VIEW_STROKE_COLOR = "key_view_stroke_color";
+	private static final String KEY_VIEW_STROKE_WIDTH = "key_view_stroke_width";
+	private static final int DEF_DISPLAY_PERCENT = 25;
+	private static final int PERCENT_TO_DECIMAL = 100;
+
 	private GoogleMap mMiniMap;
 	private Callbacks mCallbacks;
+	private Polygon mZoomedViewPolygon;
+
+	/**
+	 * Factory method to generate a new instance of the fragment given a contact Uri. A factory
+     * method is preferable to simply using the constructor as it handles creating the bundle and
+     * setting the bundle as an argument.
+     * 
+	 * @param displayPercent percent of display the mini map will fill; 0 -> 100
+	 * @param viewFillColor color to set view polygon fill
+	 * @param viewStrokeColor color to set view polygon stroke
+	 * @param viewStrokeWidth width to set view polygon stroke
+	 * @return new instance of {@link MiniMapFragment} with arguments set
+	 */
+	public static MiniMapFragment newInstance(int displayPercent, int viewFillColor, int viewStrokeColor, float viewStrokeWidth) {
+		// Create new instance of this fragment
+		final MiniMapFragment miniMapFragment = new MiniMapFragment();
+
+		// Create and populate the args bundle
+		final Bundle args = new Bundle();
+		args.putInt(KEY_DISPLAY_PERCENT, Math.min(PERCENT_TO_DECIMAL, Math.max(displayPercent, 0)));
+		args.putInt(KEY_VIEW_FILL_COLOR, viewFillColor);
+		args.putInt(KEY_VIEW_STROKE_COLOR, viewStrokeColor);
+		args.putFloat(KEY_VIEW_STROKE_WIDTH, viewStrokeWidth);
+		
+		// Assign the args bundle to the new fragment
+		miniMapFragment.setArguments(args);
+
+		// Return fragment
+		return miniMapFragment;
+	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		
+
 		mCallbacks = (Callbacks) activity;
-//		mCallbacks.registerOnCameraChangeListener(this);
+		try {
+			mCallbacks = (Callbacks) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement MiniMapFragment.Callbacks");
+		}
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		
+
 		mCallbacks.deregisterOnCameraChangeListener(this);
 		mCallbacks = null;
 	}
@@ -63,55 +102,39 @@ OnCameraChangeListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		mCallbacks.registerOnCameraChangeListener(this);
 	}
-
-	private Polygon mZoomedViewPolygon;
 
 	/**
 	 * Required interface for hosting activities.
 	 *
 	 */
 	public interface Callbacks {
-		
+
 		/**
 		 * Registers for camera change callback from another {@link GoogleMap}.
 		 * @param listener the listener registering for a callback
 		 */
 		void registerOnCameraChangeListener(OnCameraChangeListener listener);
-		
+
 		/**
 		 * Deregisters for camera change callback from another {@link GoogleMap}.
 		 * @param listener the listener deregistering for a callback
 		 */
 		void deregisterOnCameraChangeListener(OnCameraChangeListener listener);
-		
+
 		/**
 		 * @return the main map
 		 */
 		GoogleMap getMainMap();
-		
-		/**
-		 * @return the polygon options for the view region
-		 */
-		PolygonOptions getViewPolygonOptions();
-		
-		double getDisplayPercentage();
-	}
-
-	/**
-	 * Constructs a {@link MiniMapFragment}.
-	 */
-	public MiniMapFragment() {
-		super();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
- 
+
 		v.getViewTreeObserver().addOnGlobalLayoutListener(
 				new ViewTreeObserver.OnGlobalLayoutListener() {
 
@@ -120,12 +143,14 @@ OnCameraChangeListener {
 					@Override
 					public void onGlobalLayout() {
 						final View v = getView();
-						
+
+						int displayPercent = getArguments().getInt(KEY_DISPLAY_PERCENT, DEF_DISPLAY_PERCENT);
+
 						FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) v.getLayoutParams();
-						layoutParams.width = (int) (v.getWidth() * mCallbacks.getDisplayPercentage());
-						layoutParams.height = (int) (v.getHeight() * mCallbacks.getDisplayPercentage());
+						layoutParams.width = (int) (v.getWidth() * (displayPercent / (float) PERCENT_TO_DECIMAL));
+						layoutParams.height = (int) (v.getHeight() * (displayPercent / (float) PERCENT_TO_DECIMAL));
 						v.setLayoutParams(layoutParams);
-						
+
 						if (v.getViewTreeObserver().isAlive()) {
 							// remove this layout listener
 							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -157,7 +182,7 @@ OnCameraChangeListener {
 
 		settings.setCompassEnabled(false);
 		settings.setZoomControlsEnabled(false);
-		
+
 		mCallbacks.registerOnCameraChangeListener(this);
 
 		mMiniMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -168,9 +193,9 @@ OnCameraChangeListener {
 				mCallbacks.getMainMap().animateCamera(cameraUpdate);
 			}
 		});
-		
+
 		mMiniMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-			
+
 			@Override
 			public boolean onMarkerClick(Marker marker) {
 				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(marker.getPosition());
@@ -179,9 +204,16 @@ OnCameraChangeListener {
 			}
 		});
 		
-		PolygonOptions options = mCallbacks.getViewPolygonOptions();
-		options.addAll(getMainViewRegionPoints());
-		mZoomedViewPolygon = mMiniMap.addPolygon(options);
+		Bundle args = getArguments();
+		int fillColor = args.getInt(KEY_VIEW_FILL_COLOR, getActivity().getResources().getColor(R.color.map_polygon_fill_color));
+		int strokeColor = args.getInt(KEY_VIEW_STROKE_COLOR, getActivity().getResources().getColor(R.color.map_polygon_stroke_color));
+		float strokeWidth = args.getFloat(KEY_VIEW_STROKE_WIDTH, 0);
+
+		mZoomedViewPolygon = mMiniMap.addPolygon(new PolygonOptions()
+		.fillColor(fillColor)
+		.strokeColor(strokeColor)
+		.strokeWidth(strokeWidth)
+		.addAll(getMainViewRegionPoints()));
 	}
 
 	private void animateZoomedView(CameraPosition mainMapCameraPosition) {
@@ -267,7 +299,7 @@ OnCameraChangeListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		setUpMapIfNeeded();
 	}
 
@@ -286,15 +318,27 @@ OnCameraChangeListener {
 	public void onCameraChange(CameraPosition cameraPosition) {
 		animateZoomedView(cameraPosition);
 	}
-	
+
+	/**
+	 * Sets the fill color of the view polygon.
+	 * @param fillColor color for fill
+	 */
 	public void setViewFillColor(int fillColor) {
 		this.mZoomedViewPolygon.setFillColor(fillColor);
 	}
-	
+
+	/**
+	 * Sets the stroke color of the view polygon.
+	 * @param strokeColor color for stroke
+	 */
 	public void setViewStrokeColor(int strokeColor) {
 		this.mZoomedViewPolygon.setStrokeColor(strokeColor);
 	}
-	
+
+	/**
+	 * Sets the stroke width of the view polygon.
+	 * @param strokeWidth width for stroke
+	 */
 	public void setViewStrokeWidth(float strokeWidth) {
 		this.mZoomedViewPolygon.setStrokeWidth(strokeWidth);
 	}

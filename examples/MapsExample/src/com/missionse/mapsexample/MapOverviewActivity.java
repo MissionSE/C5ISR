@@ -8,17 +8,17 @@ import android.os.Bundle;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.missionse.mapviewer.MiniMapFragment;
 
 public class MapOverviewActivity extends Activity implements MiniMapFragment.Callbacks {
 	private static final String TAG = MapOverviewActivity.class.getSimpleName();
+	private static final int DEF_DISPLAY_PERCENT = 33;
+	private static final int DEF_VIEW_FILL_COLOR = Color.argb(150, 0, 0, 0);
+	private static final int DEF_VIEW_STROKE_COLOR = Color.argb(255, 0, 0, 0);
+	private static final float DEF_VIEW_STROKE_WIDTH = 2f;
 	
 	private MapFragment mMapFragment;
 	private MiniMapFragment mMiniMapFragment;
-	
-	
-	private PolygonOptions mViewPolygonOptions;
 
 	@Override
 	public void registerOnCameraChangeListener(OnCameraChangeListener listener) {
@@ -36,23 +36,9 @@ public class MapOverviewActivity extends Activity implements MiniMapFragment.Cal
 	}
 
 	@Override
-	public PolygonOptions getViewPolygonOptions() {
-		return mViewPolygonOptions;
-	}
-	
-	@Override
-	public double getDisplayPercentage() {
-		return 0.25;
-	}
-
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maps_overview);
-		
-		mViewPolygonOptions = new PolygonOptions()
-		.fillColor(Color.argb((int) (255 * 0.75), 0, 0, 0))
-		.strokeWidth(0);
 		
 		getMapViewerFragment();
 		setUpMiniMapFragment();
@@ -75,7 +61,11 @@ public class MapOverviewActivity extends Activity implements MiniMapFragment.Cal
 		FragmentManager fm = getFragmentManager();
 		mMiniMapFragment = (MiniMapFragment) fm.findFragmentByTag("map_overview");
 		if (mMiniMapFragment == null) {
-			mMiniMapFragment = new MiniMapFragment();
+			mMiniMapFragment = MiniMapFragment.newInstance(
+					DEF_DISPLAY_PERCENT, 
+					DEF_VIEW_FILL_COLOR, 
+					DEF_VIEW_STROKE_COLOR, 
+					DEF_VIEW_STROKE_WIDTH);
 
 			fm.beginTransaction()
 			.add(R.id.fragment_container_map_overview, mMiniMapFragment, "map_overview")

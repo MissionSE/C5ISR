@@ -52,7 +52,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.GeocodeResponse;
@@ -232,7 +231,10 @@ GoogleMap.OnInfoWindowClickListener {
 	private static final Executor BACKGROUND_EXECUTOR = Executors
 			.newSingleThreadExecutor();
 
-	private static final int DEF_FILL_COLOR = Color.argb(175, 0, 0, 0);
+	private static final int DEF_DISPLAY_PERCENT = 33;
+	private static final int DEF_VIEW_FILL_COLOR = Color.argb(150, 0, 0, 0);
+	private static final int DEF_VIEW_STROKE_COLOR = Color.argb(255, 0, 0, 0);
+	private static final float DEF_VIEW_STROKE_WIDTH = 2f;
 	private static final String TAG = MapFilteringActivity.class.getSimpleName();
 
 	// These are the Contacts rows that we will retrieve.
@@ -321,18 +323,8 @@ GoogleMap.OnInfoWindowClickListener {
 	}
 
 	@Override
-	public double getDisplayPercentage() {
-		return 0.33;
-	}
-
-	@Override
 	public GoogleMap getMainMap() {
 		return getMapViewerFragment().getMap();
-	}
-
-	@Override
-	public PolygonOptions getViewPolygonOptions() {
-		return mViewPolygonOptions;
 	}
 
 	@Override
@@ -595,7 +587,11 @@ GoogleMap.OnInfoWindowClickListener {
 		mMiniMapFragment = (MiniMapFragment) fm
 				.findFragmentByTag("map_overview");
 		if (mMiniMapFragment == null) {
-			mMiniMapFragment = new MiniMapFragment();
+			mMiniMapFragment = MiniMapFragment.newInstance(
+					DEF_DISPLAY_PERCENT, 
+					DEF_VIEW_FILL_COLOR, 
+					DEF_VIEW_STROKE_COLOR, 
+					DEF_VIEW_STROKE_WIDTH);
 
 			fm.beginTransaction()
 			.add(R.id.fragment_container_map_overview,
@@ -764,9 +760,6 @@ GoogleMap.OnInfoWindowClickListener {
 
 		FragmentManager fm = getFragmentManager();
 		fm.addOnBackStackChangedListener(this);
-
-		mViewPolygonOptions = new PolygonOptions().fillColor(DEF_FILL_COLOR)
-				.strokeWidth(0);
 
 		getMapViewerFragment();
 		setUpMiniMapFragment();
