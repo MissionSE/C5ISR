@@ -1,6 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/action_dismiss_all"
+        android:icon="@drawable/ic_notify_clear_normal"
+        android:title="@string/action_dismiss_all"
+        android:showAsAction="always">
+    </item>
+    
+    <item
 		android:id="@+id/action_notification"
 		android:actionLayout="@layout/action_bar_notification"
 		android:title="@string/menu_notification"

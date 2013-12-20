@@ -41,9 +41,24 @@
     
     <!-- Content Descriptions -->
     <string name="action_search">Search</string>
+    <string name="action_dismiss_all">Dismiss All Notifications</string>
     
     <!-- Fragment: Database Viewer -->
     <string name="search_hint">Search Database</string>
     <string name="nothing_selected">Select an item on the left to see details.</string>
+    <string name="entry_detail_basic_header">General Information</string>
+    <string name="entry_detail_parent_header">Parent Information</string>
+    <string name="entry_detail_inventory_header">Inventory</string>
+    <string name="entry_detail_orders_header">Orders</string>
+    
+    <!-- SITE DIALOG -->
+    <string name="hint_site_name">Site Name</string>
+    <string name="title_site_new">Create New Site</string>
+    <string name="title_site_modify">Modify Site</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
 
 </resources>

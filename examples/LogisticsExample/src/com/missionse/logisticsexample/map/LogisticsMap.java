@@ -3,14 +3,18 @@ package com.missionse.logisticsexample.map;
 import android.app.Activity;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.missionse.logisticsexample.database.GetAllLocationsTask;
+import com.missionse.logisticsexample.dialog.SiteDialogFragment;
 
 /**
  * Displays logistics information on the google map.
  */
-public class LogisticsMap implements MapLoadedListener, MapLocationListener {
+public class LogisticsMap implements MapLoadedListener, MapLocationListener,
+		OnMapLongClickListener {
 
 	private Activity mActivity;
 	private GoogleMap mMap;
@@ -35,6 +39,7 @@ public class LogisticsMap implements MapLoadedListener, MapLocationListener {
 		mMap.setIndoorEnabled(true);
 		mMap.setMyLocationEnabled(true);
 		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+		mMap.setOnMapLongClickListener(this);
 
 		if (mActivity != null) {
 			new GetAllLocationsTask(mActivity, this).execute();
@@ -58,5 +63,11 @@ public class LogisticsMap implements MapLoadedListener, MapLocationListener {
 
 			mLocationManager.put(locationId, location);
 		}
+	}
+
+	@Override
+	public void onMapLongClick(LatLng location) {
+		SiteDialogFragment.newInstance(location.latitude, location.longitude)
+				.show(mActivity.getFragmentManager(), "create_new_site");
 	}
 }

@@ -159,7 +159,9 @@ public class DrawerEntryFactory {
 			holder = (DrawerSpinner.Holder) convertView.getTag();
 		}
 		holder.getSpinner().setAdapter(navDrawerSpinner.getAdapter());
-		holder.getSpinner().setOnItemSelectedListener(navDrawerSpinner.getListener());
+		if (navDrawerSpinner.getListener() != null) {
+			holder.getSpinner().setOnItemSelectedListener(navDrawerSpinner.getListener());
+		}
 
 		return convertView;
 	}
