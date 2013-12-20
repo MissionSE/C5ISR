@@ -70,24 +70,16 @@ import com.missionse.mapviewer.MiniMapFragment;
  * Example use of marker management and map filtering.
  */
 public class MapFilteringActivity extends Activity implements
-MapViewerFragment.Callbacks, MiniMapFragment.Callbacks,
+MiniMapFragment.Callbacks,
 FragmentManager.OnBackStackChangedListener, LoaderCallbacks<Cursor>,
 SharedPreferences.OnSharedPreferenceChangeListener,
 GoogleMap.OnInfoWindowClickListener {
 
-	public static class AddressStore {
-		Map<ContactAddressKey, MarkerInfo> addressMarkers;
-
-		public AddressStore(Map<ContactAddressKey, MarkerInfo> addressMarkers) {
-			this.addressMarkers = addressMarkers;
-		}
-	}
-
-	public class SomeHeavyOperation implements Runnable {
+	public class AddressGeocoder implements Runnable {
 		private final Cursor mCursor;
 		private final int mType;
 
-		public SomeHeavyOperation(Cursor cursor, int type) {
+		public AddressGeocoder(Cursor cursor, int type) {
 			this.mCursor = cursor;
 			this.mType = type;
 		}
@@ -328,13 +320,6 @@ GoogleMap.OnInfoWindowClickListener {
 	}
 
 	@Override
-	public void mapCreated(GoogleMap map) {
-//		mMarkerManager = new MarkerManager(map);
-		//TODO bad place to do this
-//		mOverviewMarkerManager = new MarkerManager(mMiniMapFragment.getMap());
-	}
-
-	@Override
 	public void onBackStackChanged() {
 		if (mPauseBackStackWatcher) {
 			return;
@@ -430,7 +415,7 @@ GoogleMap.OnInfoWindowClickListener {
 			Log.d(TAG,
 					"onLoadFinished: type=" + type + ", count="
 							+ cursor.getCount());
-			BACKGROUND_EXECUTOR.execute(new SomeHeavyOperation(cursor, type));
+			BACKGROUND_EXECUTOR.execute(new AddressGeocoder(cursor, type));
 		}
 	}
 

@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Build;
@@ -44,12 +43,6 @@ GooglePlayServicesClient.ConnectionCallbacks,
 GooglePlayServicesClient.OnConnectionFailedListener,
 GoogleMap.OnCameraChangeListener, 
 GoogleMap.OnInfoWindowClickListener {
-	
-	public interface Callbacks {
-		void mapCreated(GoogleMap map);
-	}
-	
-	private Callbacks mCallbacks;
 
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
 
@@ -100,7 +93,8 @@ GoogleMap.OnInfoWindowClickListener {
 		setRetainInstance(true);
 
 		// get DPI
-		mDPI = getActivity().getResources().getDisplayMetrics().densityDpi / 160f;
+		final float densityConversion = 160f;
+		mDPI = getActivity().getResources().getDisplayMetrics().densityDpi / densityConversion;
 	}
 
 	@Override
@@ -139,17 +133,6 @@ GoogleMap.OnInfoWindowClickListener {
 
 		return v;
 	}
-	
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (!(activity instanceof Callbacks)) {
-			throw new ClassCastException(
-					"Activity must implement fragment's callbacks.");
-		}
-
-		mCallbacks = (Callbacks) activity;
-	}
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
@@ -165,10 +148,10 @@ GoogleMap.OnInfoWindowClickListener {
 		// padding
 		Projection proj = mMainMap.getProjection();
 		Point p = proj.toScreenLocation(position);
-
 		// apply padding
-		p.x = (int) (p.x - Math.round(mWidth * 0.5)) + mShiftRight;
-		p.y = (int) (p.y - Math.round(mHeight * 0.5)) + mShiftTop;
+		final float half = 0.5f;
+		p.x = (int) (p.x - Math.round(mWidth * half)) + mShiftRight;
+		p.y = (int) (p.y - Math.round(mHeight * half)) + mShiftTop;
 
 		mMainMap.animateCamera(CameraUpdateFactory.scrollBy(p.x, p.y));
 	}
@@ -176,6 +159,9 @@ GoogleMap.OnInfoWindowClickListener {
 	/**
 	 * Set the padding around centered markers. Specified in the percentage of
 	 * the screen space of the map.
+	 * 
+	 * @param xFraction x-axis fraction
+	 * @param yFraction y-axis fraction
 	 */
 	public void setCenterPadding(float xFraction, float yFraction) {
 		int oldShiftRight = mShiftRight;
@@ -205,8 +191,7 @@ GoogleMap.OnInfoWindowClickListener {
 
 	@Override
 	public void onLocationChanged(Location arg0) {
-		// TODO Auto-generated method stub
-
+		// Do nothing.
 	}
 
 	/**
@@ -293,7 +278,6 @@ GoogleMap.OnInfoWindowClickListener {
 			if (mMainMap != null) {
 				setUpMap();
 			}
-			mCallbacks.mapCreated(mMainMap);
 		}
 	}
 
