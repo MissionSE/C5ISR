@@ -57,8 +57,8 @@ public class SiteDetailFragment extends DatabaseEntryDetailFragment {
 		String orderContent = "";
 		for (Order order : orders) {
 			orderContent += "ID: " + order.getId() + " (" + order.getTimeStamp() + "):\n";
-			orderContent += "\tStatus: " + order.getStatus() + "\n";
-			orderContent += "\tSeverity: " + order.getSeverity() + "\n";
+			orderContent += "\tStatus: " + order.getStatusId() + "\n";
+			orderContent += "\tSeverity: " + order.getSeverityId() + "\n";
 		}
 		setOrdersContent(orderContent.trim());
 

@@ -8,6 +8,7 @@ import android.content.Context;
 
 import com.missionse.logisticsexample.R;
 import com.missionse.logisticsexample.model.InventoryItem;
+import com.missionse.logisticsexample.model.ItemName;
 import com.missionse.logisticsexample.model.Order;
 import com.missionse.logisticsexample.model.OrderItem;
 import com.missionse.logisticsexample.model.Site;
@@ -50,6 +51,15 @@ public class LocalDatabaseHelper {
 	 */
 	public List<Order> getOrders() {
 		return mDatabaseAccessor.fetchAll(Order.class);
+	}
+
+	/**
+	 * Gets the list of all itemnames from the database.
+	 * 
+	 * @return The list of all orders in the database.
+	 */
+	public List<ItemName> getItemNames() {
+		return mDatabaseAccessor.fetchAll(ItemName.class);
 	}
 
 	/**

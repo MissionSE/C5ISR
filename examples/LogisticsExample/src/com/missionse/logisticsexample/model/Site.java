@@ -29,6 +29,11 @@ public class Site extends DBEntity implements Comparable<Object> {
 	@DatabaseField(columnName = "parent_id")
 	private int mParentId;
 
+	@Expose(serialize = true, deserialize = true)
+	@SerializedName("short_name")
+	@DatabaseField(columnName = "short_name")
+	private String mShortName;
+
 	/**
 	 * Default constructor. Needed for ORM library.
 	 */

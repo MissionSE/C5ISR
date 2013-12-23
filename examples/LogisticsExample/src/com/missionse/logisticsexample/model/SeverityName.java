@@ -5,10 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
 /**
- * Mapping between an item id and its name.
+ * Severity name. Maps to database table.
  */
-public class ItemName extends DBEntity {
-
+public class SeverityName extends DBEntity {
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("name")
 	@DatabaseField(columnName = "name")
@@ -17,11 +16,12 @@ public class ItemName extends DBEntity {
 	/**
 	 * Empty constructor.
 	 */
-	public ItemName() {
+	public SeverityName() {
 	}
 
 	/**
-	 * Retrieves the name of this item.
+	 * Retrieves the name of this severity.
+	 * 
 	 * @return the name
 	 */
 	public String getName() {
@@ -29,20 +29,17 @@ public class ItemName extends DBEntity {
 	}
 
 	/**
-	 * Sets the name of this item.
-	 * @param name the name
+	 * Sets the name of this severity.
+	 * 
+	 * @param name
+	 *            the name
 	 */
 	public void setName(final String name) {
 		mName = name;
 	}
-	
+
 	@Override
 	public String toString() {
-		// StringBuilder string = new StringBuilder();
-		// string.append("ItemName>: ");
-		// string.append(" id = " + getId());
-		// string.append(" name = " + mName);
-		// return string.toString();
 		return mName;
 	}
 }

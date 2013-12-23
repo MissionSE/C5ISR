@@ -1,6 +1,6 @@
 package com.missionse.logisticsexample.dialog;
 
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
@@ -185,7 +185,14 @@ public class SiteDialogFragment extends DialogFragment {
 	}
 
 	private List<Site> generateSiteNames() {
-		return Collections.emptyList();
+		List<Site> sites = new LinkedList<Site>();
+		try {
+			LocalDatabaseHelper database = ((LogisticsExample) mActivity).getDatabaseHelper();
+			sites.addAll(database.getSites());
+		} catch (ClassCastException exception) {
+			exception.printStackTrace();
+		}
+		return sites;
 	}
 
 	private void setupButtons(final View root) {
@@ -228,17 +235,17 @@ public class SiteDialogFragment extends DialogFragment {
 		}
 
 		@Override
-		public View getDropDownView(final int position, final View convertView,
-				final ViewGroup parent) {
-			TextView v = (TextView) super
+		public View getDropDownView(int position, View convertView,
+				ViewGroup parent) {
+			TextView textview = (TextView) super
 					.getView(position, convertView, parent);
 
-			if (v == null) {
-				v = new TextView(mActivity);
+			if (textview == null) {
+				textview = new TextView(mActivity);
 			}
-			v.setTextColor(Color.BLACK);
-			v.setText(mSites.get(position).getName());
-			return v;
+			textview.setTextColor(Color.BLACK);
+			textview.setText(mSites.get(position).getName());
+			return textview;
 		}
 
 		@Override
@@ -247,15 +254,15 @@ public class SiteDialogFragment extends DialogFragment {
 		}
 
 		@Override
-		public View getView(final int position, final View convertView, final ViewGroup parent) {
-			View v = convertView;
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View view = convertView;
 
-			if (v == null) {
+			if (view == null) {
 				LayoutInflater inflater = mActivity.getLayoutInflater();
-				v = inflater.inflate(R.layout.simple_site_list_entry, null);
+				view = inflater.inflate(R.layout.simple_site_list_entry, null);
 			}
 
-			TextView lbl = (TextView) v.findViewById(R.id.entry_site_name);
+			TextView lbl = (TextView) view.findViewById(R.id.entry_site_name);
 			lbl.setTextColor(Color.BLACK);
 			lbl.setText(mSites.get(position).getName());
 

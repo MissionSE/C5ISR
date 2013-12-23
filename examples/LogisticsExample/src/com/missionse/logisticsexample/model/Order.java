@@ -6,7 +6,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -22,22 +21,22 @@ public class Order extends DBEntity implements Comparable<Object> {
 	private DateTime mTimeStamp;
 
 	@Expose(serialize = true, deserialize = true)
-	@SerializedName("severity")
-	@DatabaseField(dataType = DataType.ENUM_INTEGER, columnName = "severity")
-	private Severity mSeverity;
+	@SerializedName("severity_id")
+	@DatabaseField(columnName = "severity_id")
+	private int mSeverityId;
 
 	@Expose(serialize = true, deserialize = true)
-	@SerializedName("status")
-	@DatabaseField(dataType = DataType.ENUM_INTEGER, columnName = "status")
-	private Status mStatus;
+	@SerializedName("status_id")
+	@DatabaseField(columnName = "status_id")
+	private int mStatusId;
 
 	/**
 	 * Empty constructor. Needed for the ORM library.
 	 */
 	public Order() {
 		mTimeStamp = new DateTime();
-		mSeverity = Severity.NORMAL;
-		mStatus = Status.INCOMPLETE;
+		mSeverityId = 0;
+		mStatusId = 0;
 	}
 
 	/**
@@ -60,32 +59,32 @@ public class Order extends DBEntity implements Comparable<Object> {
 	 * Gets the severity of this order.
 	 * @return the severity
 	 */
-	public Severity getSeverity() {
-		return mSeverity;
+	public int getSeverityId() {
+		return mSeverityId;
 	}
 
 	/**
 	 * Sets the severity of this order.
 	 * @param severity the severity to set
 	 */
-	public void setSeverity(final Severity severity) {
-		mSeverity = severity;
+	public void setSeverityId(final int severity) {
+		mSeverityId = severity;
 	}
 
 	/**
 	 * Retrieves the status of this order.
 	 * @return the status
 	 */
-	public Status getStatus() {
-		return mStatus;
+	public int getStatusId() {
+		return mStatusId;
 	}
 
 	/**
 	 * Sets the status of this order.
 	 * @param status the status to set
 	 */
-	public void setStatus(final Status status) {
-		mStatus = status;
+	public void setStatusId(final int status) {
+		mStatusId = status;
 	}
 
 	@Override
@@ -95,6 +94,11 @@ public class Order extends DBEntity implements Comparable<Object> {
 		StringBuilder string = new StringBuilder();
 		string.append(getId());
 		string.append("-" + formatter.print(mTimeStamp));
+		string.append("Order>: ");
+		string.append(" id = " + getId());
+		string.append(" timestamp = " + mTimeStamp);
+		string.append(" severity = " + mSeverityId);
+		string.append(" status = " + mStatusId);
 		return string.toString();
 	}
 

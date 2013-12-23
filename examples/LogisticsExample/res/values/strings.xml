@@ -91,5 +91,12 @@
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
     <string name="update">Update</string>
+    
+    <!-- ORDER DIALOG -->
+    <string name="title_order_new">Create New Order</string>
+    <string name="title_order_modify">Modify Order</string>
+    <string name="hint_amount">Quantity</string>
+    <!-- XML -->
+    <string name="content_description">Content Description</string>
 
 </resources>
