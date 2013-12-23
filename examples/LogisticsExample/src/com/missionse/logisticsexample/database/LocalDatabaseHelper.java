@@ -45,6 +45,14 @@ public class LocalDatabaseHelper {
 	}
 
 	/**
+	 * Gets the list of all orders from the database.
+	 * @return The list of all orders in the database.
+	 */
+	public List<Order> getOrders() {
+		return mDatabaseAccessor.fetchAll(Order.class);
+	}
+
+	/**
 	 * Gets the parent of a site.
 	 * @param site The site with a parent.
 	 * @return The parent of the site or null if there is none.
