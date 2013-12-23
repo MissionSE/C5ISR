@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <Button
+            android:id="@+id/list_sort_by_btn"
+            android:layout_height="match_parent"
+            android:layout_width="0dip"
+            android:layout_weight="0.5"
+            style="?android:attr/buttonBarButtonStyle"
+            android:drawableLeft="@drawable/ic_action_sort_by_size"
+            android:padding="5dp" >
+        </Button>
+        <Button
+            android:id="@+id/list_filter_by_btn"
+            android:layout_height="match_parent"
+            android:layout_width="0dip"
+            android:layout_weight="0.5"
+            style="?android:attr/buttonBarButtonStyle"
+            android:drawableLeft="@drawable/ic_action_search"
+            android:padding="5dp" >
+        </Button>
+    </LinearLayout>
+    <include layout="@layout/list_sticky_headers" />
+</LinearLayout>

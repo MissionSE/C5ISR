@@ -14,7 +14,7 @@ import android.widget.ListView;
 import com.missionse.logisticsexample.database.DatabaseFactory;
 import com.missionse.logisticsexample.database.DatabaseUpdateCompleteListener;
 import com.missionse.logisticsexample.database.LocalDatabaseHelper;
-import com.missionse.logisticsexample.databaseview.SiteViewerContainerFragment;
+import com.missionse.logisticsexample.databaseview.site.SiteViewerContainerFragment;
 import com.missionse.logisticsexample.drawer.LogisticsDrawerFactory;
 import com.missionse.logisticsexample.map.LogisticsMap;
 import com.missionse.logisticsexample.map.MapViewerFragment;

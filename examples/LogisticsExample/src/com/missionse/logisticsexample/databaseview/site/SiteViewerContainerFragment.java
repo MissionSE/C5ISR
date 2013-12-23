@@ -1,4 +1,4 @@
-package com.missionse.logisticsexample.databaseview;
+package com.missionse.logisticsexample.databaseview.site;
 
 import android.app.Activity;
 import android.app.Fragment;

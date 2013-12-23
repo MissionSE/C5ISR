@@ -1,4 +1,4 @@
-package com.missionse.logisticsexample.databaseview;
+package com.missionse.logisticsexample.databaseview.site;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,17 +6,26 @@ import java.util.List;
 import java.util.Locale;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+import android.app.Fragment;
 import android.content.Context;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.TextView;
 
@@ -27,8 +36,10 @@ import com.missionse.logisticsexample.model.Site;
 /**
  * Displays a search-able list of Sites, with section headers for the first letter of each site name.
  */
-public class SiteListFragment extends DatabaseEntryListFragment {
+public class SiteListFragment extends Fragment {
 
+	private EditText mSearchField;
+	private StickyListHeadersListView mEntryList;
 	private SiteAdapter mSiteAdapter;
 	private int mSelectedPosition = -1;
 	private SiteViewerContainerFragment mContainer;
@@ -50,7 +61,10 @@ public class SiteListFragment extends DatabaseEntryListFragment {
 		mDatabaseHelper = databaseHelper;
 	}
 
-	@Override
+	/**
+	 * Retrieves the entry adapter, that provides the entries to list.
+	 * @return an adapter
+	 */
 	public StickyListHeadersAdapter getEntryAdapter() {
 		mSiteAdapter = new SiteAdapter(getActivity(), R.layout.list_entry, R.layout.list_entry_header);
 		List<Site> sites = mDatabaseHelper.getSites();
@@ -61,17 +75,18 @@ public class SiteListFragment extends DatabaseEntryListFragment {
 		return mSiteAdapter;
 	}
 
-	@Override
+	/**
+	 * Gets the watcher for a given text field (namely, the search text field).
+	 * @return the text watcher
+	 */
 	public TextWatcher getTextWatcher() {
 		return new TextWatcher() {
 			@Override
 			public void afterTextChanged(final Editable s) {
-
 			}
 
 			@Override
 			public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
-
 			}
 
 			@Override
@@ -82,10 +97,37 @@ public class SiteListFragment extends DatabaseEntryListFragment {
 	}
 
 	@Override
-	public void onItemSelected(final int position) {
-		mSelectedPosition = position;
-		getEntryList().invalidate();
-		mContainer.displaySite(mSiteAdapter.getItem(position));
+	public View onCreateView(final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
+		View contentView = inflater.inflate(R.layout.fragment_site_database_list, parent, false);
+		mSearchField = (EditText) contentView.findViewById(R.id.search_field);
+		mSearchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(final TextView v, final int actionId, final KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
+					InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(
+							Context.INPUT_METHOD_SERVICE);
+					inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+					return true;
+				}
+				return false;
+			}
+		});
+
+		mSearchField.addTextChangedListener(getTextWatcher());
+
+		mEntryList = (StickyListHeadersListView) contentView.findViewById(R.id.entry_list);
+		mEntryList.setAdapter(getEntryAdapter());
+		mEntryList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+				mEntryList.setItemChecked(position, true);
+				mSelectedPosition = position;
+				mEntryList.invalidate();
+				mContainer.displaySite(mSiteAdapter.getItem(position));
+			}
+		});
+
+		return contentView;
 	}
 
 	/**

@@ -25,11 +25,5 @@
             android:imeOptions="actionDone|flagNoExtractUi|flagNoFullscreen" >
         </EditText>
     </LinearLayout>
-    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-        android:id="@+id/entry_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:choiceMode="singleChoice">
-    </se.emilsjolander.stickylistheaders.StickyListHeadersListView>
+    <include layout="@layout/list_sticky_headers" />
 </LinearLayout>

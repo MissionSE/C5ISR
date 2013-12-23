@@ -1,24 +1,25 @@
 package com.missionse.logisticsexample.model;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.missionse.logisticsexample.model.orm.DatePersister;
 
 /**
  * Represents an order from a {@link Site}.
  */
 @DatabaseTable(tableName = "myorders")
-public class Order extends DBEntity {
+public class Order extends DBEntity implements Comparable<Object> {
 
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("order_at")
-	@DatabaseField(columnName = "order_at", persisterClass = DatePersister.class)
-	private Date mTimeStamp;
+	@DatabaseField(columnName = "order_at")
+	private DateTime mTimeStamp;
 
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("severity")
@@ -34,7 +35,7 @@ public class Order extends DBEntity {
 	 * Empty constructor. Needed for the ORM library.
 	 */
 	public Order() {
-		mTimeStamp = new Date();
+		mTimeStamp = new DateTime();
 		mSeverity = Severity.NORMAL;
 		mStatus = Status.INCOMPLETE;
 	}
@@ -43,7 +44,7 @@ public class Order extends DBEntity {
 	 * Retrieves the timestamp on this order.
 	 * @return the timestamp
 	 */
-	public Date getTimeStamp() {
+	public DateTime getTimeStamp() {
 		return mTimeStamp;
 	}
 
@@ -51,7 +52,7 @@ public class Order extends DBEntity {
 	 * Sets the timestamp of this order.
 	 * @param timeStamp the timestamp to set
 	 */
-	public void setTimeStamp(final Date timeStamp) {
+	public void setTimeStamp(final DateTime timeStamp) {
 		mTimeStamp = timeStamp;
 	}
 
@@ -86,15 +87,27 @@ public class Order extends DBEntity {
 	public void setStatus(final Status status) {
 		mStatus = status;
 	}
-	
+
 	@Override
 	public String toString() {
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
+
 		StringBuilder string = new StringBuilder();
-		string.append("Order>: ");
-		string.append(" id = " + getId());
-		string.append(" timestamp = " + mTimeStamp);
-		string.append(" severity = " + mSeverity);
-		string.append(" status = " + mStatus);
+		string.append(getId());
+		string.append("-" + formatter.print(mTimeStamp));
 		return string.toString();
+	}
+
+	@Override
+	public int compareTo(final Object another) {
+		if (another != null) {
+			if (getClass() == another.getClass()) {
+				return toString().compareTo(((Order) another).toString());
+			} else {
+				return 1;
+			}
+		} else {
+			return 1;
+		}
 	}
 }

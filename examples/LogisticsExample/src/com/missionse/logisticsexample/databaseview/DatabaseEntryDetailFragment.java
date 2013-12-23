@@ -93,7 +93,7 @@ public abstract class DatabaseEntryDetailFragment extends Fragment {
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
-		View contentView = inflater.inflate(R.layout.fragment_database_entry_detail, parent, false);
+		View contentView = inflater.inflate(R.layout.fragment_site_database_detail, parent, false);
 
 		mEntryTitleView = (TextView) contentView.findViewById(R.id.entry_detail_title);
 		mEntryTitleIdView = (TextView) contentView.findViewById(R.id.entry_detail_id);

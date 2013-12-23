@@ -1,9 +1,10 @@
-package com.missionse.logisticsexample.databaseview;
+package com.missionse.logisticsexample.databaseview.site;
 
 import java.util.List;
 
 import com.missionse.logisticsexample.LogisticsExample;
 import com.missionse.logisticsexample.database.LocalDatabaseHelper;
+import com.missionse.logisticsexample.databaseview.DatabaseEntryDetailFragment;
 import com.missionse.logisticsexample.model.InventoryItem;
 import com.missionse.logisticsexample.model.Order;
 import com.missionse.logisticsexample.model.Site;

@@ -1,8 +1,8 @@
 package com.missionse.logisticsexample.model.orm;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
+
+import org.joda.time.DateTime;
 
 import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.field.SqlType;
@@ -15,11 +15,10 @@ import com.j256.ormlite.support.DatabaseResults;
 public final class DatePersister extends DateType {
 
 	private static final DatePersister INSTANCE = new DatePersister();
-	@SuppressWarnings("deprecation")
-	private static final Timestamp ZERO_TIMESTAMP = new Timestamp(1970, 0, 0, 0, 0, 0, 0);
+	private static final DateTime ZERO_TIMESTAMP = new DateTime(0);
 
 	private DatePersister() {
-		super(SqlType.DATE, new Class<?>[] { Date.class });
+		super(SqlType.DATE, new Class<?>[] { DateTime.class });
 	}
 
 	/**
@@ -33,11 +32,11 @@ public final class DatePersister extends DateType {
 	@Override
 	public Object resultToSqlArg(final FieldType fieldType, final DatabaseResults results, final int columnPos)
 			throws SQLException {
-		Timestamp timestamp = results.getTimestamp(columnPos);
-		if (timestamp == null || ZERO_TIMESTAMP.after(timestamp)) {
+		DateTime timestamp = new DateTime(results.getTimestamp(columnPos));
+		if (timestamp == null || ZERO_TIMESTAMP.isAfter(timestamp)) {
 			return null;
 		} else {
-			return timestamp.getTime();
+			return timestamp;
 		}
 	}
 
@@ -46,7 +45,7 @@ public final class DatePersister extends DateType {
 		if (sqlArg == null) {
 			return null;
 		} else {
-			return new Date((Long) sqlArg);
+			return new DateTime(sqlArg);
 		}
 	}
 }
