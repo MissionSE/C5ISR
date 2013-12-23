@@ -11,19 +11,19 @@ import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
 public class OrderToOrderItemResponse extends Response {
 
 		@SerializedName("orders_to_order_items")
-		private List<OrderToOrderItem> mOrderItems;
+		private List<OrderToOrderItem> mOrdersToOrderItems;
 
 		/**
-		 * @return the mOrderItems
+		 * @return the mOrdersToOrderItems
 		 */
-		public List<OrderToOrderItem> getOrderItems() {
-			return mOrderItems;
+		public List<OrderToOrderItem> getOrdersToOrderItems() {
+			return mOrdersToOrderItems;
 		}
 
 		/**
-		 * @param orderItems the mOrderItems to set
+		 * @param ordersToOrderItems the mOrdersToOrderItems to set
 		 */
-		public void setOrderItems(List<OrderToOrderItem> orderItems) {
-			this.mOrderItems = orderItems;
+		public void setOrdersToOrderItems(final List<OrderToOrderItem> ordersToOrderItems) {
+			mOrdersToOrderItems = ordersToOrderItems;
 		}
 }

@@ -21,7 +21,7 @@ import android.widget.Filter;
 import android.widget.TextView;
 
 import com.missionse.logisticsexample.R;
-import com.missionse.logisticsexample.database.DatabaseHelper;
+import com.missionse.logisticsexample.database.LocalDatabaseHelper;
 import com.missionse.logisticsexample.model.Site;
 
 /**
@@ -32,7 +32,7 @@ public class SiteListFragment extends DatabaseEntryListFragment {
 	private SiteAdapter mSiteAdapter;
 	private int mSelectedPosition = -1;
 	private SiteViewerContainerFragment mContainer;
-	private DatabaseHelper mDatabaseHelper;
+	private LocalDatabaseHelper mDatabaseHelper;
 
 	/**
 	 * Attaches a parent container to this fragment, to be called back on certain events.
@@ -46,14 +46,14 @@ public class SiteListFragment extends DatabaseEntryListFragment {
 	 * Sets the DatabaseHelper, allowing database access.
 	 * @param databaseHelper the database helper
 	 */
-	public void setDatabaseHelper(final DatabaseHelper databaseHelper) {
+	public void setDatabaseHelper(final LocalDatabaseHelper databaseHelper) {
 		mDatabaseHelper = databaseHelper;
 	}
 
 	@Override
 	public StickyListHeadersAdapter getEntryAdapter() {
 		mSiteAdapter = new SiteAdapter(getActivity(), R.layout.list_entry, R.layout.list_entry_header);
-		List<Site> sites = mDatabaseHelper.fetchAll(Site.class);
+		List<Site> sites = mDatabaseHelper.getSites();
 		Collections.sort(sites);
 		for (Site site : sites) {
 			mSiteAdapter.add(site);

@@ -8,14 +8,14 @@ import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
  * Wrapper class to JSON.
  */
 public class SiteToInventoryItemResponse extends Response {
-	
+
 	@SerializedName("sites_to_inventory_items")
 	private List<SiteToInventoryItem> mSiteToInventoryItem;
 
 	/**
 	 * @return the mSiteToInventoryItem
 	 */
-	public List<SiteToInventoryItem> getSiteToInventoryItem() {
+	public List<SiteToInventoryItem> getSitesToInventoryItems() {
 		return mSiteToInventoryItem;
 	}
 
@@ -23,7 +23,7 @@ public class SiteToInventoryItemResponse extends Response {
 	 * @param siteToInventoryItem the mSiteToInventoryItem to set
 	 */
 	public void setSiteToInventoryItem(
-			List<SiteToInventoryItem> siteToInventoryItem) {
+			final List<SiteToInventoryItem> siteToInventoryItem) {
 		this.mSiteToInventoryItem = siteToInventoryItem;
 	}
 }

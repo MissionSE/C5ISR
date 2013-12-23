@@ -9,7 +9,7 @@ import com.missionse.logisticsexample.model.OrderItem;
  * Wrapper for JSON object.
  */
 public class OrderItemResponse extends Response {
-	
+
 	@SerializedName("order_items")
 	private List<OrderItem> mItems;
 
@@ -23,7 +23,7 @@ public class OrderItemResponse extends Response {
 	/**
 	 * @param items the mItems to set
 	 */
-	public void setItems(List<OrderItem> items) {
+	public void setItems(final List<OrderItem> items) {
 		this.mItems = items;
 	}
 }

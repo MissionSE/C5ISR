@@ -9,21 +9,21 @@ import com.missionse.logisticsexample.model.Order;
  * Wrapper for JSON response.
  */
 public class OrderResponse extends Response {
-	
+
 	@SerializedName("orders")
-	private List<Order> mOrder;
+	private List<Order> mOrders;
 
 	/**
 	 * @return the mOrder
 	 */
-	public List<Order> getOrder() {
-		return mOrder;
+	public List<Order> getOrders() {
+		return mOrders;
 	}
 
 	/**
-	 * @param order the mOrder to set
+	 * @param orders the mOrder to set
 	 */
-	public void setOrder(List<Order> order) {
-		this.mOrder = order;
+	public void setOrders(final List<Order> orders) {
+		this.mOrders = orders;
 	}
 }

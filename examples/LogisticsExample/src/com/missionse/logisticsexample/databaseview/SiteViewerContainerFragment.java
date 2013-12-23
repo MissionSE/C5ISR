@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.missionse.logisticsexample.LogisticsExample;
 import com.missionse.logisticsexample.R;
-import com.missionse.logisticsexample.database.DatabaseAccessor;
-import com.missionse.logisticsexample.database.DatabaseHelper;
+import com.missionse.logisticsexample.database.LocalDatabaseHelper;
 import com.missionse.logisticsexample.model.Site;
 
 /**
@@ -19,12 +19,12 @@ public class SiteViewerContainerFragment extends Fragment {
 
 	private SiteListFragment mSiteList;
 	private SiteDetailFragment mSiteDetail;
-	private DatabaseHelper mDatabaseHelper;
+	private LocalDatabaseHelper mDatabaseHelper;
 
 	@Override
 	public void onAttach(final Activity activity) {
 		super.onAttach(activity);
-		mDatabaseHelper = ((DatabaseAccessor) activity).getHelper();
+		mDatabaseHelper = ((LogisticsExample) activity).getDatabaseHelper();
 	}
 
 	@Override

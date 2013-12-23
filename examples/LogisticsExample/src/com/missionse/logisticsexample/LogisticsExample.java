@@ -1,7 +1,5 @@
 package com.missionse.logisticsexample;
 
-import java.util.Timer;
-
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,22 +11,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.missionse.logisticsexample.database.DatabaseAccessor;
-import com.missionse.logisticsexample.database.DatabaseHelper;
-import com.missionse.logisticsexample.database.DatabaseUpdateThread;
-import com.missionse.logisticsexample.database.OnDatabaseUpdate;
+import com.missionse.logisticsexample.database.DatabaseFactory;
+import com.missionse.logisticsexample.database.DatabaseUpdateCompleteListener;
+import com.missionse.logisticsexample.database.LocalDatabaseHelper;
 import com.missionse.logisticsexample.databaseview.SiteViewerContainerFragment;
 import com.missionse.logisticsexample.drawer.LogisticsDrawerFactory;
 import com.missionse.logisticsexample.map.LogisticsMap;
 import com.missionse.logisticsexample.map.MapViewerFragment;
-import com.missionse.logisticsexample.model.InventoryItem;
-import com.missionse.logisticsexample.model.ItemName;
-import com.missionse.logisticsexample.model.Order;
-import com.missionse.logisticsexample.model.OrderItem;
-import com.missionse.logisticsexample.model.Site;
-import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
-import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
-import com.missionse.logisticsexample.model.mappings.SiteToOrder;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerComplexItem;
@@ -38,19 +27,12 @@ import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
  * Main entry point to the Logistics application. Instantiates the two drawers, and loads the initial fragment into the
  * content space.
  */
-public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate, DatabaseAccessor {
-	private static final String LOG_TAG = "LogisticsExample";
-
-	private static final boolean DEBUG = false;
+public class LogisticsExample extends DrawerActivity implements DatabaseUpdateCompleteListener {
+	private static final String TAG = LogisticsExample.class.getName();
 
 	private LogisticsDrawerFactory mDrawerFactory;
 	private LogisticsMap mLogisticsMap;
-
-	private DatabaseHelper mDbHelper;
-	private DatabaseUpdateThread mDbUpdater;
-	private Timer mDbPeriodic;
-	private static final long DELAY_BEFORE_FIRST_RUN_IN_MS = 500;
-	private static final long INTERVAL_BETWEEN_RUNS_IN_MS = 4000;
+	private LocalDatabaseHelper mDatabaseHelper;
 
 	private static final int INITIAL_NOTIFICATION_ID = 300;
 	private static int mCurrentNotificationId = INITIAL_NOTIFICATION_ID;
@@ -64,16 +46,12 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 	public LogisticsExample() {
 		mLogisticsMap = new LogisticsMap(this);
 		mDrawerFactory = new LogisticsDrawerFactory(this);
-		mDbHelper = new DatabaseHelper(this);
-		mDbHelper.initialize();
 	}
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mDbUpdater = new DatabaseUpdateThread(this, mDbHelper);
-		mDbPeriodic = new Timer();
-		mDbPeriodic.schedule(mDbUpdater, DELAY_BEFORE_FIRST_RUN_IN_MS, INTERVAL_BETWEEN_RUNS_IN_MS);
+		mDatabaseHelper = DatabaseFactory.initializeDatabase(this, this);
 	}
 
 	private void displayMap() {
@@ -243,43 +221,16 @@ public class LogisticsExample extends DrawerActivity implements OnDatabaseUpdate
 		invalidateOptionsMenu();
 	}
 
-	@Override
-	public void onDatabaseUpdate(final DatabaseHelper helper) {
-		Log.d("LogisticsExample", "ON DATABASE UPDATE CALLED");
-		if (DEBUG) {
-			logDatabase();
-		}
-	}
-
-	private void logDatabase() {
-		for (ItemName i : mDbHelper.fetchAll(ItemName.class)) {
-			Log.d(LOG_TAG, i.toString());
-		}
-		for (InventoryItem i : mDbHelper.fetchAll(InventoryItem.class)) {
-			Log.d(LOG_TAG, i.toString());
-		}
-		for (Order i : mDbHelper.fetchAll(Order.class)) {
-			Log.d(LOG_TAG, i.toString());
-		}
-		for (OrderItem i : mDbHelper.fetchAll(OrderItem.class)) {
-			Log.d(LOG_TAG, i.toString());
-		}
-		for (Site i : mDbHelper.fetchAll(Site.class)) {
-			Log.d(LOG_TAG, i.toString());
-		}
-		for (OrderToOrderItem i : mDbHelper.fetchAll(OrderToOrderItem.class)) {
-			Log.d(LOG_TAG, i.toString());
-		}
-		for (SiteToInventoryItem i : mDbHelper.fetchAll(SiteToInventoryItem.class)) {
-			Log.d(LOG_TAG, i.toString());
-		}
-		for (SiteToOrder i : mDbHelper.fetchAll(SiteToOrder.class)) {
-			Log.d(LOG_TAG, i.toString());
-		}
+	/**
+	 * Returns the database helper.
+	 * @return The database helper.
+	 */
+	public LocalDatabaseHelper getDatabaseHelper() {
+		return mDatabaseHelper;
 	}
 
 	@Override
-	public DatabaseHelper getHelper() {
-		return mDbHelper;
+	public void onDatabaseUpdateComplete() {
+		Log.v(TAG, "Database update complete.");
 	}
 }
