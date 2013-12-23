@@ -1,6 +1,6 @@
 <?php
-	$tablename = "sites";
-	$columns = array("id", "name", "short_name", "latitude", "longitude", "parent_id");
+	$tablename = "status_names";
+	$columns = array("id", "name");
 
 	require_once __DIR__ . '/db_access.php';
 	$db = new DatabaseAccessor();
