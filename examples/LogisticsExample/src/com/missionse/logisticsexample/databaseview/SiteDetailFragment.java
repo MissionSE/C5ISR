@@ -2,8 +2,8 @@ package com.missionse.logisticsexample.databaseview;
 
 import java.util.List;
 
-import com.missionse.logisticsexample.database.DatabaseAccessor;
-import com.missionse.logisticsexample.database.DatabaseHelper;
+import com.missionse.logisticsexample.LogisticsExample;
+import com.missionse.logisticsexample.database.LocalDatabaseHelper;
 import com.missionse.logisticsexample.model.InventoryItem;
 import com.missionse.logisticsexample.model.Order;
 import com.missionse.logisticsexample.model.Site;
@@ -19,10 +19,10 @@ public class SiteDetailFragment extends DatabaseEntryDetailFragment {
 	 * @param site the site to display
 	 */
 	public void displaySite(final Site site) {
-		DatabaseHelper databaseHelper = ((DatabaseAccessor) getActivity()).getHelper();
+		LocalDatabaseHelper databaseHelper = ((LogisticsExample) getActivity()).getDatabaseHelper();
 
 		List<Order> orders = databaseHelper.getOrders(site);
-		List<InventoryItem> supplies = databaseHelper.getSupplies(site);
+		List<InventoryItem> supplies = databaseHelper.getInventoryItems(site);
 
 		setTitleText(site.getName());
 		setTitleId("" + site.getId());

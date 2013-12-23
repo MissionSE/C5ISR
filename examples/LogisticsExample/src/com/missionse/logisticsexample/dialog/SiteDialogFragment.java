@@ -19,8 +19,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.missionse.logisticsexample.LogisticsExample;
 import com.missionse.logisticsexample.R;
-import com.missionse.logisticsexample.database.DatabaseAccessor;
+import com.missionse.logisticsexample.database.LocalDatabaseHelper;
 import com.missionse.logisticsexample.model.Site;
 
 /**
@@ -49,7 +50,7 @@ public class SiteDialogFragment extends DialogFragment {
 	private boolean mModify = false;
 	/**
 	 * Creates a new SiteDialogFragment, packing the latitude and longitude.
-	 * 
+	 *
 	 * @param latitude
 	 *            The latitude of the location being created, in degrees.
 	 * @param longitude
@@ -70,7 +71,7 @@ public class SiteDialogFragment extends DialogFragment {
 
 	/**
 	 * Creates a new SiteDailogFragment, used to edit the site parameter.
-	 * 
+	 *
 	 * @param site
 	 *            The site to be edited.
 	 * @return A new SiteDialogFragment
@@ -130,7 +131,7 @@ public class SiteDialogFragment extends DialogFragment {
 		}
 	}
 
-	private void updateState(Bundle state) {
+	private void updateState(final Bundle state) {
 		if (state != null) {
 			if (state.getBoolean(SITE_MODIFY)) {
 				mModify = true;
@@ -147,14 +148,14 @@ public class SiteDialogFragment extends DialogFragment {
 		}
 	}
 
-	private void setupSiteName(View root) {
+	private void setupSiteName(final View root) {
 		mEtSiteName = (EditText) root.findViewById(R.id.site_name);
 		if (mModify) {
 			mEtSiteName.setText(mSiteName);
 		}
 	}
 
-	private void setupLatLon(View root) {
+	private void setupLatLon(final View root) {
 		mTvLatitude = (TextView) root.findViewById(R.id.site_latitude);
 		mTvLongitude = (TextView) root.findViewById(R.id.site_longitude);
 
@@ -165,7 +166,7 @@ public class SiteDialogFragment extends DialogFragment {
 		mTvLongitude.setText(lng + ": " + mLongitude);
 	}
 
-	private void setupSpinner(View root) {
+	private void setupSpinner(final View root) {
 		mSpnParent = (Spinner) root.findViewById(R.id.parent_name_spinner);
 
 		List<Site> sites = generateSiteNames();
@@ -187,7 +188,7 @@ public class SiteDialogFragment extends DialogFragment {
 		return Collections.emptyList();
 	}
 
-	private void setupButtons(View root) {
+	private void setupButtons(final View root) {
 		Button accept = (Button) root.findViewById(R.id.ok_button);
 		Button cancel = (Button) root.findViewById(R.id.cancel_button);
 
@@ -199,14 +200,14 @@ public class SiteDialogFragment extends DialogFragment {
 
 		accept.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(final View v) {
 				onAccept();
 			}
 
 		});
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(final View v) {
 				SiteDialogFragment.this.dismiss();
 			}
 		});
@@ -220,15 +221,15 @@ public class SiteDialogFragment extends DialogFragment {
 		private List<Site> mSites;
 		private Activity mActivity;
 
-		public SiteArrayAdapter(Activity activity, List<Site> sites) {
+		public SiteArrayAdapter(final Activity activity, final List<Site> sites) {
 			super(activity, android.R.layout.simple_list_item_1, sites);
 			mSites = sites;
 			mActivity = activity;
 		}
 
 		@Override
-		public View getDropDownView(int position, View convertView,
-				ViewGroup parent) {
+		public View getDropDownView(final int position, final View convertView,
+				final ViewGroup parent) {
 			TextView v = (TextView) super
 					.getView(position, convertView, parent);
 
@@ -241,12 +242,12 @@ public class SiteDialogFragment extends DialogFragment {
 		}
 
 		@Override
-		public Site getItem(int position) {
+		public Site getItem(final int position) {
 			return mSites.get(position);
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, final View convertView, final ViewGroup parent) {
 			View v = convertView;
 
 			if (v == null) {
@@ -273,9 +274,9 @@ public class SiteDialogFragment extends DialogFragment {
 		site.setName(mSiteName);
 		site.setParentId(mParentId);
 
-		DatabaseAccessor database;
+		LocalDatabaseHelper databaseHelper;
 		try {
-			database = (DatabaseAccessor) mActivity;
+			databaseHelper = ((LogisticsExample) mActivity).getDatabaseHelper();
 
 			if (mModify) {
 				// TODO: update call
