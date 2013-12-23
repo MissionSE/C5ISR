@@ -1,6 +1,6 @@
 <?php
 	$tablename = "orders";
-	$columns = array("id", "ordered_at", "severity", "status");
+	$columns = array("id", "ordered_at", "severity_id", "status_id");
 
 	require_once __DIR__ . '/db_access.php';
 	$db = new DatabaseAccessor();
