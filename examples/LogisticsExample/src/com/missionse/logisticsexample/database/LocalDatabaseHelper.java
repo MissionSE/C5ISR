@@ -74,6 +74,23 @@ public class LocalDatabaseHelper {
 	}
 
 	/**
+	 * @param order
+	 *            The order that is associated with a Site.
+	 * @return The Site associated with the Order.
+	 */
+	public Site getSiteAssociatedWith(Order order) {
+		Site site = null;
+		try {
+			List<SiteToOrder> siteToOrder = mDatabaseAccessor.getObjectDao(SiteToOrder.class).queryBuilder().where()
+					.eq(mOrderIdTag, order.getId()).query();
+			site = mDatabaseAccessor.getObjectDao(Site.class).queryForId(siteToOrder.get(0).getSiteId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return site;
+	}
+
+	/**
 	 * @param nameId
 	 *            the ID of the name
 	 * @return the ItemName associated with the id. Null if name_id could not be
