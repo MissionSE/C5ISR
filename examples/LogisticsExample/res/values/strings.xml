@@ -35,6 +35,12 @@
     <string name="item_names">Item Name</string>
     <string name="get_all_item_names">get_all_item_names.php</string>
     
+    <string name="severity_names">Severity Name</string>
+    <string name="get_all_severity_names">get_all_severity_names.php</string>
+    
+    <string name="status_names">Status Name</string>
+    <string name="get_all_status_names">get_all_status_names.php</string>
+    
     <string name="order_items">Order Item</string>
     <string name="get_all_order_items">get_all_order_items.php</string>
     

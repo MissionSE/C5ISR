@@ -11,15 +11,19 @@ import com.missionse.logisticsexample.database.table.ItemNameDatabaseRequestor;
 import com.missionse.logisticsexample.database.table.OrderDatabaseRequestor;
 import com.missionse.logisticsexample.database.table.OrderItemDatabaseRequestor;
 import com.missionse.logisticsexample.database.table.OrderToOrderItemDatabaseRequestor;
+import com.missionse.logisticsexample.database.table.SeverityNameDatabaseRequestor;
 import com.missionse.logisticsexample.database.table.SiteDatabaseRequestor;
 import com.missionse.logisticsexample.database.table.SiteToInventoryItemDatabaseRequestor;
 import com.missionse.logisticsexample.database.table.SiteToOrderDatabaseRequestor;
+import com.missionse.logisticsexample.database.table.StatusNameDatabaseRequestor;
 import com.missionse.logisticsexample.model.DBEntity;
 import com.missionse.logisticsexample.model.InventoryItem;
 import com.missionse.logisticsexample.model.ItemName;
 import com.missionse.logisticsexample.model.Order;
 import com.missionse.logisticsexample.model.OrderItem;
+import com.missionse.logisticsexample.model.SeverityName;
 import com.missionse.logisticsexample.model.Site;
+import com.missionse.logisticsexample.model.StatusName;
 import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
 import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
 import com.missionse.logisticsexample.model.mappings.SiteToOrder;
@@ -71,6 +75,8 @@ public final class DatabaseFactory {
 		daoClasses.add(OrderToOrderItem.class);
 		daoClasses.add(SiteToInventoryItem.class);
 		daoClasses.add(SiteToOrder.class);
+		daoClasses.add(SeverityName.class);
+		daoClasses.add(StatusName.class);
 
 		return daoClasses;
 	}
@@ -86,6 +92,8 @@ public final class DatabaseFactory {
 		databaseRequestors.add(new SiteDatabaseRequestor(context, databaseConnector, databaseAccessor));
 		databaseRequestors.add(new SiteToInventoryItemDatabaseRequestor(context, databaseConnector, databaseAccessor));
 		databaseRequestors.add(new SiteToOrderDatabaseRequestor(context, databaseConnector, databaseAccessor));
+		databaseRequestors.add(new StatusNameDatabaseRequestor(context, databaseConnector, databaseAccessor));
+		databaseRequestors.add(new SeverityNameDatabaseRequestor(context, databaseConnector, databaseAccessor));
 
 		return databaseRequestors;
 	}
