@@ -25,7 +25,7 @@
     <integer name="local_database_version">1</integer>
     
     <!-- DB Configuration -->
-    <string name="remote_db_path">http://192.168.86.137/</string>
+    <string name="remote_db_path">http://192.168.86.137/logistics_example/</string>
     <string name="sites">Sites</string>
     <string name="get_all_sites">get_all_sites.php</string>
     

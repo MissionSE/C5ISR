@@ -13,7 +13,7 @@
     <string name="tag_latitude">latitude</string>
     <string name="tag_longitude">longitude</string>
     
-    <string name="remote_db_path">http://192.168.86.137:8080/</string>
+    <string name="remote_db_path">http://192.168.86.137/map_database_example/</string>
     
     <string name="get_all_locations">get_all_locations.php</string>
     <string name="create_location">create_location.php</string>
