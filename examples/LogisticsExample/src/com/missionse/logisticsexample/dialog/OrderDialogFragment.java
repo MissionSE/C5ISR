@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 
 import com.missionse.logisticsexample.LogisticsExample;
@@ -21,6 +23,7 @@ import com.missionse.logisticsexample.R;
 import com.missionse.logisticsexample.database.LocalDatabaseHelper;
 import com.missionse.logisticsexample.model.ItemName;
 import com.missionse.logisticsexample.model.Order;
+import com.missionse.logisticsexample.model.SeverityName;
 import com.missionse.logisticsexample.model.Site;
 import com.missionse.logisticsexample.view.OrderItemTableRow;
 
@@ -45,6 +48,7 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 	private TableLayout mTableLayout;
 	private List<ItemName> mItemNames;
 	private List<OrderItemTableRow> mTableRows = new ArrayList<OrderItemTableRow>();
+	private Spinner mSeveritySpinner;
 
 	public static OrderDialogFragment newInstance(Site site) {
 		OrderDialogFragment fragment = new OrderDialogFragment();
@@ -94,11 +98,31 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 		updateState(savedInstanceState);
 		updateItemNames();
 		View view = inflater.inflate(R.layout.fragment_order_dialog, container);
+		setupSpinner(view);
 		setupTable(view);
 		setupButtons(view);
 		setupTitle();
 
 		return view;
+	}
+
+	private void setupSpinner(View root) {
+		mSeveritySpinner = (Spinner) root.findViewById(R.id.spinner_order_severity);
+
+		List<SeverityName> severityNames = generateSeverityNames();
+
+		mSeveritySpinner.setAdapter(new ArrayAdapter<SeverityName>(mActivity, android.R.layout.simple_list_item_1, severityNames));
+
+	}
+
+	private List<SeverityName> generateSeverityNames() {
+		List<SeverityName> names = new LinkedList<SeverityName>();
+		try {
+			names.addAll(((LogisticsExample) mActivity).getDatabaseHelper().getSeverityNames());
+		} catch (ClassCastException exception) {
+			exception.printStackTrace();
+		}
+		return names;
 	}
 
 	private void updateItemNames() {
@@ -113,8 +137,6 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 
 	private void setupTable(View root) {
 		mTableLayout = (TableLayout) root.findViewById(R.id.item_table);
-
-		addBlankRow();
 		addBlankRow();
 	}
 

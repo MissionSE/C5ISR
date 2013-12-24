@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -168,10 +167,9 @@ public class SiteDialogFragment extends DialogFragment {
 
 	private void setupSpinner(final View root) {
 		mSpnParent = (Spinner) root.findViewById(R.id.parent_name_spinner);
-
 		List<Site> sites = generateSiteNames();
-
-		mSpnParent.setAdapter(new SiteArrayAdapter(mActivity, sites));
+		addEmptySite(sites);
+		mSpnParent.setAdapter(new ArrayAdapter<Site>(mActivity, android.R.layout.simple_list_item_1, sites));
 
 		if (mParentId > 0) {
 			Site siteIndx = null;
@@ -181,7 +179,19 @@ public class SiteDialogFragment extends DialogFragment {
 				}
 			}
 			mSpnParent.setSelection(sites.indexOf(siteIndx));
+		} else {
+			mSpnParent.setSelection(sites.size() - 1);
 		}
+	}
+
+	private void addEmptySite(List<Site> sites) {
+		Site site = new Site();
+		site.setId(0);
+		site.setLatitude(0.0);
+		site.setLongitude(0.0);
+		site.setParentId(0);
+		site.setName("NONE");
+		sites.add(site);
 	}
 
 	private List<Site> generateSiteNames() {
@@ -218,56 +228,6 @@ public class SiteDialogFragment extends DialogFragment {
 				SiteDialogFragment.this.dismiss();
 			}
 		});
-	}
-
-	/**
-	 * Adapter used by the spinner to control the list of sites.
-	 */
-	private class SiteArrayAdapter extends ArrayAdapter<Site> {
-
-		private List<Site> mSites;
-		private Activity mActivity;
-
-		public SiteArrayAdapter(final Activity activity, final List<Site> sites) {
-			super(activity, android.R.layout.simple_list_item_1, sites);
-			mSites = sites;
-			mActivity = activity;
-		}
-
-		@Override
-		public View getDropDownView(int position, View convertView,
-				ViewGroup parent) {
-			TextView textview = (TextView) super
-					.getView(position, convertView, parent);
-
-			if (textview == null) {
-				textview = new TextView(mActivity);
-			}
-			textview.setTextColor(Color.BLACK);
-			textview.setText(mSites.get(position).getName());
-			return textview;
-		}
-
-		@Override
-		public Site getItem(final int position) {
-			return mSites.get(position);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = convertView;
-
-			if (view == null) {
-				LayoutInflater inflater = mActivity.getLayoutInflater();
-				view = inflater.inflate(R.layout.simple_site_list_entry, null);
-			}
-
-			TextView lbl = (TextView) view.findViewById(R.id.entry_site_name);
-			lbl.setTextColor(Color.BLACK);
-			lbl.setText(mSites.get(position).getName());
-
-			return convertView;
-		}
 	}
 
 	private void onAccept() {

@@ -64,9 +64,8 @@ public class OrderItemTableRow extends TableRow {
 	}
 
 	private void setupParams() {
-		TableRow.LayoutParams params = new TableRow.LayoutParams();
-		params.height = TableRow.LayoutParams.WRAP_CONTENT;
-		params.width = TableRow.LayoutParams.MATCH_PARENT;
+		TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+		params.span = 1;
 		setLayoutParams(params);
 	}
 

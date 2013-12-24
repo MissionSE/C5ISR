@@ -11,6 +11,7 @@ import com.missionse.logisticsexample.model.InventoryItem;
 import com.missionse.logisticsexample.model.ItemName;
 import com.missionse.logisticsexample.model.Order;
 import com.missionse.logisticsexample.model.OrderItem;
+import com.missionse.logisticsexample.model.SeverityName;
 import com.missionse.logisticsexample.model.Site;
 import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
 import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
@@ -56,10 +57,35 @@ public class LocalDatabaseHelper {
 	/**
 	 * Gets the list of all itemnames from the database.
 	 * 
-	 * @return The list of all orders in the database.
+	 * @return The list of all item names in the database.
 	 */
 	public List<ItemName> getItemNames() {
 		return mDatabaseAccessor.fetchAll(ItemName.class);
+	}
+
+	/**
+	 * Gets the list of all severity names from the database.
+	 * 
+	 * @return The list of all severity names in the database.
+	 */
+	public List<SeverityName> getSeverityNames() {
+		return mDatabaseAccessor.fetchAll(SeverityName.class);
+	}
+
+	/**
+	 * @param nameId
+	 *            the ID of the name
+	 * @return the ItemName associated with the id. Null if name_id could not be
+	 *         found.
+	 */
+	public ItemName getItemName(int nameId) {
+		ItemName itemName = null;
+		try {
+			itemName = mDatabaseAccessor.getObjectDao(ItemName.class).queryForId(nameId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return itemName;
 	}
 
 	/**

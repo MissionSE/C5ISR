@@ -3,46 +3,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<ScrollView
-	    android:layout_width="match_parent"
-	    android:layout_height="200dp">
-	    <TableLayout
-	        android:id="@+id/item_table"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:isScrollContainer="true" >
-	        
-	    </TableLayout>
+
+    <Spinner
+        android:id="@+id/spinner_order_severity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_marginLeft="4dip"
+        android:layout_marginRight="4dip"
+        android:background="?android:attr/dividerVertical" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="200dp" >
+
+        <TableLayout
+            android:id="@+id/item_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*" >
+        </TableLayout>
     </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        >
+        android:layout_height="48dp" >
 
         <ImageButton
             android:id="@+id/add_order_row"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
             android:contentDescription="@string/content_description"
             android:scaleType="fitCenter"
-            android:src="@drawable/greenplusbutton"
-            android:background="@android:color/transparent" />
-
-        <ImageButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="@string/content_description"
-            android:visibility="invisible" />
+            android:src="@drawable/greenplusbutton" />
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-         >
+        android:layout_height="45dp" >
 
         <View
             android:layout_width="match_parent"

@@ -106,14 +106,15 @@ public class Site extends DBEntity implements Comparable<Object> {
 
 	@Override
 	public String toString() {
-		StringBuilder string = new StringBuilder();
-		string.append("Site>: ");
-		string.append(" id = " + getId());
-		string.append(" name = " + mName);
-		string.append(" lat = " + mLatitude);
-		string.append(" lng = " + mLongitude);
-		string.append(" parentId = " + mParentId);
-		return string.toString();
+		// StringBuilder string = new StringBuilder();
+		// string.append("Site>: ");
+		// string.append(" id = " + getId());
+		// string.append(" name = " + mName);
+		// string.append(" lat = " + mLatitude);
+		// string.append(" lng = " + mLongitude);
+		// string.append(" parentId = " + mParentId);
+		// return string.toString();
+		return mName;
 	}
 
 	@Override
