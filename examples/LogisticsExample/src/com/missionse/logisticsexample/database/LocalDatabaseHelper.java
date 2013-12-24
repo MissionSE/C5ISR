@@ -13,6 +13,7 @@ import com.missionse.logisticsexample.model.Order;
 import com.missionse.logisticsexample.model.OrderItem;
 import com.missionse.logisticsexample.model.SeverityName;
 import com.missionse.logisticsexample.model.Site;
+import com.missionse.logisticsexample.model.StatusName;
 import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
 import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
 import com.missionse.logisticsexample.model.mappings.SiteToOrder;
@@ -86,6 +87,38 @@ public class LocalDatabaseHelper {
 			e.printStackTrace();
 		}
 		return itemName;
+	}
+
+	/**
+	 * @param nameId
+	 *            the ID of the name
+	 * @return the StatusName associated with the id. Null if name_id could not
+	 *         be found.
+	 */
+	public StatusName getStatusName(int nameId) {
+		StatusName statusName = null;
+		try {
+			statusName = mDatabaseAccessor.getObjectDao(StatusName.class).queryForId(nameId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return statusName;
+	}
+
+	/**
+	 * @param nameId
+	 *            the ID of the name
+	 * @return the SeverityName associated with the id. Null if name_id could
+	 *         not be found.
+	 */
+	public SeverityName getSeverityName(int nameId) {
+		SeverityName severityName = null;
+		try {
+			severityName = mDatabaseAccessor.getObjectDao(SeverityName.class).queryForId(nameId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return severityName;
 	}
 
 	/**
