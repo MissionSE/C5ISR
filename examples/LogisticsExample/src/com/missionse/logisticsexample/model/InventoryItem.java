@@ -1,11 +1,13 @@
 package com.missionse.logisticsexample.model;
 
+import java.util.Map;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
 /**
- * Represents supply/assets for different locations.
+ * Represents inventory items for different locations.
  */
 public class InventoryItem extends DBEntity {
 
@@ -25,14 +27,14 @@ public class InventoryItem extends DBEntity {
 	private int mNameId;
 
 	/**
-	 * Default constructor needed by ORM library.
+	 * Default constructor.
 	 */
 	public InventoryItem() {
 	}
 
 	/**
 	 * Retrieves the quantity associated with this inventory item.
-	 * @return the quantity
+	 * @return The quantity of the item.
 	 */
 	public double getQuantity() {
 		return mQuantity;
@@ -40,52 +42,62 @@ public class InventoryItem extends DBEntity {
 
 	/**
 	 * Sets the quantity of this inventory item.
-	 * @param amount the quantity
+	 * @param quantity The quantity of the item.
 	 */
-	public void setQuantity(final double amount) {
-		mQuantity = amount;
+	public void setQuantity(final double quantity) {
+		mQuantity = quantity;
 	}
 
 	/**
-	 * Retrieves the maximum amount.
-	 * @return the maximum
+	 * Retrieves the maximum amount of the item.
+	 * @return The maximum amount of the item.
 	 */
-	public double getMaxAmount() {
+	public double getMaximum() {
 		return mMaximum;
 	}
 
 	/**
-	 * Sets the maximum amount.
-	 * @param maxAmount the maximum to set
+	 * Sets the maximum amount of the item.
+	 * @param maximum The maximum amount of the item
 	 */
-	public void setMaxAmout(final double maxAmount) {
-		mMaximum = maxAmount;
+	public void setMaximum(final double maximum) {
+		mMaximum = maximum;
 	}
 
 	/**
-	 * Retrieves the id.
-	 * @return the DB ID associated with this item's name
+	 * Retrieves the id of the name.
+	 * @return The id associated with this item's name
 	 */
 	public int getNameId() {
 		return mNameId;
 	}
 
 	/**
-	 * Sets the id.
-	 * @param nameId the DB id. NOTE: this should only be set if you know what you are doing!
+	 * Sets the id of the name of the item.
+	 * @param nameId The id of the name of the item.
 	 */
 	public void setNameId(final int nameId) {
 		mNameId = nameId;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
 		string.append("InventoryItem>: ");
 		string.append(" id = " + getId());
 		string.append(" quantity = " + this.mQuantity);
-		string.append(" maxium = " + this.mMaximum);
+		string.append(" maximum = " + this.mMaximum);
 		string.append(" nameid = " + this.mNameId);
 		return string.toString();
+	}
+
+	@Override
+	public Map<String, String> toMap() {
+		Map<String, String> map = super.toMap();
+		map.put("quantity", Double.toString(mQuantity));
+		map.put("maximum", Double.toString(mMaximum));
+		map.put("name_id", Integer.toString(mNameId));
+
+		return map;
 	}
 }

@@ -1,11 +1,13 @@
 package com.missionse.logisticsexample.model;
 
+import java.util.Map;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
 /**
- * Supplies for orders.
+ * Represents an item in an order.
  */
 public class OrderItem extends DBEntity {
 
@@ -20,43 +22,43 @@ public class OrderItem extends DBEntity {
 	private int mNameId;
 
 	/**
-	 * Default constructor needed by ORM library.
+	 * Default constructor.
 	 */
 	public OrderItem() {
 	}
 
 	/**
-	 * Retrieves the quantity of this order item.
-	 * @return the quantity
+	 * Retrieves the quantity of the item.
+	 * @return The quantity of the item.
 	 */
 	public double getQuantity() {
 		return mQuantity;
 	}
 
 	/**
-	 * Sets the quantity of this order item.
-	 * @param amount the quantity to set
+	 * Sets the quantity of the item.
+	 * @param quantity The quantity of the item.
 	 */
-	public void setQuantity(final double amount) {
-		mQuantity = amount;
+	public void setQuantity(final double quantity) {
+		mQuantity = quantity;
 	}
 
 	/**
-	 * Retrieves the id.
-	 * @return the DB ID associated with this item's name
+	 * Retrieves the id of the item name.
+	 * @return The id associated with the item's name
 	 */
 	public int getNameId() {
 		return mNameId;
 	}
 
 	/**
-	 * Sets the id.
-	 * @param nameId the DB id. NOTE: this should only be set if you know what you are doing!
+	 * Sets the id of the name of the item.
+	 * @param nameId The id of the name of the item.
 	 */
 	public void setNameId(final int nameId) {
 		mNameId = nameId;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
@@ -65,5 +67,14 @@ public class OrderItem extends DBEntity {
 		string.append(" quantity = " + this.mQuantity);
 		string.append(" nameid = " + this.mNameId);
 		return string.toString();
+	}
+
+	@Override
+	public Map<String, String> toMap() {
+		Map<String, String> map = super.toMap();
+		map.put("quantity", Double.toString(mQuantity));
+		map.put("name_id", Integer.toString(mNameId));
+
+		return map;
 	}
 }

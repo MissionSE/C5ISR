@@ -1,11 +1,13 @@
 package com.missionse.logisticsexample.model;
 
+import java.util.Map;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
 /**
- * Represents a location on a map that contains supplies.
+ * Represents a location on a map.
  */
 public class Site extends DBEntity implements Comparable<Object> {
 
@@ -35,70 +37,70 @@ public class Site extends DBEntity implements Comparable<Object> {
 	private String mShortName;
 
 	/**
-	 * Default constructor. Needed for ORM library.
+	 * Default constructor.
 	 */
 	public Site() {
 	}
 
 	/**
-	 * Retrieves the name of this site.
-	 * @return the name
+	 * Retrieves the name of the site.
+	 * @return The name of the site.
 	 */
 	public String getName() {
 		return mName;
 	}
 
 	/**
-	 * Sets the name of this site.
-	 * @param name the name to set
+	 * Sets the name of the site.
+	 * @param name The name of the site.
 	 */
 	public void setName(final String name) {
 		mName = name;
 	}
 
 	/**
-	 * Retrieves the latitude of this site.
-	 * @return the latitude
+	 * Retrieves the latitude of the site.
+	 * @return The latitude of the site.
 	 */
 	public double getLatitude() {
 		return mLatitude;
 	}
 
 	/**
-	 * Sets the latitude of this site.
-	 * @param latitude the latitude to set
+	 * Sets the latitude of the site.
+	 * @param latitude The latitude of the site.
 	 */
 	public void setLatitude(final double latitude) {
 		mLatitude = latitude;
 	}
 
 	/**
-	 * Retrieves the longitude of this site.
-	 * @return the longitude
+	 * Retrieves the longitude of the site.
+	 * @return The longitude of the site.
 	 */
 	public double getLongitude() {
 		return mLongitude;
 	}
 
 	/**
-	 * Sets the longitude of this site.
-	 * @param longitude the longitude to set
+	 * Sets the longitude of the site.
+	 * @param longitude The longitude of the site.
 	 */
 	public void setLongitude(final double longitude) {
 		mLongitude = longitude;
 	}
 
 	/**
-	 * Retrieves the id of the parent associated with this site.
-	 * @return the id
+	 * Retrieves the id of the parent associated with the site.
+	 * @return The id of the parent associated with the site.
 	 */
 	public int getParentId() {
 		return mParentId;
 	}
 
 	/**
-	 * Sets the parent id stored with this site to link it to its parent.
-	 * @param id the parent's id
+	 * Sets the parent id associated with the site.
+	 * @param id The id of the parent.
 	 */
 	public void setParentId(final int id) {
 		mParentId = id;
@@ -106,15 +108,19 @@ public class Site extends DBEntity implements Comparable<Object> {
 
 	@Override
 	public String toString() {
-		// StringBuilder string = new StringBuilder();
-		// string.append("Site>: ");
-		// string.append(" id = " + getId());
-		// string.append(" name = " + mName);
-		// string.append(" lat = " + mLatitude);
-		// string.append(" lng = " + mLongitude);
-		// string.append(" parentId = " + mParentId);
-		// return string.toString();
 		return mName;
+	}
+
+	@Override
+	public Map<String, String> toMap() {
+		Map<String, String> map = super.toMap();
+		map.put("name", mName);
+		map.put("short_name", mShortName);
+		map.put("latitude", Double.toString(mLatitude));
+		map.put("longitude", Double.toString(mLongitude));
+		map.put("parent_id", Integer.toString(mParentId));
+
+		return map;
 	}
 
 	@Override

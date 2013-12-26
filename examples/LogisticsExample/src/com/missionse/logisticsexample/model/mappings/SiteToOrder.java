@@ -1,5 +1,7 @@
 package com.missionse.logisticsexample.model.mappings;
 
+import java.util.Map;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
@@ -27,44 +29,53 @@ public class SiteToOrder extends DBEntity {
 	}
 
 	/**
-	 * Gets the order id for this mapping.
-	 * @return the order id
+	 * Gets the order id for the mapping.
+	 * @return The order id.
 	 */
 	public int getOrderId() {
 		return mOrderId;
 	}
 
 	/**
-	 * Sets the order id for this mapping.
-	 * @param orderId the order id to set
+	 * Sets the order id for the mapping.
+	 * @param orderId The order id.
 	 */
 	public void setOrderId(final int orderId) {
 		mOrderId = orderId;
 	}
 
 	/**
-	 * Gets the site id for this mapping.
-	 * @return the site id
+	 * Gets the site id for the mapping.
+	 * @return The site id.
 	 */
 	public int getSiteId() {
 		return mSiteId;
 	}
 
 	/**
-	 * Sets the site id for this mapping.
-	 * @param siteId the site id to set
+	 * Sets the site id for the mapping.
+	 * @param siteId The site id.
 	 */
 	public void setSiteId(final int siteId) {
 		mSiteId = siteId;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
 		string.append("SiteToOrder>: ");
 		string.append(" id = " + getId());
-		string.append(" site_id = " + this.mSiteId);
-		string.append(" order_id = " + this.mOrderId);
+		string.append(" site_id = " + mSiteId);
+		string.append(" order_id = " + mOrderId);
 		return string.toString();
+	}
+
+	@Override
+	public Map<String, String> toMap() {
+		Map<String, String> map = super.toMap();
+		map.put("site_id", Integer.toString(mSiteId));
+		map.put("order_id", Integer.toString(mOrderId));
+
+		return map;
 	}
 }

@@ -50,7 +50,7 @@ public class SiteDetailFragment extends DatabaseEntryDetailFragment {
 		String inventoryContent = "";
 		for (InventoryItem item : supplies) {
 			inventoryContent += " (" + item.getNameId() + "):\n";
-			inventoryContent += "\tCurrent/Max: " + item.getQuantity() + "/" + item.getMaxAmount() + "\n";
+			inventoryContent += "\tCurrent/Max: " + item.getQuantity() + "/" + item.getMaximum() + "\n";
 		}
 		setInventoryContent(inventoryContent.trim());
 

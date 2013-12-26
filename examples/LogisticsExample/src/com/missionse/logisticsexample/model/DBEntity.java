@@ -1,5 +1,8 @@
 package com.missionse.logisticsexample.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
@@ -28,5 +31,16 @@ public class DBEntity {
 	 */
 	public void setId(final int id) {
 		mId = id;
+	}
+
+	/**
+	 * Creates a map representation of the fields in the entity.
+	 * @return A map containting the fields in the entity.
+	 */
+	public Map<String, String> toMap() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("id", Integer.toString(mId));
+
+		return map;
 	}
 }

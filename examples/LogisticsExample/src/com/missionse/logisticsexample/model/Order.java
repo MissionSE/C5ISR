@@ -1,5 +1,7 @@
 package com.missionse.logisticsexample.model;
 
+import java.util.Map;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -31,7 +33,7 @@ public class Order extends DBEntity implements Comparable<Object> {
 	private int mStatusId;
 
 	/**
-	 * Empty constructor. Needed for the ORM library.
+	 * Default constructor.
 	 */
 	public Order() {
 		mTimeStamp = new DateTime();
@@ -48,24 +50,24 @@ public class Order extends DBEntity implements Comparable<Object> {
 	}
 
 	/**
-	 * Sets the timestamp of this order.
-	 * @param timeStamp the timestamp to set
+	 * Sets the timestamp of the order.
+	 * @param timeStamp The timestamp of the order.
 	 */
 	public void setTimeStamp(final DateTime timeStamp) {
 		mTimeStamp = timeStamp;
 	}
 
 	/**
-	 * Gets the severity of this order.
-	 * @return the severity
+	 * Gets the severity of the order.
+	 * @return The severity of the order.
 	 */
 	public int getSeverityId() {
 		return mSeverityId;
 	}
 
 	/**
-	 * Sets the severity of this order.
-	 * @param severity the severity to set
+	 * Sets the severity of the order.
+	 * @param severity The severity of the order.
 	 */
 	public void setSeverityId(final int severity) {
 		mSeverityId = severity;
@@ -100,6 +102,16 @@ public class Order extends DBEntity implements Comparable<Object> {
 		string.append(" severity = " + mSeverityId);
 		string.append(" status = " + mStatusId);
 		return string.toString();
+	}
+
+	@Override
+	public Map<String, String> toMap() {
+		Map<String, String> map = super.toMap();
+		map.put("ordered_at", Long.toString(mTimeStamp.getMillis()));
+		map.put("severity_id", Integer.toString(mSeverityId));
+		map.put("status_id", Integer.toString(mStatusId));
+
+		return map;
 	}
 
 	@Override
