@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -23,8 +25,10 @@ import com.missionse.logisticsexample.R;
 import com.missionse.logisticsexample.database.LocalDatabaseHelper;
 import com.missionse.logisticsexample.model.ItemName;
 import com.missionse.logisticsexample.model.Order;
+import com.missionse.logisticsexample.model.OrderItem;
 import com.missionse.logisticsexample.model.SeverityName;
 import com.missionse.logisticsexample.model.Site;
+import com.missionse.logisticsexample.model.mappings.SiteToOrder;
 import com.missionse.logisticsexample.view.OrderItemTableRow;
 
 /**
@@ -42,14 +46,22 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 	private Activity mActivity;
 	private boolean mModify;
 	private int mSiteId;
+	private int mOrderId = -1;
 	private int mSeverity;
-	private int mStatus;
+	private int mStatus = 1;
 	private long mOrderAt;
 	private TableLayout mTableLayout;
 	private List<ItemName> mItemNames;
 	private List<OrderItemTableRow> mTableRows = new ArrayList<OrderItemTableRow>();
 	private Spinner mSeveritySpinner;
 
+	/**
+	 * Create a dialog base on the supplied Site.
+	 * 
+	 * @param site
+	 *            The site that the order will be sent to.
+	 * @return The OrderDialogFragment with the proper arguments set.
+	 */
 	public static OrderDialogFragment newInstance(Site site) {
 		OrderDialogFragment fragment = new OrderDialogFragment();
 		Bundle bundle = new Bundle();
@@ -60,6 +72,15 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 		return fragment;
 	}
 
+	/**
+	 * Create a dialog based on the supplied Site and Order.
+	 * 
+	 * @param site
+	 *            The site that the Order belongs too.
+	 * @param order
+	 *            The Order being viewed/modified.
+	 * @return The OrderDialogFragment with the proper arguments set.
+	 */
 	public static OrderDialogFragment newInstance(Site site, Order order) {
 		OrderDialogFragment fragment = new OrderDialogFragment();
 		Bundle bundle = new Bundle();
@@ -113,6 +134,14 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 
 		mSeveritySpinner.setAdapter(new ArrayAdapter<SeverityName>(mActivity, android.R.layout.simple_list_item_1, severityNames));
 
+		if (mModify) {
+
+			for (SeverityName name : severityNames) {
+				if (name.getId() == mSeverity) {
+					mSeveritySpinner.setSelection(severityNames.indexOf(name));
+				}
+			}
+		}
 	}
 
 	private List<SeverityName> generateSeverityNames() {
@@ -137,7 +166,22 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 
 	private void setupTable(View root) {
 		mTableLayout = (TableLayout) root.findViewById(R.id.item_table);
-		addBlankRow();
+		if (mModify) {
+			populateTableWithOrder();
+		} else {
+			addBlankRow();
+		}
+	}
+
+	private void populateTableWithOrder() {
+		try {
+			List<OrderItem> items = ((LogisticsExample) mActivity).getDatabaseHelper().getOrderItems(mOrderId);
+			for (OrderItem item : items) {
+				addRowToTable(new OrderItemTableRow(mActivity, item, mItemNames, this));
+			}
+		} catch (ClassCastException castException) {
+			castException.printStackTrace();
+		}
 	}
 
 	private void addRowToTable(OrderItemTableRow row) {
@@ -146,7 +190,7 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 	}
 
 	private OrderItemTableRow createEmptyRow() {
-		OrderItemTableRow row = new OrderItemTableRow(mActivity, mItemNames, this);
+		OrderItemTableRow row = new OrderItemTableRow(mActivity, null, mItemNames, this);
 		return row;
 	}
 
@@ -167,6 +211,7 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 				mOrderAt = state.getLong(ORDER_AT);
 				mStatus = state.getInt(STATUS_ID);
 				mSeverity = state.getInt(SEVERITY_ID);
+				mOrderId = state.getInt(ORDER_ID);
 			} else {
 				mModify = false;
 				mSiteId = state.getInt(SITE_ID);
@@ -189,8 +234,8 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 			@Override
 			public void onClick(View v) {
 				onAccept();
+				OrderDialogFragment.this.dismiss();
 			}
-
 		});
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override
@@ -211,7 +256,59 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 	}
 
 	private void onAccept() {
+		Order order = new Order();
+		order.setId(mOrderId);
+		order.setSeverityId(getSeverityId());
+		order.setStatusId(getStatusId());
+		order.setTimeStamp(getTimeStamp());
 
+		SiteToOrder siteToOrder = new SiteToOrder();
+		siteToOrder.setSiteId(mSiteId);
+
+		List<OrderItem> orderItems = new LinkedList<OrderItem>();
+		for (OrderItemTableRow row : mTableRows) {
+			int nameId = row.getSelectedNameId();
+			double quantity = row.getSelectedQuantity();
+
+			if ((nameId > 0) && (quantity >= 0)) {
+				OrderItem orderItem = new OrderItem();
+				orderItem.setNameId(nameId);
+				orderItem.setQuantity(quantity);
+				orderItems.add(orderItem);
+			}
+		}
+
+		try {
+			((LogisticsExample) mActivity).getDatabaseHelper().create(order);
+		} catch (ClassCastException castException) {
+			castException.printStackTrace();
+		}
+	}
+
+	private int getSeverityId() {
+		int retValue = 0;
+		try {
+			retValue = ((SeverityName) mSeveritySpinner.getSelectedItem()).getId();
+		} catch (ClassCastException exception) {
+			exception.printStackTrace();
+		}
+		return retValue;
+	}
+
+	private int getStatusId() {
+		int retValue = 0;
+		if (mModify) {
+			retValue = mStatus;
+		}
+		return retValue;
+	}
+
+	private DateTime getTimeStamp() {
+		if (mModify) {
+			return new DateTime(mOrderAt);
+		} else {
+			return new DateTime();
+		}
 	}
 
 	@Override
@@ -219,5 +316,4 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 		mTableRows.remove(row);
 		mTableLayout.removeView(row);
 	}
-
 }

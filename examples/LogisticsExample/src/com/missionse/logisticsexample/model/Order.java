@@ -107,7 +107,8 @@ public class Order extends DBEntity implements Comparable<Object> {
 	@Override
 	public Map<String, String> toMap() {
 		Map<String, String> map = super.toMap();
-		map.put("ordered_at", Long.toString(mTimeStamp.getMillis()));
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd hh:mm:ss");
+		map.put("ordered_at", formatter.print(mTimeStamp));
 		map.put("severity_id", Integer.toString(mSeverityId));
 		map.put("status_id", Integer.toString(mStatusId));
 

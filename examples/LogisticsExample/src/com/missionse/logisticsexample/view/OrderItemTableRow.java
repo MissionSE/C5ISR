@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.missionse.logisticsexample.view;
 
 import java.util.List;
@@ -16,6 +13,7 @@ import android.widget.TableRow;
 import com.missionse.logisticsexample.R;
 import com.missionse.logisticsexample.dialog.OnTableRowDataSetChange;
 import com.missionse.logisticsexample.model.ItemName;
+import com.missionse.logisticsexample.model.OrderItem;
 
 /**
  * Custom layout for displaying OrderItem data.
@@ -28,6 +26,9 @@ public class OrderItemTableRow extends TableRow {
 	private EditText mEditText;
 	private ImageButton mRemoveButton;
 	private OnTableRowDataSetChange mDataSetChange;
+	private int mOrderItemId = 0;
+	private int mOrderItemNameId = 0;
+	private double mOrderItemQuantity = 0.0;
 
 	/**
 	 * Constructor.
@@ -39,11 +40,18 @@ public class OrderItemTableRow extends TableRow {
 	 * @param dataSetChange
 	 *            The base Table.
 	 */
-	public OrderItemTableRow(Activity activity, List<ItemName> itemNames, OnTableRowDataSetChange dataSetChange) {
+	public OrderItemTableRow(Activity activity, OrderItem orderItem, List<ItemName> itemNames, OnTableRowDataSetChange dataSetChange) {
 		super(activity);
 		mActivity = activity;
 		mItemNames = itemNames;
 		mDataSetChange = dataSetChange;
+
+		if (orderItem != null) {
+			mOrderItemId = orderItem.getId();
+			mOrderItemNameId = orderItem.getNameId();
+			mOrderItemQuantity = orderItem.getQuantity();
+		}
+
 		init();
 	}
 
@@ -60,7 +68,21 @@ public class OrderItemTableRow extends TableRow {
 		});
 		setupParams();
 		setupSpinner(view);
+		populate();
 		addView(view);
+	}
+
+	private void populate() {
+		if (mOrderItemId > 0) {
+			mEditText.setText(String.valueOf(mOrderItemQuantity));
+			mRemoveButton.setVisibility(View.GONE);
+
+			for (ItemName name : mItemNames) {
+				if (name.getId() == mOrderItemNameId) {
+					mSpinner.setSelection(mItemNames.indexOf(name));
+				}
+			}
+		}
 	}
 
 	private void setupParams() {
@@ -78,5 +100,21 @@ public class OrderItemTableRow extends TableRow {
 		mDataSetChange.onRemove(this);
 	}
 
+	/**
+	 * Get the selected item name id.
+	 * 
+	 * @return The ID of the item name.
+	 */
+	public int getSelectedNameId() {
+		return ((ItemName) mSpinner.getSelectedItem()).getId();
+	}
 
+	/**
+	 * Get the selected item quantity.
+	 * 
+	 * @return The quantity of the selected item.
+	 */
+	public double getSelectedQuantity() {
+		return Double.valueOf(mEditText.getText().toString().trim());
+	}
 }

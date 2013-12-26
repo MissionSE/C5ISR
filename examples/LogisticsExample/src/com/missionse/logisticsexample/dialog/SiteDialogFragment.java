@@ -219,8 +219,8 @@ public class SiteDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(final View v) {
 				onAccept();
+				SiteDialogFragment.this.dismiss();
 			}
-
 		});
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override
@@ -246,9 +246,10 @@ public class SiteDialogFragment extends DialogFragment {
 			databaseHelper = ((LogisticsExample) mActivity).getDatabaseHelper();
 
 			if (mModify) {
-				// TODO: update call
+				// TODO: Not yet Implemented yet.
+				Toast.makeText(mActivity, "Unable to modify Site", Toast.LENGTH_SHORT).show();
 			} else {
-				// TODO: create call
+				databaseHelper.create(site);
 			}
 		} catch (ClassCastException exception) {
 			Toast.makeText(getActivity(), "Unable to create/update site",
