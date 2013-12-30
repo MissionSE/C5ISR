@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -279,7 +280,9 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 		}
 
 		try {
-			((LogisticsExample) mActivity).getDatabaseHelper().create(order);
+			Log.d(OrderDialogFragment.class.getSimpleName(), "Size of TableRows>: " + orderItems.size());
+			//LocalDatabaseHelper database = ((LogisticsExample) mActivity).getDatabaseHelper();
+			//(new CreateRemoteOrderTask(order, siteToOrder, orderItems, database)).execute();
 		} catch (ClassCastException castException) {
 			castException.printStackTrace();
 		}

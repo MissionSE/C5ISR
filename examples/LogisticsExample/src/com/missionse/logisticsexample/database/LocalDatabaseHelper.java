@@ -271,6 +271,58 @@ public class LocalDatabaseHelper {
 	}
 
 	/**
+	 * Create a new Order.
+	 * 
+	 * @param order
+	 *            {@link Order}
+	 * @param callback
+	 *            {@link FutureCallback<CreateResponse>}
+	 */
+	public void create(final Order order, FutureCallback<CreateResponse> callback) {
+		mDatabaseConnector.postRequest("create_order.php", new TypeToken<CreateResponse>() {
+		}, order.toMap(), callback);
+	}
+
+	/**
+	 * Create a new SiteToOrder.
+	 * 
+	 * @param siteToOrder
+	 *            {@link SiteToOrder}
+	 * @param callback
+	 *            {@link FutureCallback<CreateResponse>}
+	 */
+	public void create(final SiteToOrder siteToOrder, FutureCallback<CreateResponse> callback) {
+		mDatabaseConnector.postRequest("create_site_to_order.php", new TypeToken<CreateResponse>() {
+		}, siteToOrder.toMap(), callback);
+	}
+
+	/**
+	 * Create a new OrderItem.
+	 * 
+	 * @param orderItem
+	 *            {@link OrderItem}
+	 * @param callback
+	 *            {@link FutureCallback<CreateResponse>}
+	 */
+	public void create(final OrderItem orderItem, FutureCallback<CreateResponse> callback) {
+		mDatabaseConnector.postRequest("create_order_item.php", new TypeToken<CreateResponse>() {
+		}, orderItem.toMap(), callback);
+	}
+
+	/**
+	 * Create a new OrderToOrderItem.
+	 * 
+	 * @param orderToOrderItem
+	 *            {@link OrderToOrderItem}
+	 * @param callback
+	 *            {@link FutureCallback<CreateResponse>}
+	 */
+	public void create(final OrderToOrderItem orderToOrderItem, FutureCallback<CreateResponse> callback) {
+		mDatabaseConnector.postRequest("create_order_to_order_item.php", new TypeToken<CreateResponse>() {
+		}, orderToOrderItem.toMap(), callback);
+	}
+
+	/**
 	 * Create a new Site.
 	 * 
 	 * @param site
