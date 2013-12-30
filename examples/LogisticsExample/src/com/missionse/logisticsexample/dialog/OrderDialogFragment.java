@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 
@@ -55,6 +57,7 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 	private List<ItemName> mItemNames;
 	private List<OrderItemTableRow> mTableRows = new ArrayList<OrderItemTableRow>();
 	private Spinner mSeveritySpinner;
+	private ScrollView mScrollView;
 
 	/**
 	 * Create a dialog base on the supplied Site.
@@ -121,6 +124,7 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 		updateItemNames();
 		View view = inflater.inflate(R.layout.fragment_order_dialog, container);
 		setupSpinner(view);
+		setupScrollView(view);
 		setupTable(view);
 		setupButtons(view);
 		setupTitle();
@@ -165,6 +169,29 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 		}
 	}
 
+	private void setupScrollView(View root) {
+		mScrollView = (ScrollView) root.findViewById(R.id.item_table_scrollview);
+		mScrollView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+		mScrollView.setFocusable(true);
+		mScrollView.setFocusableInTouchMode(true);
+		mScrollView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				v.requestFocusFromTouch();
+				return false;
+			}
+		});
+	}
+
+	private void scrollToBottom() {
+		mScrollView.post(new Runnable() {
+			@Override
+			public void run() {
+				mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+			}
+		});
+	}
+
 	private void setupTable(View root) {
 		mTableLayout = (TableLayout) root.findViewById(R.id.item_table);
 		if (mModify) {
@@ -188,6 +215,7 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 	private void addRowToTable(OrderItemTableRow row) {
 		mTableLayout.addView(row);
 		mTableRows.add(row);
+		scrollToBottom();
 	}
 
 	private OrderItemTableRow createEmptyRow() {
@@ -317,5 +345,6 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 	public void onRemove(OrderItemTableRow row) {
 		mTableRows.remove(row);
 		mTableLayout.removeView(row);
+		scrollToBottom();
 	}
 }
