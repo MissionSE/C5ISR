@@ -33,7 +33,7 @@ import com.missionse.logisticsexample.model.mappings.SiteToOrder;
  */
 public final class DatabaseFactory {
 	private static final long DELAY_BEFORE_FIRST_RUN_IN_MS = 500;
-	private static final long INTERVAL_BETWEEN_RUNS_IN_MS = 4000;
+	private static final long INTERVAL_BETWEEN_RUNS_IN_MS = 10000;
 
 	private DatabaseFactory() {
 	}

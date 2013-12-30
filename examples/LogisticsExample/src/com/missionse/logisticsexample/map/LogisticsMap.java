@@ -45,6 +45,13 @@ public class LogisticsMap implements MapLoadedListener, MapLocationListener,
 		mMap.setOnMapLongClickListener(this);
 		mMap.setOnInfoWindowClickListener(this);
 
+		requestAllLocations();
+	}
+
+	/**
+	 * Request that all locations be refreshed.
+	 */
+	public void requestAllLocations() {
 		if (mActivity != null) {
 			new GetAllLocationsTask(mActivity, this).execute();
 		}

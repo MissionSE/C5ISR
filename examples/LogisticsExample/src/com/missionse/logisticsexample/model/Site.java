@@ -91,7 +91,23 @@ public class Site extends DBEntity implements Comparable<Object> {
 	}
 
 	/**
+	 * @return the mShortName
+	 */
+	public String getShortName() {
+		return mShortName;
+	}
+
+	/**
+	 * @param mShortName
+	 *            the mShortName to set
+	 */
+	public void setShortName(String shortName) {
+		mShortName = shortName;
+	}
+
+	/**
 	 * Retrieves the id of the parent associated with the site.
+	 * 
 	 * @return The id of the parent associated with the site.
 	 */
 	public int getParentId() {

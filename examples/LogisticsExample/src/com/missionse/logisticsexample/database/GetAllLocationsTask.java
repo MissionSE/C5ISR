@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.missionse.httpdatabaseconnector.HttpRequestTask;
 import com.missionse.logisticsexample.R;
@@ -59,7 +58,7 @@ public class GetAllLocationsTask extends HttpRequestTask {
 	protected String doInBackground(final String... params) {
 		JSONObject json = makeGetRequest(mGetLocationsURL);
 		if (json != null) {
-			Log.d(TAG, "All locations: " + json.toString());
+			// Log.d(TAG, "All locations: " + json.toString());
 
 			try {
 				if (json.getInt(mTagSuccess) == 1) {

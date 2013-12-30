@@ -91,6 +91,7 @@
     
     <!-- SITE DIALOG -->
     <string name="hint_site_name">Site Name</string>
+    <string name="hint_shortname">Short Name</string>
     <string name="title_site_new">Create New Site</string>
     <string name="title_site_modify">Modify Site</string>
     <string name="latitude">Latitude</string>

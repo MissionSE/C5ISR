@@ -34,19 +34,23 @@ public class SiteDialogFragment extends DialogFragment {
 	private static final String SITE_ID = "site_id";
 	private static final String SITE_PARENT_ID = "site_parent_id";
 	private static final String SITE_MODIFY = "site_modify";
+	private static final String SITE_SHORTNAME = "site_shortname";
 
 	private EditText mEtSiteName;
+	private EditText mEtShortName;
 	private TextView mTvLatitude;
 	private TextView mTvLongitude;
 	private Spinner mSpnParent;
 	private Activity mActivity;
 
 	private String mSiteName = "";
+	private String mShortName = "";
 	private double mLatitude = 0.0d;
 	private double mLongitude = 0.0d;
 	private int mSiteId = 0;
 	private int mParentId = 0;
 	private boolean mModify = false;
+
 	/**
 	 * Creates a new SiteDialogFragment, packing the latitude and longitude.
 	 *
@@ -81,6 +85,7 @@ public class SiteDialogFragment extends DialogFragment {
 		bundle.putDouble(LATITUDE, site.getLatitude());
 		bundle.putDouble(LONGITUDE, site.getLongitude());
 		bundle.putString(SITE_NAME, site.getName());
+		bundle.putString(SITE_SHORTNAME, site.getShortName());
 		bundle.putInt(SITE_ID, site.getId());
 		bundle.putInt(SITE_PARENT_ID, site.getParentId());
 		bundle.putBoolean(SITE_MODIFY, true);
@@ -149,8 +154,10 @@ public class SiteDialogFragment extends DialogFragment {
 
 	private void setupSiteName(final View root) {
 		mEtSiteName = (EditText) root.findViewById(R.id.site_name);
+		mEtShortName = (EditText) root.findViewById(R.id.site_shortname);
 		if (mModify) {
 			mEtSiteName.setText(mSiteName);
+			mEtShortName.setText(mShortName);
 		}
 	}
 
@@ -232,6 +239,7 @@ public class SiteDialogFragment extends DialogFragment {
 
 	private void onAccept() {
 		mSiteName = mEtSiteName.getText().toString().trim();
+		mShortName = mEtShortName.getText().toString().trim();
 		mParentId = ((Site) mSpnParent.getSelectedItem()).getId();
 
 		Site site = new Site();
@@ -240,6 +248,7 @@ public class SiteDialogFragment extends DialogFragment {
 		site.setLongitude(mLongitude);
 		site.setName(mSiteName);
 		site.setParentId(mParentId);
+		site.setShortName(mShortName);
 
 		LocalDatabaseHelper databaseHelper;
 		try {

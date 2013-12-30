@@ -89,12 +89,12 @@ public class LogisticsExample extends DrawerActivity implements DatabaseUpdateCo
 	private void syncNavigationDrawerWithContent() {
 		FragmentManager fragmentManager = getFragmentManager();
 		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
-		if (mapViewerFragment != null && mapViewerFragment.isVisible()) {
+		if ((mapViewerFragment != null) && mapViewerFragment.isVisible()) {
 			selectItem(getLeftDrawerAdapter().getPosition(LogisticsDrawerFactory.MAP), getLeftDrawerList());
 		}
 		SiteViewerContainerFragment siteContainerFragment = (SiteViewerContainerFragment) fragmentManager
 				.findFragmentByTag("container");
-		if (siteContainerFragment != null && siteContainerFragment.isVisible()) {
+		if ((siteContainerFragment != null) && siteContainerFragment.isVisible()) {
 			selectItem(getLeftDrawerAdapter().getPosition(LogisticsDrawerFactory.LOCATION_LIST), getLeftDrawerList());
 		}
 	}
@@ -232,5 +232,6 @@ public class LogisticsExample extends DrawerActivity implements DatabaseUpdateCo
 	@Override
 	public void onDatabaseUpdateComplete() {
 		Log.v(TAG, "Database update complete.");
+		mLogisticsMap.requestAllLocations();
 	}
 }
