@@ -104,13 +104,13 @@ public class SiteDialogFragment extends DialogFragment {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		updateState(savedInstanceState);
+		updateState(getArguments());
 	}
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, final Bundle savedInstanceState) {
-		updateState(savedInstanceState);
+		updateState(getArguments());
 		View view = inflater.inflate(R.layout.fragment_site_dialog, container);
 		setupSiteName(view);
 		setupLatLon(view);

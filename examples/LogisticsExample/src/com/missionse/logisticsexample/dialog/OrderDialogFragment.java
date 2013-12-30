@@ -112,12 +112,12 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		updateState(savedInstanceState);
+		updateState(getArguments());
 	}
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		updateState(savedInstanceState);
+		updateState(getArguments());
 		updateItemNames();
 		View view = inflater.inflate(R.layout.fragment_order_dialog, container);
 		setupSpinner(view);
