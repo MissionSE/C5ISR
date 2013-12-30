@@ -9,7 +9,6 @@ import org.joda.time.DateTime;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +23,7 @@ import android.widget.TableLayout;
 import com.missionse.logisticsexample.LogisticsExample;
 import com.missionse.logisticsexample.R;
 import com.missionse.logisticsexample.database.LocalDatabaseHelper;
+import com.missionse.logisticsexample.database.tasks.CreateRemoteOrderTask;
 import com.missionse.logisticsexample.model.ItemName;
 import com.missionse.logisticsexample.model.Order;
 import com.missionse.logisticsexample.model.OrderItem;
@@ -280,9 +280,8 @@ public class OrderDialogFragment extends DialogFragment implements OnTableRowDat
 		}
 
 		try {
-			Log.d(OrderDialogFragment.class.getSimpleName(), "Size of TableRows>: " + orderItems.size());
-			//LocalDatabaseHelper database = ((LogisticsExample) mActivity).getDatabaseHelper();
-			//(new CreateRemoteOrderTask(order, siteToOrder, orderItems, database)).execute();
+			LocalDatabaseHelper database = ((LogisticsExample) mActivity).getDatabaseHelper();
+			(new CreateRemoteOrderTask(order, siteToOrder, orderItems, database)).execute();
 		} catch (ClassCastException castException) {
 			castException.printStackTrace();
 		}

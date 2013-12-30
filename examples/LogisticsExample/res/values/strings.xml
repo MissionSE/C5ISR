@@ -14,6 +14,7 @@
     <string name="tag_success">success</string>
     <string name="tag_locations">locations</string>
     <string name="tag_id">id</string>
+    <string name="tag_sites">sites</string>
     <string name="tag_site_id">site_id</string>
     <string name="tag_order_id">order_id</string>
     <string name="tag_name">name</string>
@@ -57,8 +58,8 @@
     <string name="get_all_orders_to_order_items">get_all_orders_to_order_items.php</string>
     
     <!-- Old Map DB Configuration -->
-    <string name="map_db_path">http://192.168.86.137:8080/</string>
-    <string name="get_all_locations">get_all_locations.php</string>
+    <string name="map_db_path">http://192.168.86.137/logistics_example/</string>
+    <string name="get_all_locations">get_all_sites.php</string>
     
     
     <!-- Navigation Drawer -->

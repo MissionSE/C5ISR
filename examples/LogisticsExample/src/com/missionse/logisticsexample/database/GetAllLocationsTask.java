@@ -46,7 +46,7 @@ public class GetAllLocationsTask extends HttpRequestTask {
 
 		Resources resources = getContext().getResources();
 		mTagSuccess = resources.getString(R.string.tag_success);
-		mTagLocations = resources.getString(R.string.tag_locations);
+		mTagLocations = resources.getString(R.string.tag_sites);
 		mTagId = resources.getString(R.string.tag_id);
 		mTagName = resources.getString(R.string.tag_name);
 		mTagLatitude = resources.getString(R.string.tag_latitude);

@@ -80,9 +80,9 @@ public class LogisticsMap implements MapLoadedListener, MapLocationListener,
 		MapLocation location = mLocationManager.getLocation(marker);
 		if (location != null) {
 			Site site = new Site();
-			site.setId(-1);
+			site.setId(location.getId());
 			site.setLatitude(location.getLatitude());
-			site.setLongitude(site.getLongitude());
+			site.setLongitude(location.getLongitude());
 			site.setName(location.getName());
 			site.setParentId(1);
 			OrderDialogFragment fragment = OrderDialogFragment.newInstance(site);
