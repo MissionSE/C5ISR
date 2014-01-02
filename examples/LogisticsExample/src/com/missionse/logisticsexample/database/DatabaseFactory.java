@@ -47,16 +47,16 @@ public final class DatabaseFactory {
 	public static LocalDatabaseHelper initializeDatabase(final Context context,
 			final DatabaseUpdateCompleteListener updateCompleteListener) {
 		LocalDatabaseHelper databaseHelper = null;
-		LocalDatabaseAccessor databaseAccessor = null;
-		DatabaseConnector databaseConnector = null;
+		LocalDatabaseAccessor localDatabaseAccessor = null;
+		RemoteDatabaseAccessor remoteDatabaseAccessor = null;
 		DatabaseUpdateThread databaseUpdateThread = null;
 		Timer databasePeriodic = null;
 
-		databaseAccessor = new LocalDatabaseAccessor(context, getDaoClasses());
-		databaseHelper = new LocalDatabaseHelper(context, databaseAccessor);
-		databaseConnector = new DatabaseConnector(context);
+		localDatabaseAccessor = new LocalDatabaseAccessor(context, getDaoClasses());
+		databaseHelper = new LocalDatabaseHelper(context, localDatabaseAccessor);
+		remoteDatabaseAccessor = new RemoteDatabaseAccessor(context);
 
-		List<DatabaseRequestor> databaseRequestors = getDatabaseRequestors(context, databaseConnector, databaseAccessor);
+		List<RemoteDatabaseRequestor> databaseRequestors = getDatabaseRequestors(context, remoteDatabaseAccessor, localDatabaseAccessor);
 		databaseUpdateThread = new DatabaseUpdateThread(updateCompleteListener, databaseRequestors);
 
 		databasePeriodic = new Timer();
@@ -81,19 +81,19 @@ public final class DatabaseFactory {
 		return daoClasses;
 	}
 
-	private static List<DatabaseRequestor> getDatabaseRequestors(final Context context, final DatabaseConnector databaseConnector,
-			final LocalDatabaseAccessor databaseAccessor) {
-		List<DatabaseRequestor> databaseRequestors = new ArrayList<DatabaseRequestor>();
-		databaseRequestors.add(new InventoryItemDatabaseRequestor(context, databaseConnector, databaseAccessor));
-		databaseRequestors.add(new ItemNameDatabaseRequestor(context, databaseConnector, databaseAccessor));
-		databaseRequestors.add(new OrderDatabaseRequestor(context, databaseConnector, databaseAccessor));
-		databaseRequestors.add(new OrderItemDatabaseRequestor(context, databaseConnector, databaseAccessor));
-		databaseRequestors.add(new OrderToOrderItemDatabaseRequestor(context, databaseConnector, databaseAccessor));
-		databaseRequestors.add(new SiteDatabaseRequestor(context, databaseConnector, databaseAccessor));
-		databaseRequestors.add(new SiteToInventoryItemDatabaseRequestor(context, databaseConnector, databaseAccessor));
-		databaseRequestors.add(new SiteToOrderDatabaseRequestor(context, databaseConnector, databaseAccessor));
-		databaseRequestors.add(new StatusNameDatabaseRequestor(context, databaseConnector, databaseAccessor));
-		databaseRequestors.add(new SeverityNameDatabaseRequestor(context, databaseConnector, databaseAccessor));
+	private static List<RemoteDatabaseRequestor> getDatabaseRequestors(final Context context,
+			final RemoteDatabaseAccessor remoteDatabaseAccessor, final LocalDatabaseAccessor localDatabaseAccessor) {
+		List<RemoteDatabaseRequestor> databaseRequestors = new ArrayList<RemoteDatabaseRequestor>();
+		databaseRequestors.add(new InventoryItemDatabaseRequestor(context, remoteDatabaseAccessor, localDatabaseAccessor));
+		databaseRequestors.add(new ItemNameDatabaseRequestor(context, remoteDatabaseAccessor, localDatabaseAccessor));
+		databaseRequestors.add(new OrderDatabaseRequestor(context, remoteDatabaseAccessor, localDatabaseAccessor));
+		databaseRequestors.add(new OrderItemDatabaseRequestor(context, remoteDatabaseAccessor, localDatabaseAccessor));
+		databaseRequestors.add(new OrderToOrderItemDatabaseRequestor(context, remoteDatabaseAccessor, localDatabaseAccessor));
+		databaseRequestors.add(new SiteDatabaseRequestor(context, remoteDatabaseAccessor, localDatabaseAccessor));
+		databaseRequestors.add(new SiteToInventoryItemDatabaseRequestor(context, remoteDatabaseAccessor, localDatabaseAccessor));
+		databaseRequestors.add(new SiteToOrderDatabaseRequestor(context, remoteDatabaseAccessor, localDatabaseAccessor));
+		databaseRequestors.add(new StatusNameDatabaseRequestor(context, remoteDatabaseAccessor, localDatabaseAccessor));
+		databaseRequestors.add(new SeverityNameDatabaseRequestor(context, remoteDatabaseAccessor, localDatabaseAccessor));
 
 		return databaseRequestors;
 	}

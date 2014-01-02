@@ -8,20 +8,20 @@ import android.content.Context;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.missionse.logisticsexample.R;
-import com.missionse.logisticsexample.database.DatabaseConnector;
 import com.missionse.logisticsexample.database.DatabaseRequestCompletedListener;
-import com.missionse.logisticsexample.database.DatabaseRequestor;
+import com.missionse.logisticsexample.database.RemoteDatabaseRequestor;
 import com.missionse.logisticsexample.database.LocalDatabaseAccessor;
+import com.missionse.logisticsexample.database.RemoteDatabaseAccessor;
 import com.missionse.logisticsexample.model.StatusName;
 import com.missionse.logisticsexample.model.orm.StatusNameResponse;
 
 /**
  * Provides an implementation of a database requestor for the StatusNames table in the database.
  */
-public class StatusNameDatabaseRequestor implements DatabaseRequestor {
+public class StatusNameDatabaseRequestor implements RemoteDatabaseRequestor {
 	private Context mContext;
-	private DatabaseConnector mDatabaseConnector;
-	private LocalDatabaseAccessor mDatabaseAccessor;
+	private RemoteDatabaseAccessor mRemoteDatabaseAccessor;
+	private LocalDatabaseAccessor mLocalDatabaseAccessor;
 
 	private boolean mUpdateComplete;
 	private String mUrl;
@@ -30,14 +30,14 @@ public class StatusNameDatabaseRequestor implements DatabaseRequestor {
 	/**
 	 * Constructor.
 	 * @param context The context of the activity that owns this requestor.
-	 * @param databaseConnector A utility class that is used to make remote database calls.
-	 * @param databaseAccessor A utility class that is used to make local database calls.
+	 * @param remoteDatabaseAccessor A utility class that is used to make remote database calls.
+	 * @param localDatabaseAccessor A utility class that is used to make local database calls.
 	 */
-	public StatusNameDatabaseRequestor(final Context context, final DatabaseConnector databaseConnector,
-			final LocalDatabaseAccessor databaseAccessor) {
+	public StatusNameDatabaseRequestor(final Context context, final RemoteDatabaseAccessor remoteDatabaseAccessor,
+			final LocalDatabaseAccessor localDatabaseAccessor) {
 		mContext = context;
-		mDatabaseConnector = databaseConnector;
-		mDatabaseAccessor = databaseAccessor;
+		mRemoteDatabaseAccessor = remoteDatabaseAccessor;
+		mLocalDatabaseAccessor = localDatabaseAccessor;
 
 		mUrl = mContext.getString(R.string.get_all_status_names);
 		mName = mContext.getString(R.string.status_names);
@@ -46,19 +46,19 @@ public class StatusNameDatabaseRequestor implements DatabaseRequestor {
 	@Override
 	public void fetchAll(final DatabaseRequestCompletedListener requestCompleteListener) {
 		mUpdateComplete = false;
-		mDatabaseConnector.postRequest(mUrl, new TypeToken<StatusNameResponse>() { },
+		mRemoteDatabaseAccessor.postRequest(mUrl, new TypeToken<StatusNameResponse>() { },
 				new FutureCallback<StatusNameResponse>() {
 					@Override
 					public void onCompleted(final Exception exception, final StatusNameResponse response) {
-						if (mDatabaseConnector.verifyException(exception, mName)) {
-							if (mDatabaseConnector.verifyResponse(response, mName)) {
+						if (mRemoteDatabaseAccessor.verifyException(exception, mName)) {
+							if (mRemoteDatabaseAccessor.verifyResponse(response, mName)) {
 								List<StatusName> statusNames = response.getStatusNames();
 								for (StatusName statusName : statusNames) {
 									try {
-										if (mDatabaseAccessor.getObjectDao(StatusName.class).idExists(statusName.getId())) {
-											mDatabaseAccessor.getObjectDao(StatusName.class).update(statusName);
+										if (mLocalDatabaseAccessor.getObjectDao(StatusName.class).idExists(statusName.getId())) {
+											mLocalDatabaseAccessor.getObjectDao(StatusName.class).update(statusName);
 										} else {
-											mDatabaseAccessor.getObjectDao(StatusName.class).create(statusName);
+											mLocalDatabaseAccessor.getObjectDao(StatusName.class).create(statusName);
 										}
 									} catch (SQLException mysqlException) {
 										mysqlException.printStackTrace();

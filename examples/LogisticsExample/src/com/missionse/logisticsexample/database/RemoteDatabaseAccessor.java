@@ -15,8 +15,8 @@ import com.missionse.logisticsexample.model.orm.Response;
 /**
  * Provides functionality to make requests to a remote database using Ion.
  */
-public class DatabaseConnector {
-	private static final String TAG = DatabaseConnector.class.getName();
+public class RemoteDatabaseAccessor {
+	private static final String TAG = RemoteDatabaseAccessor.class.getName();
 
 	private Context mContext;
 	private String mDatabaseUrl;
@@ -25,7 +25,7 @@ public class DatabaseConnector {
 	 * Constructor.
 	 * @param context The context for the activity.
 	 */
-	public DatabaseConnector(final Context context) {
+	public RemoteDatabaseAccessor(final Context context) {
 		mContext = context;
 		mDatabaseUrl = context.getResources().getString(R.string.remote_db_path);
 	}

@@ -28,70 +28,70 @@ import com.missionse.logisticsexample.model.orm.CreateResponse;
 public class LocalDatabaseHelper {
 	private static final String LOG_TAG = LocalDatabaseHelper.class.getSimpleName();
 
-	private LocalDatabaseAccessor mDatabaseAccessor;
-	private DatabaseConnector mDatabaseConnector;
+	private LocalDatabaseAccessor mLocalDatabaseAccessor;
+	private RemoteDatabaseAccessor mRemoteDatabaseAccessor;
 
 	private String mSiteIdTag;
 	private String mOrderIdTag;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param context
 	 *            The context of the activity that owns the helper.
 	 * @param databaseAccessor
 	 *            An accessor to the local database.
 	 */
 	public LocalDatabaseHelper(final Context context, final LocalDatabaseAccessor databaseAccessor) {
-		mDatabaseAccessor = databaseAccessor;
-		mDatabaseConnector = new DatabaseConnector(context);
+		mLocalDatabaseAccessor = databaseAccessor;
+		mRemoteDatabaseAccessor = new RemoteDatabaseAccessor(context);
 		mSiteIdTag = context.getString(R.string.tag_site_id);
 		mOrderIdTag = context.getString(R.string.tag_order_id);
 	}
 
 	/**
 	 * Gets the list of all sites from the database.
-	 * 
+	 *
 	 * @return The list of all sites in the database.
 	 */
 	public List<Site> getSites() {
-		return mDatabaseAccessor.fetchAll(Site.class);
+		return mLocalDatabaseAccessor.fetchAll(Site.class);
 	}
 
 	/**
 	 * Gets the list of all orders from the database.
-	 * 
+	 *
 	 * @return The list of all orders in the database.
 	 */
 	public List<Order> getOrders() {
-		return mDatabaseAccessor.fetchAll(Order.class);
+		return mLocalDatabaseAccessor.fetchAll(Order.class);
 	}
 
 	/**
 	 * Gets the list of all itemnames from the database.
-	 * 
+	 *
 	 * @return The list of all item names in the database.
 	 */
 	public List<ItemName> getItemNames() {
-		return mDatabaseAccessor.fetchAll(ItemName.class);
+		return mLocalDatabaseAccessor.fetchAll(ItemName.class);
 	}
 
 	/**
 	 * Gets the list of all severity names from the database.
-	 * 
+	 *
 	 * @return The list of all severity names in the database.
 	 */
 	public List<SeverityName> getSeverityNames() {
-		return mDatabaseAccessor.fetchAll(SeverityName.class);
+		return mLocalDatabaseAccessor.fetchAll(SeverityName.class);
 	}
 
 	/**
 	 * Gets the list of all status names from the database.
-	 * 
+	 *
 	 * @return The list of all status names in the database.
 	 */
 	public List<StatusName> getStatusNames() {
-		return mDatabaseAccessor.fetchAll(StatusName.class);
+		return mLocalDatabaseAccessor.fetchAll(StatusName.class);
 	}
 
 	/**
@@ -99,12 +99,12 @@ public class LocalDatabaseHelper {
 	 *            The order that is associated with a Site.
 	 * @return The Site associated with the Order.
 	 */
-	public Site getSiteAssociatedWith(Order order) {
+	public Site getSiteAssociatedWith(final Order order) {
 		Site site = null;
 		try {
-			List<SiteToOrder> siteToOrder = mDatabaseAccessor.getObjectDao(SiteToOrder.class).queryBuilder().where()
+			List<SiteToOrder> siteToOrder = mLocalDatabaseAccessor.getObjectDao(SiteToOrder.class).queryBuilder().where()
 					.eq(mOrderIdTag, order.getId()).query();
-			site = mDatabaseAccessor.getObjectDao(Site.class).queryForId(siteToOrder.get(0).getSiteId());
+			site = mLocalDatabaseAccessor.getObjectDao(Site.class).queryForId(siteToOrder.get(0).getSiteId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -117,10 +117,10 @@ public class LocalDatabaseHelper {
 	 * @return the ItemName associated with the id. Null if name_id could not be
 	 *         found.
 	 */
-	public ItemName getItemName(int nameId) {
+	public ItemName getItemName(final int nameId) {
 		ItemName itemName = null;
 		try {
-			itemName = mDatabaseAccessor.getObjectDao(ItemName.class).queryForId(nameId);
+			itemName = mLocalDatabaseAccessor.getObjectDao(ItemName.class).queryForId(nameId);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -133,10 +133,10 @@ public class LocalDatabaseHelper {
 	 * @return the StatusName associated with the id. Null if name_id could not
 	 *         be found.
 	 */
-	public StatusName getStatusName(int nameId) {
+	public StatusName getStatusName(final int nameId) {
 		StatusName statusName = null;
 		try {
-			statusName = mDatabaseAccessor.getObjectDao(StatusName.class).queryForId(nameId);
+			statusName = mLocalDatabaseAccessor.getObjectDao(StatusName.class).queryForId(nameId);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -149,10 +149,10 @@ public class LocalDatabaseHelper {
 	 * @return the SeverityName associated with the id. Null if name_id could
 	 *         not be found.
 	 */
-	public SeverityName getSeverityName(int nameId) {
+	public SeverityName getSeverityName(final int nameId) {
 		SeverityName severityName = null;
 		try {
-			severityName = mDatabaseAccessor.getObjectDao(SeverityName.class).queryForId(nameId);
+			severityName = mLocalDatabaseAccessor.getObjectDao(SeverityName.class).queryForId(nameId);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -161,7 +161,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Gets the parent of a site.
-	 * 
+	 *
 	 * @param site
 	 *            The site with a parent.
 	 * @return The parent of the site or null if there is none.
@@ -169,7 +169,7 @@ public class LocalDatabaseHelper {
 	public Site getSiteParent(final Site site) {
 		Site parent = null;
 		try {
-			parent = mDatabaseAccessor.getObjectDao(Site.class).queryForId(site.getParentId());
+			parent = mLocalDatabaseAccessor.getObjectDao(Site.class).queryForId(site.getParentId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -178,7 +178,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Gets a list of inventory items at a site.
-	 * 
+	 *
 	 * @param site
 	 *            The site that contains the items.
 	 * @return The list of inventory items.
@@ -186,10 +186,10 @@ public class LocalDatabaseHelper {
 	public List<InventoryItem> getInventoryItems(final Site site) {
 		List<InventoryItem> inventoryItems = new LinkedList<InventoryItem>();
 		try {
-			List<SiteToInventoryItem> siteToInvItem = mDatabaseAccessor.getObjectDao(SiteToInventoryItem.class).queryBuilder().where()
+			List<SiteToInventoryItem> siteToInvItem = mLocalDatabaseAccessor.getObjectDao(SiteToInventoryItem.class).queryBuilder().where()
 					.eq(mSiteIdTag, site.getId()).query();
 			for (SiteToInventoryItem stii : siteToInvItem) {
-				inventoryItems.add(mDatabaseAccessor.getObjectDao(InventoryItem.class).queryForId(stii.getItemId()));
+				inventoryItems.add(mLocalDatabaseAccessor.getObjectDao(InventoryItem.class).queryForId(stii.getItemId()));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -199,7 +199,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Get a list of orders for an associated site.
-	 * 
+	 *
 	 * @param site
 	 *            The site that created the orders.
 	 * @return The list of orders.
@@ -207,10 +207,10 @@ public class LocalDatabaseHelper {
 	public List<Order> getOrders(final Site site) {
 		List<Order> orders = new LinkedList<Order>();
 		try {
-			List<SiteToOrder> siteToOrder = mDatabaseAccessor.getObjectDao(SiteToOrder.class).queryBuilder().where()
+			List<SiteToOrder> siteToOrder = mLocalDatabaseAccessor.getObjectDao(SiteToOrder.class).queryBuilder().where()
 					.eq(mSiteIdTag, site.getId()).query();
 			for (SiteToOrder sto : siteToOrder) {
-				orders.add(mDatabaseAccessor.getObjectDao(Order.class).queryForId(sto.getOrderId()));
+				orders.add(mLocalDatabaseAccessor.getObjectDao(Order.class).queryForId(sto.getOrderId()));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -220,7 +220,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Get a list of items in an order.
-	 * 
+	 *
 	 * @param order
 	 *            The order that contains the items.
 	 * @return The list of items in the order.
@@ -231,18 +231,18 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Get a list of items in an order.
-	 * 
+	 *
 	 * @param orderId
 	 *            The order it to search for items.
 	 * @return The list of items in the order.
 	 */
-	public List<OrderItem> getOrderItems(int orderId) {
+	public List<OrderItem> getOrderItems(final int orderId) {
 		List<OrderItem> items = new LinkedList<OrderItem>();
 		try {
-			List<OrderToOrderItem> orderToOrderItems = mDatabaseAccessor.getObjectDao(OrderToOrderItem.class).queryBuilder().where()
+			List<OrderToOrderItem> orderToOrderItems = mLocalDatabaseAccessor.getObjectDao(OrderToOrderItem.class).queryBuilder().where()
 					.eq(mOrderIdTag, orderId).query();
 			for (OrderToOrderItem orderToOrderItem : orderToOrderItems) {
-				items.add(mDatabaseAccessor.getObjectDao(OrderItem.class).queryForId(orderToOrderItem.getItemId()));
+				items.add(mLocalDatabaseAccessor.getObjectDao(OrderItem.class).queryForId(orderToOrderItem.getItemId()));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -252,15 +252,15 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Create a new Order.
-	 * 
+	 *
 	 * @param order
 	 *            {@link Order}
 	 */
 	public void create(final Order order) {
-		mDatabaseConnector.postRequest("create_order.php", new TypeToken<CreateResponse>() {
+		mRemoteDatabaseAccessor.postRequest("create_order.php", new TypeToken<CreateResponse>() {
 		}, order.toMap(), new FutureCallback<CreateResponse>() {
 			@Override
-			public void onCompleted(Exception exception, CreateResponse response) {
+			public void onCompleted(final Exception exception, final CreateResponse response) {
 				if (exception == null) {
 					Log.d(LOG_TAG, "Created an order with ID>: " + response.getId() + " and got a message saying " + response.getMessage());
 				} else {
@@ -272,67 +272,67 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Create a new Order.
-	 * 
+	 *
 	 * @param order
 	 *            {@link Order}
 	 * @param callback
 	 *            {@link FutureCallback<CreateResponse>}
 	 */
-	public void create(final Order order, FutureCallback<CreateResponse> callback) {
-		mDatabaseConnector.postRequest("create_order.php", new TypeToken<CreateResponse>() {
+	public void create(final Order order, final FutureCallback<CreateResponse> callback) {
+		mRemoteDatabaseAccessor.postRequest("create_order.php", new TypeToken<CreateResponse>() {
 		}, order.toMap(), callback);
 	}
 
 	/**
 	 * Create a new SiteToOrder.
-	 * 
+	 *
 	 * @param siteToOrder
 	 *            {@link SiteToOrder}
 	 * @param callback
 	 *            {@link FutureCallback<CreateResponse>}
 	 */
-	public void create(final SiteToOrder siteToOrder, FutureCallback<CreateResponse> callback) {
-		mDatabaseConnector.postRequest("create_site_to_order.php", new TypeToken<CreateResponse>() {
+	public void create(final SiteToOrder siteToOrder, final FutureCallback<CreateResponse> callback) {
+		mRemoteDatabaseAccessor.postRequest("create_site_to_order.php", new TypeToken<CreateResponse>() {
 		}, siteToOrder.toMap(), callback);
 	}
 
 	/**
 	 * Create a new OrderItem.
-	 * 
+	 *
 	 * @param orderItem
 	 *            {@link OrderItem}
 	 * @param callback
 	 *            {@link FutureCallback<CreateResponse>}
 	 */
-	public void create(final OrderItem orderItem, FutureCallback<CreateResponse> callback) {
-		mDatabaseConnector.postRequest("create_order_item.php", new TypeToken<CreateResponse>() {
+	public void create(final OrderItem orderItem, final FutureCallback<CreateResponse> callback) {
+		mRemoteDatabaseAccessor.postRequest("create_order_item.php", new TypeToken<CreateResponse>() {
 		}, orderItem.toMap(), callback);
 	}
 
 	/**
 	 * Create a new OrderToOrderItem.
-	 * 
+	 *
 	 * @param orderToOrderItem
 	 *            {@link OrderToOrderItem}
 	 * @param callback
 	 *            {@link FutureCallback<CreateResponse>}
 	 */
-	public void create(final OrderToOrderItem orderToOrderItem, FutureCallback<CreateResponse> callback) {
-		mDatabaseConnector.postRequest("create_order_to_order_item.php", new TypeToken<CreateResponse>() {
+	public void create(final OrderToOrderItem orderToOrderItem, final FutureCallback<CreateResponse> callback) {
+		mRemoteDatabaseAccessor.postRequest("create_order_to_order_item.php", new TypeToken<CreateResponse>() {
 		}, orderToOrderItem.toMap(), callback);
 	}
 
 	/**
 	 * Create a new Site.
-	 * 
+	 *
 	 * @param site
 	 *            {@link Site}
 	 */
 	public void create(final Site site) {
-		mDatabaseConnector.postRequest("create_site.php", new TypeToken<CreateResponse>() {
+		mRemoteDatabaseAccessor.postRequest("create_site.php", new TypeToken<CreateResponse>() {
 		}, site.toMap(), new FutureCallback<CreateResponse>() {
 			@Override
-			public void onCompleted(Exception exception, CreateResponse response) {
+			public void onCompleted(final Exception exception, final CreateResponse response) {
 				if (exception == null) {
 					Log.d(LOG_TAG, "Created an order with ID>: " + response.getId() + " and got a message saying " + response.getMessage());
 				} else {
@@ -344,7 +344,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Update an Order.
-	 * 
+	 *
 	 * @param order
 	 *            {@link Order}
 	 */
@@ -353,7 +353,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Delete an order.
-	 * 
+	 *
 	 * @param order
 	 *            {@link Order}
 	 */
@@ -362,7 +362,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Create a new InventoryItem.
-	 * 
+	 *
 	 * @param inventoryItem
 	 *            {@link InventoryItem}
 	 */
@@ -371,7 +371,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Update an InventoryItem.
-	 * 
+	 *
 	 * @param inventoryItem
 	 *            {@link InventoryItem}
 	 */
@@ -380,7 +380,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Delete an InventoryItem.
-	 * 
+	 *
 	 * @param inventoryItem
 	 *            {@link InventoryItem}
 	 */
@@ -389,7 +389,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Create a new OrderItem.
-	 * 
+	 *
 	 * @param orderItem
 	 *            {@link OrderItem}
 	 */
@@ -398,7 +398,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Update an OrderItem.
-	 * 
+	 *
 	 * @param orderItem
 	 *            {@link OrderItem}
 	 */
@@ -407,7 +407,7 @@ public class LocalDatabaseHelper {
 
 	/**
 	 * Delete an OrderItem.
-	 * 
+	 *
 	 * @param orderItem
 	 *            {@link OrderItem}
 	 */

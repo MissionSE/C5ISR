@@ -19,8 +19,6 @@ import com.missionse.logisticsexample.map.MapLocationListener;
  * Provides a task that gets all locations in the database.
  */
 public class GetAllLocationsTask extends HttpRequestTask {
-	private static final String TAG = GetAllLocationsTask.class.getName();
-
 	private final String mTagSuccess;
 	private final String mTagLocations;
 	private final String mTagId;
@@ -58,8 +56,6 @@ public class GetAllLocationsTask extends HttpRequestTask {
 	protected String doInBackground(final String... params) {
 		JSONObject json = makeGetRequest(mGetLocationsURL);
 		if (json != null) {
-			// Log.d(TAG, "All locations: " + json.toString());
-
 			try {
 				if (json.getInt(mTagSuccess) == 1) {
 					JSONArray locations = json.getJSONArray(mTagLocations);

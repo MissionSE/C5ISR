@@ -8,20 +8,20 @@ import android.content.Context;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.missionse.logisticsexample.R;
-import com.missionse.logisticsexample.database.DatabaseConnector;
 import com.missionse.logisticsexample.database.DatabaseRequestCompletedListener;
-import com.missionse.logisticsexample.database.DatabaseRequestor;
+import com.missionse.logisticsexample.database.RemoteDatabaseRequestor;
 import com.missionse.logisticsexample.database.LocalDatabaseAccessor;
+import com.missionse.logisticsexample.database.RemoteDatabaseAccessor;
 import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
 import com.missionse.logisticsexample.model.orm.SiteToInventoryItemResponse;
 
 /**
  * Provides an implementation of a database requestor for the SitesToInventoryItems table in the database.
  */
-public class SiteToInventoryItemDatabaseRequestor implements DatabaseRequestor {
+public class SiteToInventoryItemDatabaseRequestor implements RemoteDatabaseRequestor {
 	private Context mContext;
-	private DatabaseConnector mDatabaseConnector;
-	private LocalDatabaseAccessor mDatabaseAccessor;
+	private RemoteDatabaseAccessor mRemoteDatabaseAccessor;
+	private LocalDatabaseAccessor mLocalDatabaseAccessor;
 
 	private boolean mUpdateComplete;
 	private String mUrl;
@@ -30,14 +30,14 @@ public class SiteToInventoryItemDatabaseRequestor implements DatabaseRequestor {
 	/**
 	 * Constructor.
 	 * @param context The context of the activity that owns this requestor.
-	 * @param databaseConnector A utility class that is used to make remote database calls.
-	 * @param databaseAccessor A utility class that is used to make local database calls.
+	 * @param remoteDatabaseAccessor A utility class that is used to make remote database calls.
+	 * @param localDatabaseAccessor A utility class that is used to make local database calls.
 	 */
-	public SiteToInventoryItemDatabaseRequestor(final Context context, final DatabaseConnector databaseConnector,
-			final LocalDatabaseAccessor databaseAccessor) {
+	public SiteToInventoryItemDatabaseRequestor(final Context context, final RemoteDatabaseAccessor remoteDatabaseAccessor,
+			final LocalDatabaseAccessor localDatabaseAccessor) {
 		mContext = context;
-		mDatabaseConnector = databaseConnector;
-		mDatabaseAccessor = databaseAccessor;
+		mRemoteDatabaseAccessor = remoteDatabaseAccessor;
+		mLocalDatabaseAccessor = localDatabaseAccessor;
 
 		mUrl = mContext.getString(R.string.get_all_sites_to_inventory_items);
 		mName = mContext.getString(R.string.sites_to_inventory_items);
@@ -46,20 +46,20 @@ public class SiteToInventoryItemDatabaseRequestor implements DatabaseRequestor {
 	@Override
 	public void fetchAll(final DatabaseRequestCompletedListener requestCompleteListener) {
 		mUpdateComplete = false;
-		mDatabaseConnector.postRequest(mUrl, new TypeToken<SiteToInventoryItemResponse>() { },
+		mRemoteDatabaseAccessor.postRequest(mUrl, new TypeToken<SiteToInventoryItemResponse>() { },
 				new FutureCallback<SiteToInventoryItemResponse>() {
 					@Override
 					public void onCompleted(final Exception exception, final SiteToInventoryItemResponse response) {
-						if (mDatabaseConnector.verifyException(exception, mName)) {
-							if (mDatabaseConnector.verifyResponse(response, mName)) {
+						if (mRemoteDatabaseAccessor.verifyException(exception, mName)) {
+							if (mRemoteDatabaseAccessor.verifyResponse(response, mName)) {
 								List<SiteToInventoryItem> sitesToInventoryItems = response.getSitesToInventoryItems();
 								for (SiteToInventoryItem siteToInventoryItem : sitesToInventoryItems) {
 									try {
-										if (mDatabaseAccessor.getObjectDao(SiteToInventoryItem.class)
+										if (mLocalDatabaseAccessor.getObjectDao(SiteToInventoryItem.class)
 												.idExists(siteToInventoryItem.getId())) {
-											mDatabaseAccessor.getObjectDao(SiteToInventoryItem.class).update(siteToInventoryItem);
+											mLocalDatabaseAccessor.getObjectDao(SiteToInventoryItem.class).update(siteToInventoryItem);
 										} else {
-											mDatabaseAccessor.getObjectDao(SiteToInventoryItem.class).create(siteToInventoryItem);
+											mLocalDatabaseAccessor.getObjectDao(SiteToInventoryItem.class).create(siteToInventoryItem);
 										}
 									} catch (SQLException mysqlException) {
 										mysqlException.printStackTrace();

@@ -3,7 +3,7 @@ package com.missionse.logisticsexample.database;
 /**
  * Provides an API for performing database operations.
  */
-public interface DatabaseRequestor {
+public interface RemoteDatabaseRequestor {
 
 	/**
 	 * Retrieves all of the data from a table in the database.
