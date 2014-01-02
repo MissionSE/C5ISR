@@ -96,11 +96,6 @@ public class Order extends DBEntity implements Comparable<Object> {
 		StringBuilder string = new StringBuilder();
 		string.append(getId());
 		string.append("-" + formatter.print(mTimeStamp));
-		string.append("Order>: ");
-		string.append(" id = " + getId());
-		string.append(" timestamp = " + mTimeStamp);
-		string.append(" severity = " + mSeverityId);
-		string.append(" status = " + mStatusId);
 		return string.toString();
 	}
 

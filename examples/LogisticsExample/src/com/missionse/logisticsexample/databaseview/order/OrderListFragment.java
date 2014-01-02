@@ -12,6 +12,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -25,7 +26,7 @@ import com.missionse.logisticsexample.database.LocalDatabaseHelper;
 import com.missionse.logisticsexample.model.Order;
 
 /**
- * Displays a search-able list of Sites, with section headers for the first letter of each site name.
+ * Displays a search-able list of Orders, with section headers dependent on sort criteria.
  */
 public class OrderListFragment extends Fragment {
 
@@ -72,13 +73,13 @@ public class OrderListFragment extends Fragment {
 				Collections.sort(orders);
 				break;
 			case SEVERITY:
-				Collections.sort(orders, new OrderSeverityComparator());
+				Collections.sort(orders, new OrderSeverityComparator(mDatabaseHelper));
 				break;
 			case STATUS:
-				Collections.sort(orders, new OrderStatusComparator());
+				Collections.sort(orders, new OrderStatusComparator(mDatabaseHelper));
 				break;
 			case SITE:
-				Collections.sort(orders, new OrderSiteComparator());
+				Collections.sort(orders, new OrderSiteComparator(mDatabaseHelper));
 				break;
 			default:
 				break;
@@ -87,9 +88,27 @@ public class OrderListFragment extends Fragment {
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
-		View contentView = inflater.inflate(R.layout.fragment_site_database_list, parent, false);
+		View contentView = inflater.inflate(R.layout.fragment_order_database_list, parent, false);
 		Button sortByButton = (Button) contentView.findViewById(R.id.list_sort_by_btn);
+		sortByButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(final View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
 		Button filterByButton = (Button) contentView.findViewById(R.id.list_filter_by_btn);
+		filterByButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(final View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
 
 		mEntryList = (StickyListHeadersListView) contentView.findViewById(R.id.entry_list);
 		mEntryList.setAdapter(getEntryAdapter());
@@ -134,11 +153,6 @@ public class OrderListFragment extends Fragment {
 			TextView entryTitle = (TextView) convertView.findViewById(R.id.entry_title);
 			entryTitle.setText(orderId);
 			return convertView;
-		}
-
-		private boolean listIsBeingFiltered() {
-			return (mOrderFilter != null && mOrderFilter.getConstraint() != null && mOrderFilter
-					.getConstraint().length() > 0);
 		}
 
 		@Override

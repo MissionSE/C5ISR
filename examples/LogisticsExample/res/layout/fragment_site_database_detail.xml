@@ -50,6 +50,7 @@
 	                android:orientation="vertical"
 	                android:layout_margin="5dp">
                     <include layout="@layout/textview_database_detail_header"
+                        android:id="@+id/entry_detail_basic_header"
                         android:text="@string/entry_detail_basic_header" />
 		            <include layout="@layout/textview_database_detail_content"
                         android:id="@+id/entry_detail_basic_info" />
@@ -60,6 +61,7 @@
                     android:orientation="vertical"
                     android:layout_margin="5dp">
                     <include layout="@layout/textview_database_detail_header"
+                        android:id="@+id/entry_detail_parent_header"
                         android:text="@string/entry_detail_parent_header" />
 		            <include layout="@layout/textview_database_detail_content"
                         android:id="@+id/entry_detail_parent_info" />
@@ -70,6 +72,7 @@
                     android:orientation="vertical"
                     android:layout_margin="5dp">
 		            <include layout="@layout/textview_database_detail_header"
+		                android:id="@+id/entry_detail_inventory_header"
 		                android:text="@string/entry_detail_inventory_header" />
 		            <include layout="@layout/textview_database_detail_content"
                         android:id="@+id/entry_detail_inventory" />
@@ -80,6 +83,7 @@
                     android:orientation="vertical"
                     android:layout_margin="5dp">
                     <include layout="@layout/textview_database_detail_header"
+                        android:id="@+id/entry_detail_orders_header"
                         android:text="@string/entry_detail_orders_header" />
 		            <include layout="@layout/textview_database_detail_content"
 		                android:id="@+id/entry_detail_orders" />

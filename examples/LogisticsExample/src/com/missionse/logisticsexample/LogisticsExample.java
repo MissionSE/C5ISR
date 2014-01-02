@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.missionse.logisticsexample.database.DatabaseFactory;
 import com.missionse.logisticsexample.database.DatabaseUpdateCompleteListener;
 import com.missionse.logisticsexample.database.LocalDatabaseHelper;
+import com.missionse.logisticsexample.databaseview.order.OrderViewerContainerFragment;
 import com.missionse.logisticsexample.databaseview.site.SiteViewerContainerFragment;
 import com.missionse.logisticsexample.drawer.LogisticsDrawerFactory;
 import com.missionse.logisticsexample.map.LogisticsMap;
@@ -77,7 +78,14 @@ public class LogisticsExample extends DrawerActivity implements DatabaseUpdateCo
 	}
 
 	private void displayOrderDatabase() {
-
+		FragmentManager fragmentManager = getFragmentManager();
+		OrderViewerContainerFragment containerFragment = (OrderViewerContainerFragment) fragmentManager
+				.findFragmentByTag("ordercontainer");
+		if (containerFragment == null) {
+			containerFragment = new OrderViewerContainerFragment();
+		}
+		fragmentManager.beginTransaction().replace(R.id.content, containerFragment, "ordercontainer")
+				.addToBackStack("ordercontainer").commit();
 	}
 
 	@Override

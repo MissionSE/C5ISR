@@ -18,7 +18,6 @@ import com.missionse.logisticsexample.model.Order;
 public class OrderViewerContainerFragment extends Fragment {
 
 	private OrderListFragment mSiteList;
-	//private SiteDetailFragment mSiteDetail;
 	private LocalDatabaseHelper mDatabaseHelper;
 
 	@Override
@@ -34,17 +33,17 @@ public class OrderViewerContainerFragment extends Fragment {
 		mSiteList = new OrderListFragment();
 		mSiteList.setContainer(this);
 		mSiteList.setDatabaseHelper(mDatabaseHelper);
-		//mSiteDetail = new SiteDetailFragment();
 
 		getChildFragmentManager().beginTransaction().replace(R.id.database_list, mSiteList, "orderlist").commit();
-		//getChildFragmentManager().beginTransaction().replace(R.id.database_detail, mSiteDetail, "sitedetail").commit();
+		getChildFragmentManager().beginTransaction().replace(R.id.database_detail, new Fragment(), "orderdetail")
+				.commit();
 
 		return contentView;
 	}
 
 	/**
-	 * Displays the details of a Site.
-	 * @param site the site for which details should be displayed
+	 * Displays the details of an Order.
+	 * @param order the order for which details should be displayed
 	 */
 	public void displayOrder(final Order order) {
 		//mSiteDetail.displaySite(site);
