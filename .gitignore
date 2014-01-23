@@ -17,3 +17,10 @@ local.properties
 
 #Mac OSX directory store
 .DS_Store
+
+# gradle, IntelliJ
+
+.gradle
+.idea
+*.iml
+build
