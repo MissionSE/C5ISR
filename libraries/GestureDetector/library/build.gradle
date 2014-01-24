@@ -1,0 +1,93 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.8.+'
+    }
+}
+apply plugin: 'android-library'
+apply plugin: 'maven'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+}
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "19.0.1"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: mavenLocal().url)
+
+            modifyPom(pom)
+        }
+    }
+}
+
+def modifyPom(pom) {
+    pom.groupId = 'com.missionse'
+    pom.artifactId = 'gesture-detector'
+    pom.version = '1.0.0'
+
+    pom.project {
+        name 'Gesture Detector'
+        description 'Provides additional gesture detectors.'
+
+        scm {
+            url 'scm:git@github.com:MissionSE/C5ISR.git'
+            connection 'scm:git@github.com:MissionSE/C5ISR.git'
+            developerConnection 'scm:git@github.com:MissionSE/C5ISR.git'
+        }
+
+        licenses {
+            license {
+                name 'TBA'
+                url 'TBA'
+                distribution 'TBA'
+            }
+        }
+
+        organization {
+            name 'Mission Solutions Engineering'
+            url 'http://asrcfederal.com/mse/Pages/default.aspx'
+        }
+
+        developers {
+            developer {
+                id 'jsantangelo'
+                name 'James Sant\'Angelo'
+            }
+            developer {
+                id 'khunter86'
+                name 'Kyle Lehman'
+            }
+            developer {
+                id 'MrTesten'
+                name 'Mike Testen'
+            }
+            developer {
+                id 'rvieras'
+                name 'Roberto Vieras'
+            }
+        }
+    }
+}
