@@ -6,7 +6,8 @@ apply plugin: 'android'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.missionse:bluetooth-connector:1.0.1@aar'
+    compile project(':library')
+    //compile 'com.missionse:bluetooth-connector:1.0.1@aar'
 }
 
 android {
