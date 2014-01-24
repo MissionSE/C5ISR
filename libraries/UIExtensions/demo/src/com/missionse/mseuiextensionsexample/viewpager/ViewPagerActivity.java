@@ -6,11 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.missionse.mseuiextensions.R;
-import com.missionse.slidingmenu.OnMenuClickListener;
-import com.missionse.slidingmenu.SlidingMenuHelper;
-import com.missionse.slidingmenu.SlidingMenuHelper.MenuType;
 import com.missionse.uiextensions.viewpager.DepthPageTransformer;
 import com.missionse.uiextensions.viewpager.DrawerSafeViewPager;
 import com.missionse.uiextensions.viewpager.SectionFragmentPagerAdapter;
@@ -23,7 +19,7 @@ public class ViewPagerActivity extends Activity {
 	private SectionFragmentPagerAdapter mPagerAdapter;
 	private DrawerSafeViewPager mViewPager;
 
-	private SlidingMenu mNavigationDrawer;
+	//private SlidingMenu mNavigationDrawer;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -49,24 +45,24 @@ public class ViewPagerActivity extends Activity {
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 
-		SlidingMenuHelper menuHelper = new SlidingMenuHelper(this);
-		menuHelper.createSimpleMenu(MenuType.LEFT, menuItems, new OnMenuClickListener() {
-			@Override
-			public void onMenuClick(final int clickedItem) {
-				switchContent(clickedItem);
-			}
-		});
-		menuHelper.getLeftMenu().setTitle("Sections");
-		menuHelper.commit();
+		//		SlidingMenuHelper menuHelper = new SlidingMenuHelper(this);
+		//		menuHelper.createSimpleMenu(MenuType.LEFT, menuItems, new OnMenuClickListener() {
+		//			@Override
+		//			public void onMenuClick(final int clickedItem) {
+		//				switchContent(clickedItem);
+		//			}
+		//		});
+		//		menuHelper.getLeftMenu().setTitle("Sections");
+		//		menuHelper.commit();
 	}
 
 	@Override
 	public void onBackPressed() {
-		if (mNavigationDrawer.isMenuShowing()) {
-			mNavigationDrawer.showContent(true);
-		} else {
-			super.onBackPressed();
-		}
+		//		if (mNavigationDrawer.isMenuShowing()) {
+		//			mNavigationDrawer.showContent(true);
+		//		} else {
+		//			super.onBackPressed();
+		//		}
 	}
 
 	/**
@@ -74,7 +70,7 @@ public class ViewPagerActivity extends Activity {
 	 * @param position the page to switch to
 	 */
 	public void switchContent(final int position) {
-		mNavigationDrawer.showContent();
-		mViewPager.setCurrentItem(position);
+		//		mNavigationDrawer.showContent();
+		//		mViewPager.setCurrentItem(position);
 	}
 }
