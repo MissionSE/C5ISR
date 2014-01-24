@@ -38,7 +38,7 @@ uploadArchives {
 def modifyPom(pom) {
     pom.groupId = 'com.missionse'
     pom.artifactId = 'ui-extensions'
-    pom.version = '1.0.1'
+    pom.version = '1.0.0'
 
     pom.project {
         name 'UI Extensions'
