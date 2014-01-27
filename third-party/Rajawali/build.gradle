@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.8.+'
+    }
+}
+apply plugin: 'android-library'
+apply plugin: 'maven'
+
+dependencies {
+    compile fileTree(dir: 'Rajawali-master/libs', include: '*.jar')
+}
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "19.0.1"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'Rajawali-master/AndroidManifest.xml'
+            java.srcDirs = ['Rajawali-master/src']
+            resources.srcDirs = ['Rajawali-master/src']
+            aidl.srcDirs = ['Rajawali-master/src']
+            renderscript.srcDirs = ['Rajawali-master/src']
+            res.srcDirs = ['Rajawali-master/res']
+            assets.srcDirs = ['Rajawali-master/assets']
+        }
+
+        debug.setRoot('Rajawali-master/build-types/debug')
+        release.setRoot('Rajawali-master/build-types/release')
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: mavenLocal().url)
+
+            modifyPom(pom)
+        }
+    }
+}
+
+def modifyPom(pom) {
+    pom.groupId = 'rajawali'
+    pom.artifactId = 'rajawali'
+    pom.version = '1.0.0'
+
+    pom.project {
+        name 'Rajawali'
+        description 'Android OpenGL ES 2.0 Engine'
+    }
+}
