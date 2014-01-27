@@ -222,35 +222,35 @@ public class DatabaseMap implements
 
 	@Override
 	public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_edit:
-				if (mSelectedMarker != null) {
-					MapLocation location = mLocationManager.getLocation(mSelectedMarker);
-					if (location != null) {
-						EditLocationDialogFragment.newInstance(
-								location.getId(),
-								location.getName(),
-								location.getLatitude(),
-								location.getLongitude())
-								.show(mActivity.getFragmentManager(), "edit_location");
-					}
-				}
-				break;
-			case R.id.action_delete:
-				if (mSelectedMarker != null) {
-					MapLocation location = mLocationManager.getLocation(mSelectedMarker);
-					if (location != null) {
-						new DeleteLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
-								Integer.toString(location.getId()));
-						mSelectedMarker.remove();
-						mLocationManager.remove(location.getId());
-						mLocationManager.remove(location.getId());
-					}
-				}
-				break;
-			default:
-				Log.d(TAG, "Unknown action mode menu item: " + item.toString());
-		}
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_edit) {
+            if (mSelectedMarker != null) {
+                MapLocation location = mLocationManager.getLocation(mSelectedMarker);
+                if (location != null) {
+                    EditLocationDialogFragment.newInstance(
+                            location.getId(),
+                            location.getName(),
+                            location.getLatitude(),
+                            location.getLongitude())
+                            .show(mActivity.getFragmentManager(), "edit_location");
+                }
+            }
+
+        } else if (itemId == R.id.action_delete) {
+            if (mSelectedMarker != null) {
+                MapLocation location = mLocationManager.getLocation(mSelectedMarker);
+                if (location != null) {
+                    new DeleteLocationTask((Context) mActivity, (MapLocationListener) mActivity).execute(
+                            Integer.toString(location.getId()));
+                    mSelectedMarker.remove();
+                    mLocationManager.remove(location.getId());
+                    mLocationManager.remove(location.getId());
+                }
+            }
+
+        } else {
+            Log.d(TAG, "Unknown action mode menu item: " + item.toString());
+        }
 
 		mode.finish();
 		return true;

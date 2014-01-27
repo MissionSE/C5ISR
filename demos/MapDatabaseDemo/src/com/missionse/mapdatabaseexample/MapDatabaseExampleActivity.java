@@ -49,13 +49,13 @@ public class MapDatabaseExampleActivity extends Activity implements MapLocationL
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_refresh:
-				new GetAllLocationsTask(this, this).execute();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_refresh) {
+            new GetAllLocationsTask(this, this).execute();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
 	}
 
 	/**
