@@ -11,8 +11,7 @@ repositories {
     mavenLocal()
 }
 
-apply plugin: 'android-library'
-apply plugin: 'maven'
+apply plugin: 'android'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
