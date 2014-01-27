@@ -6,16 +6,24 @@ This document describes the method by which new developers can get started and c
 Setting Up Your Environment
 ---------------------------
 
-To get started, you will need to prepare your environment for Android development. Google has provided a [guide](http://developer.android.com/training/index.html) that describes how to get the [Android SDK](http://developer.android.com/sdk/index.html). This project uses Eclipse and the ADT plugin, and so you can download the ADT Bundle as provided by Google.
+To get started, you will need to prepare your environment for Android development. Google has provided a [guide](http://developer.android.com/training/index.html) that describes how to get the [Android SDK](http://developer.android.com/sdk/index.html).
 
-It is recommended that you create a new workspace specifically for all of the projects that you may import when working in this repository.
+This project uses [Android Studio](http://developer.android.com/sdk/installing/studio.html) as the IDE of choice. Eclipse `.project` files are included (for use with the ADT Bundle as provided by Google), though may not be maintained.
 
-Once you have your environment set up, you can now import any of the libraries and examples in this repository. Each library and example are individually a separate project, and may require that you import other ones that they are dependent on. See the [Troubleshooting guide](Troubleshooting.md) for help.
+Once you have your environment set up, you can now import any of the libraries and demos using the `build.gradle` file in each directory.
+
+**TODO: Create script to deploy/install libraries to local maven repo, blurb.**
 
 Checkstyle Static Analysis
 --------------------------
 
 This project employs [Checkstyle](http://checkstyle.sourceforge.net) as a means of [static code analysis](http://en.wikipedia.org/wiki/Static_program_analysis). Checkstyle failures prohibit successful builds, and therefore need to be resolved before any commits are made.
+
+### Android Studio
+
+**TODO: Fill out this section.**
+
+### Eclipse
 
 To use Checkstyle, open the Eclipse Marketplace, and install the [Checkstyle Plug-in](http://eclipse-cs.sourceforge.net/).
 

@@ -1,18 +1,22 @@
-Examples
-========
+Demos
+=====
 
-This directory contains all examples developed to exercise and demonstrate the C5ISR libraries.
+This directory contains all component demos developed to exercise and demonstrate the C5ISR libraries (or third-party libraries), and imitate real-world applications.
 
-* ARExample - exercises AugmentedReality
-* BluetoothExample - demonstrates use of the BluetoothConnector
-* CommandableModelExample - demonstrates use of the BluetoothConnector and ModelViewer
-* DatabaseExample - demonstrates use of the third-party ORMAN library
-* GeofenceExample - demonstrates use of geofencing and the MapViewer
-* HttpDatabaseExample - demonstrates use of the HttpDatabaseConnector
-* ImageViewerExample - uses the ImageViewer
-* MSEUIExtensionsExample - demonstrates use of the MSE UI Extensions
-* MapsExample - demonstrates use of the MapViewer
-* ModelViewerExample - demonstrates use of the ModelViewer
-* NFCExample - demonstrates use of the NfcConnector
-* VideoViewerExample - demonstrates use of the VideoViewer
-* WifiDirectExample - demonstrates use of the WifiDirectConnector
+* CommandableModel
+> Demonstrates use of the BluetoothConnector and ModelViewer. This application allows two phones, connected via Bluetooth, to control the presentation of a model of the paired phone simultaneously.
+
+* DatabaseDemo
+> Demonstrates use of the third-party ORMAN library.
+
+* GeofenceDemo
+> Demonstrates use of geofencing and the MapViewer.
+
+* GsonDemo
+> Demonstrates use of the GSON third-party library.
+
+* Logistics
+> Demonstrates use of many of the C5ISR libraries. This application presents a map with markers, backed by a database, with several views and a mock notification system.
+
+* MapsDatabaseDemo
+> Demonstrates use of the MapViewer library.
