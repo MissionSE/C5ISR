@@ -19,8 +19,6 @@ public class ViewPagerActivity extends Activity {
 	private SectionFragmentPagerAdapter mPagerAdapter;
 	private DrawerSafeViewPager mViewPager;
 
-	//private SlidingMenu mNavigationDrawer;
-
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,33 +42,5 @@ public class ViewPagerActivity extends Activity {
 		mViewPager = (DrawerSafeViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setPageTransformer(true, new DepthPageTransformer());
-
-		//		SlidingMenuHelper menuHelper = new SlidingMenuHelper(this);
-		//		menuHelper.createSimpleMenu(MenuType.LEFT, menuItems, new OnMenuClickListener() {
-		//			@Override
-		//			public void onMenuClick(final int clickedItem) {
-		//				switchContent(clickedItem);
-		//			}
-		//		});
-		//		menuHelper.getLeftMenu().setTitle("Sections");
-		//		menuHelper.commit();
-	}
-
-	@Override
-	public void onBackPressed() {
-		//		if (mNavigationDrawer.isMenuShowing()) {
-		//			mNavigationDrawer.showContent(true);
-		//		} else {
-		//			super.onBackPressed();
-		//		}
-	}
-
-	/**
-	 * Changes the displayed content.
-	 * @param position the page to switch to
-	 */
-	public void switchContent(final int position) {
-		//		mNavigationDrawer.showContent();
-		//		mViewPager.setCurrentItem(position);
 	}
 }

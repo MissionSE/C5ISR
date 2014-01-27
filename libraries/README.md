@@ -36,7 +36,9 @@ This directory contains all libraries for the C5ISR Application Development repo
 * WifiDirectConnector
 > provides WifiDirect connection discovery, maintenance, and data sending
 
+
 ---
+
 
 The archive directory contains deprecated libraries.
 

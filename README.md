@@ -34,7 +34,7 @@ The following is a general listing of the organization of this repository:
 
     > Includes projects that offer easy-to-use components to utilize Android and mobile development technologies.
 
-*	[static analysis][staticanalysis]
+*	[staticanalysis][staticanalysis]
 
     > Includes files used for the configuration of static analysis tools, such as Checkstyle.
 
