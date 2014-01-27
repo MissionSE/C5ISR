@@ -191,22 +191,20 @@ public class CommandableModelActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.connect_scan:
-				showDeviceList(true);
-				return true;
-			case R.id.discoverable:
-				enableDiscovery();
-				return true;
-			case R.id.reset:
-				if (mModelFragment.getController() != null) {
-					mModelFragment.getController().reset();
-					mModelClient.onModelChange();
-				}
-				return true;
-			default:
-				break;
-		}
+        int itemId = item.getItemId();
+        if (itemId == R.id.connect_scan) {
+            showDeviceList(true);
+            return true;
+        } else if (itemId == R.id.discoverable) {
+            enableDiscovery();
+            return true;
+        } else if (itemId == R.id.reset) {
+            if (mModelFragment.getController() != null) {
+                mModelFragment.getController().reset();
+                mModelClient.onModelChange();
+            }
+            return true;
+        }
 		return false;
 	}
 
