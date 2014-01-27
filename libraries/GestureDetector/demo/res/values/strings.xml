@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GestureDetectorDemo</string>
+    <string name="action_pan">Pan</string>
+    <string name="action_rotate">Rotate</string>
+    <string name="not_panning">Not Panning</string>
+    <string name="not_rotating">Not Rotating</string>
+</resources>
