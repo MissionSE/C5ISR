@@ -6,7 +6,9 @@ apply plugin: 'android'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(':library')
+    compile(project(':library')) {
+        transitive = true
+    }
 }
 
 android {

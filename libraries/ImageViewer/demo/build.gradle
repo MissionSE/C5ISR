@@ -6,8 +6,9 @@ apply plugin: 'android'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(':library')
-    //compile 'com.missionse:image-viewer:1.0.0@aar'
+    compile(project(':library')) {
+        transitive = false
+    }
 }
 
 android {
