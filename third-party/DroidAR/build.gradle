@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.8.+'
+    }
+}
+apply plugin: 'android-library'
+apply plugin: 'maven'
+
+dependencies {
+    compile fileTree(dir: 'droidar/libs', include: '*.jar')
+}
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "19.0.1"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'droidar/AndroidManifest.xml'
+            java.srcDirs = ['droidar/src']
+            resources.srcDirs = ['droidar/src']
+            aidl.srcDirs = ['droidar/src']
+            renderscript.srcDirs = ['droidar/src']
+            res.srcDirs = ['droidar/res']
+            assets.srcDirs = ['droidar/assets']
+        }
+
+        debug.setRoot('droidar/build-types/debug')
+        release.setRoot('droidar/build-types/release')
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: mavenLocal().url)
+
+            modifyPom(pom)
+        }
+    }
+}
+
+def modifyPom(pom) {
+    pom.groupId = 'droidar'
+    pom.artifactId = 'droidar'
+    pom.version = '1.0.0'
+
+    pom.project {
+        name 'DroidAR'
+        description 'Android Augmented Reality Framework.'
+    }
+}

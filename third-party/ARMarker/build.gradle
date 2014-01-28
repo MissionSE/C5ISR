@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.8.+'
+    }
+}
+apply plugin: 'android-library'
+apply plugin: 'maven'
+
+repositories {
+    mavenLocal()
+}
+
+dependencies {
+    compile fileTree(dir: 'ARMarker/libs', include: '*.jar')
+    compile fileTree(dir: 'ARMarker/libs/armeabi', include: '*.so')
+    compile 'droidar:droidar:1.0.0@aar'
+}
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "19.0.1"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'ARMarker/AndroidManifest.xml'
+            java.srcDirs = ['ARMarker/src']
+            resources.srcDirs = ['ARMarker/src']
+            aidl.srcDirs = ['ARMarker/src']
+            renderscript.srcDirs = ['ARMarker/src']
+            res.srcDirs = ['ARMarker/res']
+            assets.srcDirs = ['ARMarker/assets']
+            jniLibs.srcDirs = ['ARMarker/libs']
+        }
+
+        debug.setRoot('ARMarker/build-types/debug')
+        release.setRoot('ARMarker/build-types/release')
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: mavenLocal().url)
+
+            modifyPom(pom)
+        }
+    }
+}
+
+def modifyPom(pom) {
+    pom.groupId = 'armarker'
+    pom.artifactId = 'armarker'
+    pom.version = '1.0.0'
+
+    pom.project {
+        name 'ARMarker'
+        description 'Android Augmented Reality Extenstion that allows marker cards to be scanned in real time.'
+    }
+}

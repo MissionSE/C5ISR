@@ -1,6 +1,8 @@
 #Ignore everything...
 *
-#...but the archive(s), this gitignore, and the requisite README.
+#...but the archive(s), this gitignore, the requisite README, and the gradle build files.
 !README.md
 !.gitignore
 !*.zip
+!*gradle*
+!gradle/*
