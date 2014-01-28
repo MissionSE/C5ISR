@@ -6,3 +6,4 @@
 !*.zip
 !*gradle*
 !gradle/*
+!archive
