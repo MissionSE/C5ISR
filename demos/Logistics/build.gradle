@@ -22,6 +22,10 @@ dependencies {
     compile 'com.missionse:http-database-connector:1.0.+@aar'
     compile 'com.missionse:ui-extensions:1.0.+@aar'
     compile 'se.emilsjolander:stickylistheaders:+'
+    compile 'joda-time:joda-time:2.+'
+    compile 'com.google.code.gson:gson:2.2.+'
+    compile 'com.koushikdutta.ion:ion:1.2.+'
+    compile 'com.j256.ormlite:ormlite-android:4.+'
 }
 
 android {
