@@ -11,8 +11,7 @@ buildscript {
 apply plugin: 'android'
 
 dependencies {
-//    compile project(':library')
-    compile 'com.missionse:bluetooth-connector:1.0.2-SNAPSHOT@aar'
+    compile project(':library')
 }
 
 repositories {
