@@ -2,27 +2,36 @@ buildscript {
     repositories {
         mavenCentral()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.github.townsfolk:gradle-release:1.2'
+    }
+}
+
+apply plugin: 'android'
+
+//see https://github.com/townsfolk/gradle-release
+apply plugin: 'release'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
+}
+
+dependencies {
+    compile 'com.missionse:bluetooth-connector:1.0.2-SNAPSHOT@aar'
+    compile('com.missionse:model-viewer:1.0.0-SNAPSHOT@aar') {
+        transitive = true
     }
 }
 
 repositories {
     mavenLocal()
-}
-
-apply plugin: 'android'
-
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.missionse:bluetooth-connector:1.0.+@aar'
-    compile('com.missionse:model-viewer:1.0.+@aar') {
-        transitive = true
-    }
+    mavenCentral()
 }
 
 android {
-    compileSdkVersion 18
+    compileSdkVersion 19
     buildToolsVersion "19.0.1"
 
     sourceSets {
@@ -35,8 +44,21 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
+    }
 
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
+    signingConfigs {
+        release
+        debug
+    }
+
+    buildTypes {
+        release {
+            //signingConfig signingConfigs.release
+        }
+        debug {
+            packageNameSuffix ".debug"
+        }
     }
 }
+
+//apply from: '../../distribution/signing.gradle'
