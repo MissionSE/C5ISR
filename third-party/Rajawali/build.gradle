@@ -2,19 +2,28 @@ buildscript {
     repositories {
         mavenCentral()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.github.townsfolk:gradle-release:1.2'
     }
 }
+
+//see https://github.com/townsfolk/gradle-release
+apply plugin: 'release'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
+}
+
 apply plugin: 'android-library'
-apply plugin: 'maven'
 
 dependencies {
-    compile fileTree(dir: 'Rajawali-master/libs', include: '*.jar')
+    compile 'com.android.support:support-v13:19.0.+'
 }
 
 android {
-    compileSdkVersion 18
+    compileSdkVersion 19
     buildToolsVersion "19.0.1"
 
     sourceSets {
@@ -27,29 +36,7 @@ android {
             res.srcDirs = ['Rajawali-master/res']
             assets.srcDirs = ['Rajawali-master/assets']
         }
-
-        debug.setRoot('Rajawali-master/build-types/debug')
-        release.setRoot('Rajawali-master/build-types/release')
     }
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: mavenLocal().url)
-
-            modifyPom(pom)
-        }
-    }
-}
-
-def modifyPom(pom) {
-    pom.groupId = 'rajawali'
-    pom.artifactId = 'rajawali'
-    pom.version = '1.0.0'
-
-    pom.project {
-        name 'Rajawali'
-        description 'Android OpenGL ES 2.0 Engine'
-    }
-}
+apply from: '../../distribution/maven_push.gradle'
