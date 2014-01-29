@@ -1,13 +1,22 @@
-repositories {
-    mavenLocal()
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.8.+'
+    }
 }
 
 apply plugin: 'android'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(':library')
-    //compile 'com.missionse:bluetooth-connector:1.0.1@aar'
+//    compile project(':library')
+    compile 'com.missionse:bluetooth-connector:1.0.2-SNAPSHOT@aar'
+}
+
+repositories {
+    mavenLocal()
 }
 
 android {
@@ -24,8 +33,21 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
+    }
 
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
+    signingConfigs {
+        release
+        debug
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+        debug {
+            packageNameSuffix ".debug"
+        }
     }
 }
+
+apply from: '../../../distribution/signing.gradle'
