@@ -9,8 +9,6 @@ buildscript {
     }
 }
 
-//useful to generate a single report for all instrumentation tests
-//command: gradle deviceCheck mergeAndroidReports --continue
 apply plugin: 'android-library'
 
 //see https://github.com/townsfolk/gradle-release

@@ -4,7 +4,17 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.github.townsfolk:gradle-release:1.2'
     }
+}
+
+apply plugin: 'android'
+
+//see https://github.com/townsfolk/gradle-release
+apply plugin: 'release'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
 }
 
 repositories {
@@ -12,16 +22,14 @@ repositories {
     mavenCentral()
 }
 
-apply plugin: 'android'
-
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.missionse:ui-extensions:1.0.+@aar'
+    compile 'com.missionse:ui-extensions:1.0.0-SNAPSHOT@aar'
     compile 'com.j256.ormlite:ormlite-android:4.+'
 }
 
 android {
-    compileSdkVersion 18
+    compileSdkVersion 19
     buildToolsVersion "19.0.1"
 
     sourceSets {
@@ -38,4 +46,20 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+
+    signingConfigs {
+        release
+        debug
+    }
+
+    buildTypes {
+        release {
+           //signingConfig signingConfigs.release
+        }
+        debug {
+            packageNameSuffix ".debug"
+        }
+    }
 }
+
+//apply from: '../../distribution/signing.gradle'
