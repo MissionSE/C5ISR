@@ -1,0 +1,27 @@
+File propFile = file('signing.properties');
+if (propFile.exists()) {
+    def Properties props = new Properties()
+    props.load(new FileInputStream(propFile))
+
+    if (props.containsKey('RELEASE_STORE_FILE') && props.containsKey('RELEASE_STORE_PASSWORD') &&
+            props.containsKey('RELEASE_KEY_ALIAS') && props.containsKey('RELEASE_KEY_PASSWORD')) {
+        android.signingConfigs.release.storeFile = file(props['RELEASE_STORE_FILE'])
+        android.signingConfigs.release.storePassword = props['RELEASE_STORE_PASSWORD']
+        android.signingConfigs.release.keyAlias = props['RELEASE_KEY_ALIAS']
+        android.signingConfigs.release.keyPassword = props['RELEASE_KEY_PASSWORD']
+    } else {
+        android.buildTypes.release.signingConfig = null
+    }
+	if (props.containsKey('DEBUG_STORE_FILE') && props.containsKey('DEBUG_STORE_PASSWORD') &&
+            props.containsKey('DEBUG_KEY_ALIAS') && props.containsKey('DEBUG_KEY_PASSWORD')) {
+        android.signingConfigs.debug.storeFile = file(props['DEBUG_STORE_FILE'])
+        android.signingConfigs.debug.storePassword = props['DEBUG_STORE_PASSWORD']
+        android.signingConfigs.debug.keyAlias = props['DEBUG_KEY_ALIAS']
+        android.signingConfigs.debug.keyPassword = props['DEBUG_KEY_PASSWORD']
+    } else {
+        android.buildTypes.debug.signingConfig = null
+    }
+} else {
+        android.buildTypes.release.signingConfig = null
+		android.buildTypes.debug.signingConfig = null
+}
