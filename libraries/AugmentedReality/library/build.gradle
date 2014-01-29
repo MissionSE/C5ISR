@@ -6,9 +6,8 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'droidar:droidar:1.0.0@aar'
-    compile 'armarker:armarker:1.0.0@aar'
+    compile 'droidar:droidar:1.0.0-SNAPSHOT@aar'
+    compile 'armarker:armarker:1.0.0-SNAPSHOT@aar'
 }
 
 android {
@@ -25,66 +24,7 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
-
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
-    }
-}
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: mavenLocal().url)
-
-            modifyPom(pom)
-        }
     }
 }
 
-def modifyPom(pom) {
-    pom.groupId = 'com.missionse'
-    pom.artifactId = 'augmented-reality'
-    pom.version = '1.0.0'
-
-    pom.project {
-        name 'Augmented Reality'
-        description 'Augmented Reality Framework.'
-
-        scm {
-            url 'scm:git@github.com:MissionSE/C5ISR.git'
-            connection 'scm:git@github.com:MissionSE/C5ISR.git'
-            developerConnection 'scm:git@github.com:MissionSE/C5ISR.git'
-        }
-
-        licenses {
-            license {
-                name 'TBA'
-                url 'TBA'
-                distribution 'TBA'
-            }
-        }
-
-        organization {
-            name 'Mission Solutions Engineering'
-            url 'http://asrcfederal.com/mse/Pages/default.aspx'
-        }
-
-        developers {
-            developer {
-                id 'jsantangelo'
-                name 'James Sant\'Angelo'
-            }
-            developer {
-                id 'khunter86'
-                name 'Kyle Lehman'
-            }
-            developer {
-                id 'MrTesten'
-                name 'Mike Testen'
-            }
-            developer {
-                id 'rvieras'
-                name 'Roberto Vieras'
-            }
-        }
-    }
-}
+apply from: '../../../distribution/maven_push.gradle'

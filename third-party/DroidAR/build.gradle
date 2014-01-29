@@ -2,19 +2,26 @@ buildscript {
     repositories {
         mavenCentral()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.github.townsfolk:gradle-release:1.2'
     }
 }
-apply plugin: 'android-library'
-apply plugin: 'maven'
 
-dependencies {
-    compile fileTree(dir: 'droidar/libs', include: '*.jar')
+//useful to generate a single report for all instrumentation tests
+//command: gradle deviceCheck mergeAndroidReports --continue
+apply plugin: 'android-library'
+
+//see https://github.com/townsfolk/gradle-release
+apply plugin: 'release'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
 }
 
 android {
-    compileSdkVersion 18
+    compileSdkVersion 19
     buildToolsVersion "19.0.1"
 
     sourceSets {
@@ -27,29 +34,11 @@ android {
             res.srcDirs = ['droidar/res']
             assets.srcDirs = ['droidar/assets']
         }
+    }
 
-        debug.setRoot('droidar/build-types/debug')
-        release.setRoot('droidar/build-types/release')
+    lintOptions {
+        abortOnError false
     }
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: mavenLocal().url)
-
-            modifyPom(pom)
-        }
-    }
-}
-
-def modifyPom(pom) {
-    pom.groupId = 'droidar'
-    pom.artifactId = 'droidar'
-    pom.version = '1.0.0'
-
-    pom.project {
-        name 'DroidAR'
-        description 'Android Augmented Reality Framework.'
-    }
-}
+apply from: '../../distribution/maven_push.gradle'
