@@ -9,6 +9,7 @@ buildscript {
 
 repositories {
     mavenLocal()
+    mavenCentral()
 }
 
 apply plugin: 'android'
@@ -16,6 +17,7 @@ apply plugin: 'android'
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.missionse:ui-extensions:1.0.+@aar'
+    compile 'com.j256.ormlite:ormlite-android:4.+'
 }
 
 android {
