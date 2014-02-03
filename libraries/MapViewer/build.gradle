@@ -1,0 +1,22 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+ 
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.8.+'
+		classpath 'com.github.townsfolk:gradle-release:1.2'
+    }
+}
+
+
+//useful to generate a single report for all instrumentation tests
+//command: gradle deviceCheck mergeAndroidReports --continue
+apply plugin: 'android-reporting'
+
+//see https://github.com/townsfolk/gradle-release
+apply plugin: 'release'
+ 
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
+}
