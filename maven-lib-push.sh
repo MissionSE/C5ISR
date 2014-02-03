@@ -42,7 +42,7 @@ do
 	echoc "DONE"
 	echo
 	echoc "Running gradle tasks clean, build, and uploadArchives in $DIR..."
-	gradlew -uq clean build uploadArchives
+	./gradlew -uq clean build uploadArchives
 	echoc "DONE"
 	cd $origDir
 	echo
