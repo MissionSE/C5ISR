@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.8.+'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
+}
+
+apply plugin: 'android-library'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.1"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'android-ColorPickerPreference-master/AndroidManifest.xml'
+            java.srcDirs = ['android-ColorPickerPreference-master/src']
+            resources.srcDirs = ['android-ColorPickerPreference-master/src']
+            aidl.srcDirs = ['android-ColorPickerPreference-master/src']
+            renderscript.srcDirs = ['android-ColorPickerPreference-master/src']
+            res.srcDirs = ['android-ColorPickerPreference-master/res']
+            assets.srcDirs = ['android-ColorPickerPreference-master/assets']
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+apply from: '../../distribution/maven_push.gradle'
