@@ -1,6 +1,7 @@
 package com.missionse.logisticsexample.map;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -8,21 +9,25 @@ import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.missionse.logisticsexample.database.GetAllLocationsTask;
+import com.missionse.logisticsexample.database.LocalDatabaseHelper;
 import com.missionse.logisticsexample.dialog.OrderDialogFragment;
 import com.missionse.logisticsexample.dialog.SiteDialogFragment;
 import com.missionse.logisticsexample.model.Site;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Displays logistics information on the google map.
  */
-public class LogisticsMap implements MapLoadedListener, MapLocationListener,
- OnMapLongClickListener, OnInfoWindowClickListener {
+public class LogisticsMap implements MapLoadedListener, OnMapLongClickListener,
+		OnInfoWindowClickListener {
 
 	private Activity mActivity;
 	private GoogleMap mMap;
 
-	private MapLocationManager mLocationManager;
+	private LocalDatabaseHelper mLocalDatabaseHelper;
+	private HashMap<Integer, Marker> mMarkers;
 
 	/**
 	 * Constructor.
@@ -31,7 +36,15 @@ public class LogisticsMap implements MapLoadedListener, MapLocationListener,
 	public LogisticsMap(final Activity activity) {
 		mActivity = activity;
 
-		mLocationManager = new MapLocationManager();
+		mMarkers = new HashMap<Integer, Marker>();
+	}
+
+	/**
+	 * Sets the local database helper.
+	 * @param localDatabaseHelper Used to get locations from the local database.
+	 */
+	public void setDatabaseHelper(final LocalDatabaseHelper localDatabaseHelper) {
+		mLocalDatabaseHelper = localDatabaseHelper;
 	}
 
 	@Override
@@ -45,34 +58,26 @@ public class LogisticsMap implements MapLoadedListener, MapLocationListener,
 		mMap.setOnMapLongClickListener(this);
 		mMap.setOnInfoWindowClickListener(this);
 
-		requestAllLocations();
+		updateLocations();
 	}
 
-	/**
-	 * Request that all locations be refreshed.
-	 */
-	public void requestAllLocations() {
-		if (mActivity != null) {
-			new GetAllLocationsTask(mActivity, this).execute();
-		}
-	}
-
-	@Override
-	public void locationReceived(final MapLocation location) {
+	public void updateLocations() {
 		if (mMap != null) {
-			int locationId = location.getId();
-			if (!mLocationManager.containsLocation(locationId)) {
-				mLocationManager.put(locationId, mMap.addMarker(
-						new MarkerOptions()
-								.position(location.getLatLng())
-								.title(location.getName())));
-			} else {
-				Marker marker = mLocationManager.getMarker(locationId);
-				marker.setPosition(location.getLatLng());
-				marker.setTitle(location.getName());
+			List<Site> sites = mLocalDatabaseHelper.getSites();
+			for (Site site : sites) {
+				int siteId = site.getId();
+				LatLng siteLocation = new LatLng(site.getLatitude(), site.getLongitude());
+				if (!mMarkers.containsKey(siteId)) {
+					mMarkers.put(siteId, mMap.addMarker(
+							new MarkerOptions()
+									.position(siteLocation)
+									.title(site.getName())));
+				} else {
+					Marker marker = mMarkers.get(siteId);
+					marker.setPosition(siteLocation);
+					marker.setTitle(site.getName());
+				}
 			}
-
-			mLocationManager.put(locationId, location);
 		}
 	}
 
@@ -84,16 +89,15 @@ public class LogisticsMap implements MapLoadedListener, MapLocationListener,
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
-		MapLocation location = mLocationManager.getLocation(marker);
-		if (location != null) {
-			Site site = new Site();
-			site.setId(location.getId());
-			site.setLatitude(location.getLatitude());
-			site.setLongitude(location.getLongitude());
-			site.setName(location.getName());
-			site.setParentId(1);
-			OrderDialogFragment fragment = OrderDialogFragment.newInstance(site);
-			fragment.show(mActivity.getFragmentManager(), "order_dialog_fragment");
+		if (mLocalDatabaseHelper != null) {
+			List<Site> sites = mLocalDatabaseHelper.getSites();
+			for (Site site : sites) {
+				if (mMarkers.get(site.getId()).equals(marker)) {
+					OrderDialogFragment fragment = OrderDialogFragment.newInstance(site);
+					fragment.show(mActivity.getFragmentManager(), "order_dialog_fragment");
+					break;
+				}
+			}
 		}
 	}
 }

@@ -28,7 +28,6 @@ apply plugin: 'android'
 
 dependencies {
     compile 'com.google.android.gms:play-services:4.0.+'
-    compile 'com.missionse:http-database-connector:1.0.0-SNAPSHOT@aar'
     compile 'com.missionse:ui-extensions:1.0.0-SNAPSHOT@aar'
     compile 'se.emilsjolander:stickylistheaders:+'
     compile 'joda-time:joda-time:2.+'

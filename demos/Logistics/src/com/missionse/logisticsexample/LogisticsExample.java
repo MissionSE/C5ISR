@@ -51,6 +51,7 @@ public class LogisticsExample extends DrawerActivity implements DatabaseUpdateCo
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDatabaseHelper = DatabaseFactory.initializeDatabase(this, this);
+		mLogisticsMap.setDatabaseHelper(mDatabaseHelper);
 	}
 
 	private void displayMap() {
@@ -238,7 +239,7 @@ public class LogisticsExample extends DrawerActivity implements DatabaseUpdateCo
 	@Override
 	public void onDatabaseUpdateComplete() {
 		Log.v(TAG, "Database update complete.");
-		mLogisticsMap.requestAllLocations();
+		mLogisticsMap.updateLocations();
 	}
 
 	@Override
