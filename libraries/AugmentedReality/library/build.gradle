@@ -1,7 +1,20 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-plugin:1.0'
+    }
+}
+
 apply plugin: 'android-library'
-apply plugin: 'maven'
+apply plugin: 'android-maven'
 
 repositories {
+    maven {
+        url "http://mad/mvn-repo"
+    }
     mavenLocal()
 }
 

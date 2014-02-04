@@ -1,4 +1,15 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-plugin:1.0'
+    }
+}
+
 apply plugin: 'android-library'
+apply plugin: 'android-maven'
 
 dependencies {
     compile 'com.android.support:support-v13:19.0.+'

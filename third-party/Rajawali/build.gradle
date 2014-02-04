@@ -6,8 +6,12 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:0.8.+'
         classpath 'com.github.townsfolk:gradle-release:1.2'
+        classpath 'com.github.dcendents:android-maven-plugin:1.0'
     }
 }
+
+apply plugin: 'android-library'
+apply plugin: 'android-maven'
 
 //see https://github.com/townsfolk/gradle-release
 apply plugin: 'release'
@@ -15,8 +19,6 @@ apply plugin: 'release'
 task wrapper(type: Wrapper) {
     gradleVersion = '1.10'
 }
-
-apply plugin: 'android-library'
 
 dependencies {
     compile 'com.android.support:support-v13:19.0.+'

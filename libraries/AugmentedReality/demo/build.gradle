@@ -5,6 +5,9 @@ dependencies {
 }
 
 repositories {
+    maven {
+        url "http://mad/mvn-repo"
+    }
     mavenLocal()
 }
 

@@ -1,7 +1,15 @@
-apply plugin: 'android-library'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
 
-dependencies {
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-plugin:1.0'
+    }
 }
+
+apply plugin: 'android-library'
+apply plugin: 'android-maven'
 
 android {
     compileSdkVersion 19

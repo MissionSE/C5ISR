@@ -2,7 +2,9 @@ apply plugin: 'android'
 
 repositories {
 	mavenCentral()
-	mavenLocal()
+    maven {
+        url "http://mad/mvn-repo"
+    }
 }
 
 dependencies {
