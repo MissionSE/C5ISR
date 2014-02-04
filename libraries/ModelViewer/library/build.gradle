@@ -12,10 +12,10 @@ apply plugin: 'android-library'
 apply plugin: 'android-maven'
 
 repositories {
+    mavenLocal()
     maven {
         url "http://mad/mvn-repo"    
     }
-    mavenLocal()
 }
 
 dependencies {

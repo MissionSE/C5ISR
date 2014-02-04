@@ -21,10 +21,10 @@ task wrapper(type: Wrapper) {
 }
 
 repositories {
+    mavenLocal()
     maven {
         url "http://mad/mvn-repo"
     }
-    mavenLocal()
 }
 
 dependencies {
