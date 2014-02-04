@@ -9,6 +9,7 @@ import java.util.TimerTask;
 public class DatabaseUpdateThread extends TimerTask implements DatabaseRequestCompletedListener {
 	private DatabaseUpdateCompleteListener mUpdateCompleteListener;
 	private List<RemoteDatabaseRequestor> mRequestors;
+    private boolean mRun = false;
 
 	/**
 	 * Constructor.
@@ -19,13 +20,16 @@ public class DatabaseUpdateThread extends TimerTask implements DatabaseRequestCo
 			final List<RemoteDatabaseRequestor> requestors) {
 		mUpdateCompleteListener = updateCompleteListener;
 		mRequestors = requestors;
+        mRun = true;
 	}
 
 	@Override
 	public void run() {
-		for (RemoteDatabaseRequestor requestor : mRequestors) {
-			requestor.fetchAll(this);
-		}
+        while(mRun) {
+            for (RemoteDatabaseRequestor requestor : mRequestors) {
+                requestor.fetchAll(this);
+            }
+        }
 	}
 
 	@Override
@@ -42,4 +46,18 @@ public class DatabaseUpdateThread extends TimerTask implements DatabaseRequestCo
 			mUpdateCompleteListener.onDatabaseUpdateComplete();
 		}
 	}
+
+    /**
+     * Pause the the update thread from running.
+     */
+    public void pause() {
+        mRun = false;
+    }
+
+    /**
+     * Continue running the update thread.
+     */
+    public void resume() {
+        mRun = true;
+    }
 }

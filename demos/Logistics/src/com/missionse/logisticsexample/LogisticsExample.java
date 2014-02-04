@@ -242,4 +242,20 @@ public class LogisticsExample extends DrawerActivity implements DatabaseUpdateCo
 		Log.v(TAG, "Database update complete.");
 		mLogisticsMap.requestAllLocations();
 	}
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        DatabaseFactory.pause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        DatabaseFactory.resume();
+    }
+
+
+
 }

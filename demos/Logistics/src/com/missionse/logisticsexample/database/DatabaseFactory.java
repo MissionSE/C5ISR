@@ -34,6 +34,7 @@ import com.missionse.logisticsexample.model.mappings.SiteToOrder;
 public final class DatabaseFactory {
 	private static final long DELAY_BEFORE_FIRST_RUN_IN_MS = 500;
 	private static final long INTERVAL_BETWEEN_RUNS_IN_MS = 10000;
+    private static DatabaseUpdateThread mDatabaseThread = null;
 
 	private DatabaseFactory() {
 	}
@@ -49,7 +50,6 @@ public final class DatabaseFactory {
 		LocalDatabaseHelper databaseHelper = null;
 		LocalDatabaseAccessor localDatabaseAccessor = null;
 		RemoteDatabaseAccessor remoteDatabaseAccessor = null;
-		DatabaseUpdateThread databaseUpdateThread = null;
 		Timer databasePeriodic = null;
 
 		localDatabaseAccessor = new LocalDatabaseAccessor(context, getDaoClasses());
@@ -57,10 +57,10 @@ public final class DatabaseFactory {
 		remoteDatabaseAccessor = new RemoteDatabaseAccessor(context);
 
 		List<RemoteDatabaseRequestor> databaseRequestors = getDatabaseRequestors(context, remoteDatabaseAccessor, localDatabaseAccessor);
-		databaseUpdateThread = new DatabaseUpdateThread(updateCompleteListener, databaseRequestors);
+		mDatabaseThread = new DatabaseUpdateThread(updateCompleteListener, databaseRequestors);
 
 		databasePeriodic = new Timer();
-		databasePeriodic.schedule(databaseUpdateThread, DELAY_BEFORE_FIRST_RUN_IN_MS, INTERVAL_BETWEEN_RUNS_IN_MS);
+		databasePeriodic.schedule(mDatabaseThread, DELAY_BEFORE_FIRST_RUN_IN_MS, INTERVAL_BETWEEN_RUNS_IN_MS);
 
 		return databaseHelper;
 	}
@@ -97,4 +97,18 @@ public final class DatabaseFactory {
 
 		return databaseRequestors;
 	}
+
+    /**
+     * This will pause any necessary components used by the DatabaseFactory.
+     */
+    public static void pause() {
+        mDatabaseThread.pause();
+    }
+
+    /**
+     *  Resume any necessary components used by the DatabaseFactory.
+     */
+    public static void resume() {
+       mDatabaseThread.resume();
+    }
 }
