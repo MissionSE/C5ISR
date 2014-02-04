@@ -48,8 +48,8 @@ public class GetAllLocationsTask extends HttpRequestTask {
 		mTagName = resources.getString(R.string.tag_name);
 		mTagLatitude = resources.getString(R.string.tag_latitude);
 		mTagLongitude = resources.getString(R.string.tag_longitude);
-		mGetLocationsURL = resources.getString(R.string.map_db_path)
-				+ resources.getString(R.string.get_all_locations);
+		mGetLocationsURL = resources.getString(R.string.remote_db_path)
+				+ resources.getString(R.string.get_all_sites);
 	}
 
 	@Override
