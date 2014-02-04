@@ -25,7 +25,7 @@ public class DatabaseUpdateThread extends TimerTask implements DatabaseRequestCo
 
 	@Override
 	public void run() {
-		while (mRun) {
+		if (mRun) {
 			for (RemoteDatabaseRequestor requestor : mRequestors) {
 				requestor.fetchAll(this);
 			}
