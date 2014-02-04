@@ -18,10 +18,13 @@
         <LinearLayout
             android:id="@+id/map_filtercontrols"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="5dp"
             android:gravity="center"
             android:background="@drawable/map_filter_layout_background"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
             android:orientation="vertical">
 
             <Button

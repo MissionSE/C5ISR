@@ -431,9 +431,7 @@ GoogleMap.OnInfoWindowClickListener {
         case R.id.buttonFilter:
             if (mSlidingLayer.isOpened()) {
                 mSlidingLayer.closeLayer(true);
-                getMapViewerFragment().getMainMap().setPadding(0, 0, 0, 0);
             } else {
-                getMapViewerFragment().getMainMap().setPadding(0, 0, mSlidingLayer.getWidth(), 0);
                 mSlidingLayer.openLayer(true);
             }
             return true;
