@@ -23,5 +23,5 @@ if (propFile.exists()) {
     }
 } else {
         android.buildTypes.release.signingConfig = null
-		android.buildTypes.debug.signingConfig = null
+        android.buildTypes.debug.signingConfig = null
 }
