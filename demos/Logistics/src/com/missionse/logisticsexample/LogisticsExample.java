@@ -30,16 +30,14 @@ import com.missionse.uiextensions.touchlistener.SwipeToDismissListener;
  */
 public class LogisticsExample extends DrawerActivity implements DatabaseUpdateCompleteListener {
 	private static final String TAG = LogisticsExample.class.getName();
-
-	private LogisticsDrawerFactory mDrawerFactory;
-	private LogisticsMap mLogisticsMap;
-	private LocalDatabaseHelper mDatabaseHelper;
-
 	private static final int INITIAL_NOTIFICATION_ID = 300;
 	private static int mCurrentNotificationId = INITIAL_NOTIFICATION_ID;
 	private static int mNotificationCount = 0;
 	private static int mNotificationBackground = R.drawable.notification_action_bar_zero;
 	private static int mNotificationTextColor = R.color.default_very_dark_gray;
+	private LogisticsDrawerFactory mDrawerFactory;
+	private LogisticsMap mLogisticsMap;
+	private LocalDatabaseHelper mDatabaseHelper;
 
 	/**
 	 * Constructs a new LogisticsExample.
@@ -243,19 +241,15 @@ public class LogisticsExample extends DrawerActivity implements DatabaseUpdateCo
 		mLogisticsMap.requestAllLocations();
 	}
 
+	@Override
+	public void onPause() {
+		super.onPause();
+		DatabaseFactory.pause();
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        DatabaseFactory.pause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        DatabaseFactory.resume();
-    }
-
-
-
+	@Override
+	public void onResume() {
+		super.onResume();
+		DatabaseFactory.resume();
+	}
 }

@@ -1,9 +1,5 @@
 package com.missionse.logisticsexample.database;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-
 import android.content.Context;
 
 import com.missionse.logisticsexample.database.table.InventoryItemDatabaseRequestor;
@@ -28,13 +24,17 @@ import com.missionse.logisticsexample.model.mappings.OrderToOrderItem;
 import com.missionse.logisticsexample.model.mappings.SiteToInventoryItem;
 import com.missionse.logisticsexample.model.mappings.SiteToOrder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+
 /**
  * Provides functionality to set up the database objects.
  */
 public final class DatabaseFactory {
 	private static final long DELAY_BEFORE_FIRST_RUN_IN_MS = 500;
 	private static final long INTERVAL_BETWEEN_RUNS_IN_MS = 10000;
-    private static DatabaseUpdateThread mDatabaseThread = null;
+	private static DatabaseUpdateThread mDatabaseThread = null;
 
 	private DatabaseFactory() {
 	}
@@ -98,17 +98,17 @@ public final class DatabaseFactory {
 		return databaseRequestors;
 	}
 
-    /**
-     * This will pause any necessary components used by the DatabaseFactory.
-     */
-    public static void pause() {
-        mDatabaseThread.pause();
-    }
+	/**
+	 * This will pause any necessary components used by the DatabaseFactory.
+	 */
+	public static void pause() {
+		mDatabaseThread.pause();
+	}
 
-    /**
-     *  Resume any necessary components used by the DatabaseFactory.
-     */
-    public static void resume() {
-       mDatabaseThread.resume();
-    }
+	/**
+	 * Resume any necessary components used by the DatabaseFactory.
+	 */
+	public static void resume() {
+		mDatabaseThread.resume();
+	}
 }
