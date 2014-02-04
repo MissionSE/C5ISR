@@ -14,10 +14,15 @@ function echoc() {
 
 origDir=`pwd`
 
+if [ ! -f $HOME/.gradle/gradle.properties ]; then
+	cp gradle.properties $HOME/.gradle
+fi
+
 thirdPartyLibraries=(
 	'third-party/Rajawali'
 	'third-party/DroidAR'
 	'third-party/ARMarker'
+	'third-party/ColorPickerPreference'
 	)
 
 libraries=(
@@ -41,8 +46,8 @@ do
 	unzip -uq '*.zip'
 	echoc "DONE"
 	echo
-	echoc "Running gradle tasks clean, build, and uploadArchives in $DIR..."
-	./gradlew -uq clean build uploadArchives
+	echoc "Running gradle tasks clean, build, and install in $DIR..."
+	./gradlew -uq clean build install
 	echoc "DONE"
 	cd $origDir
 	echo
@@ -51,8 +56,8 @@ done
 for DIR in "${libraries[@]}"
 do
 	cd "$DIR"
-	echoc "Running gradle tasks clean, build, and uploadArchives in $DIR..."
-	../gradlew -q clean build uploadArchives
+	echoc "Running gradle tasks clean, build, and install in $DIR..."
+	../gradlew -q clean build install
 	echoc "DONE"
 	cd $origDir
 	echo
