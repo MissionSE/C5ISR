@@ -10,6 +10,7 @@ dependencies {
 	compile 'com.google.maps.android:android-maps-utils:0.2+'
 	compile 'com.koushikdutta.ion:ion:1.2+'
 	compile 'com.google.code.geocoder-java:geocoder-java:+'
+    compile 'net.margaritov.preference:colorpicker:1.11.0-SNAPSHOT@aar'
 }
 
 android {
