@@ -65,6 +65,7 @@ import com.missionse.mapsexample.utils.ImageLoader;
 import com.missionse.mapsexample.utils.Utils;
 import com.missionse.mapviewer.MapViewerFragment;
 import com.missionse.mapviewer.MiniMapFragment;
+import com.slidinglayer.SlidingLayer;
 
 /**
  * Example use of marker management and map filtering.
@@ -280,6 +281,7 @@ GoogleMap.OnInfoWindowClickListener {
 	}
 
 	private SparseArray<Button> mFilterButtons = new SparseArray<Button>();
+    private SlidingLayer mSlidingLayer;
 	private LinearLayout mFilterControls;
 	private SparseBooleanArray mFilterLoaded = new SparseBooleanArray();
 	private ImageLoader mImageLoader; // Handles loading the contact image in a
@@ -426,6 +428,15 @@ GoogleMap.OnInfoWindowClickListener {
 		case R.id.menu_search:
 			startSearch(null, false, Bundle.EMPTY, false);
 			return true;
+        case R.id.buttonFilter:
+            if (mSlidingLayer.isOpened()) {
+                mSlidingLayer.closeLayer(true);
+                getMapViewerFragment().getMainMap().setPadding(0, 0, 0, 0);
+            } else {
+                getMapViewerFragment().getMainMap().setPadding(0, 0, mSlidingLayer.getWidth(), 0);
+                mSlidingLayer.openLayer(true);
+            }
+            return true;
 		case R.id.myLocation:
 			item.setChecked(enabled);
 			mMapViewerFragment.setMyLocationEnabled(enabled);
@@ -755,6 +766,8 @@ GoogleMap.OnInfoWindowClickListener {
 						clearBackStack(false);
 					}
 				});
+
+        mSlidingLayer = (SlidingLayer) findViewById(R.id.map_slidingLayer);
 
 		mFilterControls = (LinearLayout) findViewById(R.id.map_filtercontrols);
 

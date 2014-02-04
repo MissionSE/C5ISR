@@ -33,4 +33,11 @@
 
     <style name="addressButton" />
 
+    <style name="MapFilterSelectorButton" parent="android:Widget.Button">
+        <item name="android:background">@drawable/map_filter_button_background</item>
+        <item name="android:minWidth">40dp</item>
+        <item name="android:textColor">@color/map_filterselect_inactive</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
 </resources>
