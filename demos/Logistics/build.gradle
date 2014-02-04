@@ -19,6 +19,9 @@ task wrapper(type: Wrapper) {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        url "http://mad/mvn-repo"
+    }
 }
 
 apply plugin: 'android'

@@ -11,9 +11,6 @@ buildscript {
 
 apply plugin: 'android'
 
-//see https://github.com/townsfolk/gradle-release
-apply plugin: 'release'
-
 task wrapper(type: Wrapper) {
     gradleVersion = '1.10'
 }
@@ -26,6 +23,9 @@ dependencies {
 repositories {
     mavenLocal()
     mavenCentral()
+    maven {
+        url "http://mad/mvn-repo"
+    }
 }
 
 android {
@@ -51,7 +51,7 @@ android {
 
     buildTypes {
         release {
-            //signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
         }
         debug {
             packageNameSuffix ".debug"
@@ -59,4 +59,4 @@ android {
     }
 }
 
-//apply from: '../../distribution/signing.gradle'
+apply from: '../../distribution/signing.gradle'

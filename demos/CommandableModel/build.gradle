@@ -28,6 +28,9 @@ dependencies {
 repositories {
     mavenLocal()
     mavenCentral()
+    maven {
+        url "http://mad/mvn-repo"
+    }
 }
 
 android {
