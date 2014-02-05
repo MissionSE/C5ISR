@@ -18,5 +18,7 @@ if (propertiesFile.exists()) {
 
             classpath = files(configurations.compile)
         }
+
+        check.dependsOn tasks.withType(Checkstyle)
     }
 }
