@@ -1,12 +1,5 @@
 package com.missionse.logisticsexample.databaseview.order;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -14,22 +7,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Filter;
 import android.widget.TextView;
-
 import com.missionse.logisticsexample.R;
 import com.missionse.logisticsexample.database.LocalDatabaseHelper;
 import com.missionse.logisticsexample.model.Order;
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Displays a search-able list of Orders, with section headers dependent on sort criteria.
  */
 public class OrderListFragment extends Fragment {
 
+	/**
+	 * The type of sorts.
+	 */
 	public enum SortType {
 		DEFAULT, SEVERITY, STATUS, SITE
 	}
@@ -57,6 +59,10 @@ public class OrderListFragment extends Fragment {
 		mDatabaseHelper = databaseHelper;
 	}
 
+	/**
+	 * Gets the entry adapter.
+	 * @return The adapter.
+	 */
 	public StickyListHeadersAdapter getEntryAdapter() {
 		mOrderAdapter = new OrderAdapter(getActivity(), R.layout.list_entry, R.layout.list_entry_header);
 		List<Order> orders = mDatabaseHelper.getOrders();

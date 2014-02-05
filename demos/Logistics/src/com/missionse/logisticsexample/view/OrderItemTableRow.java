@@ -1,7 +1,5 @@
 package com.missionse.logisticsexample.view;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,6 +12,8 @@ import com.missionse.logisticsexample.R;
 import com.missionse.logisticsexample.dialog.OnTableRowDataSetChange;
 import com.missionse.logisticsexample.model.ItemName;
 import com.missionse.logisticsexample.model.OrderItem;
+
+import java.util.List;
 
 /**
  * Custom layout for displaying OrderItem data.
@@ -32,13 +32,10 @@ public class OrderItemTableRow extends TableRow {
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param activity
-	 *            The base activity that this fragment comes from.
-	 * @param itemNames
-	 *            The list of names for items.
-	 * @param dataSetChange
-	 *            The base Table.
+	 * @param activity The base activity that this fragment comes from.
+	 * @param orderItem The order item.
+	 * @param itemNames The list of names for items.
+	 * @param dataSetChange The base Table.
 	 */
 	public OrderItemTableRow(Activity activity, OrderItem orderItem, List<ItemName> itemNames, OnTableRowDataSetChange dataSetChange) {
 		super(activity);

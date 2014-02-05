@@ -1,7 +1,6 @@
 package com.missionse.logisticsexample.map;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -61,6 +60,9 @@ public class LogisticsMap implements MapLoadedListener, OnMapLongClickListener,
 		updateLocations();
 	}
 
+	/**
+	 * Update the markers on the map using the Site list.
+	 */
 	public void updateLocations() {
 		if (mMap != null) {
 			List<Site> sites = mLocalDatabaseHelper.getSites();

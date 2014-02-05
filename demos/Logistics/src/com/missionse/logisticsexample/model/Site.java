@@ -1,10 +1,10 @@
 package com.missionse.logisticsexample.model;
 
-import java.util.Map;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
+
+import java.util.Map;
 
 /**
  * Represents a location on a map.
@@ -98,8 +98,7 @@ public class Site extends DBEntity implements Comparable<Object> {
 	}
 
 	/**
-	 * @param mShortName
-	 *            the mShortName to set
+	 * @param shortName the shortName to set
 	 */
 	public void setShortName(String shortName) {
 		mShortName = shortName;
