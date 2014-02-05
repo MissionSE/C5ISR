@@ -1,0 +1,22 @@
+apply plugin: 'checkstyle'
+
+File propertiesFile = file('checkstyle.properties')
+if (propertiesFile.exists()) {
+    def Properties properties = new Properties()
+    properties.load(new FileInputStream(propertiesFile))
+
+    if (properties.containsKey('REPOSITORY_ROOT')) {
+        File repositoryDir = file(properties['REPOSITORY_ROOT'])
+        File checksFile = file(repositoryDir.getPath()+'/staticanalysis/android_style_checks.xml')
+
+        task checkstyle(type: Checkstyle) {
+            configFile = checksFile
+            configProperties = ['repository.root.dir':repositoryDir.getPath()]
+            source 'src'
+            include '**/*.java'
+            exclude '**/build/**'
+
+            classpath = files(configurations.compile)
+        }
+    }
+}

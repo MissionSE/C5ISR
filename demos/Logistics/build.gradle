@@ -67,4 +67,5 @@ android {
     }
 }
 
+apply from: '../../staticanalysis/checkstyle.gradle'
 apply from: '../../distribution/signing.gradle'
