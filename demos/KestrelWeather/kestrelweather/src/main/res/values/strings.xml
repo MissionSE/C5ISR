@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">KestrelWeather</string>
-
     <string name="action_settings">Settings</string>
-
     <string name="drawer_overview">OVERVIEW</string>
 
+    <string name="rain_overlay_name">Rain</string>
+    <string name="rain_overlay_url" formatted="false">http://tile.openweathermap.org/map/rain/%d/%d/%d.png</string>
+
+    <string name="cloud_overlay_name">Clouds</string>
+    <string name="cloud_overlay_url" formatted="false">http://tile.openweathermap.org/map/clouds/%d/%d/%d.png</string>
+
+    <string name="snow_overlay_name">Snow</string>
+    <string name="snow_overlay_url" formatted="false">http://tile.openweathermap.org/map/snow/%d/%d/%d.png</string>
+
+    <string name="pressure_overlay_name">Pressure</string>
+    <string name="pressure_overlay_url" formatted="false">http://tile.openweathermap.org/map/pressure/%d/%d/%d.png</string>
+
+    <string name="temp_overlay_name">Temperature</string>
+    <string name="temp_overlay_url" formatted="false">http://tile.openweathermap.org/map/temp/%d/%d/%d.png</string>
+
+    <string name="precipitation_overlay_name">Precipitation</string>
+    <string name="precipitation_overlay_url" formatted="false">http://tile.openweathermap.org/map/precipitation/%d/%d/%d.png</string>
+
+    <string name="wind_overlay_name">Wind</string>
+    <string name="wind_overlay_url" formatted="false">http://tile.openweathermap.org/map/wind/%d/%d/%d.png</string>
 </resources>
