@@ -49,4 +49,8 @@
     <string name="no_address">No addresses found</string>
     <string name="no_intent_found">No application found to handle this action</string>
 
+    <string name="map_filter_other">Other</string>
+    <string name="map_filter_work">Work</string>
+    <string name="map_filter_home">Home</string>
+
 </resources>

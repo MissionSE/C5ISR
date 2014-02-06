@@ -27,29 +27,33 @@
             android:paddingTop="5dp"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/map_filter3"
-                style="@style/MapFilterSelectorButton"
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/map_filtercontrol_3" />
-
-            <Button
-                android:id="@+id/map_filter2"
-                style="@style/MapFilterSelectorButton"
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/map_filtercontrol_2" />
-
-            <Button
+            <ImageButton
                 android:id="@+id/map_filter1"
                 style="@style/MapFilterSelectorButton"
                 android:padding="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/map_filtercontrol_1" />
+                android:src="@drawable/ic_home"
+                android:contentDescription="@string/map_filter_home" />
+
+            <ImageButton
+                android:id="@+id/map_filter2"
+                style="@style/MapFilterSelectorButton"
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_building"
+                android:contentDescription="@string/map_filter_work" />
+
+            <ImageButton
+                android:id="@+id/map_filter3"
+                style="@style/MapFilterSelectorButton"
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_flag"
+                android:contentDescription="@string/map_filter_other"/>
+
         </LinearLayout>
     </com.slidinglayer.SlidingLayer>
 

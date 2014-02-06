@@ -42,6 +42,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -280,7 +281,7 @@ GoogleMap.OnInfoWindowClickListener {
 		return arguments;
 	}
 
-	private SparseArray<Button> mFilterButtons = new SparseArray<Button>();
+	private SparseArray<ImageButton> mFilterButtons = new SparseArray<ImageButton>();
     private SlidingLayer mSlidingLayer;
 	private LinearLayout mFilterControls;
 	private SparseBooleanArray mFilterLoaded = new SparseBooleanArray();
@@ -701,14 +702,10 @@ GoogleMap.OnInfoWindowClickListener {
 		int textColorResource;
 		if (visible) {
 			backgroundResource = R.drawable.map_filter_button_active_background;
-			textColorResource = R.color.map_filterselect_active;
 		} else {
 			backgroundResource = R.drawable.map_filter_button_background;
-			textColorResource = R.color.map_filterselect_inactive;
 		}
 		mFilterButtons.get(type).setBackgroundResource(backgroundResource);
-		mFilterButtons.get(type).setTextColor(
-				getResources().getColor(textColorResource));
 	}
 
 	private void storeContactMarkers() {
@@ -771,14 +768,15 @@ GoogleMap.OnInfoWindowClickListener {
 
 		// setup filter button handlers
 		mFilterButtons.put(StructuredPostal.TYPE_HOME,
-				(Button) findViewById(R.id.map_filter1));
+				(ImageButton) findViewById(R.id.map_filter1));
 		mFilterButtons.put(StructuredPostal.TYPE_WORK,
-				(Button) findViewById(R.id.map_filter2));
+				(ImageButton) findViewById(R.id.map_filter2));
 		mFilterButtons.put(StructuredPostal.TYPE_OTHER,
-				(Button) findViewById(R.id.map_filter3));
+				(ImageButton) findViewById(R.id.map_filter3));
 
-		Button button = mFilterButtons.get(StructuredPostal.TYPE_HOME);
-		button.setOnClickListener(new View.OnClickListener() {
+		ImageButton button;
+        button = mFilterButtons.get(StructuredPostal.TYPE_HOME);
+        button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				showMarkers(StructuredPostal.TYPE_HOME);
