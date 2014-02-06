@@ -3,9 +3,9 @@
     <string name="app_name">KestrelWeather</string>
     <string name="action_settings">Settings</string>
     <string name="drawer_overview">OVERVIEW</string>
-	<string name="drawer_create_report">CREATE</string>
-	<string name="drawer_sync_reports">SYNC</string>
-	<string name="drawer_report_database">DATABASE</string>
+    <string name="drawer_create_report">CREATE</string>
+    <string name="drawer_sync_reports">SYNC</string>
+    <string name="drawer_report_database">DATABASE</string>
 
     <string name="rain_overlay_name">Rain</string>
     <string name="rain_overlay_url" formatted="false">http://tile.openweathermap.org/map/rain/%d/%d/%d.png</string>
@@ -24,6 +24,16 @@
 
     <string name="precipitation_overlay_name">Precipitation</string>
     <string name="precipitation_overlay_url" formatted="false">http://tile.openweathermap.org/map/precipitation/%d/%d/%d.png</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Create Report -->
+    <string name="obtain_readings">Obtain Readings</string>
+    <string name="view_readings">View Readings</string>
+    <string name="notes">Notes</string>
+    <string name="pictures">Pictures</string>
+    <string name="audio_recording">Audio Recording</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 
     <string name="wind_overlay_name">Wind</string>
     <string name="wind_overlay_url" formatted="false">http://tile.openweathermap.org/map/wind/%d/%d/%d.png</string>
