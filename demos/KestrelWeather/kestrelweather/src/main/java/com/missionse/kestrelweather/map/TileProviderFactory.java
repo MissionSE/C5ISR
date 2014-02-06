@@ -6,12 +6,20 @@ import com.google.android.gms.maps.model.UrlTileProvider;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * Provides utility functions to create TileProviders.
+ */
 public final class TileProviderFactory {
-	private final static int TILE_SIZE = 256;
+	private static final int TILE_SIZE = 256;
 
 	private TileProviderFactory() {
 	}
 
+	/**
+	 * Creates a TileProvider utilizing a URL.
+	 * @param tileAddress The address of the tile provider.
+	 * @return The TileProvider created.
+	 */
 	public static TileProvider createUrlTileProvider(final String tileAddress) {
 		return new UrlTileProvider(TILE_SIZE, TILE_SIZE) {
 			@Override

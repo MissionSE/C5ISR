@@ -15,46 +15,46 @@ import java.util.List;
 
 public class KestrelWeatherDrawerFactory {
 
-    public static final int MAP_OVERVIEW = 101;
-    //public static final int REPORT_DATABASE = 102;
+	public static final int MAP_OVERVIEW = 101;
+	//public static final int REPORT_DATABASE = 102;
 
-    private Context mContext;
+	private Context mContext;
 
-    public KestrelWeatherDrawerFactory(final Context context) {
-        mContext = context;
-    }
+	public KestrelWeatherDrawerFactory(final Context context) {
+		mContext = context;
+	}
 
-    public DrawerConfigurationContainer createDrawers() {
-        DrawerConfigurationContainer container = new DrawerConfigurationContainer(R.layout.activity_kestrel_weather,
-            R.id.drawer_layout);
+	public DrawerConfigurationContainer createDrawers() {
+		DrawerConfigurationContainer container = new DrawerConfigurationContainer(R.layout.activity_kestrel_weather,
+				R.id.drawer_layout);
 
-        createNavigationDrawer(container);
-        createSyncDrawer(container);
+		createNavigationDrawer(container);
+		createSyncDrawer(container);
 
-        return container;
-    }
+		return container;
+	}
 
-    private void createNavigationDrawer(final DrawerConfigurationContainer container) {
-        DrawerConfiguration configuration = new DrawerConfiguration(DrawerType.LEFT, mContext);
-        configuration.setDrawer(R.id.navigation_drawer);
-        container.addConfiguration(configuration);
-    }
+	private void createNavigationDrawer(final DrawerConfigurationContainer container) {
+		DrawerConfiguration configuration = new DrawerConfiguration(DrawerType.LEFT, mContext);
+		configuration.setDrawer(R.id.navigation_drawer);
+		container.addConfiguration(configuration);
+	}
 
-    private void createSyncDrawer(final DrawerConfigurationContainer container) {
-        DrawerConfiguration configuration = new DrawerConfiguration(DrawerType.RIGHT, mContext);
-        configuration.setDrawer(R.id.sync_drawer);
-        //configuration.setShouldCloseOnSelect(false);
-        container.addConfiguration(configuration);
-    }
+	private void createSyncDrawer(final DrawerConfigurationContainer container) {
+		DrawerConfiguration configuration = new DrawerConfiguration(DrawerType.RIGHT, mContext);
+		configuration.setDrawer(R.id.sync_drawer);
+		//configuration.setShouldCloseOnSelect(false);
+		container.addConfiguration(configuration);
+	}
 
-    public void addNavigationMenuItems(final DrawerAdapter adapter) {
-        List<DrawerItem> menu = new ArrayList<DrawerItem>();
+	public void addNavigationMenuItems(final DrawerAdapter adapter) {
+		List<DrawerItem> menu = new ArrayList<DrawerItem>();
 
-        menu.add(DrawerSimpleItem.create(MAP_OVERVIEW, mContext.getResources().getString(R.string.drawer_overview),
-            0, true));
+		menu.add(DrawerSimpleItem.create(MAP_OVERVIEW, mContext.getResources().getString(R.string.drawer_overview),
+				0, true));
 
-        for (DrawerItem item : menu) {
-            adapter.add(item);
-        }
-    }
+		for (DrawerItem item : menu) {
+			adapter.add(item);
+		}
+	}
 }
