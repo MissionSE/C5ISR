@@ -6,6 +6,11 @@
             android:summary="@string/view_pager_summary" >
             <intent android:action=".viewpager.ViewPagerActivity" />
         </PreferenceScreen>
+        <PreferenceScreen
+                android:title="@string/navigation_drawer"
+                android:summary="@string/navigation_drawer_summary" >
+            <intent android:action=".navigationdrawer.NavigationDrawerActivity" />
+        </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>
     

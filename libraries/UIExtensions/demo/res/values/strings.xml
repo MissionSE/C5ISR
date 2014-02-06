@@ -12,7 +12,21 @@
     
     <!-- General Section headers -->
     <string name="view_pager">View Pager</string>
-    <string name="view_pager_summary">This spawns a View Pager with a Sliding Menu.</string>
+    <string name="view_pager_summary">This starts an activity demonstrating a basic View Pager.</string>
+    <string name="navigation_drawer">Navigation Drawer</string>
+    <string name="navigation_drawer_summary">This starts an activity demonstrating use of the Navigation Drawer wrapper.</string>
+
+    <!-- Navigation Drawer content -->
+    <string name="navigation_drawer_content">This is some basic content.</string>
+    <string name="basic_item">Basic Item</string>
+    <string name="complex_item">Complex Item</string>
+    <string name="complex_item_subtitle">This is a subtitle for the Complex Item.</string>
+    <string name="item_header">Item Header</string>
+    <string name="nochange_item">NoChange Item</string>
+    <string name="nochange_item_subtitle">When selected, this item doesn\'t change the ActionBar title.</string>
+    <string name="icon_item">Icon Item</string>
+    <string name="custom_selection_item">Custom Selection Item</string>
+    <string name="custom_selection_item_subtitle">This item uses a custom layout for selection colors.</string>
     
     <!-- Content Description -->
     <string name="right_arrow">Right arrow</string>

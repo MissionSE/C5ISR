@@ -3,6 +3,7 @@ package com.missionse.uiextensions.navigationdrawer.entry;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.missionse.uiextensions.navigationdrawer.Drawer;
 import com.missionse.uiextensions.navigationdrawer.DrawerItem;
 import com.missionse.uiextensions.navigationdrawer.DrawerItemType;
 
@@ -72,7 +73,7 @@ public final class DrawerComplexItem extends DrawerItem {
 	public static final DrawerItemType TYPE = DrawerItemType.COMPLEX;
 	private String mLabel;
 	private String mSubtitle;
-	private int mIcon;
+	private int mIcon = Drawer.NO_ICON;
 	private boolean mWillChangeActionBarTitle;
 
 	private DrawerComplexItem() {
@@ -155,7 +156,7 @@ public final class DrawerComplexItem extends DrawerItem {
 	}
 
 	private void setIcon(final int icon) {
-		if (icon != 0) {
+		if (icon != Drawer.NO_ICON) {
 			mIcon = icon;
 		}
 	}

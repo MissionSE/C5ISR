@@ -1,8 +1,10 @@
 package com.missionse.uiextensions.navigationdrawer.entry;
 
+import android.content.Context;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.missionse.uiextensions.navigationdrawer.Drawer;
 import com.missionse.uiextensions.navigationdrawer.DrawerItem;
 import com.missionse.uiextensions.navigationdrawer.DrawerItemType;
 
@@ -54,8 +56,12 @@ public final class DrawerSimpleItem extends DrawerItem {
 
 	public static final DrawerItemType TYPE = DrawerItemType.SIMPLE;
 	private String mLabel;
-	private int mIcon;
+	private int mIcon = Drawer.NO_ICON;
 	private boolean mWillChangeActionBarTitle;
+
+    private int mBackgroundDrawable = Drawer.USE_DEFAULT;
+	private int mTextColorStateList = Drawer.USE_DEFAULT;
+    private Context mContext;
 
 	private DrawerSimpleItem() {
 	}
@@ -123,8 +129,56 @@ public final class DrawerSimpleItem extends DrawerItem {
 	}
 
 	private void setIcon(final int icon) {
-		if (icon != 0) {
+		if (icon != Drawer.NO_ICON) {
 			mIcon = icon;
 		}
 	}
+
+    /**
+     * Returns the resource ID to be used for drawing the background of this item.
+     * @return the resource ID
+     */
+    public int getBackgroundDrawable() {
+        return mBackgroundDrawable;
+    }
+
+    /**
+     * Sets the resource ID to be used when drawing the background of the item.
+     * @param resourceID the resource to be used
+     * @param context the context in which the resourceID can be found
+     */
+    public void setBackgroundDrawable(final int resourceID, final Context context) {
+        if (resourceID != Drawer.USE_DEFAULT && context != null) {
+            mBackgroundDrawable = resourceID;
+            mContext = context;
+        }
+    }
+
+	/**
+	 * Returns the Color State List to use when drawing text for this item.
+	 * @return the resource ID
+	 */
+	public int getTextColorStateList() {
+		return mTextColorStateList;
+	}
+
+	/**
+	 * Sets the resource ID to be used when drawing the text of the item.
+	 * @param resourceID the resource to be used
+	 * @param context the context in which the resourceID can be found
+	 */
+	public void setTextColorStateList(final int resourceID, final Context context) {
+		if (resourceID != Drawer.USE_DEFAULT && context != null) {
+			mTextColorStateList = resourceID;
+			mContext = context;
+		}
+	}
+
+    /**
+     * Returns the context to use for drawable resource ID resolution.
+     * @return the context
+     */
+    public Context getContext() {
+        return mContext;
+    }
 }

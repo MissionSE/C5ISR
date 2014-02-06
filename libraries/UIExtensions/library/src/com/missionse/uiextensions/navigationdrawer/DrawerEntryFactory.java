@@ -57,11 +57,20 @@ public class DrawerEntryFactory {
 		}
 
 		holder.getTextView().setText(basicItem.getLabel());
-		if (basicItem.getIcon() != 0) {
+		if (basicItem.getTextColorStateList() != Drawer.USE_DEFAULT) {
+			holder.getTextView().setTextColor(basicItem.getContext().getResources().getColorStateList(
+				basicItem.getTextColorStateList()));
+		}
+		if (basicItem.getIcon() != Drawer.NO_ICON) {
 			holder.getImageView().setImageResource(basicItem.getIcon());
 		} else {
 			holder.getImageView().setVisibility(View.GONE);
 		}
+
+        if (basicItem.getBackgroundDrawable() != Drawer.USE_DEFAULT) {
+            convertView.setBackground(
+                basicItem.getContext().getResources().getDrawable(basicItem.getBackgroundDrawable()));
+        }
 
 		return convertView;
 	}
@@ -97,7 +106,7 @@ public class DrawerEntryFactory {
 
 		holder.getTextView().setText(complexItem.getLabel());
 		holder.getSubtitleTextView().setText(complexItem.getSubtitle());
-		if (complexItem.getIcon() != 0) {
+		if (complexItem.getIcon() != Drawer.NO_ICON) {
 			holder.getImageView().setImageResource(complexItem.getIcon());
 		} else {
 			holder.getImageView().setVisibility(View.GONE);

@@ -29,10 +29,12 @@ public class DrawerConfiguration {
 	 * Constructs a new DrawerConfiguration with default settings.
 	 * @param type the type of drawer (LEFT/RIGHT)
 	 * @param context the context of the parent activity
+     * @param layoutId the layout ID of the ListView resource that will become the drawer
 	 */
-	public DrawerConfiguration(final DrawerType type, final Context context) {
+	public DrawerConfiguration(final Context context, final DrawerType type, final int layoutId) {
 		mType = type;
 		setDefaults(context);
+        setDrawer(layoutId);
 	}
 
 	private void setDefaults(final Context context) {

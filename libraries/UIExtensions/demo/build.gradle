@@ -1,7 +1,16 @@
 apply plugin: 'android'
 
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        url "http://mad/mvn-repo"
+    }
+}
+
 dependencies {
     compile project(':library')
+    compile 'com.android.support:support-v13:19.0.1'
 }
 
 android {

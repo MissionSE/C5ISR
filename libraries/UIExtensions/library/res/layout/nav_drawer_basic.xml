@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingLeft="10dp"
-        android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#ddd"/>
 </LinearLayout>
