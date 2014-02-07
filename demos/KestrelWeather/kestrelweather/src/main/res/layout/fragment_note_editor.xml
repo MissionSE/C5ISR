@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/note_editor_title"
+        android:singleLine="true"
+        android:maxLength="@integer/max_title_length"
+        android:hint="@string/hint_note_title"
+        android:layout_weight="5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.missionse.kestrelweather.reports.views.LinedEditText
+        android:id="@+id/note_editor_content"
+        android:layout_weight="1"
+        android:maxLength="@integer/max_note_length"
+        android:background="#FFFFC0"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_weight=".1">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:background="?android:attr/dividerVertical" />
+
+        <View
+            android:id="@+id/vertical_button_divider"
+            android:layout_width="1dip"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="4dip"
+            android:layout_marginTop="4dip"
+            android:background="?android:attr/dividerVertical" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/vertical_button_divider"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/ok_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/vertical_button_divider"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="@string/save" />
+    </RelativeLayout>
+</LinearLayout>

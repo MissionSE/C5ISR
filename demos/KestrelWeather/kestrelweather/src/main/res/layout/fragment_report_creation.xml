@@ -5,11 +5,11 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-                  android:id="@+id/report_main_content"
-                  android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentTop="true">
+        android:id="@+id/report_main_content"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -32,7 +32,7 @@
             android:layout_marginRight="4dip"
             android:layout_marginTop="10dip"
             android:layout_marginBottom="10dip"
-            android:background="?android:attr/dividerVertical" />
+            android:background="?android:attr/dividerVertical"/>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -67,7 +67,7 @@
             android:layout_marginRight="4dip"
             android:layout_marginTop="10dip"
             android:layout_marginBottom="10dip"
-            android:background="?android:attr/dividerVertical" />
+            android:background="?android:attr/dividerVertical"/>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -102,12 +102,13 @@
             android:layout_marginRight="4dip"
             android:layout_marginTop="10dip"
             android:layout_marginBottom="10dip"
-            android:background="?android:attr/dividerVertical" />
+            android:background="?android:attr/dividerVertical"/>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="50dip">
+
             <Button
                 android:id="@+id/report_get_audios"
                 android:text="@string/audio_recording"
@@ -136,9 +137,9 @@
             android:layout_marginRight="4dip"
             android:layout_marginTop="10dip"
             android:layout_marginBottom="10dip"
-            android:background="?android:attr/dividerVertical" />
+            android:background="?android:attr/dividerVertical"/>
 
-     </LinearLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -151,7 +152,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="4dip"
             android:layout_marginRight="4dip"
-            android:background="?android:attr/dividerVertical" />
+            android:background="?android:attr/dividerVertical"/>
 
         <View
             android:id="@+id/vertical_button_divider"
@@ -162,7 +163,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="4dip"
             android:layout_marginTop="4dip"
-            android:background="?android:attr/dividerVertical" />
+            android:background="?android:attr/dividerVertical"/>
 
         <Button
             android:id="@+id/cancel_button"
@@ -172,7 +173,7 @@
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/vertical_button_divider"
             android:background="?android:attr/selectableItemBackground"
-            android:text="@android:string/cancel" />
+            android:text="@android:string/cancel"/>
 
         <Button
             android:id="@+id/ok_button"
@@ -182,6 +183,6 @@
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@id/vertical_button_divider"
             android:background="?android:attr/selectableItemBackground"
-            android:text="@android:string/ok" />
+            android:text="@android:string/ok"/>
     </RelativeLayout>
 </RelativeLayout>
