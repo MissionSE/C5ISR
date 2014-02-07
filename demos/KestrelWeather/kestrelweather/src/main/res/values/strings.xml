@@ -35,7 +35,6 @@
 
 	<string name="precipitation_overlay_name">Precipitation</string>
 	<string name="precipitation_overlay_url" formatted="false">http://tile.openweathermap.org/map/precipitation/%d/%d/%d.png</string>
-	<string name="hello_blank_fragment">Hello blank fragment</string>
 
 	<string name="wind_overlay_name">Wind</string>
 	<string name="wind_overlay_url" formatted="false">http://tile.openweathermap.org/map/wind/%d/%d/%d.png</string>
@@ -68,7 +67,4 @@
 	<string name="empty_notes">No notes created</string>
 	<string name="create_caps">CREATE</string>
 	<string name="hint_note_title">Note Title</string>
-
-	<string name="wind_overlay_name">Wind</string>
-	<string name="wind_overlay_url" formatted="false">http://tile.openweathermap.org/map/wind/%d/%d/%d.png</string>
 </resources>

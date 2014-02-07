@@ -13,7 +13,7 @@ import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 
 /**
- * Main activity for KestrelWeatherActivity.
+ * Main activity for the Kestrel Weather application.
  */
 public class KestrelWeatherActivity extends DrawerActivity {
 
