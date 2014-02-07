@@ -13,9 +13,9 @@ import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 
 /**
- * Main activity for KestrelWeather.
+ * Main activity for KestrelWeatherActivity.
  */
-public class KestrelWeather extends DrawerActivity {
+public class KestrelWeatherActivity extends DrawerActivity {
 
 	private KestrelWeatherDrawerFactory mDrawerFactory;
 	private TiledMap mTiledMap;
@@ -23,7 +23,7 @@ public class KestrelWeather extends DrawerActivity {
 	/**
 	 * Constructor.
 	 */
-	public KestrelWeather() {
+	public KestrelWeatherActivity() {
 		mDrawerFactory = new KestrelWeatherDrawerFactory(this);
 		mTiledMap = new TiledMap();
 	}
