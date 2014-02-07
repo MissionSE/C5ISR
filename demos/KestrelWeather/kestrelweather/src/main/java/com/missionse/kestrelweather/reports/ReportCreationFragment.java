@@ -15,6 +15,9 @@ import com.missionse.kestrelweather.R;
  * This fragment will be how the user will create new reports.
  */
 public class ReportCreationFragment extends Fragment {
+	private static String EDIT_REPORT = "edit_report";
+	private static String REPORT_ID = "report_id";
+	private static int INVALID_REPORT_ID = -1;
 
 	/*
 	 * status fields
@@ -23,29 +26,56 @@ public class ReportCreationFragment extends Fragment {
 	private TextView mPicturesStatus;
 	private TextView mAudiosStatus;
 
+	private boolean mModifyReport = false;
+	private int mReportId = INVALID_REPORT_ID;
+
+	/**
+	 * @see com.missionse.kestrelweather.reports.ReportCreationFragment#newInstance(boolean, int)
+	 * @param editable - Boolean to determine if the report is editable.
+	 * @return A new instance of fragment ReportCreationFragment.
+	 */
+	public static ReportCreationFragment newInstance(boolean editable) {
+		return newInstance(editable, INVALID_REPORT_ID);
+	}
+
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
 	 *
+	 * @param editable - Boolean to determine if the report is editable.
+	 * @param reportId - The database ID associated with the report.
 	 * @return A new instance of fragment ReportCreationFragment.
 	 */
-	public static ReportCreationFragment newInstance() {
+	public static ReportCreationFragment newInstance(boolean editable, int reportId) {
 		ReportCreationFragment fragment = new ReportCreationFragment();
+		Bundle bundle = new Bundle();
+		bundle.putBoolean(EDIT_REPORT, editable);
+		bundle.putInt(REPORT_ID, reportId);
+		fragment.setArguments(bundle);
 		return fragment;
 	}
 
 	/**
 	 * Default constructor.
-	 * Required.
+	 * Required by android library.
 	 */
 	public ReportCreationFragment() {
+
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			processCreateBundle(getArguments());
+		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 
-		View contentView = inflater.inflate(R.layout.create_report_buttons, container, false);
+		View contentView = inflater.inflate(R.layout.fragment_report_creation, container, false);
 
 		mNotesStatus = (TextView) contentView.findViewById(R.id.report_notes_status);
 		mPicturesStatus = (TextView) contentView.findViewById(R.id.report_pictures_status);
@@ -113,6 +143,10 @@ public class ReportCreationFragment extends Fragment {
 
 
 	private void onOkButtonPressed() {
+
+	}
+
+	private void processCreateBundle(Bundle bundle) {
 
 	}
 
