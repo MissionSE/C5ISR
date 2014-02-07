@@ -30,9 +30,9 @@ public class ReportCreationFragment extends Fragment {
 	private int mReportId = INVALID_REPORT_ID;
 
 	/**
-	 * @see com.missionse.kestrelweather.reports.ReportCreationFragment#newInstance(boolean, int)
 	 * @param editable - Boolean to determine if the report is editable.
 	 * @return A new instance of fragment ReportCreationFragment.
+	 * @see com.missionse.kestrelweather.reports.ReportCreationFragment#newInstance(boolean, int)
 	 */
 	public static ReportCreationFragment newInstance(boolean editable) {
 		return newInstance(editable, INVALID_REPORT_ID);
@@ -41,7 +41,6 @@ public class ReportCreationFragment extends Fragment {
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
-	 *
 	 * @param editable - Boolean to determine if the report is editable.
 	 * @param reportId - The database ID associated with the report.
 	 * @return A new instance of fragment ReportCreationFragment.
@@ -73,7 +72,7 @@ public class ReportCreationFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+			Bundle savedInstanceState) {
 
 		View contentView = inflater.inflate(R.layout.fragment_report_creation, container, false);
 

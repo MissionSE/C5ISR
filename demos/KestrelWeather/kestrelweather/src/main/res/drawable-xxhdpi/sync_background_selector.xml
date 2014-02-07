@@ -2,12 +2,12 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:state_activated="true">
 		<shape>
-			<solid android:color="@color/holo_green_light" />
+			<solid android:color="@color/holo_green_light"/>
 		</shape>
 	</item>
 	<item>
 		<shape>
-			<solid android:color="@color/background_holo_light" />
+			<solid android:color="@color/background_holo_light"/>
 		</shape>
 	</item>
 </selector>

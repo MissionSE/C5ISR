@@ -1,6 +1,7 @@
 <resources>
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
-    </style>
+
+	<style name="AppTheme" parent="android:Theme.Holo.Light">
+	</style>
 
 	<!-- Fragment: Kestrel Simulation -->
 	<style name="fragment_kestrel_simulation_label" parent="@android:style/TextAppearance.Medium">

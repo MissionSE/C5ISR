@@ -1,59 +1,59 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.missionse.kestrelweather.KestrelWeather" >
-    
-    <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
-    <item
-        android:id="@+id/action_rain"
-        android:title="@string/rain_overlay_name"
-        android:orderInCategory="101"
-        android:showAsAction="never"
-        android:checkable="true"
-        android:checked="false" />
-    <item
-        android:id="@+id/action_cloud"
-        android:title="@string/cloud_overlay_name"
-        android:orderInCategory="102"
-        android:showAsAction="never"
-        android:checkable="true"
-        android:checked="false" />
-    <item
-        android:id="@+id/action_snow"
-        android:title="@string/snow_overlay_name"
-        android:orderInCategory="103"
-        android:showAsAction="never"
-        android:checkable="true"
-        android:checked="false" />
-    <item
-        android:id="@+id/action_pressure"
-        android:title="@string/pressure_overlay_name"
-        android:orderInCategory="104"
-        android:showAsAction="never"
-        android:checkable="true"
-        android:checked="false" />
-    <item
-        android:id="@+id/action_temp"
-        android:title="@string/temp_overlay_name"
-        android:orderInCategory="105"
-        android:showAsAction="never"
-        android:checkable="true"
-        android:checked="false" />
-    <item
-        android:id="@+id/action_precipitation"
-        android:title="@string/precipitation_overlay_name"
-        android:orderInCategory="106"
-        android:showAsAction="never"
-        android:checkable="true"
-        android:checked="false" />
-    <item
-        android:id="@+id/action_wind"
-        android:title="@string/wind_overlay_name"
-        android:orderInCategory="107"
-        android:showAsAction="never"
-        android:checkable="true"
-        android:checked="false" />
+	  xmlns:tools="http://schemas.android.com/tools"
+	  tools:context="com.missionse.kestrelweather.KestrelWeather">
+
+	<item
+		android:id="@+id/action_settings"
+		android:title="@string/action_settings"
+		android:orderInCategory="100"
+		android:showAsAction="never"/>
+	<item
+		android:id="@+id/action_rain"
+		android:title="@string/rain_overlay_name"
+		android:orderInCategory="101"
+		android:showAsAction="never"
+		android:checkable="true"
+		android:checked="false"/>
+	<item
+		android:id="@+id/action_cloud"
+		android:title="@string/cloud_overlay_name"
+		android:orderInCategory="102"
+		android:showAsAction="never"
+		android:checkable="true"
+		android:checked="false"/>
+	<item
+		android:id="@+id/action_snow"
+		android:title="@string/snow_overlay_name"
+		android:orderInCategory="103"
+		android:showAsAction="never"
+		android:checkable="true"
+		android:checked="false"/>
+	<item
+		android:id="@+id/action_pressure"
+		android:title="@string/pressure_overlay_name"
+		android:orderInCategory="104"
+		android:showAsAction="never"
+		android:checkable="true"
+		android:checked="false"/>
+	<item
+		android:id="@+id/action_temp"
+		android:title="@string/temp_overlay_name"
+		android:orderInCategory="105"
+		android:showAsAction="never"
+		android:checkable="true"
+		android:checked="false"/>
+	<item
+		android:id="@+id/action_precipitation"
+		android:title="@string/precipitation_overlay_name"
+		android:orderInCategory="106"
+		android:showAsAction="never"
+		android:checkable="true"
+		android:checked="false"/>
+	<item
+		android:id="@+id/action_wind"
+		android:title="@string/wind_overlay_name"
+		android:orderInCategory="107"
+		android:showAsAction="never"
+		android:checkable="true"
+		android:checked="false"/>
 </menu>

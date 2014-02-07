@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Notes -->
-    <integer name="max_title_length">20</integer>
-    <integer name="max_note_length">255</integer>
+	<!-- Notes -->
+	<integer name="max_title_length">20</integer>
+	<integer name="max_note_length">255</integer>
 
 </resources>
