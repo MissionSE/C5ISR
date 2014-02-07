@@ -108,7 +108,6 @@ OnCameraChangeListener {
 
 	/**
 	 * Required interface for hosting activities.
-	 *
 	 */
 	public interface Callbacks {
 

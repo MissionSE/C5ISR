@@ -73,11 +73,17 @@ import com.slidinglayer.SlidingLayer;
  */
 public class MapFilteringActivity extends Activity implements
 MiniMapFragment.Callbacks,
+MapViewerFragment.Callbacks,
 FragmentManager.OnBackStackChangedListener, LoaderCallbacks<Cursor>,
 SharedPreferences.OnSharedPreferenceChangeListener,
 GoogleMap.OnInfoWindowClickListener {
 
-	public class AddressGeocoder implements Runnable {
+    @Override
+    public void onMapViewerLoaded() {
+
+    }
+
+    public class AddressGeocoder implements Runnable {
 		private final Cursor mCursor;
 		private final int mType;
 

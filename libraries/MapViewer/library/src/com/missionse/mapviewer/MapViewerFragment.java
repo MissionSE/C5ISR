@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Build;
@@ -42,7 +43,8 @@ LocationListener,
 GooglePlayServicesClient.ConnectionCallbacks,
 GooglePlayServicesClient.OnConnectionFailedListener,
 GoogleMap.OnCameraChangeListener, 
-GoogleMap.OnInfoWindowClickListener {
+GoogleMap.OnInfoWindowClickListener,
+GoogleMap.OnMapLoadedCallback {
 
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
 
@@ -70,6 +72,7 @@ GoogleMap.OnInfoWindowClickListener {
 		return fragment;
 	}
 
+    private Callbacks mCallbacks;
 	private LocationClient mLocationClient;
 	private GoogleMap mMainMap;
 	private LatLng mInitialLatLng;
@@ -85,6 +88,41 @@ GoogleMap.OnInfoWindowClickListener {
 
 	// Screen DPI
 	private float mDPI = 0;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        mCallbacks = (Callbacks) activity;
+        try {
+            mCallbacks = (Callbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement MapViewerFragment.Callbacks");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mCallbacks = null;
+    }
+
+    @Override
+    public void onMapLoaded() {
+        mCallbacks.onMapViewerLoaded();
+    }
+
+    /**
+     * Required interface for hosting activities.
+     */
+    public interface Callbacks {
+
+        /**
+         * Called when the GoogleMap.onMapLoaded callback is received.
+         */
+        void onMapViewerLoaded();
+    }
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -159,7 +197,7 @@ GoogleMap.OnInfoWindowClickListener {
 	/**
 	 * Set the padding around centered markers. Specified in the percentage of
 	 * the screen space of the map.
-	 * 
+	 *
 	 * @param xFraction x-axis fraction
 	 * @param yFraction y-axis fraction
 	 */
@@ -281,10 +319,11 @@ GoogleMap.OnInfoWindowClickListener {
 		}
 	}
 
-	private void setUpMap() {		
+	private void setUpMap() {
 		mMainMap.setMapType(MAP_TYPE_HYBRID);
 		mMainMap.setOnCameraChangeListener(this);
 		mMainMap.setOnInfoWindowClickListener(this);
+        mMainMap.setOnMapLoadedCallback(this);
 
 		UiSettings settings = mMainMap.getUiSettings();
 		settings.setZoomControlsEnabled(false);
@@ -298,7 +337,7 @@ GoogleMap.OnInfoWindowClickListener {
 	public void setMyLocationEnabled(boolean enabled) {
 		if (enabled) {
 			if (mLocationClient == null) {
-				mLocationClient = new LocationClient(getActivity(), this, this); 
+				mLocationClient = new LocationClient(getActivity(), this, this);
 			}
 			mLocationClient.connect();
 		} else {
