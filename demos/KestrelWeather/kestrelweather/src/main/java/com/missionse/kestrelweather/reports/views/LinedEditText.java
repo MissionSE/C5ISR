@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 
 /**
- * Custome view to simulate lined paper
+ * Custom view to simulate lined paper.
  */
 public class LinedEditText extends EditText {
 	private Rect mRect;
@@ -33,12 +33,12 @@ public class LinedEditText extends EditText {
 	protected void onDraw(Canvas canvas) {
 		int height = canvas.getHeight();
 		int curHeight = 0;
-		Rect r = mRect;
+		Rect rect = mRect;
 		Paint paint = mPaint;
-		int baseline = getLineBounds(0, r);
+		int baseline = getLineBounds(0, rect);
 		for (curHeight = baseline + 1; curHeight < height;
 			 curHeight += getLineHeight()) {
-			canvas.drawLine(r.left, curHeight, r.right, curHeight, paint);
+			canvas.drawLine(rect.left, curHeight, rect.right, curHeight, paint);
 		}
 		super.onDraw(canvas);
 	}
