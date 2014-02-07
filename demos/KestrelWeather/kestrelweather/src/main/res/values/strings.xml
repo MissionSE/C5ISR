@@ -2,11 +2,21 @@
 <resources>
     <string name="app_name">KestrelWeather</string>
     <string name="action_settings">Settings</string>
+
+	<!-- General -->
+	<string name="save">Save</string>
+	<string name="cancel">Cancel</string>
+	<string name="confirm">Confirm</string>
+	<string name="continue">Continue</string>
+	<string name="edit">Edit</string>
+
+	<!-- Navigation Drawer -->
     <string name="drawer_overview">OVERVIEW</string>
     <string name="drawer_create_report">CREATE</string>
     <string name="drawer_sync_reports">SYNC</string>
     <string name="drawer_report_database">DATABASE</string>
 
+	<!-- Map Overlay -->
     <string name="rain_overlay_name">Rain</string>
     <string name="rain_overlay_url" formatted="false">http://tile.openweathermap.org/map/rain/%d/%d/%d.png</string>
 
@@ -26,15 +36,30 @@
     <string name="precipitation_overlay_url" formatted="false">http://tile.openweathermap.org/map/precipitation/%d/%d/%d.png</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- Create Report -->
+	<string name="wind_overlay_name">Wind</string>
+	<string name="wind_overlay_url" formatted="false">http://tile.openweathermap.org/map/wind/%d/%d/%d.png</string>
+
+    <!-- Fragment: Create Report -->
     <string name="obtain_readings">Obtain Readings</string>
     <string name="view_readings">View Readings</string>
     <string name="notes">Notes</string>
     <string name="pictures">Pictures</string>
     <string name="audio_recording">Audio Recording</string>
-    <string name="confirm">Confirm</string>
-    <string name="cancel">Cancel</string>
 
-    <string name="wind_overlay_name">Wind</string>
-    <string name="wind_overlay_url" formatted="false">http://tile.openweathermap.org/map/wind/%d/%d/%d.png</string>
+	<!-- Fragment: Kestrel Connector -->
+	<string name="connect_to_device">Connect To Device</string>
+	<string name="no_device">No Device Connected</string>
+	<string name="no_readings">No readings available.</string>
+
+	<!-- Fragment: Kestrel Simulation, Kestrel Readings Viewer -->
+	<string name="kestrel_simulation_field_hint">Enter Value</string>
+	<string name="kestrel_simulation_temperature">Temperature (°C)</string>
+	<string name="kestrel_simulation_humidity">Humidity (%)</string>
+	<string name="kestrel_simulation_pressure">Bar. Pressure (in)</string>
+	<string name="kestrel_simulation_pressure_trend">Pressure Trend</string>
+	<string name="kestrel_simulation_heat_index">Heat Stress Index</string>
+	<string name="kestrel_simulation_wind_speed">Wind Speed</string>
+	<string name="kestrel_simulation_wind_dir">Wind Direction</string>
+	<string name="kestrel_simulation_wind_chill">Wind Chill</string>
+	<string name="kestrel_simulation_dew_pt">Dew Point</string>
 </resources>

@@ -1,4 +1,14 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Holo.Light">
     </style>
+
+	<!-- Fragment: Kestrel Simulation -->
+	<style name="fragment_kestrel_simulation_label" parent="@android:style/TextAppearance.Medium">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">?android:listPreferredItemHeightSmall</item>
+		<item name="android:layout_margin">1dp</item>
+		<item name="android:background">@color/light_gray</item>
+		<item name="android:gravity">center</item>
+	</style>
+
 </resources>

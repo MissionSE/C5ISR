@@ -50,14 +50,26 @@ public class KestrelWeatherDrawerFactory {
 	public void addNavigationMenuItems(final DrawerAdapter adapter) {
 		List<DrawerItem> menu = new ArrayList<DrawerItem>();
 
-        menu.add(DrawerSimpleItem.create(MAP_OVERVIEW, mContext.getResources().getString(R.string.drawer_overview),
-            0, true));
-        menu.add(DrawerSimpleItem.create(CREATE_REPORT, mContext.getResources().getString(R.string.drawer_create_report),
-            0, true));
-        menu.add(DrawerSimpleItem.create(REPORT_SYNC, mContext.getResources().getString(R.string.drawer_sync_reports),
-            0, true));
-        menu.add(DrawerSimpleItem.create(REPORT_DATABASE, mContext.getResources().getString(R.string.drawer_report_database),
-            0, true));
+        DrawerSimpleItem overviewItem = DrawerSimpleItem.create(MAP_OVERVIEW, mContext.getResources().getString(R.string.drawer_overview),
+            0, true);
+		overviewItem.setBackgroundDrawable(R.drawable.overview_background_selector, mContext);
+		overviewItem.setTextColorStateList(R.drawable.overview_text_selector, mContext);
+		menu.add(overviewItem);
+		DrawerSimpleItem createItem = DrawerSimpleItem.create(CREATE_REPORT, mContext.getResources().getString(R.string.drawer_create_report),
+            0, true);
+		createItem.setBackgroundDrawable(R.drawable.create_background_selector, mContext);
+		createItem.setTextColorStateList(R.drawable.create_text_selector, mContext);
+		menu.add(createItem);
+		DrawerSimpleItem syncItem = DrawerSimpleItem.create(REPORT_SYNC, mContext.getResources().getString(R.string.drawer_sync_reports),
+            0, true);
+		syncItem.setBackgroundDrawable(R.drawable.sync_background_selector, mContext);
+		syncItem.setTextColorStateList(R.drawable.sync_text_selector, mContext);
+		menu.add(syncItem);
+		DrawerSimpleItem databaseItem = DrawerSimpleItem.create(REPORT_DATABASE, mContext.getResources().getString(R.string.drawer_report_database),
+            0, true);
+		databaseItem.setBackgroundDrawable(R.drawable.database_background_selector, mContext);
+		databaseItem.setTextColorStateList(R.drawable.database_text_selector, mContext);
+		menu.add(databaseItem);
 
 		for (DrawerItem item : menu) {
 			adapter.add(item);

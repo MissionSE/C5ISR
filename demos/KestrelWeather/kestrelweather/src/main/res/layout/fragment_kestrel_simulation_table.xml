@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_margin="10dp"
+	android:layout_height="0dip"
+	android:layout_weight="1">
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:baselineAligned="false">
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="0dip"
+			android:layout_weight="0.5"
+			android:layout_height="match_parent">
+			<TextView
+				android:text="@string/kestrel_simulation_temperature"
+				style="@style/fragment_kestrel_simulation_label"/>
+			<TextView
+				android:text="@string/kestrel_simulation_humidity"
+				style="@style/fragment_kestrel_simulation_label"/>
+			<TextView
+				android:text="@string/kestrel_simulation_pressure"
+				style="@style/fragment_kestrel_simulation_label"/>
+			<TextView
+				android:text="@string/kestrel_simulation_pressure_trend"
+				style="@style/fragment_kestrel_simulation_label"/>
+			<TextView
+				android:text="@string/kestrel_simulation_heat_index"
+				style="@style/fragment_kestrel_simulation_label"/>
+			<TextView
+				android:text="@string/kestrel_simulation_wind_speed"
+				style="@style/fragment_kestrel_simulation_label"/>
+			<TextView
+				android:text="@string/kestrel_simulation_wind_dir"
+				style="@style/fragment_kestrel_simulation_label"/>
+			<TextView
+				android:text="@string/kestrel_simulation_wind_chill"
+				style="@style/fragment_kestrel_simulation_label"/>
+			<TextView
+				android:text="@string/kestrel_simulation_dew_pt"
+				style="@style/fragment_kestrel_simulation_label"/>
+		</LinearLayout>
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="0dip"
+			android:layout_weight="0.5"
+			android:layout_height="match_parent">
+			<include layout="@layout/fragment_kestrel_simulation_field" />
+			<include layout="@layout/fragment_kestrel_simulation_field" />
+			<include layout="@layout/fragment_kestrel_simulation_field" />
+			<include layout="@layout/fragment_kestrel_simulation_field" />
+			<include layout="@layout/fragment_kestrel_simulation_field" />
+			<include layout="@layout/fragment_kestrel_simulation_field" />
+			<include layout="@layout/fragment_kestrel_simulation_field" />
+			<include layout="@layout/fragment_kestrel_simulation_field" />
+			<include layout="@layout/fragment_kestrel_simulation_field" />
+		</LinearLayout>
+	</LinearLayout>
+</ScrollView>

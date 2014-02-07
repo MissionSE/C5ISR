@@ -1,4 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background_holo_light">#fff3f3f3</color>
+
+	<color name="black">#000</color>
+	<color name="disabled_gray">#aaa</color>
+	<color name="light_gray">#ddd</color>
+	<color name="white">#fff</color>
+
+	<color name="holo_blue_light">#33B5E5</color>
+	<color name="holo_blue_dark">#0099CC</color>
+	<color name="holo_blue_1">#E2F4FB</color>
+	<color name="holo_blue_2">#C5EAF8</color>
+	<color name="holo_blue_3">#A8DFF4</color>
+	<color name="holo_blue_4">#8AD5F0</color>
+	<color name="holo_blue_5">#6DCAEC</color>
+	<color name="holo_blue_6">#50C0E9</color>
+	<color name="holo_blue_7">#33B5E5</color>
+	<color name="holo_blue_8">#2CB1E1</color>
+	<color name="holo_blue_9">#24ADDE</color>
+	<color name="holo_blue_10">#1DA9DA</color>
+	<color name="holo_blue_11">#16A5D7</color>
+	<color name="holo_blue_12">#0FA1D3</color>
+	<color name="holo_blue_13">#079DD0</color>
+	<color name="holo_blue_14">#0099CC</color>
+
+	<color name="holo_purple_light">#AA66CC</color>
+	<color name="holo_purple_dark">#9933CC</color>
+	<color name="holo_purple_1">#F5EAFA</color>
+	<color name="holo_purple_2">#E5CAF2</color>
+	<color name="holo_purple_3">#DDBCEE</color>
+	<color name="holo_purple_4">#D6ADEB</color>
+	<color name="holo_purple_5">#CF9FE7</color>
+	<color name="holo_purple_6">#CB97E5</color>
+	<color name="holo_purple_7">#C58BE2</color>
+	<color name="holo_purple_8">#C182E0</color>
+	<color name="holo_purple_9">#BA75DC</color>
+	<color name="holo_purple_10">#B368D9</color>
+	<color name="holo_purple_11">#AC59D6</color>
+	<color name="holo_purple_12">#A750D3</color>
+	<color name="holo_purple_13">#A041D0</color>
+	<color name="holo_purple_14">#9933CC</color>
+
+	<color name="holo_green_light">#99CC00</color>
+	<color name="holo_green_dark">#669900</color>
+	<color name="holo_green_1">#F0F8DB</color>
+	<color name="holo_green_2">#E2F0B6</color>
+	<color name="holo_green_3">#D3E992</color>
+	<color name="holo_green_4">#C5E26D</color>
+	<color name="holo_green_5">#B6DB49</color>
+	<color name="holo_green_6">#A8D324</color>
+	<color name="holo_green_7">#99CC00</color>
+	<color name="holo_green_8">#92C500</color>
+	<color name="holo_green_9">#8ABD00</color>
+	<color name="holo_green_10">#83B600</color>
+	<color name="holo_green_11">#7CAF00</color>
+	<color name="holo_green_12">#75A800</color>
+	<color name="holo_green_13">#6DA000</color>
+	<color name="holo_green_14">#669900</color>
+
+	<color name="holo_orange_light">#FFBB33</color>
+	<color name="holo_orange_dark">#FF8800</color>
+	<color name="holo_orange_1">#FFF6DF</color>
+	<color name="holo_orange_2">#FFECC0</color>
+	<color name="holo_orange_3">#FFE3A0</color>
+	<color name="holo_orange_4">#FFD980</color>
+	<color name="holo_orange_5">#FFD060</color>
+	<color name="holo_orange_6">#FFC641</color>
+	<color name="holo_orange_7">#FFBD21</color>
+	<color name="holo_orange_8">#FFB61C</color>
+	<color name="holo_orange_9">#FFAE18</color>
+	<color name="holo_orange_10">#FFA713</color>
+	<color name="holo_orange_11">#FFA00E</color>
+	<color name="holo_orange_12">#FF9909</color>
+	<color name="holo_orange_13">#FF9105</color>
+	<color name="holo_orange_14">#FF8A00</color>
+
+	<color name="holo_red_light">#FF4444</color>
+	<color name="holo_red_dark">#CC0000</color>
+	<color name="holo_red_1">#FFE4E4</color>
+	<color name="holo_red_2">#FFCACA</color>
+	<color name="holo_red_3">#FFAFAF</color>
+	<color name="holo_red_4">#FF9494</color>
+	<color name="holo_red_5">#FF7979</color>
+	<color name="holo_red_6">#FF5F5F</color>
+	<color name="holo_red_7">#FF4444</color>
+	<color name="holo_red_8">#F83A3A</color>
+	<color name="holo_red_9">#F03131</color>
+	<color name="holo_red_10">#E92727</color>
+	<color name="holo_red_11">#E21D1D</color>
+	<color name="holo_red_12">#DB1313</color>
+	<color name="holo_red_13">#D30A0A</color>
+	<color name="holo_red_14">#CC0000</color>
 </resources>

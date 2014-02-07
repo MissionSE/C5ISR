@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<Button
+		android:text="@string/connect_to_device"
+		style="?android:attr/borderlessButtonStyle"
+		android:background="@drawable/create_fragment_button_selector"
+		android:textColor="@color/white"
+		android:layout_margin="10dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+
+	<Button
+		android:text="@string/no_device"
+		style="?android:attr/borderlessButtonStyle"
+		android:background="@drawable/create_fragment_button_selector"
+		android:textColor="@color/white"
+		android:layout_margin="10dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_margin="10dp"
+		android:padding="10dp"
+		android:textColor="@color/black"
+		android:text="@string/no_readings"
+		android:gravity="center_horizontal"
+		android:background="@color/light_gray"
+		android:layout_height="0dip"
+		android:layout_weight="1"/>
+
+	<Button
+		android:text="@string/continue"
+		style="?android:attr/borderlessButtonStyle"
+		android:background="@drawable/create_fragment_button_selector"
+		android:textColor="@color/white"
+		android:layout_margin="10dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<Button
+		android:text="@string/edit"
+		style="?android:attr/borderlessButtonStyle"
+		android:background="@drawable/create_fragment_button_selector"
+		android:textColor="@color/white"
+		android:layout_margin="10dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+
+	<include layout="@layout/fragment_kestrel_simulation_table" />
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+		<Button
+			android:text="@string/save"
+			style="?android:attr/borderlessButtonStyle"
+			android:background="@drawable/create_fragment_button_selector"
+			android:textColor="@color/white"
+			android:layout_margin="10dp"
+			android:layout_width="0dip"
+			android:layout_weight="0.5"
+			android:layout_height="wrap_content"/>
+		<Button
+			android:text="@string/cancel"
+			style="?android:attr/borderlessButtonStyle"
+			android:background="@drawable/create_fragment_button_selector"
+			android:textColor="@color/white"
+			android:layout_margin="10dp"
+			android:layout_width="0dip"
+			android:layout_weight="0.5"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
+
+</LinearLayout>
