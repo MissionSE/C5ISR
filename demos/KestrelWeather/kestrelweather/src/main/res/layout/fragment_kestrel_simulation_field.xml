@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<EditText xmlns:android="http://schemas.android.com/apk/res/android"
-		  android:hint="@string/kestrel_simulation_field_hint"
-		  android:layout_margin="1dp"
-		  android:layout_width="match_parent"
-		  android:layout_height="?android:listPreferredItemHeightSmall">
+<EditText
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:hint="@string/kestrel_simulation_field_hint"
+	android:layout_margin="1dp"
+	android:layout_width="match_parent"
+	android:layout_height="?android:listPreferredItemHeightSmall">
 </EditText>
