@@ -7,7 +7,7 @@
 	<string name="save">Save</string>
 	<string name="cancel">Cancel</string>
 	<string name="confirm">Confirm</string>
-	<string name="continue">Continue</string>
+	<string name="cont">Continue</string>
 	<string name="edit">Edit</string>
 
 	<!-- Navigation Drawer -->

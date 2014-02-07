@@ -34,7 +34,7 @@
 		android:layout_weight="1"/>
 
 	<Button
-		android:text="@string/continue"
+		android:text="@string/cont"
 		style="?android:attr/borderlessButtonStyle"
 		android:background="@drawable/create_fragment_button_selector"
 		android:textColor="@color/white"
