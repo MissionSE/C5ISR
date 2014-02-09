@@ -1,8 +1,5 @@
 package com.missionse.bluetooth;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -14,6 +11,9 @@ import android.os.Handler;
 
 import com.missionse.bluetooth.network.BluetoothNetworkService;
 import com.missionse.bluetooth.network.ServiceIdentifier.ConnectionType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Acts as the main wrapper around the BluetoothAdapter, managing the BluetoothNetworkService.
@@ -88,8 +88,6 @@ public class BluetoothConnector {
 	 * Stops the network service.
 	 */
 	public void stopService() {
-		mParentActivity.unregisterReceiver(mBroadcastReceiver);
-
 		if (mNetworkService != null) {
 			mNetworkService.stop();
 		}
@@ -121,6 +119,16 @@ public class BluetoothConnector {
 		BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 		// ...and attempt to connect to the device.
 		mNetworkService.connect(device, type);
+	}
+
+	/**
+	 * Disconnects from the currently connected device.
+	 */
+	public void disconnect() {
+		if (mNetworkService != null) {
+			mNetworkService.stop();
+			mNetworkService.start(true);
+		}
 	}
 
 	/**
