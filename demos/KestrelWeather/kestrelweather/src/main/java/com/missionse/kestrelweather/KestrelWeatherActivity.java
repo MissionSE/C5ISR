@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.missionse.kestrelweather.drawer.KestrelWeatherDrawerFactory;
+import com.missionse.kestrelweather.kestrel.KestrelConnectorFragment;
+import com.missionse.kestrelweather.kestrel.KestrelSimulator;
 import com.missionse.kestrelweather.map.MapViewerFragment;
 import com.missionse.kestrelweather.map.TileProviderFactory;
 import com.missionse.kestrelweather.map.TiledMap;
@@ -19,6 +21,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 
 	private KestrelWeatherDrawerFactory mDrawerFactory;
 	private TiledMap mTiledMap;
+	private KestrelSimulator mKestrelSimulator;
 
 	/**
 	 * Constructor.
@@ -26,6 +29,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	public KestrelWeatherActivity() {
 		mDrawerFactory = new KestrelWeatherDrawerFactory(this);
 		mTiledMap = new TiledMap();
+		mKestrelSimulator = new KestrelSimulator(this);
 	}
 
 	@Override
@@ -47,6 +51,8 @@ public class KestrelWeatherActivity extends DrawerActivity {
 				TileProviderFactory.createUrlTileProvider(getString(R.string.wind_overlay_url)));
 
 		displayMap();
+
+		mKestrelSimulator.onCreate();
 	}
 
 	private void displayMap() {
@@ -70,8 +76,17 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	}
 
 	@Override
-	protected void onNavigationItemSelected(int i) {
-
+	protected void onNavigationItemSelected(int index) {
+		if (index == KestrelWeatherDrawerFactory.CREATE_REPORT) {
+			FragmentManager fragmentManager = getFragmentManager();
+			KestrelConnectorFragment kestrelConnectorFragment = (KestrelConnectorFragment) fragmentManager
+				.findFragmentByTag("kestrelconnector");
+			if (kestrelConnectorFragment == null) {
+				kestrelConnectorFragment = new KestrelConnectorFragment();
+			}
+			fragmentManager.beginTransaction().replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
+				.addToBackStack("kestrelconnector").commit();
+		}
 	}
 
 	@Override
@@ -95,6 +110,19 @@ public class KestrelWeatherActivity extends DrawerActivity {
 			String overlayName = item.getTitle().toString();
 			mTiledMap.setOverlayVisibility(overlayName, !item.isChecked());
 			item.setChecked(mTiledMap.isOverlayVisible(overlayName));
+			return true;
+		} else if (id == R.id.action_simulate_kestrel) {
+			if (!item.isChecked()) {
+				if (mKestrelSimulator.checkBluetoothAvailability()) {
+					mKestrelSimulator.startSimulator();
+					item.setChecked(true);
+				} else {
+					item.setChecked(false);
+				}
+			} else {
+				mKestrelSimulator.stopSimulator();
+				item.setChecked(false);
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

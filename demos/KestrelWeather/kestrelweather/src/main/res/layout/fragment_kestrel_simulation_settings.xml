@@ -8,7 +8,7 @@
 	<Button
 		android:text="@string/edit"
 		style="?android:attr/borderlessButtonStyle"
-		android:background="@drawable/create_fragment_button_selector"
+		android:background="@drawable/fragment_create_button_selector"
 		android:textColor="@color/white"
 		android:layout_margin="10dp"
 		android:layout_width="match_parent"
@@ -24,7 +24,7 @@
 		<Button
 			android:text="@string/save"
 			style="?android:attr/borderlessButtonStyle"
-			android:background="@drawable/create_fragment_button_selector"
+			android:background="@drawable/fragment_create_button_selector"
 			android:textColor="@color/white"
 			android:layout_margin="10dp"
 			android:layout_width="0dip"
@@ -34,7 +34,7 @@
 		<Button
 			android:text="@string/cancel"
 			style="?android:attr/borderlessButtonStyle"
-			android:background="@drawable/create_fragment_button_selector"
+			android:background="@drawable/fragment_create_button_selector"
 			android:textColor="@color/white"
 			android:layout_margin="10dp"
 			android:layout_width="0dip"

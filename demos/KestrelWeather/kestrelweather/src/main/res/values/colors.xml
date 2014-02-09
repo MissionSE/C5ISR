@@ -3,8 +3,10 @@
 	<color name="background_holo_light">#fff3f3f3</color>
 
 	<color name="black">#000</color>
-	<color name="disabled_gray">#aaa</color>
-	<color name="light_gray">#ddd</color>
+	<color name="gray_dark">#333</color>
+	<color name="gray_medium">#666</color>
+	<color name="gray_disabled">#aaa</color>
+	<color name="gray_light">#ddd</color>
 	<color name="white">#fff</color>
 
 	<color name="holo_blue_light">#33B5E5</color>

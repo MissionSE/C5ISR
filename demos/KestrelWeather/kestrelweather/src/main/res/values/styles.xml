@@ -8,7 +8,7 @@
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">?android:listPreferredItemHeightSmall</item>
 		<item name="android:layout_margin">1dp</item>
-		<item name="android:background">@color/light_gray</item>
+		<item name="android:background">@color/gray_light</item>
 		<item name="android:gravity">center</item>
 	</style>
 
