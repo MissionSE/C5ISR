@@ -64,6 +64,13 @@ public class BluetoothConnector {
 	}
 
 	/**
+	 * Cleans up the registered receivers. To be called from the parent activity's onDestroy().
+	 */
+	public void onDestroy() {
+		mParentActivity.unregisterReceiver(mBroadcastReceiver);
+	}
+
+	/**
 	 * Creates the network service.
 	 */
 	public void createService() {
