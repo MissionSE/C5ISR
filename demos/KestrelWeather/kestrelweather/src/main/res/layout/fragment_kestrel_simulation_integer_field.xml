@@ -4,5 +4,7 @@
 	android:hint="@string/kestrel_simulation_field_hint"
 	android:layout_margin="1dp"
 	android:layout_width="match_parent"
-	android:layout_height="?android:listPreferredItemHeightSmall">
+	android:layout_height="?android:listPreferredItemHeightSmall"
+	android:inputType="number|numberSigned"
+	android:imeOptions="actionNext">
 </EditText>

@@ -5,6 +5,7 @@
 	<!-- Option Menu -->
 	<string name="action_settings">Settings</string>
 	<string name="action_simulate_kestrel">Simulation Mode</string>
+	<string name="action_kestrel_simulation_settings">Simulation Settings</string>
 
 	<!-- General -->
 	<string name="save">Save</string>
@@ -61,9 +62,17 @@
 	<string name="error_bluetooth_not_enabled">Error: Bluetooth is not enabled.</string>
 	<string name="error_unable_to_request">Error: Unable to send request.</string>
 
+	<!-- Fragment: Kestrel Simulation Settings -->
+	<string-array name="kestrel_simulation_pressure_trend_entries">
+		<item>Up</item>
+		<item>Down</item>
+	</string-array>
+
 	<!-- Fragment: Kestrel Simulation Alert -->
 	<string name="new_request_alert_title">Request Received!</string>
-	<string name="new_request_alert_content">Would you like to send the currently saved simulation data?</string>
+	<string name="new_request_alert_content">Would you like to send the saved simulation data or use random values?</string>
+	<string name="new_request_use_random">Send Random Values</string>
+	<string name="new_request_use_saved">Send Saved Values</string>
 
 	<!-- Fragment: Bluetooth Device List -->
 	<string name="paired_devices">Paired Devices</string>

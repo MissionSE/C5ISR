@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather.communication;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,21 +112,24 @@ public class KestrelMessage {
 	 */
 	public List<String> makePretty() {
 		List<String> printables = new ArrayList<String>();
-		printables.add("Temperature: " + mTemperature + " °C");
+		DecimalFormat prettyDecimalFormat = new DecimalFormat("##.##");
+		printables.add("Temperature: " + prettyDecimalFormat.format(mTemperature) + " °C");
 		printables.add("Humidity: " + mHumidity + " %");
-		printables.add("Barometric Pressure: " + mPressure + " Hg");
+		printables.add("Barometric Pressure: " + prettyDecimalFormat.format(mPressure) + " Hg");
 		String printablePressureTrend;
-		if (mPressureTrend > 0) {
+		if (mPressureTrend == 0) {
 			printablePressureTrend = "Up";
-		} else {
+		} else if (mPressureTrend == 1) {
 			printablePressureTrend = "Down";
+		} else {
+			printablePressureTrend = "Unknown";
 		}
 		printables.add("Pressure Trend: " + printablePressureTrend);
-		printables.add("Heat Index: " + mHeatIndex + " °C");
-		printables.add("Wind Speed: " + mWindSpeed + " mph");
+		printables.add("Heat Index: " + prettyDecimalFormat.format(mHeatIndex) + " °C");
+		printables.add("Wind Speed: " + prettyDecimalFormat.format(mWindSpeed) + " mph");
 		printables.add("Wind Direction: " + mWindDirection + " °");
-		printables.add("Wind Chill: " + mWindChill + " °C");
-		printables.add("Dew Point: " + mDewPoint + " °C");
+		printables.add("Wind Chill: " + prettyDecimalFormat.format(mWindChill) + " °C");
+		printables.add("Dew Point: " + prettyDecimalFormat.format(mDewPoint) + " °C");
 		return printables;
 	}
 

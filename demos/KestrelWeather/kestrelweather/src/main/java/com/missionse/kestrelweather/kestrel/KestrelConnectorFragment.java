@@ -234,6 +234,7 @@ public class KestrelConnectorFragment extends Fragment {
 						ex.printStackTrace();
 					}
 					if (kestrelMessage != null && kestrelMessage.isData()) {
+						mReadingsAdapter.clear();
 						for (String data : kestrelMessage.makePretty()) {
 							mReadingsAdapter.add(data);
 						}
@@ -245,5 +246,4 @@ public class KestrelConnectorFragment extends Fragment {
 			}
 		}
 	};
-
 }

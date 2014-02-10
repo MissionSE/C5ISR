@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import com.missionse.kestrelweather.drawer.KestrelWeatherDrawerFactory;
 import com.missionse.kestrelweather.kestrel.KestrelConnectorFragment;
+import com.missionse.kestrelweather.kestrel.KestrelSimulationSettingsFragment;
 import com.missionse.kestrelweather.kestrel.KestrelSimulator;
 import com.missionse.kestrelweather.map.MapViewerFragment;
 import com.missionse.kestrelweather.map.TileProviderFactory;
@@ -55,9 +56,9 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mKestrelSimulator.onDestroy();
+	protected void onStop() {
+		super.onStop();
+		mKestrelSimulator.onStop();
 	}
 
 	@Override
@@ -156,6 +157,16 @@ public class KestrelWeatherActivity extends DrawerActivity {
 				mKestrelSimulator.stopSimulator();
 				item.setChecked(false);
 			}
+			return true;
+		} else if (id == R.id.action_kestrel_simulation_settings) {
+			FragmentManager fragmentManager = getFragmentManager();
+			KestrelSimulationSettingsFragment kestrelSimulationSettingsFragment = (KestrelSimulationSettingsFragment) fragmentManager
+				.findFragmentByTag("kestrelsimulationsettings");
+			if (kestrelSimulationSettingsFragment == null) {
+				kestrelSimulationSettingsFragment = new KestrelSimulationSettingsFragment();
+			}
+			fragmentManager.beginTransaction().replace(R.id.content, kestrelSimulationSettingsFragment, "kestrelsimulationsettings")
+				.addToBackStack("kestrelsimulationsettings").commit();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
