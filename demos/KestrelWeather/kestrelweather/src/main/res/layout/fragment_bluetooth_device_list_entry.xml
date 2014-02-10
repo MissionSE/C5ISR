@@ -22,6 +22,7 @@
 		android:layout_height="?android:listPreferredItemHeightSmall"
 		android:textAppearance="?android:textAppearanceSmallPopupMenu"
 		android:textColor="@color/gray_medium"
+		android:fontFamily="monospace"
 		android:paddingRight="10dp"
 		android:gravity="center_vertical|end">
 	</TextView>

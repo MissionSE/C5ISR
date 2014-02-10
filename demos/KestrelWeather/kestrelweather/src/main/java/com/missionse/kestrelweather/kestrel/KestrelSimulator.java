@@ -83,15 +83,15 @@ public class KestrelSimulator {
 		public void run() {
 			KestrelMessage dataMessage = new KestrelMessage(KestrelMessage.DATA);
 			Random random = new Random(System.currentTimeMillis());
-			dataMessage.setTemperature(random.nextFloat() * 100);
-			dataMessage.setHumidity(random.nextFloat() * 100 - 50);
-			dataMessage.setPressure(random.nextFloat() * 100 - 25);
-			dataMessage.setPressureTrend(random.nextFloat());
-			dataMessage.setHeatIndex(random.nextInt(10));
-			dataMessage.setWindSpeed(random.nextFloat() * 100);
-			dataMessage.setWindDirection(random.nextFloat() * 360);
-			dataMessage.setWindChill(random.nextFloat() * -40);
-			dataMessage.setDewPoint(random.nextFloat() * 5);
+			dataMessage.setTemperature(random.nextFloat() * 200 - 100);
+			dataMessage.setHumidity(random.nextInt(100));
+			dataMessage.setPressure(random.nextFloat() * 2 + 29);
+			dataMessage.setPressureTrend(random.nextInt(1));
+			dataMessage.setHeatIndex(random.nextFloat() * dataMessage.getHumidity()/10 + dataMessage.getTemperature());
+			dataMessage.setWindSpeed(random.nextFloat() * 30);
+			dataMessage.setWindDirection(random.nextInt(360));
+			dataMessage.setWindChill(random.nextFloat() * -1 * dataMessage.getWindSpeed()/6);
+			dataMessage.setDewPoint(random.nextFloat() * 60);
 
 			mBluetoothConnector.getService().write(dataMessage.toString().getBytes());
 		}
