@@ -85,6 +85,10 @@
 	<string name="kestrel_simulation_wind_chill">Wind Chill</string>
 	<string name="kestrel_simulation_dew_pt">Dew Point</string>
 
+	<!-- Fragment: Photo Overview -->
+	<string name="action_add">Add</string>
+	<string name="action_delete">Delete</string>
+
 	<!-- Notes Viewer/Editor -->
 	<string name="empty_notes">No notes created</string>
 	<string name="create_caps">CREATE</string>
