@@ -93,4 +93,9 @@
 	<string name="empty_notes">No notes created</string>
 	<string name="create_caps">CREATE</string>
 	<string name="hint_note_title">Note Title</string>
+
+	<!-- Audio Viewer/Editor -->
+	<string name="empty_audios">No recordings created.</string>
+	<string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -3,6 +3,11 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.missionse.kestrelweather">
 
+	<uses-sdk
+		android:minSdkVersion="16"
+		android:targetSdkVersion="19"
+		android:maxSdkVersion="19" />
+
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
@@ -17,6 +22,9 @@
 	<!-- Bluetooth -->
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 	<uses-permission android:name="android.permission.BLUETOOTH" />
+
+	<!-- Audio -->
+	<uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
 	<!-- Maps API needs OpenGL ES 2.0. -->
 	<uses-feature
