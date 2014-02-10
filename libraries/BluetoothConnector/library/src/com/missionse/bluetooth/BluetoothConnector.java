@@ -64,9 +64,9 @@ public class BluetoothConnector {
 	}
 
 	/**
-	 * Cleans up the registered receivers. To be called from the parent activity's onDestroy().
+	 * Cleans up the registered receivers. To be called from the parent activity's onStop().
 	 */
-	public void onDestroy() {
+	public void onStop() {
 		mParentActivity.unregisterReceiver(mBroadcastReceiver);
 	}
 
