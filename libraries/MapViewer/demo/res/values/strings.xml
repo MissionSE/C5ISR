@@ -2,6 +2,12 @@
 <resources>
 
     <string name="app_name">Maps Example</string>
+
+    <string name="title_activity_marker_cluster">Marker Cluster Example</string>
+    <string name="title_activity_map_filtering">Map Filtering Example</string>
+    <string name="title_activity_map_settings">Map Settings Example</string>
+    <string name="title_activity_map_overview">Map Overview Example</string>
+
     <string name="action_settings">Settings</string>
     <string name="switch_level">Switch Level</string>
     <string name="my_location">My Location</string>

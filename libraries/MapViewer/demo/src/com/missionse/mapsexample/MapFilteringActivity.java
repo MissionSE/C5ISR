@@ -755,6 +755,8 @@ GoogleMap.OnInfoWindowClickListener {
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
 		FragmentManager fm = getFragmentManager();
 		fm.addOnBackStackChangedListener(this);
 

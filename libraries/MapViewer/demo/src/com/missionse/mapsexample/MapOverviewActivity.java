@@ -39,6 +39,8 @@ public class MapOverviewActivity extends Activity implements MiniMapFragment.Cal
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maps_overview);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		getMapViewerFragment();
 		setUpMiniMapFragment();

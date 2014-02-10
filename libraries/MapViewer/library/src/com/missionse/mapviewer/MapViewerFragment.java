@@ -59,6 +59,19 @@ GoogleMap.OnMapLoadedCallback {
 			.setInterval(DEF_LOCATION_REQUEST_INTERVAL)
 			.setFastestInterval(DEF_FASTEST_REQUEST_INTERVAL) 
 			.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    private Callbacks mCallbacks;
+	private LocationClient mLocationClient;
+	private GoogleMap mMainMap;
+	private LatLng mInitialLatLng;
+	private final Set<GoogleMap.OnCameraChangeListener> mCameraListeners = new HashSet<GoogleMap.OnCameraChangeListener>();
+	private final Set<GoogleMap.OnInfoWindowClickListener> mInfoWindowClickListeners = new HashSet<GoogleMap.OnInfoWindowClickListener>();
+	// Cached size of view
+	private int mWidth, mHeight;
+	// Padding for #centerMap
+	private int mShiftRight = 0;
+	private int mShiftTop = 0;
+	// Screen DPI
+	private float mDPI = 0;
 
 	/**
 	 * Creates a new instance of the {@link MapViewerFragment} and sets an initial
@@ -72,23 +85,6 @@ GoogleMap.OnMapLoadedCallback {
 		return fragment;
 	}
 
-    private Callbacks mCallbacks;
-	private LocationClient mLocationClient;
-	private GoogleMap mMainMap;
-	private LatLng mInitialLatLng;
-	private Set<GoogleMap.OnCameraChangeListener> mCameraListeners = new HashSet<GoogleMap.OnCameraChangeListener>();
-	private Set<GoogleMap.OnInfoWindowClickListener> mInfoWindowClickListeners = new HashSet<GoogleMap.OnInfoWindowClickListener>();
-
-	// Cached size of view
-	private int mWidth, mHeight;
-
-	// Padding for #centerMap
-	private int mShiftRight = 0;
-	private int mShiftTop = 0;
-
-	// Screen DPI
-	private float mDPI = 0;
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -99,29 +95,6 @@ GoogleMap.OnMapLoadedCallback {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement MapViewerFragment.Callbacks");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        mCallbacks = null;
-    }
-
-    @Override
-    public void onMapLoaded() {
-        mCallbacks.onMapViewerLoaded();
-    }
-
-    /**
-     * Required interface for hosting activities.
-     */
-    public interface Callbacks {
-
-        /**
-         * Called when the GoogleMap.onMapLoaded callback is received.
-         */
-        void onMapViewerLoaded();
     }
 
 	@Override
@@ -171,6 +144,32 @@ GoogleMap.OnMapLoadedCallback {
 
 		return v;
 	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		setUpMapIfNeeded();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (mLocationClient != null) {
+			mLocationClient.disconnect();
+		}
+	}
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mCallbacks = null;
+    }
+
+    @Override
+    public void onMapLoaded() {
+        mCallbacks.onMapViewerLoaded();
+    }
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
@@ -223,6 +222,11 @@ GoogleMap.OnMapLoadedCallback {
 	}
 
 	@Override
+	public void onDisconnected() {
+		// Do nothing.
+	}
+
+	@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
 		// Do nothing.
 	}
@@ -231,7 +235,7 @@ GoogleMap.OnMapLoadedCallback {
 	public void onLocationChanged(Location arg0) {
 		// Do nothing.
 	}
-
+	
 	/**
 	 * Registers a listener for to receive camera change callbacks.
 	 * @param listener the listener
@@ -257,7 +261,7 @@ GoogleMap.OnMapLoadedCallback {
 	public void deregisterOnCameraChangeListener(final GoogleMap.OnCameraChangeListener listener) {
 		mCameraListeners.remove(listener);
 	}
-	
+
 	/**
 	 * Registers a listener for to receive info window click callbacks.
 	 * @param listener the listener
@@ -291,20 +295,6 @@ GoogleMap.OnMapLoadedCallback {
 	 */
 	public void resetLatLng() {
 		mMainMap.animateCamera(CameraUpdateFactory.newLatLng(mInitialLatLng));
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		if (mLocationClient != null) {
-			mLocationClient.disconnect();
-		}
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		setUpMapIfNeeded();
 	}
 
 	private void setUpMapIfNeeded() {
@@ -349,11 +339,6 @@ GoogleMap.OnMapLoadedCallback {
 	}
 
 	@Override
-	public void onDisconnected() {
-		// Do nothing.
-	}
-
-	@Override
 	public void onCameraChange(CameraPosition cameraPosition) {
 		synchronized (mCameraListeners) {
 			for (GoogleMap.OnCameraChangeListener listener : mCameraListeners) {
@@ -361,4 +346,15 @@ GoogleMap.OnMapLoadedCallback {
 			}
 		}
 	}
+
+    /**
+     * Required interface for hosting activities.
+     */
+    public interface Callbacks {
+
+        /**
+         * Called when the GoogleMap.onMapLoaded callback is received.
+         */
+        void onMapViewerLoaded();
+    }
 }

@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.gms.maps.model.Marker;
+
 public class MainActivity extends Activity implements View.OnClickListener {
     private ViewGroup mListView;
 
@@ -17,9 +19,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         mListView = (ViewGroup) findViewById(R.id.list);
 
-        addDemo("Map Filtering", MapFilteringActivity.class);
-        addDemo("Maps Overview", MapOverviewActivity.class);
-        addDemo("Settings Example", MapSettingsActivity.class);
+        addDemo("Filtering Demo", MapFilteringActivity.class);
+        addDemo("Map Overview Demo", MapOverviewActivity.class);
+        addDemo("Clustering Demo", MarkerClusterActivity.class);
+        addDemo("Settings Demo", MapSettingsActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {

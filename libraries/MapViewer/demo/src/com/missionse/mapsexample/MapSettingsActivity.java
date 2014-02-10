@@ -60,6 +60,8 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maps_settings);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
