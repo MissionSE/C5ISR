@@ -38,6 +38,10 @@ public class KestrelSimulator {
 		});
 	}
 
+	public void onDestroy() {
+		mBluetoothConnector.onDestroy();
+	}
+
 	public boolean checkBluetoothAvailability() {
 		if (BluetoothAdapter.getDefaultAdapter() == null) {
 			Toast.makeText(mActivity, R.string.error_bluetooth_not_available, Toast.LENGTH_SHORT).show();

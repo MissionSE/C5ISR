@@ -55,6 +55,12 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		mKestrelSimulator.onCreate();
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mKestrelSimulator.onDestroy();
+	}
+
 	private void displayMap() {
 		FragmentManager fragmentManager = getFragmentManager();
 		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
