@@ -3,14 +3,9 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
-	<GridView
-		android:id="@+id/photo_grid_view"
+	<ListView
+		android:id="@+id/photo_overview_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:numColumns="auto_fit"
-		android:columnWidth="@dimen/photo_width"
-		android:horizontalSpacing="1dp"
-		android:verticalSpacing="1dp"
-		android:stretchMode="columnWidth"
-		android:gravity="center"/>
+		android:choiceMode="multipleChoiceModal"/>
 </RelativeLayout>
