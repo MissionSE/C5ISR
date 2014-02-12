@@ -56,7 +56,12 @@ public class BluetoothConnector {
 				}
 			}
 		};
+	}
 
+	/**
+	 * Registers a receiver for Bluetooth Intents. To be called from the parent activity's onStart().
+	 */
+	public void onStart() {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(BluetoothDevice.ACTION_FOUND);
 		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
