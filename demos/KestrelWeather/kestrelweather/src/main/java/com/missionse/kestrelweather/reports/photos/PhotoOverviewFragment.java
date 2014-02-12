@@ -2,6 +2,7 @@ package com.missionse.kestrelweather.reports.photos;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,7 +21,7 @@ import com.missionse.kestrelweather.R;
  * A fragment used to manage the photos attached to a report.
  */
 public class PhotoOverviewFragment extends Fragment {
-	private static final int READ_REQUEST_CODE = 100;
+	private static final int ADD_PHOTO_REQUEST = 10;
 
 	private PhotoAdapter mPhotoAdapter;
 	private Activity mActivity;
@@ -72,11 +73,12 @@ public class PhotoOverviewFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		if (item.getItemId() == R.id.action_add_photo) {
-			Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-			intent.addCategory(Intent.CATEGORY_OPENABLE);
-			intent.setType("image/*");
-			intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-			startActivityForResult(intent, READ_REQUEST_CODE);
+			FragmentManager fragmentManager = getFragmentManager();
+			if (fragmentManager != null) {
+				PhotoDialogFragment photoDialogFragment = new PhotoDialogFragment();
+				photoDialogFragment.setTargetFragment(this, ADD_PHOTO_REQUEST);
+				photoDialogFragment.show(fragmentManager, "");
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -86,7 +88,7 @@ public class PhotoOverviewFragment extends Fragment {
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent resultData) {
 		super.onActivityResult(requestCode, resultCode, resultData);
 
-		if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+		if (requestCode == ADD_PHOTO_REQUEST && resultCode == Activity.RESULT_OK) {
 			if (resultData != null) {
 				Uri uri = resultData.getData();
 				if (uri != null) {
@@ -97,7 +99,8 @@ public class PhotoOverviewFragment extends Fragment {
 						for (int index = 0; index < clipData.getItemCount(); ++index) {
 							ClipData.Item item = clipData.getItemAt(index);
 							if (item != null) {
-								mPhotoAdapter.add(item.getUri());
+								uri = item.getUri();
+								mPhotoAdapter.add(uri);
 							}
 						}
 					}

@@ -102,6 +102,8 @@
 	<!-- Fragment: Photo Overview -->
 	<string name="action_add">Add</string>
 	<string name="action_delete">Delete</string>
+	<string name="take_photo">Take Photo</string>
+	<string name="attach_photo">Attach Photo</string>
 
 	<!-- Notes Viewer/Editor -->
 	<string name="empty_notes">No notes created</string>

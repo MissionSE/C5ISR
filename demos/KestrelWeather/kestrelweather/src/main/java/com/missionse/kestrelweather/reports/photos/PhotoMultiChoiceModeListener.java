@@ -43,8 +43,6 @@ public class PhotoMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 	public void onItemCheckedStateChanged(final ActionMode actionMode, final int position, final long id, final boolean checked) {
 		int selectedItemCount = mListView.getCheckedItemCount();
 		actionMode.setSubtitle(selectedItemCount + " " + mItemsSelectedText);
-		mAdapter.setSelected(mAdapter.getItem(position), checked);
-		mAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -79,8 +77,6 @@ public class PhotoMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 					mAdapter.remove(uri);
 				}
 
-				mAdapter.clearSelected();
-				mAdapter.notifyDataSetChanged();
 				actionMode.finish();
 			}
 		}
@@ -89,7 +85,5 @@ public class PhotoMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 
 	@Override
 	public void onDestroyActionMode(final ActionMode actionMode) {
-		mAdapter.clearSelected();
-		mAdapter.notifyDataSetChanged();
 	}
 }

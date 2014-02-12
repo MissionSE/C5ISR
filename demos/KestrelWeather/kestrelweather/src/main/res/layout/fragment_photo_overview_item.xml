@@ -3,7 +3,8 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
-	android:orientation="horizontal">
+	android:orientation="horizontal"
+	android:background="@drawable/default_list_selector">
 	<ImageView
 		android:id="@+id/photo_overview_item_thumbnail"
 		android:layout_height="75dp"

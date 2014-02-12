@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +16,12 @@ import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Provides an adapter for a list of photos.
  */
 public class PhotoAdapter extends ArrayAdapter<Uri> {
-	private static final String TAG = PhotoAdapter.class.getName();
 	private static final int BYTE_SIZE = 1024;
 	private final int mResource;
-	private List<Uri> mSelectedPhotos;
 
 	/**
 	 * Constructor.
@@ -37,7 +31,6 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 	public PhotoAdapter(final Context context, final int resource) {
 		super(context, resource);
 		mResource = resource;
-		mSelectedPhotos = new ArrayList<Uri>();
 	}
 
 	@Override
@@ -48,76 +41,83 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 		}
 
 		if (view != null) {
-			ImageView thumbnailView = (ImageView) view.findViewById(R.id.photo_overview_item_thumbnail);
-			TextView imageFilenameView = (TextView) view.findViewById(R.id.photo_overview_item_file_name);
-			TextView imageSizeView = (TextView) view.findViewById(R.id.photo_overview_item_file_size);
+			Bitmap imageThumbnail = null;
+			String imageFilename;
+			long imageSize = -1;
 
 			Uri uri = getItem(position);
 			Cursor cursor = getContext().getContentResolver()
 					.query(uri, null, null, null, null, null);
 			try {
 				if (cursor != null && cursor.moveToFirst()) {
-					if (thumbnailView != null) {
-						long id = getUriId(cursor.getString(
-								cursor.getColumnIndex(DocumentsContract.Root.COLUMN_DOCUMENT_ID)));
+					int idIndex = cursor.getColumnIndex(DocumentsContract.Root.COLUMN_DOCUMENT_ID);
+					if (idIndex == -1) {
+						idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+					}
+					if (idIndex != -1) {
+						long id = getUriId(cursor.getString(idIndex));
 						if (id != -1) {
-							Bitmap thumbnail = MediaStore.Images.Thumbnails.getThumbnail(
+							imageThumbnail = MediaStore.Images.Thumbnails.getThumbnail(
 									getContext().getContentResolver(), id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-							thumbnailView.setImageBitmap(thumbnail);
-						} else {
-							thumbnailView.setImageResource(R.drawable.ic_launcher);
 						}
 					}
 
-					if (imageFilenameView != null) {
-						String displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-						imageFilenameView.setText(displayName);
+					imageFilename = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+					int sizeIndex = cursor.getColumnIndexOrThrow(OpenableColumns.SIZE);
+					if (!cursor.isNull(sizeIndex)) {
+						imageSize = cursor.getLong(sizeIndex);
 					}
 
-					if (imageSizeView != null) {
-						int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
-						if (!cursor.isNull(sizeIndex)) {
-							long size = cursor.getLong(sizeIndex);
-							imageSizeView.setText(humanReadableByteCount(size));
-						} else {
-							imageSizeView.setText(getContext().getString(R.string.unknown));
-						}
-					}
+					setThumbnail(view, imageThumbnail);
+					setFilename(view, imageFilename);
+					setFilesize(view, imageSize);
 				}
 			} finally {
 				if (cursor != null) {
 					cursor.close();
 				}
 			}
-
-			if (mSelectedPhotos.contains(uri)) {
-				view.setBackgroundColor(getContext().getResources().getColor(R.color.gray_light));
-			} else {
-				view.setBackgroundColor(getContext().getResources().getColor(R.color.background_holo_light));
-			}
 		}
 		return view;
 	}
 
-	/**
-	 * Sets the selected status of a URI.
-	 * @param uri The uri item.
-	 * @param selected Whether the uri is selected.
-	 */
-	public void setSelected(final Uri uri, final boolean selected) {
-		Log.d(TAG, "setSelected: " + selected + " - " + uri.toString());
-		if (selected) {
-			mSelectedPhotos.add(uri);
-		} else {
-			mSelectedPhotos.remove(uri);
+	private void setThumbnail(final View view, final Bitmap thumbnail) {
+		if (view != null) {
+			ImageView thumbnailView = (ImageView) view.findViewById(R.id.photo_overview_item_thumbnail);
+			if (thumbnailView != null) {
+				if (thumbnail != null) {
+					thumbnailView.setImageBitmap(thumbnail);
+				} else {
+					thumbnailView.setImageResource(R.drawable.ic_launcher);
+				}
+			}
 		}
 	}
 
-	/**
-	 * Clear all selected items.
-	 */
-	public void clearSelected() {
-		mSelectedPhotos.clear();
+	private void setFilename(final View view, final String filename) {
+		if (view != null) {
+			TextView filenameView = (TextView) view.findViewById(R.id.photo_overview_item_file_name);
+			if (filenameView != null) {
+				if (filename != null) {
+					filenameView.setText(filename);
+				} else {
+					filenameView.setText(getContext().getString(R.string.unknown));
+				}
+			}
+		}
+	}
+
+	private void setFilesize(final View view, final long size) {
+		if (view != null) {
+			TextView filesizeView = (TextView) view.findViewById(R.id.photo_overview_item_file_size);
+			if (filesizeView != null) {
+				if (size != -1) {
+					filesizeView.setText(humanReadableByteCount(size));
+				} else {
+					filesizeView.setText(getContext().getString(R.string.unknown));
+				}
+			}
+		}
 	}
 
 	private long getUriId(final String uri) {
@@ -126,7 +126,7 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 		try {
 			uriId = Long.valueOf(uriSegments[uriSegments.length - 1]);
 		} catch (NumberFormatException exception) {
-			Log.d(TAG, "ID was not valid long: " + uri);
+			// Invalid long, nothing to do.
 		}
 
 		return uriId;
