@@ -51,6 +51,13 @@ public class KestrelSimulator {
 	}
 
 	/**
+	 * Notifies the BluetoothConnector of activity start. To be called from the parent activity's onStart().
+	 */
+	public void onStart() {
+		mBluetoothConnector.onStart();
+	}
+
+	/**
 	 * Notifies the BluetoothConnector of activity stop. To be called from the parent activity's onStop().
 	 */
 	public void onStop() {

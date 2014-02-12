@@ -12,7 +12,7 @@ dependencies {
     compile 'com.android.support:support-v13:19.0.1'
     compile 'com.google.android.gms:play-services:4.1.+'
     compile 'com.missionse:ui-extensions:1.1.0-SNAPSHOT@aar'
-	compile 'com.missionse:bluetooth-connector:1.3.0-SNAPSHOT@aar'
+	compile 'com.missionse:bluetooth-connector:1.4.0-SNAPSHOT@aar'
 }
 
 android {

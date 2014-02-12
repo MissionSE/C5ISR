@@ -30,9 +30,10 @@ public class NewRequestAlertDialogFragment extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(final Bundle savedInstanceState) {
 		if (getActivity() != null) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setIcon(getResources().getDrawable(R.drawable.ic_action_warning));
-			builder.setTitle(getResources().getString(R.string.new_request_alert_title));
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_HOLO_LIGHT);
+			builder.setIcon(R.drawable.ic_action_warning);
+			builder.setTitle(R.string.new_request_alert_title);
+			builder.setCancelable(true);
 			builder.setMessage(R.string.new_request_alert_content)
 				.setPositiveButton(R.string.new_request_use_saved, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -43,11 +44,6 @@ public class NewRequestAlertDialogFragment extends DialogFragment {
 					@Override
 					public void onClick(final DialogInterface dialogInterface, final int i) {
 						mNeutralRunnable.run();
-					}
-				})
-				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						//Nothing to do.
 					}
 				});
 			return builder.create();

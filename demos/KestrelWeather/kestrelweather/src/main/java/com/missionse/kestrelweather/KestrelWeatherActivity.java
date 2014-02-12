@@ -56,6 +56,12 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		mKestrelSimulator.onStart();
+	}
+
+	@Override
 	protected void onStop() {
 		super.onStop();
 		mKestrelSimulator.onStop();
