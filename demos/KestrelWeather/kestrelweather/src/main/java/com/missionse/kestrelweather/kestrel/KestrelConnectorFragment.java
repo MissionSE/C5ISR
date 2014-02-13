@@ -149,7 +149,7 @@ public class KestrelConnectorFragment extends Fragment {
 	private void setInitialButtonStates() {
 		mConnectToDeviceButton.setEnabled(true);
 		mRequestReadingsButton.setEnabled(false);
-		mContinueButton.setEnabled(false);
+		mContinueButton.setEnabled(true);
 	}
 
 	private void setButtonBehavior() {
@@ -187,7 +187,7 @@ public class KestrelConnectorFragment extends Fragment {
 			@Override
 			public void onClick(final View view) {
 				getActivity().getFragmentManager().beginTransaction()
-				  .replace(R.id.content, ReportCreationFragment.newInstance(false),"report_addon" )
+				  .replace(R.id.content, ReportCreationFragment.newInstance(false),"report_addon")
 				  .addToBackStack("report_addon")
 				  .commit();
 			}

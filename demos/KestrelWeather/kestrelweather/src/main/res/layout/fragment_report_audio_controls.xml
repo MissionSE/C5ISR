@@ -15,7 +15,7 @@
 			android:layout_weight="1"
 			android:layout_width="0dip"
 			android:layout_height="match_parent"
-			android:text="00:00"/>
+			android:text="@string/default_time"/>
 
 		<SeekBar
 			android:id="@+id/audio_control_seek_bar"
@@ -27,7 +27,7 @@
 			android:id="@+id/audio_control_end_time_time"
 			android:layout_weight="1"
 			android:layout_width="0dip"
-			android:text="12:00"
+			android:text="@string/default_time"
 			android:layout_height="match_parent"/>
 
 	</LinearLayout>

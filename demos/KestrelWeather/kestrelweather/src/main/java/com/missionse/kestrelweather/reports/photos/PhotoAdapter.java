@@ -25,8 +25,8 @@ import java.util.Date;
  */
 public class PhotoAdapter extends ArrayAdapter<Uri> {
 	private static final String TAG = PhotoAdapter.class.getName();
-	private static final int BYTE_SIZE = 1024;
-	private static final int SECONDS_TO_MILLISECONDS = 1000;
+	private static final int BYTES_IN_KILOBYTE = 1024;
+	private static final int MILLISECONDS_IN_SECOND = 1000;
 	private final int mResource;
 
 	/**
@@ -85,12 +85,12 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 
 	private void setThumbnail(final View view, final Bitmap thumbnail) {
 		if (view != null) {
-			ImageView thumbnailView = (ImageView) view.findViewById(R.id.photo_overview_item_thumbnail);
+			ImageView thumbnailView = (ImageView) view.findViewById(R.id.report_item_thumbnail);
 			if (thumbnailView != null) {
 				if (thumbnail != null) {
 					thumbnailView.setImageBitmap(thumbnail);
 				} else {
-					thumbnailView.setImageResource(R.drawable.ic_launcher);
+					thumbnailView.setImageResource(R.drawable.ic_action_picture);
 				}
 			}
 		}
@@ -102,7 +102,7 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 
 	private void setFileName(final View view, final String fileName) {
 		if (view != null) {
-			TextView fileNameView = (TextView) view.findViewById(R.id.photo_overview_item_file_name);
+			TextView fileNameView = (TextView) view.findViewById(R.id.report_item_file_name);
 			if (fileNameView != null) {
 				if (fileName != null) {
 					fileNameView.setText(fileName);
@@ -119,7 +119,7 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 		int dateModifiedIndex = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED);
 		if (dateModifiedIndex == -1) {
 			dateModifiedIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED);
-			unitConversion = SECONDS_TO_MILLISECONDS;
+			unitConversion = MILLISECONDS_IN_SECOND;
 		}
 		if (dateModifiedIndex != -1) {
 			long dateModifiedInSeconds = cursor.getLong(dateModifiedIndex);
@@ -132,7 +132,7 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 
 	private void setFileDate(final View view, final String date) {
 		if (view != null) {
-			TextView fileDateView = (TextView) view.findViewById(R.id.photo_overview_item_file_date);
+			TextView fileDateView = (TextView) view.findViewById(R.id.report_item_file_date);
 			if (fileDateView != null) {
 				if (date != null) {
 					fileDateView.setText(date);
@@ -155,7 +155,7 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 
 	private void setFileSize(final View view, final long size) {
 		if (view != null) {
-			TextView fileSizeView = (TextView) view.findViewById(R.id.photo_overview_item_file_size);
+			TextView fileSizeView = (TextView) view.findViewById(R.id.report_item_file_size);
 			if (fileSizeView != null) {
 				if (size != -1) {
 					fileSizeView.setText(humanReadableByteCount(size));
@@ -179,12 +179,12 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 	}
 
 	private String humanReadableByteCount(long bytes) {
-		if (bytes < BYTE_SIZE) {
+		if (bytes < BYTES_IN_KILOBYTE) {
 			return bytes + " B";
 		}
 
-		int exp = (int) (Math.log(bytes) / Math.log(BYTE_SIZE));
+		int exp = (int) (Math.log(bytes) / Math.log(BYTES_IN_KILOBYTE));
 		String pre = ("KMGTPE").charAt(exp - 1) + "";
-		return String.format("%.1f %sB", bytes / Math.pow(BYTE_SIZE, exp), pre);
+		return String.format("%.1f %sB", bytes / Math.pow(BYTES_IN_KILOBYTE, exp), pre);
 	}
 }

@@ -52,11 +52,11 @@ public class PhotoOverviewFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View contentView = inflater.inflate(R.layout.fragment_photo_overview, container, false);
+		View contentView = inflater.inflate(R.layout.fragment_report_photos, container, false);
 		if (contentView != null) {
 			ListView mPhotoList = (ListView) contentView.findViewById(R.id.photo_overview_list);
 
-			mPhotoAdapter = new PhotoAdapter(mActivity, R.layout.fragment_photo_overview_item);
+			mPhotoAdapter = new PhotoAdapter(mActivity, R.layout.fragment_report_list_entry);
 			mPhotoList.setAdapter(mPhotoAdapter);
 			mPhotoList.setMultiChoiceModeListener(new PhotoMultiChoiceModeListener(mActivity, mPhotoList, mPhotoAdapter));
 		}
@@ -67,7 +67,7 @@ public class PhotoOverviewFragment extends Fragment {
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.photo_overview_menu, menu);
+		inflater.inflate(R.menu.report_photos, menu);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
@@ -21,45 +22,54 @@ import java.text.SimpleDateFormat;
  */
 public class AudioAdapter extends ArrayAdapter<String> {
 	private static final String TAG = AudioAdapter.class.getSimpleName();
-	private Context mContext;
-	private String[] mSongPaths;
+	private final int mResource;
 
-	public AudioAdapter(Context context, String[] songs) {
-		super(context, R.layout.fragment_audio_viewer_list_entry, songs);
-		mContext = context;
-		mSongPaths = songs;
+	/**
+	 * Constructor.
+	 * @param context The current context.
+	 * @param resource The resource ID for a layout file containing a TextView to use when instantiating views.
+	 * @param songs The objects to represent in the ListView.
+	 */
+	public AudioAdapter(Context context, final int resource, String[] songs) {
+		super(context, resource, songs);
+		mResource = resource;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View row = inflater.inflate(R.layout.fragment_audio_viewer_list_entry, parent, false);
+		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(mResource, parent, false);
 
-		if (row == null) {
+		if (view == null) {
 			throw new NullPointerException("Unable to inflate view.");
 		}
 
-		TextView title = (TextView) row.findViewById(R.id.audio_entry_title);
-		TextView date = (TextView) row.findViewById(R.id.audio_entry_date);
-		TextView duration = (TextView) row.findViewById(R.id.audio_entry_duration);
+		ImageView thumbnail = (ImageView) view.findViewById(R.id.report_item_thumbnail);
+		TextView title = (TextView) view.findViewById(R.id.report_item_file_name);
+		TextView date = (TextView) view.findViewById(R.id.report_item_file_date);
+		TextView duration = (TextView) view.findViewById(R.id.report_item_file_size);
 
-		File song = new File(mSongPaths[position]);
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-		MediaMetadataRetriever mmdr = new MediaMetadataRetriever();
+		File song = new File(getItem(position));
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd");
+		MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
 		try {
 			FileInputStream inputStream = new FileInputStream(song);
-			mmdr.setDataSource(inputStream.getFD());
+			metadataRetriever.setDataSource(inputStream.getFD());
 			inputStream.close();
-			mmdr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+			metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 			duration.setText(
-					MediaTimeConverter.extractRunTime(Long.valueOf(mmdr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))));
+					MediaTimeConverter.extractRunTime(
+							Long.valueOf(metadataRetriever.extractMetadata(
+									MediaMetadataRetriever.METADATA_KEY_DURATION))));
 		} catch (Exception exec) {
 			Log.e(TAG, "Unable to retrieve metadata.", exec);
 		}
-		title.setText(song.getName());
-		date.setText(sdf.format(song.lastModified()));
 
-		return row;
+		title.setText(song.getName());
+		date.setText(dateFormat.format(song.lastModified()));
+		thumbnail.setImageResource(R.drawable.ic_action_play);
+
+		return view;
 	}
 
 }

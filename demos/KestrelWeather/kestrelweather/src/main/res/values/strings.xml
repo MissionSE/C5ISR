@@ -99,19 +99,18 @@
 	<string name="kestrel_simulation_wind_chill">Wind Chill</string>
 	<string name="kestrel_simulation_dew_pt">Dew Point</string>
 
-	<!-- Fragment: Photo Overview -->
+	<!-- Fragment: Report Photos -->
 	<string name="action_add">Add</string>
 	<string name="action_delete">Delete</string>
 	<string name="take_photo">Take Photo</string>
 	<string name="attach_photo">Attach Photo</string>
 
-	<!-- Notes Viewer/Editor -->
+	<!-- Fragment: Report Notes -->
 	<string name="empty_notes">No notes created</string>
 	<string name="create_caps">CREATE</string>
 	<string name="hint_note_title">Note Title</string>
 
-	<!-- Audio Viewer/Editor -->
-	<string name="empty_audios">No recordings created.</string>
-	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<!-- Fragment: Report Audio -->
+	<string name="default_time">00:00</string>
 
 </resources>

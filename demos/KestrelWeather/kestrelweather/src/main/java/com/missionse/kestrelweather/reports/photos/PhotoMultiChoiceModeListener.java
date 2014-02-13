@@ -57,7 +57,7 @@ public class PhotoMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 
 		MenuInflater menuInflater = actionMode.getMenuInflater();
 		if (menuInflater != null) {
-			menuInflater.inflate(R.menu.photo_overview_action_bar, menu);
+			menuInflater.inflate(R.menu.report_action_bar, menu);
 		}
 
 		return true;

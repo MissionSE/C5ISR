@@ -62,7 +62,7 @@ public class PhotoDialogFragment extends DialogFragment {
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_photo_overview_dialog, container);
+		View view = inflater.inflate(R.layout.fragment_report_photos_dialog, container);
 		if (view != null) {
 			Button takePhotoButton = (Button) view.findViewById(R.id.photo_overview_take_photo_btn);
 			if (takePhotoButton != null) {

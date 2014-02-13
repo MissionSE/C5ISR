@@ -85,19 +85,13 @@ public class AudioViewFragment extends ListFragment implements MediaPlayerWrappe
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		if (inflater == null) {
-			throw new NullPointerException("Unable to inflate view.");
-		}
-
-		View contentView = inflater.inflate(R.layout.fragment_audio_viewer, container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View contentView = inflater.inflate(R.layout.fragment_report_audio, container, false);
 
 		if (contentView != null) {
 			initMediaComponents(contentView);
 			initLoadMedia();
-			setListAdapter(new AudioAdapter(getActivity(), mSongList));
+			setListAdapter(new AudioAdapter(getActivity(), R.layout.fragment_report_list_entry, mSongList));
 		}
 		return contentView;
 	}

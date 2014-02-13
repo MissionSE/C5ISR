@@ -24,6 +24,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="0dip"
 		android:layout_weight="1"
-		layout="@layout/fragment_audio_control_view"/>
+		layout="@layout/fragment_report_audio_controls"/>
 
 </LinearLayout>

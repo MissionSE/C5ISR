@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context="com.missionse.kestrelweather.KestrelWeatherActivity">
+
+	<item
+		android:id="@+id/action_add_media"
+		android:icon="@drawable/ic_action_new_attachment"
+		android:title="@string/action_add"
+		android:orderInCategory="100"
+		android:showAsAction="ifRoom|withText"/>
+</menu>
