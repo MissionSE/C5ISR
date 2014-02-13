@@ -13,22 +13,13 @@
 		android:layout_height="0dip"
 		android:layout_weight="5"
 		android:drawSelectorOnTop="false"/>
-
-	<TextView
-		android:id="@id/android:empty"
-		android:layout_width="match_parent"
-		android:layout_height="0dip"
-		android:layout_weight="5"
-		android:text="@string/empty_audios"
-		android:visibility="gone"/>
-
 	<View
 		android:layout_width="match_parent"
 		android:layout_height="0dip"
 		android:layout_weight=".05"
 		android:layout_marginLeft="1dip"
 		android:layout_marginRight="1dip"
-		android:background="?android:attr/dividerVertical"/>
+		android:background="?android:attr/dividerHorizontal"/>
 	<include
 		android:layout_width="match_parent"
 		android:layout_height="0dip"

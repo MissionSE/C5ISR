@@ -6,7 +6,7 @@
 	android:orientation="horizontal"
 	android:background="@drawable/default_list_selector">
 	<ImageView
-		android:id="@+id/photo_overview_item_thumbnail"
+		android:id="@+id/report_item_thumbnail"
 		android:layout_height="75dp"
 		android:layout_width="75dp"
 		android:padding="10dp"
@@ -19,7 +19,7 @@
 		android:layout_gravity="center"
 		android:orientation="vertical">
 		<TextView
-			android:id="@+id/photo_overview_item_file_name"
+			android:id="@+id/report_item_file_name"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
 			android:text="@string/unknown"
@@ -30,7 +30,7 @@
 			android:layout_width="match_parent"
 			android:orientation="horizontal">
 			<TextView
-				android:id="@+id/photo_overview_item_file_date"
+				android:id="@+id/report_item_file_date"
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
 				android:layout_weight="50"
@@ -39,7 +39,7 @@
 				android:textColor="@color/gray_medium">
 			</TextView>
 			<TextView
-				android:id="@+id/photo_overview_item_file_size"
+				android:id="@+id/report_item_file_size"
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
 				android:layout_weight="50"
