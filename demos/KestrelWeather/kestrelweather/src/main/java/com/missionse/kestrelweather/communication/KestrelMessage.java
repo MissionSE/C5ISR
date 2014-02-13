@@ -1,5 +1,9 @@
 package com.missionse.kestrelweather.communication;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Defines the basic message format for a message between two devices, to support both a request for data, and the
  * incoming payload.
@@ -24,12 +28,12 @@ public class KestrelMessage {
 
 	private int mMessageType;
 	private float mTemperature;
-	private float mHumidity;
+	private int mHumidity;
 	private float mPressure;
-	private float mPressureTrend;
-	private int mHeatIndex;
+	private int mPressureTrend;
+	private float mHeatIndex;
 	private float mWindSpeed;
-	private float mWindDirection;
+	private int mWindDirection;
 	private float mWindChill;
 	private float mDewPoint;
 
@@ -46,12 +50,12 @@ public class KestrelMessage {
 	public KestrelMessage(final int type) {
 		mMessageType = type;
 		mTemperature = 0.0f;
-		mHumidity = 0.0f;
+		mHumidity = 0;
 		mPressure = 0.0f;
-		mPressureTrend = 0.0f;
-		mHeatIndex = 0;
+		mPressureTrend = 0;
+		mHeatIndex = 0.0f;
 		mWindSpeed = 0.0f;
-		mWindDirection = 0.0f;
+		mWindDirection = 0;
 		mWindChill = 0.0f;
 		mDewPoint = 0.0f;
 	}
@@ -70,12 +74,12 @@ public class KestrelMessage {
 			}
 
 			translation.setTemperature(Float.valueOf(tokenizedMessage[TEMPERATURE]));
-			translation.setHumidity(Float.valueOf(tokenizedMessage[HUMIDITY]));
+			translation.setHumidity(Integer.valueOf(tokenizedMessage[HUMIDITY]));
 			translation.setPressure(Float.valueOf(tokenizedMessage[PRESSURE]));
-			translation.setPressureTrend(Float.valueOf(tokenizedMessage[PRESSURE_TREND]));
-			translation.setHeatIndex(Integer.valueOf(tokenizedMessage[HEAT_INDEX]));
+			translation.setPressureTrend(Integer.valueOf(tokenizedMessage[PRESSURE_TREND]));
+			translation.setHeatIndex(Float.valueOf(tokenizedMessage[HEAT_INDEX]));
 			translation.setWindSpeed(Float.valueOf(tokenizedMessage[WIND_SPEED]));
-			translation.setWindDirection(Float.valueOf(tokenizedMessage[WIND_DIRECTION]));
+			translation.setWindDirection(Integer.valueOf(tokenizedMessage[WIND_DIRECTION]));
 			translation.setWindChill(Float.valueOf(tokenizedMessage[WIND_CHILL]));
 			translation.setDewPoint(Float.valueOf(tokenizedMessage[DEW_POINT]));
 		}
@@ -106,18 +110,27 @@ public class KestrelMessage {
 	 * Converts this KestrelMessage to a pretty, printable String.
 	 * @return a pretty, printable String
 	 */
-	public String makePretty() {
-		String printable = "";
-		printable += "Temperature (°C): " + mTemperature + "\n";
-		printable += "Humidity: " + mHumidity + "\n";
-		printable += "Barometric Pressure: " + mPressure + "\n";
-		printable += "Pressure Trend: " + mPressureTrend + "\n";
-		printable += "Heat Index: " + mHeatIndex + "\n";
-		printable += "Wind Speed: " + mWindSpeed + "\n";
-		printable += "Wind Direction: " + mWindDirection + "\n";
-		printable += "Wind Chill: " + mWindChill + "\n";
-		printable += "Dew Point: " + mDewPoint + "\n";
-		return printable;
+	public List<String> makePretty() {
+		List<String> printables = new ArrayList<String>();
+		DecimalFormat prettyDecimalFormat = new DecimalFormat("##.##");
+		printables.add("Temperature: " + prettyDecimalFormat.format(mTemperature) + " °C");
+		printables.add("Humidity: " + mHumidity + " %");
+		printables.add("Barometric Pressure: " + prettyDecimalFormat.format(mPressure) + " Hg");
+		String printablePressureTrend;
+		if (mPressureTrend == 0) {
+			printablePressureTrend = "Up";
+		} else if (mPressureTrend == 1) {
+			printablePressureTrend = "Down";
+		} else {
+			printablePressureTrend = "Unknown";
+		}
+		printables.add("Pressure Trend: " + printablePressureTrend);
+		printables.add("Heat Index: " + prettyDecimalFormat.format(mHeatIndex) + " °C");
+		printables.add("Wind Speed: " + prettyDecimalFormat.format(mWindSpeed) + " mph");
+		printables.add("Wind Direction: " + mWindDirection + " °");
+		printables.add("Wind Chill: " + prettyDecimalFormat.format(mWindChill) + " °C");
+		printables.add("Dew Point: " + prettyDecimalFormat.format(mDewPoint) + " °C");
+		return printables;
 	}
 
 	/**
@@ -137,7 +150,7 @@ public class KestrelMessage {
 	}
 
 	/**
-	 * Retrieves the temperature in this message.
+	 * Retrieves the temperature, in degrees Celsius.
 	 * @return the temperature
 	 */
 	public float getTemperature() {
@@ -145,7 +158,7 @@ public class KestrelMessage {
 	}
 
 	/**
-	 * Sets the temperature of this message.
+	 * Sets the temperature, in degrees Celsius.
 	 * @param temperature the temperature to use
 	 */
 	public void setTemperature(final float temperature) {
@@ -153,23 +166,23 @@ public class KestrelMessage {
 	}
 
 	/**
-	 * Retrieves the humidity of this message.
+	 * Retrieves the humidity, a percentage.
 	 * @return the humidity
 	 */
-	public float getHumidity() {
+	public int getHumidity() {
 		return mHumidity;
 	}
 
 	/**
-	 * Sets the humidity of this message.
+	 * Sets the humidity, a percentage.
 	 * @param humidity the humidity to use
 	 */
-	public void setHumidity(final float humidity) {
+	public void setHumidity(final int humidity) {
 		mHumidity = humidity;
 	}
 
 	/**
-	 * Retrieves the pressure of this message.
+	 * Retrieves the pressure, in inches..
 	 * @return the pressure
 	 */
 	public float getPressure() {
@@ -177,47 +190,47 @@ public class KestrelMessage {
 	}
 
 	/**
-	 * Sets the pressure of this message.
-	 * @param pressure the humidity to use
+	 * Sets the pressure, in inches.
+	 * @param pressure the pressure to use
 	 */
 	public void setPressure(final float pressure) {
 		mPressure = pressure;
 	}
 
 	/**
-	 * Retrieves the pressure trend of this message.
+	 * Retrieves the pressure trend, which can be 0 or 1 (denoting down or up, respectively).
 	 * @return the pressure trend
 	 */
-	public float getPressureTrend() {
+	public int getPressureTrend() {
 		return mPressureTrend;
 	}
 
 	/**
-	 * Sets the pressure trend of this message.
-	 * @param pressureTrend the humidity to use
+	 * Sets the pressure trend, which can be 0 or 1 (denoting down or up, respectively).
+	 * @param pressureTrend the pressure trend to use
 	 */
-	public void setPressureTrend(final float pressureTrend) {
+	public void setPressureTrend(final int pressureTrend) {
 		mPressureTrend = pressureTrend;
 	}
 
 	/**
-	 * Retrieves the heat index of this message.
+	 * Retrieves the heat index, in degrees Celsius.
 	 * @return the heat index
 	 */
-	public int getHeatIndex() {
+	public float getHeatIndex() {
 		return mHeatIndex;
 	}
 
 	/**
-	 * Sets the heat index of this message.
-	 * @param heatIndex the humidity to use
+	 * Sets the heat index, in degrees Celsius.
+	 * @param heatIndex the heat index to use
 	 */
-	public void setHeatIndex(final int heatIndex) {
+	public void setHeatIndex(final float heatIndex) {
 		mHeatIndex = heatIndex;
 	}
 
 	/**
-	 * Retrieves the wind speed of this message.
+	 * Retrieves the wind speed, in miles per hour.
 	 * @return the wind speed
 	 */
 	public float getWindSpeed() {
@@ -225,31 +238,31 @@ public class KestrelMessage {
 	}
 
 	/**
-	 * Sets the wind speed of this message.
-	 * @param windSpeed the humidity to use
+	 * Sets the wind speed, in miles per hour.
+	 * @param windSpeed the wind speed to use
 	 */
 	public void setWindSpeed(final float windSpeed) {
 		mWindSpeed = windSpeed;
 	}
 
 	/**
-	 * Retrieves the wind direction of this message.
+	 * Retrieves the wind direction, in degrees (of a circle).
 	 * @return the wind direction
 	 */
-	public float getWindDirection() {
+	public int getWindDirection() {
 		return mWindDirection;
 	}
 
 	/**
-	 * Sets the wind direction of this message.
-	 * @param windDirection the humidity to use
+	 * Sets the wind direction, in degrees (of a circle).
+	 * @param windDirection the wind direction to use
 	 */
-	public void setWindDirection(final float windDirection) {
+	public void setWindDirection(final int windDirection) {
 		mWindDirection = windDirection;
 	}
 
 	/**
-	 * Retrieves the wind chill of this message.
+	 * Retrieves the wind chill, in degrees Celsius.
 	 * @return the wind chill
 	 */
 	public float getWindChill() {
@@ -257,15 +270,15 @@ public class KestrelMessage {
 	}
 
 	/**
-	 * Sets the wind chill of this message.
-	 * @param windChill the humidity to use
+	 * Sets the wind chill, in degrees Celsius.
+	 * @param windChill the wind chill to use
 	 */
 	public void setWindChill(final float windChill) {
 		mWindChill = windChill;
 	}
 
 	/**
-	 * Retrieves the dew point of this message.
+	 * Retrieves the dew point, in degrees Celsius.
 	 * @return the dew point
 	 */
 	public float getDewPoint() {
@@ -273,8 +286,8 @@ public class KestrelMessage {
 	}
 
 	/**
-	 * Sets the dew point of this message.
-	 * @param dewPoint the humidity to use
+	 * Sets the dew point, in degrees Celsius.
+	 * @param dewPoint the dew point to use
 	 */
 	public void setDewPoint(final float dewPoint) {
 		mDewPoint = dewPoint;

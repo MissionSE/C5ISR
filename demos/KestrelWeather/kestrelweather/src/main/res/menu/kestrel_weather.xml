@@ -63,4 +63,9 @@
 		android:showAsAction="never"
 		android:checkable="true"
 		android:checked="false"/>
+	<item
+		android:id="@+id/action_kestrel_simulation_settings"
+		android:title="@string/action_kestrel_simulation_settings"
+		android:orderInCategory="109"
+		android:showAsAction="never"/>
 </menu>

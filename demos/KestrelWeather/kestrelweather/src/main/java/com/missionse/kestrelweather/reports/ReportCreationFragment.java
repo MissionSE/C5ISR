@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.reports.audio.AudioViewFragment;
+import com.missionse.kestrelweather.reports.photos.PhotoOverviewFragment;
 
 
 /**
@@ -129,20 +131,27 @@ public class ReportCreationFragment extends Fragment {
 	}
 
 	private void onPictureButtonPressed() {
-
+		launchReport(new PhotoOverviewFragment(), "photo_report");
 	}
 
 	private void onAudioButtonPressed() {
-
+		launchReport(AudioViewFragment.newInstance(false), "audio_report");
 	}
 
 	private void onCancelButtonPressed() {
-
+		getActivity().getFragmentManager().beginTransaction().remove(this).commit();
 	}
 
 
 	private void onOkButtonPressed() {
 
+	}
+
+	private void launchReport(Fragment fragment, String backStackId) {
+		getActivity().getFragmentManager().beginTransaction()
+		  .replace(R.id.content, fragment, backStackId)
+		  .addToBackStack(backStackId)
+		  .commit();
 	}
 
 	private void processCreateBundle(Bundle bundle) {

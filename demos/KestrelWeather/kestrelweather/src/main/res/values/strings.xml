@@ -5,6 +5,7 @@
 	<!-- Option Menu -->
 	<string name="action_settings">Settings</string>
 	<string name="action_simulate_kestrel">Simulation Mode</string>
+	<string name="action_kestrel_simulation_settings">Simulation Settings</string>
 
 	<!-- General -->
 	<string name="save">Save</string>
@@ -14,6 +15,11 @@
 	<string name="cont">Continue</string>
 	<string name="create">Create</string>
 	<string name="edit">Edit</string>
+	<string name="no_description">No description.</string>
+	<string name="image_thumbnail">Thumbnail of the image.</string>
+	<string name="unknown">Unknown</string>
+	<string name="select_items">Select Items</string>
+	<string name="items_selected">selected</string>
 
 	<!-- Navigation Drawer -->
 	<string name="drawer_overview">OVERVIEW</string>
@@ -61,9 +67,17 @@
 	<string name="error_bluetooth_not_enabled">Error: Bluetooth is not enabled.</string>
 	<string name="error_unable_to_request">Error: Unable to send request.</string>
 
+	<!-- Fragment: Kestrel Simulation Settings -->
+	<string-array name="kestrel_simulation_pressure_trend_entries">
+		<item>Up</item>
+		<item>Down</item>
+	</string-array>
+
 	<!-- Fragment: Kestrel Simulation Alert -->
 	<string name="new_request_alert_title">Request Received!</string>
-	<string name="new_request_alert_content">Would you like to send the currently saved simulation data?</string>
+	<string name="new_request_alert_content">Would you like to send the saved simulation data or use random values?</string>
+	<string name="new_request_use_random">Send Random Values</string>
+	<string name="new_request_use_saved">Send Saved Values</string>
 
 	<!-- Fragment: Bluetooth Device List -->
 	<string name="paired_devices">Paired Devices</string>
@@ -85,8 +99,19 @@
 	<string name="kestrel_simulation_wind_chill">Wind Chill</string>
 	<string name="kestrel_simulation_dew_pt">Dew Point</string>
 
+	<!-- Fragment: Photo Overview -->
+	<string name="action_add">Add</string>
+	<string name="action_delete">Delete</string>
+	<string name="take_photo">Take Photo</string>
+	<string name="attach_photo">Attach Photo</string>
+
 	<!-- Notes Viewer/Editor -->
 	<string name="empty_notes">No notes created</string>
 	<string name="create_caps">CREATE</string>
 	<string name="hint_note_title">Note Title</string>
+
+	<!-- Audio Viewer/Editor -->
+	<string name="empty_audios">No recordings created.</string>
+	<string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -12,8 +12,9 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.missionse.bluetooth.BluetoothConnector;
@@ -23,6 +24,7 @@ import com.missionse.bluetooth.network.ServiceIdentifier;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.communication.BluetoothDeviceListFragment;
 import com.missionse.kestrelweather.communication.KestrelMessage;
+import com.missionse.kestrelweather.reports.ReportCreationFragment;
 
 public class KestrelConnectorFragment extends Fragment {
 
@@ -31,8 +33,8 @@ public class KestrelConnectorFragment extends Fragment {
 
 	private Button mConnectToDeviceButton;
 	private Button mRequestReadingsButton;
-	private TextView mReadingsText;
 	private Button mContinueButton;
+	private ArrayAdapter<String> mReadingsAdapter;
 
 	private BluetoothConnector mBluetoothConnector;
 
@@ -131,7 +133,10 @@ public class KestrelConnectorFragment extends Fragment {
 		if (contentView != null) {
 			mConnectToDeviceButton = (Button) contentView.findViewById(R.id.connect_to_device_btn);
 			mRequestReadingsButton = (Button) contentView.findViewById(R.id.request_readings_btn);
-			mReadingsText = (TextView) contentView.findViewById(R.id.device_readings);
+			ListView receivedReadings = (ListView) contentView.findViewById(R.id.device_readings);
+			mReadingsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.fragment_kestrel_connector_reading_entry);
+			receivedReadings.setEmptyView(contentView.findViewById(R.id.no_readings_available));
+			receivedReadings.setAdapter(mReadingsAdapter);
 			mContinueButton = (Button) contentView.findViewById(R.id.continue_btn);
 
 			setInitialButtonStates();
@@ -181,7 +186,10 @@ public class KestrelConnectorFragment extends Fragment {
 		mContinueButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View view) {
-
+				getActivity().getFragmentManager().beginTransaction()
+				  .replace(R.id.content, ReportCreationFragment.newInstance(false),"report_addon" )
+				  .addToBackStack("report_addon")
+				  .commit();
 			}
 		});
 	}
@@ -230,7 +238,10 @@ public class KestrelConnectorFragment extends Fragment {
 						ex.printStackTrace();
 					}
 					if (kestrelMessage != null && kestrelMessage.isData()) {
-						mReadingsText.setText(kestrelMessage.makePretty());
+						mReadingsAdapter.clear();
+						for (String data : kestrelMessage.makePretty()) {
+							mReadingsAdapter.add(data);
+						}
 						mContinueButton.setEnabled(true);
 					}
 					break;
@@ -239,5 +250,4 @@ public class KestrelConnectorFragment extends Fragment {
 			}
 		}
 	};
-
 }

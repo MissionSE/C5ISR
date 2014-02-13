@@ -7,10 +7,12 @@ import android.view.MenuItem;
 
 import com.missionse.kestrelweather.drawer.KestrelWeatherDrawerFactory;
 import com.missionse.kestrelweather.kestrel.KestrelConnectorFragment;
+import com.missionse.kestrelweather.kestrel.KestrelSimulationSettingsFragment;
 import com.missionse.kestrelweather.kestrel.KestrelSimulator;
 import com.missionse.kestrelweather.map.MapViewerFragment;
 import com.missionse.kestrelweather.map.TileProviderFactory;
 import com.missionse.kestrelweather.map.TiledMap;
+import com.missionse.kestrelweather.reports.photos.PhotoOverviewFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 
@@ -50,25 +52,19 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		mTiledMap.addTileProvider(getString(R.string.wind_overlay_name),
 				TileProviderFactory.createUrlTileProvider(getString(R.string.wind_overlay_url)));
 
-		displayMap();
-
 		mKestrelSimulator.onCreate();
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mKestrelSimulator.onDestroy();
+	protected void onStart() {
+		super.onStart();
+		mKestrelSimulator.onStart();
 	}
 
-	private void displayMap() {
-		FragmentManager fragmentManager = getFragmentManager();
-		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager.findFragmentByTag("map");
-		if (mapViewerFragment == null) {
-			mapViewerFragment = new MapViewerFragment();
-			mapViewerFragment.setMapLoadedListener(mTiledMap);
-		}
-		fragmentManager.beginTransaction().replace(R.id.content, mapViewerFragment, "map").commit();
+	@Override
+	protected void onStop() {
+		super.onStop();
+		mKestrelSimulator.onStop();
 	}
 
 	@Override
@@ -79,20 +75,58 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	@Override
 	protected void onDrawerConfigurationComplete() {
 		mDrawerFactory.addNavigationMenuItems(getLeftDrawerAdapter());
+		selectItem(0, getLeftDrawerList());
 	}
 
 	@Override
 	protected void onNavigationItemSelected(int index) {
-		if (index == KestrelWeatherDrawerFactory.CREATE_REPORT) {
-			FragmentManager fragmentManager = getFragmentManager();
-			KestrelConnectorFragment kestrelConnectorFragment = (KestrelConnectorFragment) fragmentManager
-				.findFragmentByTag("kestrelconnector");
-			if (kestrelConnectorFragment == null) {
-				kestrelConnectorFragment = new KestrelConnectorFragment();
-			}
-			fragmentManager.beginTransaction().replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
-				.addToBackStack("kestrelconnector").commit();
+		if (index == KestrelWeatherDrawerFactory.MAP_OVERVIEW) {
+			displayMapOverview();
+		} else if (index == KestrelWeatherDrawerFactory.CREATE_REPORT) {
+			displayCreateReport();
+		} else if (index == KestrelWeatherDrawerFactory.REPORT_SYNC) {
+			displayReportSync();
 		}
+	}
+
+	private void displayMapOverview() {
+		FragmentManager fragmentManager = getFragmentManager();
+		MapViewerFragment mapViewerFragment = (MapViewerFragment) fragmentManager
+				.findFragmentByTag("map");
+		if (mapViewerFragment == null) {
+			mapViewerFragment = new MapViewerFragment();
+			mapViewerFragment.setMapLoadedListener(mTiledMap);
+		}
+		fragmentManager.beginTransaction()
+				.replace(R.id.content, mapViewerFragment, "map")
+				.addToBackStack("map")
+				.commit();
+	}
+
+	private void displayCreateReport() {
+		FragmentManager fragmentManager = getFragmentManager();
+		KestrelConnectorFragment kestrelConnectorFragment = (KestrelConnectorFragment) fragmentManager
+				.findFragmentByTag("kestrelconnector");
+		if (kestrelConnectorFragment == null) {
+			kestrelConnectorFragment = new KestrelConnectorFragment();
+		}
+		fragmentManager.beginTransaction()
+				.replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
+				.addToBackStack("kestrelconnector")
+				.commit();
+	}
+
+	private void displayReportSync() {
+		FragmentManager fragmentManager = getFragmentManager();
+		PhotoOverviewFragment photoOverviewFragment = (PhotoOverviewFragment) fragmentManager
+				.findFragmentByTag("photo_overview");
+		if (photoOverviewFragment == null) {
+			photoOverviewFragment = new PhotoOverviewFragment();
+		}
+		fragmentManager.beginTransaction()
+				.replace(R.id.content, photoOverviewFragment, "photo_overview")
+				.addToBackStack("photo_overview")
+				.commit();
 	}
 
 	@Override
@@ -130,7 +164,27 @@ public class KestrelWeatherActivity extends DrawerActivity {
 				item.setChecked(false);
 			}
 			return true;
+		} else if (id == R.id.action_kestrel_simulation_settings) {
+			FragmentManager fragmentManager = getFragmentManager();
+			KestrelSimulationSettingsFragment kestrelSimulationSettingsFragment = (KestrelSimulationSettingsFragment) fragmentManager
+				.findFragmentByTag("kestrelsimulationsettings");
+			if (kestrelSimulationSettingsFragment == null) {
+				kestrelSimulationSettingsFragment = new KestrelSimulationSettingsFragment();
+			}
+			fragmentManager.beginTransaction().replace(R.id.content, kestrelSimulationSettingsFragment, "kestrelsimulationsettings")
+				.addToBackStack("kestrelsimulationsettings").commit();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onBackPressed() {
+		int backStackEntries = getFragmentManager().getBackStackEntryCount();
+		if (backStackEntries == 1) {
+			finish();
+		} else {
+			super.onBackPressed();
+		}
 	}
 }

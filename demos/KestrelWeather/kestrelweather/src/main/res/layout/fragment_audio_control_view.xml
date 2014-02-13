@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<TextView
+			android:id="@+id/audio_control_current_time"
+			android:layout_weight="1"
+			android:layout_width="0dip"
+			android:layout_height="match_parent"
+			android:text="00:00"/>
+
+		<SeekBar
+			android:id="@+id/audio_control_seek_bar"
+			android:layout_weight="6"
+			android:layout_width="0dip"
+			android:layout_height="wrap_content"/>
+
+		<TextView
+			android:id="@+id/audio_control_end_time_time"
+			android:layout_weight="1"
+			android:layout_width="0dip"
+			android:text="12:00"
+			android:layout_height="match_parent"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="50dip">
+
+		<ImageButton
+			android:id="@+id/audio_control_reverse_button"
+			style="?android:attr/borderlessButtonStyle"
+			android:layout_width="0dip"
+			android:layout_height="match_parent"
+			android:scaleType="fitCenter"
+			android:layout_weight="1"
+			android:src="@drawable/ic_action_rewind"/>
+
+		<RelativeLayout
+			android:layout_width="0dip"
+			android:layout_height="wrap_content"
+			android:layout_weight="3">
+
+			<ImageButton
+				android:id="@+id/audio_control_play_button"
+				style="?android:attr/borderlessButtonStyle"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:scaleType="fitCenter"
+				android:src="@drawable/ic_action_play"/>
+
+			<ImageButton
+				android:id="@+id/audio_control_pause_button"
+				style="?android:attr/borderlessButtonStyle"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:scaleType="fitCenter"
+				android:src="@drawable/ic_action_pause"
+				android:visibility="invisible"/>
+
+			<ImageButton
+				android:id="@+id/audio_control_stop_button"
+				style="?android:attr/borderlessButtonStyle"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:scaleType="fitCenter"
+				android:src="@drawable/ic_action_stop"
+				android:visibility="invisible"/>
+
+		</RelativeLayout>
+
+		<ImageButton
+			android:id="@+id/audio_control_forward_button"
+			style="?android:attr/borderlessButtonStyle"
+			android:layout_width="0dip"
+			android:layout_height="match_parent"
+			android:scaleType="fitCenter"
+			android:layout_weight="1"
+			android:src="@drawable/ic_action_fast_forward"/>
+
+	</LinearLayout>
+
+</LinearLayout>

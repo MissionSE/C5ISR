@@ -3,4 +3,7 @@
 	<dimen name="activity_horizontal_margin">16dp</dimen>
 	<dimen name="activity_vertical_margin">16dp</dimen>
 
+	<!-- Size of the photos in the photo selection grid. -->
+	<dimen name="photo_width">120dp</dimen>
+	<dimen name="photo_height">120dp</dimen>
 </resources>
