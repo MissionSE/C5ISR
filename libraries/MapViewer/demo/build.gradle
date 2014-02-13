@@ -9,12 +9,14 @@ repositories {
 }
 
 dependencies {
-    compile project(':library')
-	compile 'com.google.maps.android:android-maps-utils:0.2+'
-	compile 'com.koushikdutta.ion:ion:1.2+'
-	compile 'com.google.code.geocoder-java:geocoder-java:+'
-    compile 'net.margaritov.preference:colorpicker:1.11.0-SNAPSHOT@aar'
+    compile 'com.google.maps.android:android-maps-utils:0.3'
+    compile 'com.koushikdutta.ion:ion:1.2.+'
+    compile 'com.google.code.geocoder-java:geocoder-java:+'
     compile 'com.github.itsmechlark:android-sliding-layer-lib:1.0.1'
+    compile 'com.android.support:support-v4:19.0.1'
+    compile project(':library')
+    compile 'net.margaritov.preference:colorpicker:1.11.0-SNAPSHOT@aar'
+    compile 'com.makeramen:roundedimageview:1.2.4'
 }
 
 android {
