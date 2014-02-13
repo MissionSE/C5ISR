@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,16 @@ import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Provides an adapter for a list of photos.
  */
 public class PhotoAdapter extends ArrayAdapter<Uri> {
+	private static final String TAG = PhotoAdapter.class.getName();
 	private static final int BYTE_SIZE = 1024;
+	private static final int SECONDS_TO_MILLISECONDS = 1000;
 	private final int mResource;
 
 	/**
@@ -41,36 +47,15 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 		}
 
 		if (view != null) {
-			Bitmap imageThumbnail = null;
-			String imageFilename;
-			long imageSize = -1;
-
 			Uri uri = getItem(position);
 			Cursor cursor = getContext().getContentResolver()
 					.query(uri, null, null, null, null, null);
 			try {
 				if (cursor != null && cursor.moveToFirst()) {
-					int idIndex = cursor.getColumnIndex(DocumentsContract.Root.COLUMN_DOCUMENT_ID);
-					if (idIndex == -1) {
-						idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-					}
-					if (idIndex != -1) {
-						long id = getUriId(cursor.getString(idIndex));
-						if (id != -1) {
-							imageThumbnail = MediaStore.Images.Thumbnails.getThumbnail(
-									getContext().getContentResolver(), id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-						}
-					}
-
-					imageFilename = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
-					int sizeIndex = cursor.getColumnIndexOrThrow(OpenableColumns.SIZE);
-					if (!cursor.isNull(sizeIndex)) {
-						imageSize = cursor.getLong(sizeIndex);
-					}
-
-					setThumbnail(view, imageThumbnail);
-					setFilename(view, imageFilename);
-					setFilesize(view, imageSize);
+					setThumbnail(view, getThumbnail(cursor));
+					setFileName(view, getFileName(cursor));
+					setFileDate(view, getFileDate(cursor));
+					setFileSize(view, getFileSize(cursor));
 				}
 			} finally {
 				if (cursor != null) {
@@ -79,6 +64,23 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 			}
 		}
 		return view;
+	}
+
+	private Bitmap getThumbnail(final Cursor cursor) {
+		Bitmap thumbnail = null;
+		int idIndex = cursor.getColumnIndex(DocumentsContract.Root.COLUMN_DOCUMENT_ID);
+		if (idIndex == -1) {
+			idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+		}
+		if (idIndex != -1) {
+			long id = getUriId(cursor.getString(idIndex));
+			if (id != -1) {
+				thumbnail = MediaStore.Images.Thumbnails.getThumbnail(
+						getContext().getContentResolver(), id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+			}
+		}
+
+		return thumbnail;
 	}
 
 	private void setThumbnail(final View view, final Bitmap thumbnail) {
@@ -94,27 +96,71 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 		}
 	}
 
-	private void setFilename(final View view, final String filename) {
+	private String getFileName(final Cursor cursor) {
+		return cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+	}
+
+	private void setFileName(final View view, final String fileName) {
 		if (view != null) {
-			TextView filenameView = (TextView) view.findViewById(R.id.photo_overview_item_file_name);
-			if (filenameView != null) {
-				if (filename != null) {
-					filenameView.setText(filename);
+			TextView fileNameView = (TextView) view.findViewById(R.id.photo_overview_item_file_name);
+			if (fileNameView != null) {
+				if (fileName != null) {
+					fileNameView.setText(fileName);
 				} else {
-					filenameView.setText(getContext().getString(R.string.unknown));
+					fileNameView.setText(getContext().getString(R.string.unknown));
 				}
 			}
 		}
 	}
 
-	private void setFilesize(final View view, final long size) {
+	private String getFileDate(final Cursor cursor) {
+		String dateModified = null;
+		int unitConversion = 1;
+		int dateModifiedIndex = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED);
+		if (dateModifiedIndex == -1) {
+			dateModifiedIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED);
+			unitConversion = SECONDS_TO_MILLISECONDS;
+		}
+		if (dateModifiedIndex != -1) {
+			long dateModifiedInSeconds = cursor.getLong(dateModifiedIndex);
+			SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd");
+			dateModified = dateFormatter.format(new Date(dateModifiedInSeconds * unitConversion));
+		}
+
+		return dateModified;
+	}
+
+	private void setFileDate(final View view, final String date) {
 		if (view != null) {
-			TextView filesizeView = (TextView) view.findViewById(R.id.photo_overview_item_file_size);
-			if (filesizeView != null) {
-				if (size != -1) {
-					filesizeView.setText(humanReadableByteCount(size));
+			TextView fileDateView = (TextView) view.findViewById(R.id.photo_overview_item_file_date);
+			if (fileDateView != null) {
+				if (date != null) {
+					fileDateView.setText(date);
 				} else {
-					filesizeView.setText(getContext().getString(R.string.unknown));
+					fileDateView.setText(getContext().getString(R.string.unknown));
+				}
+			}
+		}
+	}
+
+	private long getFileSize(final Cursor cursor) {
+		long size = 0;
+		int sizeIndex = cursor.getColumnIndexOrThrow(OpenableColumns.SIZE);
+		if (!cursor.isNull(sizeIndex)) {
+			size = cursor.getLong(sizeIndex);
+		}
+
+		return size;
+	}
+
+	private void setFileSize(final View view, final long size) {
+		if (view != null) {
+			TextView fileSizeView = (TextView) view.findViewById(R.id.photo_overview_item_file_size);
+			if (fileSizeView != null) {
+				if (size != -1) {
+					fileSizeView.setText(humanReadableByteCount(size));
+				} else {
+					fileSizeView.setText(getContext().getString(R.string.unknown));
 				}
 			}
 		}
@@ -124,9 +170,9 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 		long uriId = -1;
 		String[] uriSegments = uri.split(":");
 		try {
-			uriId = Long.valueOf(uriSegments[uriSegments.length - 1]);
+			uriId = Long.parseLong(uriSegments[uriSegments.length - 1]);
 		} catch (NumberFormatException exception) {
-			// Invalid long, nothing to do.
+			Log.v(TAG, "Unable to get ID from URI: " + uri);
 		}
 
 		return uriId;
