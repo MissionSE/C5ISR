@@ -57,4 +57,7 @@
     <dimen name="custom_item_image">50dp</dimen>
     <dimen name="custom_item_padding">2dp</dimen>
 
+    <dimen name="info_window_data_margin_corner">28dp</dimen>
+    <dimen name="info_window_data_margin_side">1dp</dimen>
+
 </resources>

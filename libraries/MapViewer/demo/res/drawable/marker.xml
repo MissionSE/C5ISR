@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_marker" />
+    <item
+        android:left="5dp"
+        android:bottom="5dp"
+        android:right="5dp"
+        android:top="5dp">
+        <shape android:shape="oval">
+            <solid android:color="@android:color/holo_red_light"/>
+        </shape>
+    </item>
+    <!--<item-->
+        <!--android:drawable="@drawable/bg_weather"-->
+        <!--android:left="5.0dip"-->
+        <!--android:top="5.0dip"-->
+        <!--android:right="5.0dip"-->
+        <!--android:bottom="5.0dip" />-->
+</layer-list>

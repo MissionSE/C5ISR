@@ -22,6 +22,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("Filtering Demo", MapFilteringActivity.class);
         addDemo("Map Overview Demo", MapOverviewActivity.class);
         addDemo("Clustering Demo", MarkerClusterActivity.class);
+        addDemo("Custom Marker Info Window Demo", CustomMarkerInfoWindowActivity.class);
         addDemo("Settings Demo", MapSettingsActivity.class);
     }
 

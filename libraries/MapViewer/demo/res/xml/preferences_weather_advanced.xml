@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="@string/default_metric"
+        android:entries="@array/pref_wind_speed"
+        android:entryValues="@array/pref_wind_speed_values"
+        android:key="pref_speed"
+        android:title="@string/wind_speed"/>
+    <ListPreference
+        android:defaultValue="@string/default_metric"
+        android:entries="@array/pref_wind_direction"
+        android:entryValues="@array/pref_wind_direction_values"
+        android:key="pref_wind_direction"
+        android:title="@string/wind_direction"/>
+    <ListPreference
+        android:defaultValue="@string/default_metric"
+        android:entries="@array/pref_pressure"
+        android:entryValues="@array/pref_pressure_values"
+        android:key="pref_pressure"
+        android:title="@string/pressure"/>
+    <ListPreference
+        android:defaultValue="@string/default_metric"
+        android:entries="@array/pref_time_format"
+        android:entryValues="@array/pref_time_format_values"
+        android:key="pref_time"
+        android:title="@string/time_format"/>
+    <ListPreference
+        android:defaultValue="@string/default_metric"
+        android:entries="@array/pref_date_format"
+        android:entryValues="@array/pref_date_format_values"
+        android:key="pref_date"
+        android:title="@string/date_format"/>
+</PreferenceScreen>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/units">
+        <ListPreference
+            android:entries="@array/pref_temp_units"
+            android:title="@string/basic"
+            android:key="pref_temp_units"
+            android:defaultValue="@string/default_metric"
+            android:dialogTitle="@string/units"
+            android:entryValues="@array/pref_temp_units_values" />
+        <Preference android:title="@string/advanced" android:key="advanced_pref" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="About">
+        <Preference android:title="Build version" />
+        <Preference android:title="Open Source Licenses" />
+    </PreferenceCategory>
+</PreferenceScreen>

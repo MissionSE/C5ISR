@@ -84,6 +84,15 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
+            android:name=".CustomMarkerInfoWindowActivity"
+            android:label="@string/title_activity_custom_marker_info_window"
+            android:parentActivityName=".MainActivity">
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
             android:name=".MapSettingsActivity"
             android:label="@string/title_activity_map_settings"
             android:parentActivityName=".MainActivity">
