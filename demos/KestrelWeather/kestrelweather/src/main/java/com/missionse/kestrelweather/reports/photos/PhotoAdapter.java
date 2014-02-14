@@ -1,9 +1,11 @@
 package com.missionse.kestrelweather.reports.photos;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -66,6 +68,7 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 		return view;
 	}
 
+	@TargetApi(Build.VERSION_CODES.KITKAT)
 	private Bitmap getThumbnail(final Cursor cursor) {
 		Bitmap thumbnail = null;
 		int idIndex = cursor.getColumnIndex(DocumentsContract.Root.COLUMN_DOCUMENT_ID);
@@ -113,6 +116,7 @@ public class PhotoAdapter extends ArrayAdapter<Uri> {
 		}
 	}
 
+	@TargetApi(Build.VERSION_CODES.KITKAT)
 	private String getFileDate(final Cursor cursor) {
 		String dateModified = null;
 		int unitConversion = 1;

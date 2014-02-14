@@ -69,8 +69,12 @@ public class PhotoMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 			SparseBooleanArray checkedItems = mListView.getCheckedItemPositions();
 			if (checkedItems != null) {
 				List<Uri> selectedUris = new ArrayList<Uri>();
-				for (int index = 0; index < checkedItems.size(); index++) {
-					selectedUris.add(mAdapter.getItem(checkedItems.keyAt(index)));
+				for (int index = checkedItems.size() - 1; index >= 0; index--) {
+					int position = checkedItems.keyAt(index);
+					if (checkedItems.valueAt(position)) {
+						selectedUris.add(mAdapter.getItem(position));
+						mListView.setItemChecked(position, false);
+					}
 				}
 
 				for (Uri uri : selectedUris) {

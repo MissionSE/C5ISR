@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather.reports.photos;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -7,6 +8,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -61,6 +63,7 @@ public class PhotoDialogFragment extends DialogFragment {
 	}
 
 	@Override
+	@TargetApi(Build.VERSION_CODES.KITKAT)
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_report_photos_dialog, container);
 		if (view != null) {
@@ -86,8 +89,14 @@ public class PhotoDialogFragment extends DialogFragment {
 				attachPhotoButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(final View view) {
-						Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-						intent.addCategory(Intent.CATEGORY_OPENABLE);
+						Intent intent;
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+							intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+							intent.addCategory(Intent.CATEGORY_OPENABLE);
+						} else {
+							intent = new Intent(Intent.ACTION_GET_CONTENT);
+						}
+
 						intent.setType("image/*");
 						intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 						startActivityForResult(intent, ATTACH_PHOTO_REQUEST);

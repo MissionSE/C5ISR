@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ClipData;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -90,17 +89,15 @@ public class PhotoOverviewFragment extends Fragment {
 
 		if (requestCode == ADD_PHOTO_REQUEST && resultCode == Activity.RESULT_OK) {
 			if (resultData != null) {
-				Uri uri = resultData.getData();
-				if (uri != null) {
-					mPhotoAdapter.add(uri);
+				if (resultData.getData() != null) {
+					mPhotoAdapter.add(resultData.getData());
 				} else {
 					ClipData clipData = resultData.getClipData();
 					if (clipData != null) {
 						for (int index = 0; index < clipData.getItemCount(); ++index) {
 							ClipData.Item item = clipData.getItemAt(index);
 							if (item != null) {
-								uri = item.getUri();
-								mPhotoAdapter.add(uri);
+								mPhotoAdapter.add(item.getUri());
 							}
 						}
 					}
