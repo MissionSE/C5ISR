@@ -2,6 +2,7 @@ package com.missionse.kestrelweather.database.model.tables;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import com.missionse.kestrelweather.database.model.SupplementType;
 
 import org.joda.time.DateTime;
@@ -9,6 +10,7 @@ import org.joda.time.DateTime;
 /**
  * A report supplement class.  Used for holding video, photos etc.
  */
+@DatabaseTable(daoClass = com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable.class)
 public class Supplement {
 	@DatabaseField(columnName = "uri")
 	private String mUri;

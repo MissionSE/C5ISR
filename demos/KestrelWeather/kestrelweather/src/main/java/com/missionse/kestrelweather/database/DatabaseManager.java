@@ -24,10 +24,18 @@ public class DatabaseManager {
 		mRemoteDatabaseHelper = new RemoteDatabaseHelper(context);
 	}
 
+	/**
+	 * Getter for local database helper.
+	 * @return An instance of LocalDatabaseHelper.
+	 */
 	public LocalDatabaseHelper getLocalHelper() {
 		return mLocalDatabaseHelper;
 	}
 
+	/**
+	 * Getter for remote database helper.
+	 * @return An instance of RemoteDatabaseHelper.
+	 */
 	public RemoteDatabaseHelper getRemoteHelper() {
 		return mRemoteDatabaseHelper;
 	}

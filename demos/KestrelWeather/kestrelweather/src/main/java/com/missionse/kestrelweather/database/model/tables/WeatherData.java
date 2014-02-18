@@ -1,11 +1,13 @@
 package com.missionse.kestrelweather.database.model.tables;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import com.missionse.kestrelweather.database.model.Entity;
 
 /**
  * Container for weather data information.
  */
+@DatabaseTable(daoClass = com.missionse.kestrelweather.database.model.tables.manipulators.WeatherDataTable.class)
 public class WeatherData extends Entity {
 	@DatabaseField(columnName = "temperature")
 	private float mTemperature;

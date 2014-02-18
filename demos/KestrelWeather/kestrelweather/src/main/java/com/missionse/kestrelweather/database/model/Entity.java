@@ -6,7 +6,7 @@ import com.j256.ormlite.field.DatabaseField;
  * Base class for database tables.
  */
 public class Entity {
-	@DatabaseField(id = true, columnName = "_id", generatedId = true)
+	@DatabaseField(columnName = "_id", generatedId = true)
 	private int mId;
 	@DatabaseField(columnName = "dirty")
 	private boolean mDirty;

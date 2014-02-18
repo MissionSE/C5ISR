@@ -11,6 +11,9 @@ import com.j256.ormlite.table.TableUtils;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.WeatherData;
+import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.WeatherDataTable;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -98,5 +101,17 @@ public class LocalDatabaseHelper extends OrmLiteSqliteOpenHelper {
 			Log.e(TAG, "Cannot drop database.", exp);
 			throw new RuntimeException(exp);
 		}
+	}
+
+	public ReportTable getReportTable() {
+		return (ReportTable) getObjectDao(Report.class);
+	}
+
+	public SupplementTable getSupplementTable() {
+		return (SupplementTable) getObjectDao(Supplement.class);
+	}
+
+	public WeatherDataTable getWeatherTable() {
+		return (WeatherDataTable) getObjectDao(WeatherData.class);
 	}
 }
