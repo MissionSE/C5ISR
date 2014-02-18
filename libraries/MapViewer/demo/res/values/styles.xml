@@ -39,5 +39,12 @@
         <item name="android:textColor">@color/map_filterselect_inactive</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
+    
+    <style name="ObservationDataWidget">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+    </style>
 
 </resources>

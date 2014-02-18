@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:maxLevel="0">
+        <shape android:shape="oval">
+            <solid android:color="@color/fog" />
+        </shape>
+    </item>
+    <item android:maxLevel="1">
+        <shape android:shape="oval">
+            <solid android:color="@color/overcast" />
+        </shape>
+    </item>
+    <item android:maxLevel="2">
+        <shape android:shape="oval">
+            <solid android:color="@color/cloudy" />
+        </shape>
+    </item>
+    <item android:maxLevel="3">
+        <shape android:shape="oval">
+            <solid android:color="@color/fair" />
+        </shape>
+    </item>
+    <item android:maxLevel="4">
+        <shape android:shape="oval">
+            <solid android:color="@color/hot" />
+        </shape>
+    </item>
+    <item android:maxLevel="5">
+        <shape android:shape="oval">
+            <solid android:color="@color/showers" />
+        </shape>
+    </item>
+    <item android:maxLevel="6">
+        <shape android:shape="oval">
+            <solid android:color="@color/lightRain" />
+        </shape>
+    </item>
+    <item android:maxLevel="7">
+        <shape android:shape="oval">
+            <solid android:color="@color/heavyRain" />
+        </shape>
+    </item>
+    <item android:maxLevel="8">
+        <shape android:shape="oval">
+            <solid android:color="@color/rainSnow" />
+        </shape>
+    </item>
+    <item android:maxLevel="9">
+        <shape android:shape="oval">
+            <solid android:color="@color/lightSnow" />
+        </shape>
+    </item>
+    <item android:maxLevel="10">
+        <shape android:shape="oval">
+            <solid android:color="@color/heavySnow" />
+        </shape>
+    </item>
+    <item android:maxLevel="11">
+        <shape android:shape="oval">
+            <solid android:color="@color/storm" />
+        </shape>
+    </item>
+</level-list>

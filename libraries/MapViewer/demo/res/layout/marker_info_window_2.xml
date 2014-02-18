@@ -10,25 +10,24 @@
     android:padding="15.0dip"
     android:paddingBottom="35.0dip">
 
+    <com.makeramen.RoundedImageView
+        android:layout_width="230dp"
+        android:layout_height="230dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/imageView1"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:scaleType="centerCrop"
+        android:src="@drawable/photo_1"
+        app:is_oval="true"
+        app:round_background="true"/>
+
     <FrameLayout
         android:layout_width="230dp"
         android:layout_height="230dp"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/marker_info_ring">
-
-        <com.makeramen.RoundedImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:id="@+id/imageView1"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:scaleType="centerCrop"
-            android:src="@drawable/photo_1"
-            app:is_oval="true"
-            app:round_background="true"
-            app:border_width="4dp"
-            app:border_color="#FFFFFF"/>
+        android:background="@drawable/marker_info_ring_2">
 
         <LinearLayout
             android:layout_width="48dp"
@@ -55,7 +54,6 @@
         <LinearLayout
             android:layout_width="48dp"
             android:layout_height="48dp"
-
             android:layout_gravity="top|center_horizontal"
             android:layout_marginTop="@dimen/info_window_data_margin_side"
             android:gravity="center"

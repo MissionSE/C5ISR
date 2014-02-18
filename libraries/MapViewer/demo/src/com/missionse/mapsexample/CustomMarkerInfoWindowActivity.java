@@ -40,7 +40,7 @@ public class CustomMarkerInfoWindowActivity extends Activity {
         private final View mWindow;
 
         CustomInfoWindowAdapter() {
-            mWindow = getLayoutInflater().inflate(R.layout.marker_info_window, null);
+            mWindow = getLayoutInflater().inflate(R.layout.marker_info_window_2, null);
         }
 
         @Override

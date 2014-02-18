@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/weather_pict_fog" android:maxLevel="0" />
+    <item android:drawable="@drawable/weather_pict_overcast" android:maxLevel="1" />
+    <item android:drawable="@drawable/weather_pict_cloudy" android:maxLevel="2" />
+    <item android:drawable="@drawable/weather_pict_fair" android:maxLevel="3" />
+    <item android:drawable="@drawable/weather_pict_hot" android:maxLevel="4" />
+    <item android:drawable="@drawable/weather_pict_showers" android:maxLevel="5" />
+    <item android:drawable="@drawable/weather_pict_light_rain" android:maxLevel="6" />
+    <item android:drawable="@drawable/weather_pict_heavy_rain" android:maxLevel="7" />
+    <item android:drawable="@drawable/weather_pict_rain_snow" android:maxLevel="8" />
+    <item android:drawable="@drawable/weather_pict_light_snow" android:maxLevel="9" />
+    <item android:drawable="@drawable/weather_pict_heavy_snow" android:maxLevel="10" />
+    <item android:drawable="@drawable/weather_pict_storm" android:maxLevel="11" />
+</level-list>
