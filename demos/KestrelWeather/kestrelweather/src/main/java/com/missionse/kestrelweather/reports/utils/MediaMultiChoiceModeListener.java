@@ -1,4 +1,4 @@
-package com.missionse.kestrelweather.reports.photos;
+package com.missionse.kestrelweather.reports.utils;
 
 import android.content.Context;
 import android.net.Uri;
@@ -18,9 +18,9 @@ import java.util.List;
 /**
  * Provides an implementation of a multiple choice mode listener.
  */
-public class PhotoMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+public class MediaMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 	private ListView mListView;
-	private PhotoAdapter mAdapter;
+	private UriAdapter mAdapter;
 
 	private final String mSelectItemsText;
 	private final String mItemsSelectedText;
@@ -31,7 +31,7 @@ public class PhotoMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 	 * @param listView The view that contains the items.
 	 * @param adapter The adapter that handles the item views.
 	 */
-	public PhotoMultiChoiceModeListener(final Context context, final ListView listView, final PhotoAdapter adapter) {
+	public MediaMultiChoiceModeListener(final Context context, final ListView listView, final UriAdapter adapter) {
 		mListView = listView;
 		mAdapter = adapter;
 
