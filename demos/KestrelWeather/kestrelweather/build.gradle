@@ -13,6 +13,8 @@ dependencies {
     compile 'com.google.android.gms:play-services:4.1.+'
     compile 'com.missionse:ui-extensions:1.1.0-SNAPSHOT@aar'
 	compile 'com.missionse:bluetooth-connector:1.4.0-SNAPSHOT@aar'
+    compile 'com.j256.ormlite:ormlite-android:4.+'
+    compile 'joda-time:joda-time:2.+'
 }
 
 android {
@@ -20,7 +22,7 @@ android {
     buildToolsVersion "19.0.1"
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"

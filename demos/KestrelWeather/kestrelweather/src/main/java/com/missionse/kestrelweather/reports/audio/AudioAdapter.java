@@ -16,6 +16,7 @@ import com.missionse.kestrelweather.reports.utils.MediaTimeConverter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * An adapter used to display audio files.
@@ -50,7 +51,7 @@ public class AudioAdapter extends ArrayAdapter<String> {
 		TextView duration = (TextView) view.findViewById(R.id.report_item_file_size);
 
 		File song = new File(getItem(position));
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd", Locale.US);
 		MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
 		try {
 			FileInputStream inputStream = new FileInputStream(song);
