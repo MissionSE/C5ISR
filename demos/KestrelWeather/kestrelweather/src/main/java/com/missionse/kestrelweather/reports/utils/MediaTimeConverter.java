@@ -46,7 +46,7 @@ public final class MediaTimeConverter {
 	}
 
 	/**
-	 * Converts the time in milliseconds to a more human readable format:
+	 * Converts the time in milliseconds to a more human readable format.
 	 * Format: 00:00
 	 * @param time The run time in milliseconds.
 	 * @return Human readable time. (String)

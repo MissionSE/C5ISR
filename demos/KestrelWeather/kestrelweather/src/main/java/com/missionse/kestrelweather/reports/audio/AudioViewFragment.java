@@ -1,21 +1,17 @@
 package com.missionse.kestrelweather.reports.audio;
 
 
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
-import com.missionse.kestrelweather.reports.utils.FileManager;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +20,7 @@ import java.util.List;
  * Use the {@link AudioViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AudioViewFragment extends ListFragment implements MediaPlayerWrapper.OnMediaPlayerEventListener {
+public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.OnMediaPlayerEventListener {
 	private static final String EDITABLE_REPORT = "is_report_editable";
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
@@ -85,13 +81,13 @@ public class AudioViewFragment extends ListFragment implements MediaPlayerWrappe
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View contentView = inflater.inflate(R.layout.fragment_report_audio, container, false);
 
 		if (contentView != null) {
 			initMediaComponents(contentView);
-			initLoadMedia();
-			setListAdapter(new AudioAdapter(getActivity(), R.layout.fragment_report_list_entry, mSongList));
+//			initLoadMedia();
+//			setListAdapter(new AudioAdapter(getActivity(), R.layout.fragment_report_list_entry, mSongList));
 		}
 		return contentView;
 	}
@@ -102,28 +98,28 @@ public class AudioViewFragment extends ListFragment implements MediaPlayerWrappe
 		mMediaWrapper.destroy();
 	}
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		mMediaWrapper.setMediaSource(mSongList[position]);
-		onMediaPlayButtonPressed();
-	}
+//	@Override
+//	public void onListItemClick(ListView l, View v, int position, long id) {
+//		super.onListItemClick(l, v, position, id);
+//		mMediaWrapper.setMediaSource(mSongList[position]);
+//		onMediaPlayButtonPressed();
+//	}
 
-	private void initLoadMedia() {
-
-		File[] audioFiles = FileManager.getTestFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String filename) {
-				return filename.endsWith("mp3");
-			}
-		});
-
-		mSongList = new String[audioFiles.length];
-		for (int i = 0; i < audioFiles.length; i++) {
-			mSongList[i] = audioFiles[i].getAbsolutePath();
-		}
-
-	}
+//	private void initLoadMedia() {
+//
+//		File[] audioFiles = FileManager.getTestFiles(new FilenameFilter() {
+//			@Override
+//			public boolean accept(File dir, String filename) {
+//				return filename.endsWith("mp3");
+//			}
+//		});
+//
+//		mSongList = new String[audioFiles.length];
+//		for (int i = 0; i < audioFiles.length; i++) {
+//			mSongList[i] = audioFiles[i].getAbsolutePath();
+//		}
+//
+//	}
 
 	private void initMediaComponents(final View root) {
 

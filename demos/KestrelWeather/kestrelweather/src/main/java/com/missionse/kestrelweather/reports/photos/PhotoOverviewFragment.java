@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 
 /**
  * A fragment used to manage the photos attached to a report.
@@ -57,7 +58,7 @@ public class PhotoOverviewFragment extends Fragment {
 
 			mPhotoAdapter = new PhotoAdapter(mActivity, R.layout.fragment_report_list_entry);
 			mPhotoList.setAdapter(mPhotoAdapter);
-			mPhotoList.setMultiChoiceModeListener(new PhotoMultiChoiceModeListener(mActivity, mPhotoList, mPhotoAdapter));
+			mPhotoList.setMultiChoiceModeListener(new MediaMultiChoiceModeListener(mActivity, mPhotoList, mPhotoAdapter));
 		}
 
 		return contentView;

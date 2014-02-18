@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides an implementation of a multiple choice mode listener.
+ * Provides an implementation of a multiple choice mode listener for selecting lists of media.
  */
 public class MediaMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 	private ListView mListView;
