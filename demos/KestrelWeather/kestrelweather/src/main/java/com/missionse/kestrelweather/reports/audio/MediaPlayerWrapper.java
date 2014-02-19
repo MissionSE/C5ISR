@@ -1,6 +1,8 @@
 package com.missionse.kestrelweather.reports.audio;
 
+import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.SeekBar;
@@ -20,7 +22,7 @@ public class MediaPlayerWrapper {
 	private TextView mCurrentTextView;
 	private SeekBar mSeekBar;
 	private OnMediaPlayerEventListener mCompleteListener;
-	private String mCurrentMediaPath;
+	private Uri mCurrentMediaUri;
 	private boolean mNewMediaSelected = false;
 	private int mSeekResumePosition = 0;
 	private Handler mHandler = new Handler();
@@ -36,7 +38,7 @@ public class MediaPlayerWrapper {
 	};
 
 	/**
-	 * Default Constructor.
+	 * Constructor.
 	 */
 	public MediaPlayerWrapper() {
 		mMediaPlayer = new MediaPlayer();
@@ -101,24 +103,21 @@ public class MediaPlayerWrapper {
 
 	/**
 	 * Set the media source that will be playing.
-	 * @param path The absolute path to the media to be played.
+	 * @param context The current context.
+	 * @param uri The URI that represents the media to be played.
 	 */
-	public void setMediaSource(String path) {
-		if (path == null || path.length() == 0) {
-			throw new IllegalArgumentException("Path cannot be null or empty string.");
-		}
-		mCurrentMediaPath = path;
-		mNewMediaSelected = true;
-		prepareMedia();
-	}
+	public void setMediaSource(final Context context, final Uri uri) {
+		if (uri != null) {
+			mCurrentMediaUri = uri;
+			mNewMediaSelected = true;
 
-	private void prepareMedia() {
-		try {
-			mMediaPlayer.reset();
-			mMediaPlayer.setDataSource(mCurrentMediaPath);
-			mMediaPlayer.prepare();
-		} catch (Exception exp) {
-			Log.e(TAG, "Unable to prepare media.", exp);
+			try {
+				mMediaPlayer.reset();
+				mMediaPlayer.setDataSource(context, mCurrentMediaUri);
+				mMediaPlayer.prepare();
+			} catch (Exception exception) {
+				Log.e(TAG, "Unable to prepare media.", exception);
+			}
 		}
 	}
 
@@ -126,15 +125,12 @@ public class MediaPlayerWrapper {
 	 * Play the current media.
 	 */
 	public void playMedia() {
-		Log.d(TAG, "playMedia - playing media is about to begin");
-		if (mCurrentMediaPath != null && mCurrentMediaPath.length() > 0) {
+		if (mCurrentMediaUri != null) {
 			if (!mNewMediaSelected) {
-				Log.d(TAG, "playMedia - Resume media from last position.");
 				mMediaPlayer.start();
 				mMediaPlayer.seekTo(mSeekResumePosition);
 				updateSeekBar();
 			} else {
-				Log.d(TAG, "playMedia - Start new media. ");
 				mNewMediaSelected = false;
 				mMediaPlayer.start();
 				mSeekBar.setMax(mMediaPlayer.getDuration());
@@ -148,7 +144,6 @@ public class MediaPlayerWrapper {
 	 * Pause the current media.
 	 */
 	public void pauseMedia() {
-		Log.d(TAG, "pauseMedia - Pausing media and setting current position to: " + mMediaPlayer.getCurrentPosition());
 		mMediaPlayer.pause();
 		mSeekResumePosition = mMediaPlayer.getCurrentPosition();
 	}
@@ -158,7 +153,6 @@ public class MediaPlayerWrapper {
 	 * @param amount The amount of time to fast-forward in milliseconds.
 	 */
 	public void fastForward(int amount) {
-		Log.d(TAG, "fastForward - fast forwarding");
 		if (mMediaPlayer != null) {
 			mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() + amount);
 		}
@@ -169,7 +163,6 @@ public class MediaPlayerWrapper {
 	 * @param amount The amount of time to rewind in milliseconds.
 	 */
 	public void rewind(int amount) {
-		Log.d(TAG, "rewind - rewinding");
 		if (mMediaPlayer != null) {
 			mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() - amount);
 		}
@@ -205,7 +198,6 @@ public class MediaPlayerWrapper {
 	 * Cleans up all processes.
 	 */
 	public void destroy() {
-		Log.d(TAG, "destroy - Destroying media player components");
 		if (mMediaPlayer != null) {
 			mMediaPlayer.reset();
 			mMediaPlayer.release();
@@ -217,7 +209,9 @@ public class MediaPlayerWrapper {
 	 * Listener for media player.
 	 */
 	public interface OnMediaPlayerEventListener {
+		/**
+		 * Callback function to notify when media playback has completed.
+		 */
 		void onMediaComplete();
 	}
-
 }
