@@ -2,6 +2,8 @@ package com.missionse.kestrelweather.database.model;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import org.joda.time.DateTime;
+
 /**
  * Base class for database tables.
  */
@@ -9,7 +11,11 @@ public class Entity {
 	@DatabaseField(columnName = "_id", generatedId = true)
 	private int mId;
 	@DatabaseField(columnName = "dirty")
-	private boolean mDirty;
+	private boolean mDirty = false;
+	@DatabaseField(columnName = "update_at", version = true)
+	private DateTime mUpdateAt = DateTime.now();
+	@DatabaseField(columnName = "created_at")
+	private DateTime mCreatedAt =DateTime.now();
 
 	/**
 	 * Return the database ID associated with this object.
@@ -42,4 +48,37 @@ public class Entity {
 	public void setDirty(final boolean dirty) {
 		mDirty = dirty;
 	}
+
+	/**
+	 * Getter.
+	 * @return Instance of DateTime which states the time of last modification.
+	 */
+	public DateTime getUpdateAt() {
+		return mUpdateAt;
+	}
+
+	/**
+	 * Setter.
+	 * @param updateAt DateTime this report was last modified.
+	 */
+	public void setUpdateAt(DateTime updateAt) {
+		mUpdateAt = updateAt;
+	}
+
+	/**
+	 * Getter.
+	 * @return Instance of DataTime which states when this report was created.
+	 */
+	public DateTime getCreatedAt() {
+		return mCreatedAt;
+	}
+
+	/**
+	 * Setter.
+	 * @param createdAt DateTime this report was created at.
+	 */
+	public void setCreatedAt(DateTime createdAt) {
+		mCreatedAt = createdAt;
+	}
+
 }

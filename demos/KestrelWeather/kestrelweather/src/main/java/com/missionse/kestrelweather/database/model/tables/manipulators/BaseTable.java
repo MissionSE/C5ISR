@@ -5,6 +5,10 @@ import android.util.Log;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
+import com.missionse.kestrelweather.database.model.Entity;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -13,7 +17,7 @@ import java.util.List;
 /**
  * Base Class for manipulators.
  */
-public class BaseTable<T> extends BaseDaoImpl<T, Integer> implements Dao<T, Integer> {
+public class BaseTable<T extends Entity> extends BaseDaoImpl<T, Integer> implements Dao<T, Integer> {
 	private static final String TAG = BaseTable.class.getSimpleName();
 	private static final int INVALID_DB_ID = -1;
 
@@ -34,6 +38,7 @@ public class BaseTable<T> extends BaseDaoImpl<T, Integer> implements Dao<T, Inte
 	@Override
 	public int create(T data) {
 		try {
+			data.setCreatedAt(DateTime.now());
 			return super.create(data);
 		} catch (SQLException exp) {
 			Log.e(TAG, "Unable to create report in database.", exp);
@@ -44,6 +49,7 @@ public class BaseTable<T> extends BaseDaoImpl<T, Integer> implements Dao<T, Inte
 	@Override
 	public int update(T data) {
 		try {
+			data.setUpdateAt(DateTime.now());
 			return super.update(data);
 		} catch (SQLException exp) {
 			Log.e(TAG, "Unable to update report in database.", exp);

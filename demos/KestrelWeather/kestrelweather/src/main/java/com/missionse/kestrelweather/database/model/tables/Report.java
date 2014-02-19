@@ -21,10 +21,6 @@ public class Report extends Entity {
 	private long mLongitude;
 	@DatabaseField(foreign = true, canBeNull = true)
 	private WeatherData mWeatherData;
-	@DatabaseField(columnName = "update_at")
-	private DateTime mUpdateAt;
-	@DatabaseField(columnName = "created_at")
-	private DateTime mCreatedAt;
 	@ForeignCollectionField
 	private ForeignCollection<Supplement> mSupplements;
 
@@ -36,8 +32,6 @@ public class Report extends Entity {
 		mLatitude = 0L;
 		mLongitude = 0L;
 		mWeatherData = null;
-		mUpdateAt = null;
-		mCreatedAt = null;
 	}
 
 	/**
@@ -104,37 +98,6 @@ public class Report extends Entity {
 		mWeatherData = weatherData;
 	}
 
-	/**
-	 * Getter.
-	 * @return Instance of DateTime which states the time of last modification.
-	 */
-	public DateTime getUpdateAt() {
-		return mUpdateAt;
-	}
-
-	/**
-	 * Setter.
-	 * @param updateAt DateTime this report was last modified.
-	 */
-	public void setUpdateAt(DateTime updateAt) {
-		mUpdateAt = updateAt;
-	}
-
-	/**
-	 * Getter.
-	 * @return Instance of DataTime which states when this report was created.
-	 */
-	public DateTime getCreatedAt() {
-		return mCreatedAt;
-	}
-
-	/**
-	 * Setter.
-	 * @param createdAt DateTime this report was created at.
-	 */
-	public void setCreatedAt(DateTime createdAt) {
-		mCreatedAt = createdAt;
-	}
 
 	/**
 	 * Add a Supplement to this report.
