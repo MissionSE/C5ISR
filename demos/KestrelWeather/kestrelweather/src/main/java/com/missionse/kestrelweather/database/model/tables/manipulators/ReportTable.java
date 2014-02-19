@@ -33,6 +33,7 @@ public class ReportTable extends BaseTable<Report> {
 		Report report = new Report();
 		try {
 			assignEmptyForeignCollection(report, "mSupplements");
+			assignEmptyForeignCollection(report, "mNotes");
 		} catch (SQLException exp) {
 			Log.e(TAG, "Issue creating new report.", exp);
 		}

@@ -8,9 +8,11 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.missionse.kestrelweather.database.model.tables.Note;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.WeatherData;
+import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.WeatherDataTable;
@@ -36,6 +38,7 @@ public class LocalDatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public LocalDatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		mClasses = new LinkedList<Class>();
+		mClasses.add(Note.class);
 		mClasses.add(Report.class);
 		mClasses.add(Supplement.class);
 		mClasses.add(WeatherData.class);
@@ -103,15 +106,35 @@ public class LocalDatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 	}
 
+	/**
+	 * Getter
+	 * @return Instance of ReportTable.
+	 */
 	public ReportTable getReportTable() {
 		return (ReportTable) getObjectDao(Report.class);
 	}
 
+	/**
+	 * Getter
+	 * @return Instance of SupplementTable.
+	 */
 	public SupplementTable getSupplementTable() {
 		return (SupplementTable) getObjectDao(Supplement.class);
 	}
 
+	/**
+	 * Getter
+	 * @return Instance of WeatherData.
+	 */
 	public WeatherDataTable getWeatherTable() {
 		return (WeatherDataTable) getObjectDao(WeatherData.class);
+	}
+
+	/**
+	 * Getter.
+	 * @return Instance of NoteTable.
+	 */
+	public NoteTable getNoteTable() {
+		return (NoteTable) getObjectDao(Note.class);
 	}
 }

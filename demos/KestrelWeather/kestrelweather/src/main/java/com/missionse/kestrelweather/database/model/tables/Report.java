@@ -23,6 +23,8 @@ public class Report extends Entity {
 	private WeatherData mWeatherData;
 	@ForeignCollectionField
 	private ForeignCollection<Supplement> mSupplements;
+	@ForeignCollectionField
+	private ForeignCollection<Note> mNotes;
 
 	/**
 	 * Default Constructor.
@@ -113,6 +115,22 @@ public class Report extends Entity {
 	 */
 	public void removeSupplement(Supplement supplement) {
 		mSupplements.remove(supplement);
+	}
+
+	/**
+	 * Add a Note to this report.
+	 * @param note The Note to be added.
+	 */
+	public void addNote(Note note) {
+		mNotes.add(note);
+	}
+
+	/**
+	 * Remove Note from this report.
+	 * @param note The Note to be removed.
+	 */
+	public void removeNote(Note note) {
+		mNotes.remove(note);
 	}
 
 	/**
