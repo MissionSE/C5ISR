@@ -1,0 +1,18 @@
+{
+	"name": "kestrel-weather-server",
+	"version": "0.0.1",
+	"description":"Kestrel Weather server application.",
+	"private": true,
+	"scripts": {
+		"start": "node server.js"
+	},
+	"dependencies": {
+		"express": "3.4.8",
+		"jade": "*",
+		"mongodb": "*",
+		"monk": "*",
+		"mongoose": "*",
+		"mongoose-auto-increment":"*",
+		"implementjs": "*"
+	}
+}

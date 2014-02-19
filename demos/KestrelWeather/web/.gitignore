@@ -1,0 +1,2 @@
+#Ignore all node_modules, as those are installed by end-users.
+node_modules/
