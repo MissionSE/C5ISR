@@ -3,9 +3,17 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
-	<ListView
-		android:id="@+id/photo_overview_list"
-		android:layout_width="match_parent"
+	<TextView
+		android:id="@+id/fragment_report_photos_empty"
 		android:layout_height="match_parent"
-		android:choiceMode="multipleChoiceModal"/>
+		android:layout_width="match_parent"
+		android:gravity="center"
+		android:text="@string/no_photos"
+		android:textSize="22sp"
+		android:textColor="@color/gray_medium">
+	</TextView>
+	<ListView
+		android:id="@+id/fragment_report_photos_list"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
 </RelativeLayout>

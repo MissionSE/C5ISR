@@ -41,7 +41,7 @@ public class PhotoAdapter extends UriAdapter {
 				if (cursor != null && cursor.moveToFirst()) {
 					setThumbnail(view, getThumbnail(cursor));
 					setFileName(view, getFileName(cursor));
-					setFileDate(view, getFileDateModified(cursor));
+					setFileDateModified(view, getFileDateModified(cursor));
 					setFileSize(view, getFileSize(cursor));
 				}
 			} finally {
@@ -92,7 +92,7 @@ public class PhotoAdapter extends UriAdapter {
 		}
 	}
 
-	private void setFileDate(final View view, final String date) {
+	private void setFileDateModified(final View view, final String date) {
 		if (view != null) {
 			TextView fileDateView = (TextView) view.findViewById(R.id.report_item_file_date);
 			if (fileDateView != null) {

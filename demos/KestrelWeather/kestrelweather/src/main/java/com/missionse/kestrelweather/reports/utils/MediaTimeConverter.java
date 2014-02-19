@@ -7,7 +7,8 @@ public final class MediaTimeConverter {
 	private static final int MILLI_TO_SEC = 1000;
 	private static final int MILLI_TO_MIN = 60000;
 
-	private MediaTimeConverter() { }
+	private MediaTimeConverter() {
+	}
 
 	/**
 	 * Extract the amount of seconds from the given parameter.

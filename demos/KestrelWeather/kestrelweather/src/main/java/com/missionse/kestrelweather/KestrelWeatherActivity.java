@@ -121,7 +121,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		PhotoOverviewFragment photoOverviewFragment = (PhotoOverviewFragment) fragmentManager
 				.findFragmentByTag("photo_overview");
 		if (photoOverviewFragment == null) {
-			photoOverviewFragment = new PhotoOverviewFragment();
+			photoOverviewFragment = PhotoOverviewFragment.newInstance(true);
 		}
 		fragmentManager.beginTransaction()
 				.replace(R.id.content, photoOverviewFragment, "photo_overview")
@@ -167,12 +167,12 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		} else if (id == R.id.action_kestrel_simulation_settings) {
 			FragmentManager fragmentManager = getFragmentManager();
 			KestrelSimulationSettingsFragment kestrelSimulationSettingsFragment = (KestrelSimulationSettingsFragment) fragmentManager
-				.findFragmentByTag("kestrelsimulationsettings");
+					.findFragmentByTag("kestrelsimulationsettings");
 			if (kestrelSimulationSettingsFragment == null) {
 				kestrelSimulationSettingsFragment = new KestrelSimulationSettingsFragment();
 			}
 			fragmentManager.beginTransaction().replace(R.id.content, kestrelSimulationSettingsFragment, "kestrelsimulationsettings")
-				.addToBackStack("kestrelsimulationsettings").commit();
+					.addToBackStack("kestrelsimulationsettings").commit();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

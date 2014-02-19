@@ -1,19 +1,29 @@
 package com.missionse.kestrelweather.reports.audio;
 
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.ClipData;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 
 /**
  * A simple {@link android.app.Fragment} subclass.
@@ -21,75 +31,163 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.OnMediaPlayerEventListener {
+	private static final int ATTACH_AUDIO_REQUEST = 20;
 	private static final String EDITABLE_REPORT = "is_report_editable";
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
-	private int mReportId = INVALID_REPORT_ID;
-	private static final int SKIP_INTERVAL_IN_MILLI = 5000;
+	private static final int SKIP_INTERVAL_IN_MILLISECONDS = 5000;
+
+	private AudioAdapter mAudioAdapter;
+	private Activity mActivity;
 	private boolean mEditable;
-	private List<View> mSelectedAudioFiles;
+	private int mReportId = INVALID_REPORT_ID;
+
 	private ImageButton mPlayButton;
 	private ImageButton mPauseButton;
-	private String[] mSongList;
 	private MediaPlayerWrapper mMediaWrapper;
 
 	/**
-	 * Empty default constructor required.
+	 * Constructor.
 	 */
 	public AudioViewFragment() {
-		mSelectedAudioFiles = new ArrayList<View>();
 		mMediaWrapper = new MediaPlayerWrapper();
 		mMediaWrapper.setCompleteListener(this);
 	}
 
 	/**
-	 * Use this factory method to create a new instance of
-	 * this fragment using the provide parameters.
-	 *
-	 * @param editable Determine if the report is editable.
-	 * @return A new instance of fragment AudioViewFragment.
+	 * A factory method used to create a new instance of the fragment with the provided parameters.
+	 * @param editable Whether or not the report is editable.
+	 * @return A new instance of an AudioViewFragment.
 	 */
 	public static AudioViewFragment newInstance(boolean editable) {
 		return newInstance(editable, INVALID_REPORT_ID);
 	}
 
 	/**
-	 * Use this factory method to create a new instance of
-	 * this fragment using the provided parameters.
-	 *
-	 * @param editable Determine if the report is editable.
-	 * @param reportId The database ID report associated with this report.
-	 * @return A new instance of fragment AudioViewFragment.
+	 * A factory method used to create a new instance of the fragment with the provided parameters.
+	 * @param editable Whether or not the report is editable.
+	 * @param reportId The database report id that is associated with the report (if one exists).
+	 * @return A new instance of an AudioViewFragment.
 	 */
 	public static AudioViewFragment newInstance(boolean editable, int reportId) {
 		AudioViewFragment fragment = new AudioViewFragment();
+
 		Bundle args = new Bundle();
 		args.putBoolean(EDITABLE_REPORT, editable);
 		args.putInt(REPORT_ID, reportId);
 		fragment.setArguments(args);
+
 		return fragment;
+	}
+
+	@Override
+	public void onAttach(final Activity activity) {
+		super.onAttach(activity);
+		mActivity = activity;
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mActivity = null;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
 		if (getArguments() != null) {
 			mEditable = getArguments().getBoolean(EDITABLE_REPORT);
 			mReportId = getArguments().getInt(REPORT_ID);
+		}
+
+		if (mEditable) {
+			setHasOptionsMenu(true);
 		}
 	}
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View contentView = inflater.inflate(R.layout.fragment_report_audio, container, false);
-
 		if (contentView != null) {
-			initMediaComponents(contentView);
-//			initLoadMedia();
-//			setListAdapter(new AudioAdapter(getActivity(), R.layout.fragment_report_list_entry, mSongList));
+			ListView mAudioList = (ListView) contentView.findViewById(R.id.fragment_report_audio_list);
+
+			mAudioAdapter = new AudioAdapter(mActivity, R.layout.fragment_report_list_entry);
+			mAudioList.setAdapter(mAudioAdapter);
+
+			if (mEditable) {
+				mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+				mAudioList.setMultiChoiceModeListener(new MediaMultiChoiceModeListener(mActivity, mAudioList, mAudioAdapter));
+			}
+
+			mAudioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
+					mMediaWrapper.setMediaSource(mAudioAdapter.getItem(position).getPath());
+					onMediaPlayButtonPressed();
+				}
+			});
+
+			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_audio_empty);
+			if (emptyView != null) {
+				mAudioList.setEmptyView(emptyView);
+			}
+
+			initializeMediaComponents(contentView);
 		}
+
 		return contentView;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.report_media, menu);
+	}
+
+	@Override
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		if (item.getItemId() == R.id.action_add_media) {
+			FragmentManager fragmentManager = getFragmentManager();
+			if (fragmentManager != null) {
+				Intent intent;
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+					intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+					intent.addCategory(Intent.CATEGORY_OPENABLE);
+				} else {
+					intent = new Intent(Intent.ACTION_GET_CONTENT);
+				}
+
+				intent.setType("audio/*");
+				intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+				startActivityForResult(intent, ATTACH_AUDIO_REQUEST);
+			}
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onActivityResult(final int requestCode, final int resultCode, final Intent resultData) {
+		super.onActivityResult(requestCode, resultCode, resultData);
+
+		if (requestCode == ATTACH_AUDIO_REQUEST && resultCode == Activity.RESULT_OK) {
+			if (resultData != null) {
+				if (resultData.getData() != null) {
+					mAudioAdapter.add(resultData.getData());
+				} else {
+					ClipData clipData = resultData.getClipData();
+					if (clipData != null) {
+						for (int index = 0; index < clipData.getItemCount(); ++index) {
+							ClipData.Item item = clipData.getItemAt(index);
+							if (item != null) {
+								mAudioAdapter.add(item.getUri());
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -98,38 +196,14 @@ public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.On
 		mMediaWrapper.destroy();
 	}
 
-//	@Override
-//	public void onListItemClick(ListView l, View v, int position, long id) {
-//		super.onListItemClick(l, v, position, id);
-//		mMediaWrapper.setMediaSource(mSongList[position]);
-//		onMediaPlayButtonPressed();
-//	}
-
-//	private void initLoadMedia() {
-//
-//		File[] audioFiles = FileManager.getTestFiles(new FilenameFilter() {
-//			@Override
-//			public boolean accept(File dir, String filename) {
-//				return filename.endsWith("mp3");
-//			}
-//		});
-//
-//		mSongList = new String[audioFiles.length];
-//		for (int i = 0; i < audioFiles.length; i++) {
-//			mSongList[i] = audioFiles[i].getAbsolutePath();
-//		}
-//
-//	}
-
-	private void initMediaComponents(final View root) {
-
+	private void initializeMediaComponents(final View root) {
 		mMediaWrapper.setSeekBar((SeekBar) root.findViewById(R.id.audio_control_seek_bar));
 		mMediaWrapper.setDurationTextView((TextView) root.findViewById(R.id.audio_control_end_time_time));
 		mMediaWrapper.setCurrentTextView((TextView) root.findViewById(R.id.audio_control_current_time));
 		mPlayButton = (ImageButton) root.findViewById(R.id.audio_control_play_button);
 		mPauseButton = (ImageButton) root.findViewById(R.id.audio_control_pause_button);
-		ImageButton ffBtn = (ImageButton) root.findViewById(R.id.audio_control_forward_button);
-		ImageButton revBtn = (ImageButton) root.findViewById(R.id.audio_control_reverse_button);
+		ImageButton fastForwardButton = (ImageButton) root.findViewById(R.id.audio_control_forward_button);
+		ImageButton rewindButton = (ImageButton) root.findViewById(R.id.audio_control_reverse_button);
 
 		mPlayButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -143,13 +217,13 @@ public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.On
 				onMediaPauseButtonPressed();
 			}
 		});
-		ffBtn.setOnClickListener(new View.OnClickListener() {
+		fastForwardButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onMediaFastForwardButtonPressed();
 			}
 		});
-		revBtn.setOnClickListener(new View.OnClickListener() {
+		rewindButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onMediaReverseButtonPressed();
@@ -163,11 +237,11 @@ public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.On
 	}
 
 	private void onMediaReverseButtonPressed() {
-		mMediaWrapper.rewind(SKIP_INTERVAL_IN_MILLI);
+		mMediaWrapper.rewind(SKIP_INTERVAL_IN_MILLISECONDS);
 	}
 
 	private void onMediaFastForwardButtonPressed() {
-		mMediaWrapper.fastForward(SKIP_INTERVAL_IN_MILLI);
+		mMediaWrapper.fastForward(SKIP_INTERVAL_IN_MILLISECONDS);
 	}
 
 	private void onMediaPauseButtonPressed() {

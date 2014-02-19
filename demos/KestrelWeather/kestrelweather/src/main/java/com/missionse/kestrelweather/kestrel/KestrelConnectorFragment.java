@@ -120,7 +120,7 @@ public class KestrelConnectorFragment extends Fragment {
 
 	private void createNetworkService() {
 		ServiceIdentifier.identifyService(ServiceIdentifier.ConnectionType.SECURE, "KestrelWeatherSecure",
-			"79d137f1-be68-4a2a-b8ba-d8c71c4b4d75");
+				"79d137f1-be68-4a2a-b8ba-d8c71c4b4d75");
 
 		mBluetoothConnector.registerHandler(mBluetoothServiceMessageHandler);
 		mBluetoothConnector.createService();
@@ -187,9 +187,9 @@ public class KestrelConnectorFragment extends Fragment {
 			@Override
 			public void onClick(final View view) {
 				getActivity().getFragmentManager().beginTransaction()
-				  .replace(R.id.content, ReportCreationFragment.newInstance(false),"report_addon")
-				  .addToBackStack("report_addon")
-				  .commit();
+						.replace(R.id.content, ReportCreationFragment.newInstance(false), "report_addon")
+						.addToBackStack("report_addon")
+						.commit();
 			}
 		});
 	}
@@ -202,11 +202,11 @@ public class KestrelConnectorFragment extends Fragment {
 					switch (msg.arg1) {
 						case BluetoothNetworkService.STATE_CONNECTED:
 							mRequestReadingsButton.setText(getResources().getString(R.string.request_readings) +
-								" " + mConnectedDevice);
+									" " + mConnectedDevice);
 							mRequestReadingsButton.setEnabled(true);
 
 							mConnectToDeviceButton.setText(getResources().getString(R.string.disconnect_from_device) +
-								" " + mConnectedDevice);
+									" " + mConnectedDevice);
 							break;
 						case BluetoothNetworkService.STATE_CONNECTING:
 							mRequestReadingsButton.setText(R.string.connecting);

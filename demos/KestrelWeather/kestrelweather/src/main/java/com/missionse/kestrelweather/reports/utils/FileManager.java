@@ -23,7 +23,6 @@ public final class FileManager {
 
 	/**
 	 * Creates a new directory for a report to link too.
-	 *
 	 * @return The Uri associated with the new directory.
 	 */
 	public static Uri createReportDirectory() {
@@ -36,7 +35,6 @@ public final class FileManager {
 
 	/**
 	 * Obtain a File[] that has all files in the reportDir that passes the filter.
-	 *
 	 * @param reportDir The base report directory to look in.
 	 * @param filter The filter that determine what files we are looking for. this parm cannot be null
 	 * @return A File[] with all accepted files from reportDir.
@@ -52,7 +50,6 @@ public final class FileManager {
 
 	/**
 	 * Obtain a File[] that has all files in the reportDir that passes the filter.
-	 *
 	 * @param filter The filter that determine what files we are looking for. this parm cannot be null
 	 * @return A File[] with all accepted files from reportDir.
 	 */
@@ -82,7 +79,7 @@ public final class FileManager {
 	}
 
 	private static File getTestDir() {
-		String testDirString = EXTERNAL_STORAGE_BASE + PROJECT_ROOT + "/test" ;
+		String testDirString = EXTERNAL_STORAGE_BASE + PROJECT_ROOT + "/test";
 		File testDir = new File(testDirString);
 		mkdir(testDir);
 		return testDir;

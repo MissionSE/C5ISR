@@ -104,6 +104,7 @@
 	<string name="action_delete">Delete</string>
 	<string name="take_photo">Take Photo</string>
 	<string name="attach_photo">Attach Photo</string>
+	<string name="no_photos">No photos attached.</string>
 
 	<!-- Fragment: Report Notes -->
 	<string name="empty_notes">No notes created</string>
@@ -112,5 +113,5 @@
 
 	<!-- Fragment: Report Audio -->
 	<string name="default_time">00:00</string>
-
+	<string name="no_audio">No audio attached.</string>
 </resources>

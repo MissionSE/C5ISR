@@ -35,17 +35,17 @@ public class NewRequestAlertDialogFragment extends DialogFragment {
 			builder.setTitle(R.string.new_request_alert_title);
 			builder.setCancelable(true);
 			builder.setMessage(R.string.new_request_alert_content)
-				.setPositiveButton(R.string.new_request_use_saved, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						mPositiveRunnable.run();
-					}
-				})
-				.setNeutralButton(R.string.new_request_use_random, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(final DialogInterface dialogInterface, final int i) {
-						mNeutralRunnable.run();
-					}
-				});
+					.setPositiveButton(R.string.new_request_use_saved, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							mPositiveRunnable.run();
+						}
+					})
+					.setNeutralButton(R.string.new_request_use_random, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(final DialogInterface dialogInterface, final int i) {
+							mNeutralRunnable.run();
+						}
+					});
 			return builder.create();
 		}
 		return null;

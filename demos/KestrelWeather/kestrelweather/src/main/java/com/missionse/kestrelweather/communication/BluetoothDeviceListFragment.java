@@ -51,7 +51,7 @@ public class BluetoothDeviceListFragment extends DialogFragment {
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		View contentView = inflater.inflate(R.layout.fragment_bluetooth_device_list,  container, false);
+		View contentView = inflater.inflate(R.layout.fragment_bluetooth_device_list, container, false);
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		if (contentView != null) {
@@ -69,14 +69,14 @@ public class BluetoothDeviceListFragment extends DialogFragment {
 
 			if (getActivity() != null) {
 				mPairedDevicesArrayAdapter = new BluetoothDeviceAdapter(
-					getActivity(), R.layout.fragment_bluetooth_device_list_entry);
+						getActivity(), R.layout.fragment_bluetooth_device_list_entry);
 
 				ListView pairedListView = (ListView) contentView.findViewById(R.id.paired_devices);
 				pairedListView.setAdapter(mPairedDevicesArrayAdapter);
 				pairedListView.setOnItemClickListener(new OnItemClickListener() {
 					@Override
 					public void onItemClick(final AdapterView<?> adapterView, final View view, final int position,
-						final long l) {
+							final long l) {
 						mAdapter.cancelDiscovery();
 
 						Intent result = new Intent();
@@ -91,14 +91,14 @@ public class BluetoothDeviceListFragment extends DialogFragment {
 				pairedListView.setEmptyView(contentView.findViewById(R.id.bluetooth_no_paired_devices));
 
 				mNewDevicesArrayAdapter = new BluetoothDeviceAdapter(
-					getActivity(), R.layout.fragment_bluetooth_device_list_entry);
+						getActivity(), R.layout.fragment_bluetooth_device_list_entry);
 
 				ListView newDevicesListView = (ListView) contentView.findViewById(R.id.discovered_devices);
 				newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
 				newDevicesListView.setOnItemClickListener(new OnItemClickListener() {
 					@Override
 					public void onItemClick(final AdapterView<?> adapterView, final View view, final int position,
-						final long l) {
+							final long l) {
 						mAdapter.cancelDiscovery();
 
 						Intent result = new Intent();

@@ -32,7 +32,7 @@ public class KestrelSimulationSettingsFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		if (getActivity() != null) {
 			mSimulationPreferences = getActivity().getSharedPreferences(
-				KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0);
+					KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0);
 		}
 	}
 
@@ -78,7 +78,7 @@ public class KestrelSimulationSettingsFragment extends Fragment {
 			mPressureTrendSpinner = (Spinner) contentView.findViewById(R.id.kestrel_pressure_trend_spinner);
 			if (getActivity() != null) {
 				ArrayAdapter<CharSequence> pressureTrendAdapter = ArrayAdapter.createFromResource(getActivity(),
-					R.array.kestrel_simulation_pressure_trend_entries, android.R.layout.simple_spinner_item);
+						R.array.kestrel_simulation_pressure_trend_entries, android.R.layout.simple_spinner_item);
 				pressureTrendAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 				mPressureTrendSpinner.setAdapter(pressureTrendAdapter);
 			}
@@ -117,49 +117,49 @@ public class KestrelSimulationSettingsFragment extends Fragment {
 		for (EditText editText : mReportEntryFields) {
 			if (editText.getId() == R.id.kestrel_temperature_edit_text) {
 				float savedTemperature = mSimulationPreferences.getFloat(
-					KestrelSimulationSharedPreferences.KESTREL_TEMPERATURE, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
+						KestrelSimulationSharedPreferences.KESTREL_TEMPERATURE, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
 				if (savedTemperature != KestrelSimulationSharedPreferences.NONSENSE_FLOAT) {
 					editText.setText("" + savedTemperature);
 				}
 			} else if (editText.getId() == R.id.kestrel_humidity_edit_text) {
 				int savedHumidity = mSimulationPreferences.getInt(
-					KestrelSimulationSharedPreferences.KESTREL_HUMIDITY, KestrelSimulationSharedPreferences.NONSENSE_INT);
+						KestrelSimulationSharedPreferences.KESTREL_HUMIDITY, KestrelSimulationSharedPreferences.NONSENSE_INT);
 				if (savedHumidity != KestrelSimulationSharedPreferences.NONSENSE_INT) {
 					editText.setText("" + savedHumidity);
 				}
 			} else if (editText.getId() == R.id.kestrel_pressure_edit_text) {
 				float savedPressure = mSimulationPreferences.getFloat(
-					KestrelSimulationSharedPreferences.KESTREL_PRESSURE, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
+						KestrelSimulationSharedPreferences.KESTREL_PRESSURE, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
 				if (savedPressure != KestrelSimulationSharedPreferences.NONSENSE_FLOAT) {
 					editText.setText("" + savedPressure);
 				}
 			} else if (editText.getId() == R.id.kestrel_heat_index_edit_text) {
 				float savedHeatIndex = mSimulationPreferences.getFloat(
-					KestrelSimulationSharedPreferences.KESTREL_HEAT_IDX, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
+						KestrelSimulationSharedPreferences.KESTREL_HEAT_IDX, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
 				if (savedHeatIndex != KestrelSimulationSharedPreferences.NONSENSE_FLOAT) {
 					editText.setText("" + savedHeatIndex);
 				}
 			} else if (editText.getId() == R.id.kestrel_wind_speed_edit_text) {
 				float savedWindSpeed = mSimulationPreferences.getFloat(
-					KestrelSimulationSharedPreferences.KESTREL_WIND_SPD, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
+						KestrelSimulationSharedPreferences.KESTREL_WIND_SPD, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
 				if (savedWindSpeed != KestrelSimulationSharedPreferences.NONSENSE_FLOAT) {
 					editText.setText("" + savedWindSpeed);
 				}
 			} else if (editText.getId() == R.id.kestrel_wind_direction_edit_text) {
 				int savedWindDirection = mSimulationPreferences.getInt(
-					KestrelSimulationSharedPreferences.KESTREL_WIND_DIR, KestrelSimulationSharedPreferences.NONSENSE_INT);
+						KestrelSimulationSharedPreferences.KESTREL_WIND_DIR, KestrelSimulationSharedPreferences.NONSENSE_INT);
 				if (savedWindDirection != KestrelSimulationSharedPreferences.NONSENSE_INT) {
 					editText.setText("" + savedWindDirection);
 				}
 			} else if (editText.getId() == R.id.kestrel_wind_chill_edit_text) {
 				float savedWindChill = mSimulationPreferences.getFloat(
-					KestrelSimulationSharedPreferences.KESTREL_WIND_CHILL, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
+						KestrelSimulationSharedPreferences.KESTREL_WIND_CHILL, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
 				if (savedWindChill != KestrelSimulationSharedPreferences.NONSENSE_FLOAT) {
 					editText.setText("" + savedWindChill);
 				}
 			} else if (editText.getId() == R.id.kestrel_dew_point_edit_text) {
 				float savedDewPoint = mSimulationPreferences.getFloat(
-					KestrelSimulationSharedPreferences.KESTREL_DEW_PT, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
+						KestrelSimulationSharedPreferences.KESTREL_DEW_PT, KestrelSimulationSharedPreferences.NONSENSE_FLOAT);
 				if (savedDewPoint != KestrelSimulationSharedPreferences.NONSENSE_FLOAT) {
 					editText.setText("" + savedDewPoint);
 				}
@@ -167,7 +167,7 @@ public class KestrelSimulationSettingsFragment extends Fragment {
 		}
 
 		int savedPressureTrend = mSimulationPreferences.getInt(KestrelSimulationSharedPreferences.KESTREL_PRESSURE_TREND,
-			KestrelSimulationSharedPreferences.NONSENSE_INT);
+				KestrelSimulationSharedPreferences.NONSENSE_INT);
 		if (savedPressureTrend == KestrelSimulationSharedPreferences.NONSENSE_INT) {
 			mPressureTrendSpinner.setSelection(savedPressureTrend);
 		} else {
@@ -181,48 +181,48 @@ public class KestrelSimulationSettingsFragment extends Fragment {
 			if (editText.getId() == R.id.kestrel_temperature_edit_text) {
 				if (editText.getText() != null) {
 					editor.putFloat(KestrelSimulationSharedPreferences.KESTREL_TEMPERATURE,
-						Float.valueOf(editText.getText().toString()));
+							Float.valueOf(editText.getText().toString()));
 				}
 			} else if (editText.getId() == R.id.kestrel_humidity_edit_text) {
 				if (editText.getText() != null) {
 					editor.putInt(KestrelSimulationSharedPreferences.KESTREL_HUMIDITY,
-						Integer.valueOf(editText.getText().toString()));
+							Integer.valueOf(editText.getText().toString()));
 				}
 			} else if (editText.getId() == R.id.kestrel_pressure_edit_text) {
 				if (editText.getText() != null) {
 					editor.putFloat(KestrelSimulationSharedPreferences.KESTREL_PRESSURE,
-						Float.valueOf(editText.getText().toString()));
+							Float.valueOf(editText.getText().toString()));
 				}
 			} else if (editText.getId() == R.id.kestrel_heat_index_edit_text) {
 				if (editText.getText() != null) {
 					editor.putFloat(KestrelSimulationSharedPreferences.KESTREL_HEAT_IDX,
-						Float.valueOf(editText.getText().toString()));
+							Float.valueOf(editText.getText().toString()));
 				}
 			} else if (editText.getId() == R.id.kestrel_wind_speed_edit_text) {
 				if (editText.getText() != null) {
 					editor.putFloat(KestrelSimulationSharedPreferences.KESTREL_WIND_SPD,
-						Float.valueOf(editText.getText().toString()));
+							Float.valueOf(editText.getText().toString()));
 				}
 			} else if (editText.getId() == R.id.kestrel_wind_direction_edit_text) {
 				if (editText.getText() != null) {
 					editor.putInt(KestrelSimulationSharedPreferences.KESTREL_WIND_DIR,
-						Integer.valueOf(editText.getText().toString()));
+							Integer.valueOf(editText.getText().toString()));
 				}
 			} else if (editText.getId() == R.id.kestrel_wind_chill_edit_text) {
 				if (editText.getText() != null) {
 					editor.putFloat(KestrelSimulationSharedPreferences.KESTREL_WIND_CHILL,
-						Float.valueOf(editText.getText().toString()));
+							Float.valueOf(editText.getText().toString()));
 				}
 			} else if (editText.getId() == R.id.kestrel_dew_point_edit_text) {
 				if (editText.getText() != null) {
 					editor.putFloat(KestrelSimulationSharedPreferences.KESTREL_DEW_PT,
-						Float.valueOf(editText.getText().toString()));
+							Float.valueOf(editText.getText().toString()));
 				}
 			}
 		}
 
 		editor.putInt(KestrelSimulationSharedPreferences.KESTREL_PRESSURE_TREND,
-			mPressureTrendSpinner.getSelectedItemPosition());
+				mPressureTrendSpinner.getSelectedItemPosition());
 
 		editor.commit();
 	}
