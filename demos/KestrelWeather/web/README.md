@@ -3,7 +3,7 @@ KestrelWeather Server
 
 This directory contains the KestrelWeather server application, written in node.js javascript. It requires the following to be installed separately:
 
-	node.js
+	node.js (and npm)
 	mongodb
 
 To install, navigate to the root directory where the `package.json` file is located, and run:
