@@ -107,8 +107,8 @@ public class MediaPlayerWrapper {
 	 * @param uri The URI that represents the media to be played.
 	 */
 	public void setMediaSource(final Context context, final Uri uri) {
+		mCurrentMediaUri = uri;
 		if (uri != null) {
-			mCurrentMediaUri = uri;
 			mNewMediaSelected = true;
 
 			try {
@@ -137,6 +137,13 @@ public class MediaPlayerWrapper {
 				updateDurationTime(mMediaPlayer.getDuration());
 				updateSeekBar();
 			}
+		} else {
+			pauseSeekBar();
+			mMediaPlayer.pause();
+			mSeekBar.setProgress(0);
+			mSeekBar.setMax(0);
+			updateCurrentTime(0);
+			updateDurationTime(0);
 		}
 	}
 
@@ -153,7 +160,7 @@ public class MediaPlayerWrapper {
 	 * @param amount The amount of time to fast-forward in milliseconds.
 	 */
 	public void fastForward(int amount) {
-		if (mMediaPlayer != null) {
+		if (mMediaPlayer != null && mCurrentMediaUri != null) {
 			mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() + amount);
 		}
 	}
@@ -163,7 +170,7 @@ public class MediaPlayerWrapper {
 	 * @param amount The amount of time to rewind in milliseconds.
 	 */
 	public void rewind(int amount) {
-		if (mMediaPlayer != null) {
+		if (mMediaPlayer != null && mCurrentMediaUri != null) {
 			mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() - amount);
 		}
 	}
