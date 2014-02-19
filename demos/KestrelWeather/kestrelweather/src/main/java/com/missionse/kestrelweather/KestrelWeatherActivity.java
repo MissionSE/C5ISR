@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.missionse.kestrelweather.database.DatabaseManager;
+import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
+import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.database.remote.RemoteDatabaseHelper;
 import com.missionse.kestrelweather.drawer.KestrelWeatherDrawerFactory;
 import com.missionse.kestrelweather.kestrel.KestrelConnectorFragment;
 import com.missionse.kestrelweather.kestrel.KestrelSimulationSettingsFragment;
@@ -24,6 +28,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	private KestrelWeatherDrawerFactory mDrawerFactory;
 	private TiledMap mTiledMap;
 	private KestrelSimulator mKestrelSimulator;
+	private DatabaseManager mDatabaseManager;
 
 	/**
 	 * Constructor.
@@ -32,6 +37,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		mDrawerFactory = new KestrelWeatherDrawerFactory(this);
 		mTiledMap = new TiledMap();
 		mKestrelSimulator = new KestrelSimulator(this);
+		mDatabaseManager = new DatabaseManager(this);
 	}
 
 	@Override
@@ -186,5 +192,21 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		} else {
 			super.onBackPressed();
 		}
+	}
+
+	/**
+	 * Retrieve the local database helper.
+	 * @return An instance of LocalDatabaseHelper.
+	 */
+	public LocalDatabaseHelper getLocalDatabaseHelper() {
+		return mDatabaseManager.getLocalHelper();
+	}
+
+	/**
+	 * Retrieve the remote database helper.
+	 * @return An instance of RemoteDatabaseHelper.
+	 */
+	public RemoteDatabaseHelper getRemoteDatabaseHelepr() {
+		return mDatabaseManager.getRemoteHelper();
 	}
 }
