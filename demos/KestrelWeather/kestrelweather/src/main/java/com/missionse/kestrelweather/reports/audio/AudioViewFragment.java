@@ -103,6 +103,8 @@ public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.On
 		if (mEditable) {
 			setHasOptionsMenu(true);
 		}
+
+		mAudioAdapter = new AudioAdapter(mActivity, R.layout.fragment_report_list_entry);
 	}
 
 	@Override
@@ -110,15 +112,7 @@ public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.On
 		View contentView = inflater.inflate(R.layout.fragment_report_audio, container, false);
 		if (contentView != null) {
 			ListView mAudioList = (ListView) contentView.findViewById(R.id.fragment_report_audio_list);
-
-			mAudioAdapter = new AudioAdapter(mActivity, R.layout.fragment_report_list_entry);
 			mAudioList.setAdapter(mAudioAdapter);
-
-			if (mEditable) {
-				mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-				mAudioList.setMultiChoiceModeListener(new MediaMultiChoiceModeListener(mActivity, mAudioList, mAudioAdapter));
-			}
-
 			mAudioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
@@ -126,6 +120,11 @@ public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.On
 					onMediaPlayButtonPressed();
 				}
 			});
+
+			if (mEditable) {
+				mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+				mAudioList.setMultiChoiceModeListener(new MediaMultiChoiceModeListener(mActivity, mAudioList, mAudioAdapter));
+			}
 
 			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_audio_empty);
 			if (emptyView != null) {
