@@ -1,18 +1,17 @@
 package com.missionse.imageviewer;
 
-import java.util.ArrayList;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * Provides a pager adapter used for image resources.
  */
-public class ImagePagerAdapter extends FragmentStatePagerAdapter {
-
-	private static final String TAG = ImagePagerAdapter.class.getName();
+public class ResourceImagePagerAdapter extends FragmentStatePagerAdapter {
+	private static final String TAG = ResourceImagePagerAdapter.class.getName();
 
 	private ArrayList<Integer> mImageResources;
 
@@ -20,7 +19,7 @@ public class ImagePagerAdapter extends FragmentStatePagerAdapter {
 	 * Constructor.
 	 * @param fragmentManager The fragment manager.
 	 */
-	public ImagePagerAdapter(final FragmentManager fragmentManager) {
+	public ResourceImagePagerAdapter(final FragmentManager fragmentManager) {
 		super(fragmentManager);
 		mImageResources = new ArrayList<Integer>();
 	}
