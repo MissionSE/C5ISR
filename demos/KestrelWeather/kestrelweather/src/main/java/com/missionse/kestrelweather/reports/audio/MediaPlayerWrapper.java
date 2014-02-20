@@ -206,7 +206,6 @@ public class MediaPlayerWrapper {
 	 */
 	public void destroy() {
 		if (mMediaPlayer != null) {
-			mMediaPlayer.reset();
 			mMediaPlayer.release();
 		}
 		pauseSeekBar();
