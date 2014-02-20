@@ -13,9 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.missionse.imageviewer.ImageFragmentFactory;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 
@@ -88,6 +90,8 @@ public class PhotoOverviewFragment extends Fragment {
 		if (mEditable) {
 			setHasOptionsMenu(true);
 		}
+
+		mPhotoAdapter = new PhotoAdapter(mActivity, R.layout.fragment_report_list_entry);
 	}
 
 	@Override
@@ -95,9 +99,20 @@ public class PhotoOverviewFragment extends Fragment {
 		View contentView = inflater.inflate(R.layout.fragment_report_photos, container, false);
 		if (contentView != null) {
 			ListView mPhotoList = (ListView) contentView.findViewById(R.id.fragment_report_photos_list);
-
-			mPhotoAdapter = new PhotoAdapter(mActivity, R.layout.fragment_report_list_entry);
 			mPhotoList.setAdapter(mPhotoAdapter);
+			mPhotoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
+					FragmentManager fragmentManager = getFragmentManager();
+					if (fragmentManager != null) {
+						Fragment imageFragment = ImageFragmentFactory.createImageFragment(mPhotoAdapter.getItem(position));
+						fragmentManager.beginTransaction()
+								.replace(R.id.content, imageFragment, "image_preview")
+								.addToBackStack("image_preview")
+								.commit();
+					}
+				}
+			});
 
 			if (mEditable) {
 				mPhotoList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
