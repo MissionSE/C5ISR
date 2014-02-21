@@ -16,7 +16,7 @@ import com.missionse.kestrelweather.reports.photos.PhotoOverviewFragment;
 /**
  * This fragment will be how the user will create new reports.
  */
-public class ReportCreationFragment extends Fragment {
+public class ReportDetailFragment extends Fragment {
 	private static final String EDITABLE_REPORT = "edit_report";
 	private static final String REPORT_ID = "report_id";
 	private static final String PHOTO_REPORT = "photo_report";
@@ -31,15 +31,15 @@ public class ReportCreationFragment extends Fragment {
 	/**
 	 * Default constructor.
 	 */
-	public ReportCreationFragment() {
+	public ReportDetailFragment() {
 	}
 
 	/**
 	 * @param editable - Boolean to determine if the report is editable.
-	 * @return A new instance of fragment ReportCreationFragment.
-	 * @see com.missionse.kestrelweather.reports.ReportCreationFragment#newInstance(boolean, int)
+	 * @return A new instance of fragment ReportDetailFragment.
+	 * @see ReportDetailFragment#newInstance(boolean, int)
 	 */
-	public static ReportCreationFragment newInstance(boolean editable) {
+	public static ReportDetailFragment newInstance(boolean editable) {
 		return newInstance(editable, INVALID_REPORT_ID);
 	}
 
@@ -48,10 +48,10 @@ public class ReportCreationFragment extends Fragment {
 	 * this fragment using the provided parameters.
 	 * @param editable - Boolean to determine if the report is editable.
 	 * @param reportId - The database ID associated with the report.
-	 * @return A new instance of fragment ReportCreationFragment.
+	 * @return A new instance of fragment ReportDetailFragment.
 	 */
-	public static ReportCreationFragment newInstance(boolean editable, int reportId) {
-		ReportCreationFragment fragment = new ReportCreationFragment();
+	public static ReportDetailFragment newInstance(boolean editable, int reportId) {
+		ReportDetailFragment fragment = new ReportDetailFragment();
 
 		Bundle bundle = new Bundle();
 		bundle.putBoolean(EDITABLE_REPORT, editable);
