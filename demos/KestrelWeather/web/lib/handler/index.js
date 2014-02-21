@@ -1,10 +1,11 @@
 module.exports = function(db) {
 	return {
-		readIndex: function(req, res) {
-			res.send('rendering index');
+		getIndex: function(req, res) {
+			res.send('You\'ve landed at the KestrelWeather index.');
 		},
-		readAllReports: require('./read.allreports')(db),
-		readReport: require('./read.report')(db),
-		createReport: require('./create.report')(db)
+		getTest: require('./getTest')(db),
+		getAllReports: require('./getAllReports')(db),
+		getReport: require('./getReport')(db),
+		postReport: require('./postReport')(db)
 	};
 };

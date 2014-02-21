@@ -6,9 +6,21 @@ var ReportSchema = new Schema({
 	userId: String,
 	latitude: Number,
 	longitude: Number,
-	updated_at: { type: Date, default: Date.now },
-	created_at: { type: Date, default: Date.now },
-	weatherId: { type: Number, min: 0 }
+	updatedAt: { type: Date, default: Date.now },
+	createdAt: { type: Date, default: Date.now },
+	weather: { 
+		temperature: Number,
+		humidity: Number,
+		pressure: Number,
+		heatIndex: Number,
+		windSpeed: Number,
+		windDirection: Number,
+		dewPoint: Number
+	},
+	notes: [String],
+	images: [String],
+	audio: [String],
+	video: [String]
 }, {
 	versionKey: false
 });

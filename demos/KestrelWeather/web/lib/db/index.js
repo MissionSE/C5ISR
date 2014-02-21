@@ -22,5 +22,7 @@ mongoose.connection.on('close', function() {
 
 // models
 var reportModel = require('./report');
+var eventModel = require('./event');
 
 module.exports.Report = reportModel;
+module.exports.Event = eventModel;
