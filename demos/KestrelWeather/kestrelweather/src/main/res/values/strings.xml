@@ -1,117 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">KestrelWeather</string>
 
-	<!-- Option Menu -->
-	<string name="action_settings">Settings</string>
-	<string name="action_simulate_kestrel">Simulation Mode</string>
-	<string name="action_kestrel_simulation_settings">Simulation Settings</string>
+    <string name="app_name">KestrelWeather</string>
 
-	<!-- General -->
-	<string name="save">Save</string>
-	<string name="send">Send</string>
-	<string name="cancel">Cancel</string>
-	<string name="confirm">Confirm</string>
-	<string name="cont">Continue</string>
-	<string name="create">Create</string>
-	<string name="edit">Edit</string>
-	<string name="no_description">No description.</string>
-	<string name="image_thumbnail">Thumbnail of the image.</string>
-	<string name="unknown">Unknown</string>
-	<string name="select_items">Select Items</string>
-	<string name="items_selected">selected</string>
+    <!-- Option Menu -->
+    <string name="action_settings">Settings</string>
+    <string name="action_simulate_kestrel">Simulation Mode</string>
+    <string name="action_kestrel_simulation_settings">Simulation Settings</string>
 
-	<!-- Navigation Drawer -->
-	<string name="drawer_overview">OVERVIEW</string>
-	<string name="drawer_create_report">CREATE</string>
-	<string name="drawer_sync_reports">SYNC</string>
-	<string name="drawer_report_database">DATABASE</string>
+    <!-- General -->
+    <string name="save">Save</string>
+    <string name="send">Send</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="cont">Continue</string>
+    <string name="create">Create</string>
+    <string name="edit">Edit</string>
+    <string name="no_description">No description.</string>
+    <string name="image_thumbnail">Thumbnail of the image.</string>
+    <string name="unknown">Unknown</string>
+    <string name="select_items">Select Items</string>
+    <string name="items_selected">selected</string>
 
-	<!-- Map Overlay -->
-	<string name="rain_overlay_name">Rain</string>
-	<string name="rain_overlay_url" formatted="false">http://tile.openweathermap.org/map/rain/%d/%d/%d.png</string>
+    <!-- Navigation Drawer -->
+    <string name="drawer_overview">OVERVIEW</string>
+    <string name="drawer_create_report">CREATE</string>
+    <string name="drawer_sync_reports">SYNC</string>
+    <string name="drawer_report_database">DATABASE</string>
 
-	<string name="cloud_overlay_name">Clouds</string>
-	<string name="cloud_overlay_url" formatted="false">http://tile.openweathermap.org/map/clouds/%d/%d/%d.png</string>
+    <!-- Map Overlay -->
+    <string name="rain_overlay_name">Rain</string>
+    <string name="rain_overlay_url" formatted="false">http://tile.openweathermap.org/map/rain/%d/%d/%d.png</string>
+    <string name="cloud_overlay_name">Clouds</string>
+    <string name="cloud_overlay_url" formatted="false">http://tile.openweathermap.org/map/clouds/%d/%d/%d.png</string>
+    <string name="snow_overlay_name">Snow</string>
+    <string name="snow_overlay_url" formatted="false">http://tile.openweathermap.org/map/snow/%d/%d/%d.png</string>
+    <string name="pressure_overlay_name">Pressure</string>
+    <string name="pressure_overlay_url" formatted="false">http://tile.openweathermap.org/map/pressure/%d/%d/%d.png</string>
+    <string name="temp_overlay_name">Temperature</string>
+    <string name="temp_overlay_url" formatted="false">http://tile.openweathermap.org/map/temp/%d/%d/%d.png</string>
+    <string name="precipitation_overlay_name">Precipitation</string>
+    <string name="precipitation_overlay_url" formatted="false">http://tile.openweathermap.org/map/precipitation/%d/%d/%d.png</string>
+    <string name="wind_overlay_name">Wind</string>
+    <string name="wind_overlay_url" formatted="false">http://tile.openweathermap.org/map/wind/%d/%d/%d.png</string>
 
-	<string name="snow_overlay_name">Snow</string>
-	<string name="snow_overlay_url" formatted="false">http://tile.openweathermap.org/map/snow/%d/%d/%d.png</string>
+    <!-- Fragment: Create Report -->
+    <string name="obtain_readings">Obtain Readings</string>
+    <string name="view_readings">View Readings</string>
+    <string name="notes">Notes</string>
+    <string name="pictures">Pictures</string>
+    <string name="audio_recording">Audio Recording</string>
 
-	<string name="pressure_overlay_name">Pressure</string>
-	<string name="pressure_overlay_url" formatted="false">http://tile.openweathermap.org/map/pressure/%d/%d/%d.png</string>
+    <!-- Fragment: Kestrel Connector -->
+    <string name="connect_to_device">Connect To Device</string>
+    <string name="disconnect_from_device">Disconnect from</string>
+    <string name="no_device">No Device Connected</string>
+    <string name="connecting">Connecting…</string>
+    <string name="request_readings">Request readings from</string>
+    <string name="no_readings">No readings available.</string>
+    <string name="error_bluetooth_not_available">Error: Bluetooth is not available.</string>
+    <string name="error_bluetooth_not_enabled">Error: Bluetooth is not enabled.</string>
+    <string name="error_unable_to_request">Error: Unable to send request.</string>
 
-	<string name="temp_overlay_name">Temperature</string>
-	<string name="temp_overlay_url" formatted="false">http://tile.openweathermap.org/map/temp/%d/%d/%d.png</string>
+    <!-- Fragment: Kestrel Simulation Settings -->
+    <string-array name="kestrel_simulation_pressure_trend_entries">
+        <item>Up</item>
+        <item>Down</item>
+    </string-array>
 
-	<string name="precipitation_overlay_name">Precipitation</string>
-	<string name="precipitation_overlay_url" formatted="false">http://tile.openweathermap.org/map/precipitation/%d/%d/%d.png</string>
+    <!-- Fragment: Kestrel Simulation Alert -->
+    <string name="new_request_alert_title">Request Received!</string>
+    <string name="new_request_alert_content">Would you like to send the saved simulation data or use random values?</string>
+    <string name="new_request_use_random">Send Random Values</string>
+    <string name="new_request_use_saved">Send Saved Values</string>
 
-	<string name="wind_overlay_name">Wind</string>
-	<string name="wind_overlay_url" formatted="false">http://tile.openweathermap.org/map/wind/%d/%d/%d.png</string>
+    <!-- Fragment: Bluetooth Device List -->
+    <string name="paired_devices">Paired Devices</string>
+    <string name="discovered_devices">Discovered Devices</string>
+    <string name="discover_devices">Discover</string>
+    <string name="discovering">Discovering…</string>
+    <string name="no_paired_devices">No paired devices found.</string>
+    <string name="no_discovered_devices">No devices found.</string>
 
-	<!-- Fragment: Create Report -->
-	<string name="obtain_readings">Obtain Readings</string>
-	<string name="view_readings">View Readings</string>
-	<string name="notes">Notes</string>
-	<string name="pictures">Pictures</string>
-	<string name="audio_recording">Audio Recording</string>
+    <!-- Fragment: Kestrel Simulation, Kestrel Readings Viewer -->
+    <string name="kestrel_simulation_field_hint">Enter Value</string>
+    <string name="kestrel_simulation_temperature">Temperature (°C)</string>
+    <string name="kestrel_simulation_humidity">Humidity (%)</string>
+    <string name="kestrel_simulation_pressure">Bar. Pressure (in)</string>
+    <string name="kestrel_simulation_pressure_trend">Pressure Trend</string>
+    <string name="kestrel_simulation_heat_index">Heat Stress Index</string>
+    <string name="kestrel_simulation_wind_speed">Wind Speed</string>
+    <string name="kestrel_simulation_wind_dir">Wind Direction</string>
+    <string name="kestrel_simulation_wind_chill">Wind Chill</string>
+    <string name="kestrel_simulation_dew_pt">Dew Point</string>
 
-	<!-- Fragment: Kestrel Connector -->
-	<string name="connect_to_device">Connect To Device</string>
-	<string name="disconnect_from_device">Disconnect from</string>
-	<string name="no_device">No Device Connected</string>
-	<string name="connecting">Connecting&#8230;</string>
-	<string name="request_readings">Request readings from</string>
-	<string name="no_readings">No readings available.</string>
-	<string name="error_bluetooth_not_available">Error: Bluetooth is not available.</string>
-	<string name="error_bluetooth_not_enabled">Error: Bluetooth is not enabled.</string>
-	<string name="error_unable_to_request">Error: Unable to send request.</string>
+    <!-- Fragment: Report Photos -->
+    <string name="action_add">Add</string>
+    <string name="action_delete">Delete</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="attach_photo">Attach Photo</string>
+    <string name="no_photos">No photos attached.</string>
 
-	<!-- Fragment: Kestrel Simulation Settings -->
-	<string-array name="kestrel_simulation_pressure_trend_entries">
-		<item>Up</item>
-		<item>Down</item>
-	</string-array>
+    <!-- Fragment: Report Notes -->
+    <string name="no_notes">No notes attached</string>
+    <string name="create_caps">CREATE</string>
+    <string name="hint_note_title">Note Title</string>
 
-	<!-- Fragment: Kestrel Simulation Alert -->
-	<string name="new_request_alert_title">Request Received!</string>
-	<string name="new_request_alert_content">Would you like to send the saved simulation data or use random values?</string>
-	<string name="new_request_use_random">Send Random Values</string>
-	<string name="new_request_use_saved">Send Saved Values</string>
+    <!-- Fragment: Report Audio -->
+    <string name="default_time">00:00</string>
+    <string name="no_audio">No audio attached.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
-	<!-- Fragment: Bluetooth Device List -->
-	<string name="paired_devices">Paired Devices</string>
-	<string name="discovered_devices">Discovered Devices</string>
-	<string name="discover_devices">Discover</string>
-	<string name="discovering">Discovering&#8230;</string>
-	<string name="no_paired_devices">No paired devices found.</string>
-	<string name="no_discovered_devices">No devices found.</string>
-
-	<!-- Fragment: Kestrel Simulation, Kestrel Readings Viewer -->
-	<string name="kestrel_simulation_field_hint">Enter Value</string>
-	<string name="kestrel_simulation_temperature">Temperature (°C)</string>
-	<string name="kestrel_simulation_humidity">Humidity (%)</string>
-	<string name="kestrel_simulation_pressure">Bar. Pressure (in)</string>
-	<string name="kestrel_simulation_pressure_trend">Pressure Trend</string>
-	<string name="kestrel_simulation_heat_index">Heat Stress Index</string>
-	<string name="kestrel_simulation_wind_speed">Wind Speed</string>
-	<string name="kestrel_simulation_wind_dir">Wind Direction</string>
-	<string name="kestrel_simulation_wind_chill">Wind Chill</string>
-	<string name="kestrel_simulation_dew_pt">Dew Point</string>
-
-	<!-- Fragment: Report Photos -->
-	<string name="action_add">Add</string>
-	<string name="action_delete">Delete</string>
-	<string name="take_photo">Take Photo</string>
-	<string name="attach_photo">Attach Photo</string>
-	<string name="no_photos">No photos attached.</string>
-
-	<!-- Fragment: Report Notes -->
-	<string name="empty_notes">No notes created</string>
-	<string name="create_caps">CREATE</string>
-	<string name="hint_note_title">Note Title</string>
-
-	<!-- Fragment: Report Audio -->
-	<string name="default_time">00:00</string>
-	<string name="no_audio">No audio attached.</string>
 </resources>

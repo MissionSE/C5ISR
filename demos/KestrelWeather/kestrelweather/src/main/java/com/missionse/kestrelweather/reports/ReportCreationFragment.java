@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.reports.audio.AudioViewFragment;
+import com.missionse.kestrelweather.reports.notes.NoteOverviewFragment;
 import com.missionse.kestrelweather.reports.photos.PhotoOverviewFragment;
 
 
@@ -21,6 +22,7 @@ public class ReportCreationFragment extends Fragment {
 	private static final String REPORT_ID = "report_id";
 	private static final String PHOTO_REPORT = "photo_report";
 	private static final String AUDIO_REPORT = "audio_report";
+	private static final String NOTE_REPORT = "note_report";
 	private static final int INVALID_REPORT_ID = -1;
 
 	private Activity mActivity;
@@ -91,6 +93,7 @@ public class ReportCreationFragment extends Fragment {
 			Button audioBtn = (Button) contentView.findViewById(R.id.report_get_audios);
 			Button cancelBtn = (Button) contentView.findViewById(R.id.cancel_button);
 			Button okBtn = (Button) contentView.findViewById(R.id.ok_button);
+			Button noteBtn = (Button) contentView.findViewById(R.id.report_get_notes);
 
 			readingsBtn.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -122,9 +125,20 @@ public class ReportCreationFragment extends Fragment {
 					onOkButtonPressed();
 				}
 			});
+			noteBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onNoteButtonPressed();
+				}
+			});
 		}
 
 		return contentView;
+	}
+
+	private void onNoteButtonPressed() {
+		editReportAttachments(NoteOverviewFragment.newInstance(true), PHOTO_REPORT);
+
 	}
 
 	private void onReadingsButtonPressed() {
