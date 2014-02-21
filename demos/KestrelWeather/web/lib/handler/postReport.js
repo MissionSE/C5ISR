@@ -58,6 +58,14 @@ module.exports = function(db) {
 			newReport.save(function(err, newReport) {
 				debug(postReport, JSON.stringify(newReport));
 				res.end('' + newReport._id);
+
+				var newEvent = new db.Event({
+					reportId: newReport._id,
+					eventType: 'create'
+				});
+				newEvent.save(function(err, newEvent) {
+					debug(postReport, newEvent.eventType + ' event logged');
+				});
 			});
 		});
 

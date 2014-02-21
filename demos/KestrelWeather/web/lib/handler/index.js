@@ -6,6 +6,9 @@ module.exports = function(db) {
 		getTest: require('./getTest')(db),
 		getAllReports: require('./getAllReports')(db),
 		getReport: require('./getReport')(db),
-		postReport: require('./postReport')(db)
+		postReport: require('./postReport')(db),
+		getAllEvents: require('./getAllEvents')(db),
+		getEventsSince: require('./getEventsSince')(db),
+		getEvent: require('./getEvent')(db)
 	};
 };
