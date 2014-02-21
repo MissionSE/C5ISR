@@ -1,7 +1,8 @@
 var impl = require('implementjs');
+var debug = require('debug')('kestrel:router');
 
 module.exports = function (server, handler) {
-	console.log('setting up routes...');
+	debug('setting up routes');
 
 	impl.implements(handler, { getIndex: impl.F });
 	impl.implements(handler, { getTest: impl.F });

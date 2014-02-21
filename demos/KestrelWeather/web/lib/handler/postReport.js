@@ -4,6 +4,8 @@ var path = require('path');
 var fs = require('fs');
 var randomstring = require('randomstring');
 var _ = require('underscore');
+var debug = require('debug')('kestrel:handler');
+var postReport = 'postReport';
 
 var stagingArea = path.join(__dirname, '../../public/staging');
 
@@ -17,29 +19,22 @@ module.exports = function(db) {
 		form.keepExtensions = true;
 
 		form.on('field', function(field, value) {
-			console.log(field, value);
 			fields.push([field, value]);
 		})
-		.on('fileBegin', function(name, file) {
-			//file.path = form.uploadDir + "/" + file.name;
-		})
 		.on('file', function(name, file) {
-			console.log(name, file);
 			files.push(file);
 		})
 		.on('progress', function(bytesReceived, bytesExpected) {
-			console.log(bytesReceived + '/' + bytesExpected);
+			debug(postReport, bytesReceived + '/' + bytesExpected);
 		})
 		.on('end', function() {
-			console.log('-> upload done');
+			debug(postReport, '-> upload done');
 			res.writeHead(200, {'content-type': 'text/plain'});
-			res.write('received fields:\n\n ' + util.inspect(fields));
-			res.write('\n\n');
-			res.write('received files:\n\n ' + util.inspect(files));
+			
+			debug(postReport, '\n'+ util.inspect(fields));
+			debug(postReport, '\n'+ util.inspect(files));
 
 			var data = _.object(fields);
-			//console.log(JSON.stringify(data));
-
 			//save a new report and add an event log entry
 			var newReport = new db.Report({
 				userId: data.userId,
@@ -61,10 +56,8 @@ module.exports = function(db) {
 			}
 
 			newReport.save(function(err, newReport) {
-				res.write('\n\nCreated report:\n\n');
-				res.write(JSON.stringify(newReport));
-				res.write('\n\nResponse to client:\n\n');
-				res.end('new report id: ' + newReport._id);
+				debug(postReport, JSON.stringify(newReport));
+				res.end('' + newReport._id);
 			});
 		});
 
