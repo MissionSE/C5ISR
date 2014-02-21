@@ -1,67 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
-
-	<ListView
-		android:id="@id/android:list"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_weight="1"
-		android:drawSelectorOnTop="false"/>
-
 	<TextView
-		android:id="@id/android:empty"
-		android:layout_width="match_parent"
+		android:id="@+id/fragment_report_notes_empty"
 		android:layout_height="match_parent"
-		android:text="@string/empty_notes"
-		android:visibility="gone"/>
-
-	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="45dp"
-		android:layout_weight=".1">
-
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="1dip"
-			android:layout_alignParentTop="true"
-			android:layout_marginLeft="4dip"
-			android:layout_marginRight="4dip"
-			android:background="?android:attr/dividerVertical"/>
-
-		<View
-			android:id="@+id/vertical_button_divider"
-			android:layout_width="1dip"
-			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:layout_alignParentTop="true"
-			android:layout_centerHorizontal="true"
-			android:layout_marginBottom="4dip"
-			android:layout_marginTop="4dip"
-			android:background="?android:attr/dividerVertical"/>
-
-		<Button
-			android:id="@+id/cancel_button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:layout_alignParentLeft="true"
-			android:layout_toLeftOf="@id/vertical_button_divider"
-			android:background="?android:attr/selectableItemBackground"
-			android:text="@string/create"/>
-
-		<Button
-			android:id="@+id/ok_button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:layout_alignParentRight="true"
-			android:layout_toRightOf="@id/vertical_button_divider"
-			android:background="?android:attr/selectableItemBackground"
-			android:text="@android:string/ok"/>
-	</RelativeLayout>
-</LinearLayout>
+		android:gravity="center"
+		android:text="@string/no_notes"
+		android:textSize="22sp"
+		android:textColor="@color/gray_medium">
+	</TextView>
+	<ListView
+		android:id="@+id/fragment_report_notes_list"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
+</RelativeLayout>

@@ -3,15 +3,15 @@ package com.missionse.kestrelweather.reports;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
-import com.missionse.kestrelweather.reports.audio.AudioViewFragment;
-import com.missionse.kestrelweather.reports.photos.PhotoOverviewFragment;
-
+import com.missionse.kestrelweather.reports.readings.ReadingsFragment;
+import com.missionse.uiextensions.viewpager.SectionFragmentPagerAdapter;
 
 /**
  * This fragment will be how the user will create new reports.
@@ -19,14 +19,15 @@ import com.missionse.kestrelweather.reports.photos.PhotoOverviewFragment;
 public class ReportDetailFragment extends Fragment {
 	private static final String EDITABLE_REPORT = "edit_report";
 	private static final String REPORT_ID = "report_id";
-	private static final String PHOTO_REPORT = "photo_report";
-	private static final String AUDIO_REPORT = "audio_report";
 	private static final int INVALID_REPORT_ID = -1;
 
 	private Activity mActivity;
 	private boolean mEditable = false;
 	private int mReportId = INVALID_REPORT_ID;
 
+	private ReadingsFragment mReadingsFragment;
+	private ReadingsFragment mWeatherDataFragment;
+	private ReadingsFragment mAuxDataFragment;
 
 	/**
 	 * Default constructor.
@@ -80,80 +81,38 @@ public class ReportDetailFragment extends Fragment {
 			mEditable = getArguments().getBoolean(EDITABLE_REPORT);
 			mReportId = getArguments().getInt(REPORT_ID);
 		}
+
+		mReadingsFragment = ReadingsFragment.newInstance(mReportId);
+		mWeatherDataFragment = ReadingsFragment.newInstance(mReportId);
+		mAuxDataFragment = ReadingsFragment.newInstance(mReportId);
 	}
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		View contentView = inflater.inflate(R.layout.fragment_report_creation, container, false);
-		if (contentView != null) {
-			Button readingsBtn = (Button) contentView.findViewById(R.id.report_get_readings);
-			Button pictureBtn = (Button) contentView.findViewById(R.id.report_get_pictures);
-			Button audioBtn = (Button) contentView.findViewById(R.id.report_get_audios);
-			Button cancelBtn = (Button) contentView.findViewById(R.id.cancel_button);
-			Button okBtn = (Button) contentView.findViewById(R.id.ok_button);
+		View view = inflater.inflate(R.layout.fragment_report_detail, container, false);
+		if (view != null) {
+			TextView reportTitle = (TextView) view.findViewById(R.id.report_detail_title);
+			if (reportTitle != null) {
+				reportTitle.setText("Test Report");
+			}
 
-			readingsBtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onReadingsButtonPressed();
-				}
-			});
-			pictureBtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onPictureButtonPressed();
-				}
-			});
-			audioBtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onAudioButtonPressed();
-				}
-			});
-			cancelBtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onCancelButtonPressed();
-				}
-			});
-			okBtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onOkButtonPressed();
-				}
-			});
+			TextView reportTimestamp = (TextView) view.findViewById(R.id.report_detail_timestamp);
+			if (reportTimestamp != null) {
+				reportTimestamp.setText("Fakeday 2014");
+			}
+
+			ViewPager reportViewPager = (ViewPager) view.findViewById(R.id.report_detail_view_pager);
+			if (reportViewPager != null) {
+				SectionFragmentPagerAdapter pagerAdapter = new SectionFragmentPagerAdapter(getFragmentManager());
+				pagerAdapter.setPage(0, mActivity.getString(R.string.readings), mReadingsFragment);
+				pagerAdapter.setPage(1, mActivity.getString(R.string.readings), mWeatherDataFragment);
+				pagerAdapter.setPage(2, mActivity.getString(R.string.readings), mAuxDataFragment);
+
+				reportViewPager.setAdapter(pagerAdapter);
+				reportViewPager.setOffscreenPageLimit(2);
+			}
 		}
 
-		return contentView;
-	}
-
-	private void onReadingsButtonPressed() {
-
-	}
-
-	private void onPictureButtonPressed() {
-		editReportAttachments(PhotoOverviewFragment.newInstance(true), PHOTO_REPORT);
-	}
-
-	private void onAudioButtonPressed() {
-		editReportAttachments(AudioViewFragment.newInstance(true), AUDIO_REPORT);
-	}
-
-	private void onCancelButtonPressed() {
-		if (mActivity != null) {
-			mActivity.getFragmentManager().beginTransaction().remove(this).commit();
-		}
-	}
-
-	private void onOkButtonPressed() {
-	}
-
-	private void editReportAttachments(final Fragment fragment, final String backStackId) {
-		if (mActivity != null) {
-			mActivity.getFragmentManager().beginTransaction()
-					.replace(R.id.content, fragment, backStackId)
-					.addToBackStack(backStackId)
-					.commit();
-		}
+		return view;
 	}
 }

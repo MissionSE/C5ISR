@@ -66,4 +66,24 @@ public class BaseTable<T extends Entity> extends BaseDaoImpl<T, Integer> impleme
 			return INVALID_DB_ID;
 		}
 	}
+
+	@Override
+	public T queryForId(Integer integer) {
+		try {
+			return super.queryForId(integer);
+		} catch (SQLException e) {
+			Log.e(TAG, "Unable to query for ID.", e);
+			return null;
+		}
+	}
+
+	@Override
+	public int deleteById(Integer integer) {
+		try {
+			return super.deleteById(integer);
+		} catch (SQLException e) {
+			Log.e(TAG, "Unable to deleteById.", e);
+			return INVALID_DB_ID;
+		}
+	}
 }

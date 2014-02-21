@@ -1,23 +1,23 @@
-// modules
 var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
+var debug = require('debug')('kestrel:db');
 
 // connection setup
 var connectionString = 'mongodb://localhost/kestreldb';
 
-console.log('connecting to database...');
+debug('connecting to database');
 mongoose.connect(connectionString);
 
 autoIncrement.initialize(mongoose.connection);
 
 mongoose.connection.once('open', function() {
-	console.log('connected to kestreldb');
+	debug('connected to kestreldb');
 });
 
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
 mongoose.connection.on('close', function() {
-	console.log('db connection closed');
+	debug('connection closed');
 });
 
 // models

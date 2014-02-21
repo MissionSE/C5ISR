@@ -85,4 +85,10 @@ public final class FileManager {
 		return testDir;
 	}
 
+	public static File getTestZipDir(String zipname) {
+		String testDirString = EXTERNAL_STORAGE_BASE + PROJECT_ROOT + "/test/" + zipname;
+		File testzip = new File(testDirString);
+		return testzip;
+	}
+
 }

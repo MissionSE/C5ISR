@@ -24,7 +24,7 @@ import com.missionse.bluetooth.network.ServiceIdentifier;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.communication.BluetoothDeviceListFragment;
 import com.missionse.kestrelweather.communication.KestrelMessage;
-import com.missionse.kestrelweather.reports.ReportCreationFragment;
+import com.missionse.kestrelweather.reports.ReportDetailFragment;
 
 public class KestrelConnectorFragment extends Fragment {
 
@@ -187,7 +187,7 @@ public class KestrelConnectorFragment extends Fragment {
 			@Override
 			public void onClick(final View view) {
 				getActivity().getFragmentManager().beginTransaction()
-						.replace(R.id.content, ReportCreationFragment.newInstance(false), "report_addon")
+						.replace(R.id.content, ReportDetailFragment.newInstance(false), "report_addon")
 						.addToBackStack("report_addon")
 						.commit();
 			}

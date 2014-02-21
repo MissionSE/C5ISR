@@ -12,7 +12,7 @@ public class Entity {
 	private int mId;
 	@DatabaseField(columnName = "dirty")
 	private boolean mDirty = false;
-	@DatabaseField(columnName = "update_at", version = true)
+	@DatabaseField(columnName = "update_at")
 	private DateTime mUpdateAt = DateTime.now();
 	@DatabaseField(columnName = "created_at")
 	private DateTime mCreatedAt =DateTime.now();

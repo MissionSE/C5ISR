@@ -6,10 +6,18 @@ This directory contains the KestrelWeather server application, written in node.j
 	node.js (and npm)
 	mongodb
 
-To install, navigate to the root directory where the `package.json` file is located, and run:
+All of the following commands must be run from the root directory, where this file is located.
+
+To install, run:
 
 	npm install
 
-To start the server, navigate to the root directory where the `server.js` script lives, and run:
+To start the server, run:
 
 	node server
+
+To start the server with debug information, run:
+
+	DEBUG=kestrel:* node server
+
+See the [debug](https://github.com/visionmedia/debug) node.js module for more information on the DEBUG parameter.

@@ -3,6 +3,9 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var mongo = require('mongodb');
+var debug = require('debug')('kestrel');
+
+debug('booting in debug mode');
 
 var db = require('./lib/db');
 var handler = require('./lib/handler')(db);

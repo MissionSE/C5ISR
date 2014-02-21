@@ -12,9 +12,11 @@ var ReportSchema = new Schema({
 		temperature: Number,
 		humidity: Number,
 		pressure: Number,
+		pressureTrend: String,
 		heatIndex: Number,
 		windSpeed: Number,
 		windDirection: Number,
+		windChill: Number,
 		dewPoint: Number
 	},
 	notes: [String],
