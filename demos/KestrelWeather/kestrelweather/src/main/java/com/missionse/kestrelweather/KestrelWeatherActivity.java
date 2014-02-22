@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import com.missionse.kestrelweather.database.DatabaseManager;
 import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
-import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.remote.RemoteDatabaseHelper;
 import com.missionse.kestrelweather.drawer.KestrelWeatherDrawerFactory;
 import com.missionse.kestrelweather.kestrel.KestrelConnectorFragment;

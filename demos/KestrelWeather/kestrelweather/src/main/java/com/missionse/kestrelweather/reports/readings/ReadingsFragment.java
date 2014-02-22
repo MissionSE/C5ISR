@@ -9,17 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.missionse.kestrelweather.R;
-import com.missionse.kestrelweather.reports.readings.impl.DewPointListItem;
-import com.missionse.kestrelweather.reports.readings.impl.HeatIndexListItem;
-import com.missionse.kestrelweather.reports.readings.impl.HumidityListItem;
-import com.missionse.kestrelweather.reports.readings.impl.PressureListItem;
-import com.missionse.kestrelweather.reports.readings.impl.PressureTrendListItem;
-import com.missionse.kestrelweather.reports.readings.impl.TemperatureListItem;
-import com.missionse.kestrelweather.reports.readings.impl.WindChillListItem;
-import com.missionse.kestrelweather.reports.readings.impl.WindDirectionListItem;
-import com.missionse.kestrelweather.reports.readings.impl.WindSpeedListItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,16 +71,7 @@ public class ReadingsFragment extends Fragment {
 			mReportId = getArguments().getInt(REPORT_ID);
 		}
 
-		List<ReadingsListItem> readingsListItems = new ArrayList<ReadingsListItem>();
-		readingsListItems.add(new DewPointListItem(mActivity));
-		readingsListItems.add(new TemperatureListItem(mActivity));
-		readingsListItems.add(new HumidityListItem(mActivity));
-		readingsListItems.add(new PressureListItem(mActivity));
-		readingsListItems.add(new PressureTrendListItem(mActivity));
-		readingsListItems.add(new HeatIndexListItem(mActivity));
-		readingsListItems.add(new WindSpeedListItem(mActivity));
-		readingsListItems.add(new WindDirectionListItem(mActivity));
-		readingsListItems.add(new WindChillListItem(mActivity));
+		List<ReadingsListItem> readingsListItems = ReadingsListFactory.getListItems(mActivity);
 		mReadingsAdapter = new ReadingsAdapter(mActivity, R.layout.fragment_report_detail_readings_list_entry, readingsListItems);
 	}
 

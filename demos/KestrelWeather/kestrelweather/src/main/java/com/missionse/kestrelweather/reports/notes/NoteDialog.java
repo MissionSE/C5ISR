@@ -89,7 +89,7 @@ public class NoteDialog extends DialogFragment {
 		}
 	}
 
-	private void setDialogTitle(){
+	private void setDialogTitle() {
 		if (mEditableNote) {
 			if (mNoteId == INVALID_DB_ID) {
 				getDialog().setTitle("Create Note");
@@ -181,7 +181,7 @@ public class NoteDialog extends DialogFragment {
 
 	private boolean validate() {
 		return mTitleField.getText().toString().trim().length() > 0 &&
-			mContentField.getText().toString().trim().length() > 0;
+				mContentField.getText().toString().trim().length() > 0;
 	}
 
 	private void onOkButtonPressed() {

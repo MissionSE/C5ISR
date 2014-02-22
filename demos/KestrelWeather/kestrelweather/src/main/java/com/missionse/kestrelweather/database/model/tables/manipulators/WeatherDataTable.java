@@ -13,7 +13,6 @@ public class WeatherDataTable extends BaseTable<WeatherData> {
 
 	/**
 	 * Constructor.
-	 *
 	 * @param connectionSource The database source connection.
 	 * @throws SQLException Thrown if any issues with connection.
 	 */

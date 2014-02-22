@@ -15,7 +15,6 @@ public class ReportTable extends BaseTable<Report> {
 
 	/**
 	 * Constructor.
-	 *
 	 * @param connectionSource The database source connection.
 	 * @throws SQLException Thrown if any issues with connection.
 	 */
@@ -26,7 +25,6 @@ public class ReportTable extends BaseTable<Report> {
 	/**
 	 * Creates a new instance of a Report without adding it into the database.  Using this
 	 * will prevent NullPointerException when trying to add Supplements.
-	 *
 	 * @return Instance of Report that has not been added to the database.
 	 */
 	public Report newReport() {

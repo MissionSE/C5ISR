@@ -13,7 +13,6 @@ public class NoteTable extends BaseTable<Note> {
 
 	/**
 	 * Constructor.
-	 *
 	 * @param connectionSource The database source connection.
 	 * @throws java.sql.SQLException Thrown if any issues with connection.
 	 */

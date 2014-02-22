@@ -6,8 +6,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.missionse.kestrelweather.database.model.Entity;
 import com.missionse.kestrelweather.database.model.SupplementType;
 
-import org.joda.time.DateTime;
-
 /**
  * A report supplement class.  Used for holding video, photos etc.
  */

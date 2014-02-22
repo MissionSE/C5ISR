@@ -15,9 +15,8 @@ public class DatabaseManager {
 
 	/**
 	 * Constructor.
-	 *
 	 * @param context The android context associated with this
-	 *                application.
+	 * application.
 	 */
 	public DatabaseManager(Context context) {
 		mLocalDatabaseHelper = new LocalDatabaseHelper(context);

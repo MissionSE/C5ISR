@@ -99,7 +99,7 @@ public class ZipManager {
 	 * Zip the contents.
 	 */
 	public void zip() {
-		try  {
+		try {
 			BufferedInputStream origin = null;
 			FileOutputStream dest = new FileOutputStream(mZipFile);
 			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
@@ -118,7 +118,7 @@ public class ZipManager {
 				origin.close();
 			}
 			out.close();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

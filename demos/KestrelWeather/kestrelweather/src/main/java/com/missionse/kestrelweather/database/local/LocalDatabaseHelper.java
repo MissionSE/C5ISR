@@ -46,8 +46,7 @@ public class LocalDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	/**
 	 * Gets a list of a certain type of object from the local database.
-	 *
-	 * @param <T>   The type of the object.
+	 * @param <T> The type of the object.
 	 * @param clazz The class of the object.
 	 * @return List of type <T> objects from the local database.
 	 */
@@ -75,8 +74,7 @@ public class LocalDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	/**
 	 * Gets the Dao for an object from the database.
-	 *
-	 * @param <T>   The type of object to retrieve from the database.
+	 * @param <T> The type of object to retrieve from the database.
 	 * @param clazz The class representing the object in the database.
 	 * @return A Dao object for the requested class if it exists.
 	 */
@@ -93,7 +91,7 @@ public class LocalDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
-						  int oldVersion, int newVersion) {
+			int oldVersion, int newVersion) {
 		try {
 			Log.i(TAG, "onUpgrade");
 			for (Class clazz : mClasses) {

@@ -4,6 +4,7 @@
 	android:id="@+id/report_detail_readings"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent">
+
 	<ListView
 		android:id="@+id/report_detail_readings_list"
 		android:layout_height="match_parent"

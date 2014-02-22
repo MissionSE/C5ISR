@@ -13,7 +13,6 @@ public class SupplementTable extends BaseTable<Supplement> {
 
 	/**
 	 * Constructor.
-	 *
 	 * @param connectionSource The database source connection.
 	 * @throws SQLException Thrown if any issues with connection.
 	 */

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">KestrelWeather</string>
+	<string name="app_name">KestrelWeather</string>
 
-    <!-- Option Menu -->
-    <string name="action_settings">Settings</string>
-    <string name="action_simulate_kestrel">Simulation Mode</string>
-    <string name="action_kestrel_simulation_settings">Simulation Settings</string>
+	<!-- Option Menu -->
+	<string name="action_settings">Settings</string>
+	<string name="action_simulate_kestrel">Simulation Mode</string>
+	<string name="action_kestrel_simulation_settings">Simulation Settings</string>
 
 	<!-- General -->
 	<string name="save">Save</string>
@@ -104,6 +104,8 @@
 
 	<!-- Fragment: Report Details -->
 	<string name="readings">Readings</string>
+	<string name="weather_data">Weather Data</string>
+	<string name="auxiliary_data">Auxiliary Data</string>
 	<string name="icon_description">The icon for a reading.</string>
 
 	<!-- Fragment: Report Photos -->

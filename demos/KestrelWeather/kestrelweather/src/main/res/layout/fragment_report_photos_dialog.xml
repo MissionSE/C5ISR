@@ -5,6 +5,7 @@
 	android:layout_height="match_parent"
 	android:minWidth="300dp"
 	android:orientation="vertical">
+
 	<Button
 		android:id="@+id/photo_overview_take_photo_btn"
 		android:layout_width="match_parent"
@@ -18,10 +19,12 @@
 		android:textSize="22sp"
 		android:textColor="@color/gray_medium">
 	</Button>
+
 	<View
 		android:layout_width="match_parent"
 		android:layout_height="1dip"
 		android:background="?android:attr/dividerHorizontal"/>
+
 	<Button
 		android:id="@+id/photo_overview_attach_photo_btn"
 		android:layout_width="match_parent"

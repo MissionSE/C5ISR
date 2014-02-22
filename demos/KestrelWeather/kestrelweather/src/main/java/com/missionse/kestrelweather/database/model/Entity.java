@@ -15,11 +15,11 @@ public class Entity {
 	@DatabaseField(columnName = "update_at")
 	private DateTime mUpdateAt = DateTime.now();
 	@DatabaseField(columnName = "created_at")
-	private DateTime mCreatedAt =DateTime.now();
+	private DateTime mCreatedAt = DateTime.now();
 
 	/**
 	 * Return the database ID associated with this object.
-	 * @return The database ID. 
+	 * @return The database ID.
 	 */
 	public int getId() {
 		return mId;

@@ -2,6 +2,7 @@ package com.missionse.kestrelweather.reports;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -24,10 +25,6 @@ public class ReportDetailFragment extends Fragment {
 	private Activity mActivity;
 	private boolean mEditable = false;
 	private int mReportId = INVALID_REPORT_ID;
-
-	private ReadingsFragment mReadingsFragment;
-	private ReadingsFragment mWeatherDataFragment;
-	private ReadingsFragment mAuxDataFragment;
 
 	/**
 	 * Default constructor.
@@ -82,9 +79,7 @@ public class ReportDetailFragment extends Fragment {
 			mReportId = getArguments().getInt(REPORT_ID);
 		}
 
-		mReadingsFragment = ReadingsFragment.newInstance(mReportId);
-		mWeatherDataFragment = ReadingsFragment.newInstance(mReportId);
-		mAuxDataFragment = ReadingsFragment.newInstance(mReportId);
+		setRetainInstance(true);
 	}
 
 	@Override
@@ -101,15 +96,18 @@ public class ReportDetailFragment extends Fragment {
 				reportTimestamp.setText("Fakeday 2014");
 			}
 
-			ViewPager reportViewPager = (ViewPager) view.findViewById(R.id.report_detail_view_pager);
-			if (reportViewPager != null) {
-				SectionFragmentPagerAdapter pagerAdapter = new SectionFragmentPagerAdapter(getFragmentManager());
-				pagerAdapter.setPage(0, mActivity.getString(R.string.readings), mReadingsFragment);
-				pagerAdapter.setPage(1, mActivity.getString(R.string.readings), mWeatherDataFragment);
-				pagerAdapter.setPage(2, mActivity.getString(R.string.readings), mAuxDataFragment);
+			ViewPager viewPager = (ViewPager) view.findViewById(R.id.report_detail_view_pager);
+			if (viewPager != null) {
+				FragmentManager fragmentManager = getChildFragmentManager();
+				if (fragmentManager != null) {
+					SectionFragmentPagerAdapter pagerAdapter = new SectionFragmentPagerAdapter(fragmentManager);
+					pagerAdapter.setPage(0, mActivity.getString(R.string.readings), ReadingsFragment.newInstance(mReportId));
+					pagerAdapter.setPage(1, mActivity.getString(R.string.weather_data), ReadingsFragment.newInstance(mReportId));
+					pagerAdapter.setPage(2, mActivity.getString(R.string.auxiliary_data), ReadingsFragment.newInstance(mReportId));
 
-				reportViewPager.setAdapter(pagerAdapter);
-				reportViewPager.setOffscreenPageLimit(2);
+					viewPager.setAdapter(pagerAdapter);
+					viewPager.setOffscreenPageLimit(2);
+				}
 			}
 		}
 

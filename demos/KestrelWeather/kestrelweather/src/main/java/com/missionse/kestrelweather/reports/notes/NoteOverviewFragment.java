@@ -3,8 +3,8 @@ package com.missionse.kestrelweather.reports.notes;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
-import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -42,7 +41,6 @@ public class NoteOverviewFragment extends Fragment {
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
-	 *
 	 * @param editable Parameter 1.
 	 * @return A new instance of fragment NoteOverviewFragment.
 	 */
@@ -53,7 +51,6 @@ public class NoteOverviewFragment extends Fragment {
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
-	 *
 	 * @param editable Parameter 1.
 	 * @param reportId Parameter 2.
 	 * @return A new instance of fragment NoteOverviewFragment.
@@ -91,7 +88,7 @@ public class NoteOverviewFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+			Bundle savedInstanceState) {
 		View contentView = inflater.inflate(R.layout.fragment_report_notes, container, false);
 		if (contentView != null) {
 			ListView mNoteList = (ListView) contentView.findViewById(R.id.fragment_report_notes_list);
@@ -136,7 +133,6 @@ public class NoteOverviewFragment extends Fragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 
 
 }

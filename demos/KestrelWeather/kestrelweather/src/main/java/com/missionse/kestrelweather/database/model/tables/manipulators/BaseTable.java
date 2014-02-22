@@ -8,7 +8,6 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.missionse.kestrelweather.database.model.Entity;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import java.sql.SQLException;
 import java.util.Collections;

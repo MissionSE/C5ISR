@@ -61,13 +61,16 @@
 			android:layout_weight="0.5"
 			android:layout_height="match_parent">
 
-			<include layout="@layout/fragment_kestrel_simulation_float_field"
+			<include
+				layout="@layout/fragment_kestrel_simulation_float_field"
 				android:id="@+id/kestrel_temperature_edit_text"/>
 
-			<include layout="@layout/fragment_kestrel_simulation_integer_field"
+			<include
+				layout="@layout/fragment_kestrel_simulation_integer_field"
 				android:id="@+id/kestrel_humidity_edit_text"/>
 
-			<include layout="@layout/fragment_kestrel_simulation_float_field"
+			<include
+				layout="@layout/fragment_kestrel_simulation_float_field"
 				android:id="@+id/kestrel_pressure_edit_text"/>
 
 			<Spinner
@@ -75,19 +78,24 @@
 				android:layout_width="match_parent"
 				android:layout_height="?android:listPreferredItemHeightSmall"/>
 
-			<include layout="@layout/fragment_kestrel_simulation_float_field"
+			<include
+				layout="@layout/fragment_kestrel_simulation_float_field"
 				android:id="@+id/kestrel_heat_index_edit_text"/>
 
-			<include layout="@layout/fragment_kestrel_simulation_float_field"
+			<include
+				layout="@layout/fragment_kestrel_simulation_float_field"
 				android:id="@+id/kestrel_wind_speed_edit_text"/>
 
-			<include layout="@layout/fragment_kestrel_simulation_integer_field"
+			<include
+				layout="@layout/fragment_kestrel_simulation_integer_field"
 				android:id="@+id/kestrel_wind_direction_edit_text"/>
 
-			<include layout="@layout/fragment_kestrel_simulation_float_field"
+			<include
+				layout="@layout/fragment_kestrel_simulation_float_field"
 				android:id="@+id/kestrel_wind_chill_edit_text"/>
 
-			<include layout="@layout/fragment_kestrel_simulation_float_field"
+			<include
+				layout="@layout/fragment_kestrel_simulation_float_field"
 				android:id="@+id/kestrel_dew_point_edit_text"/>
 		</LinearLayout>
 	</LinearLayout>

@@ -6,6 +6,7 @@
 	android:layout_height="wrap_content"
 	android:background="@drawable/fragment_bluetooth_button_selector"
 	android:layout_margin="1dp">
+
 	<TextView
 		android:id="@+id/bluetooth_device_name"
 		android:layout_width="wrap_content"
@@ -15,6 +16,7 @@
 		android:paddingLeft="20dp"
 		android:gravity="center_vertical">
 	</TextView>
+
 	<TextView
 		android:id="@+id/bluetooth_device_mac_address"
 		android:layout_width="0dip"

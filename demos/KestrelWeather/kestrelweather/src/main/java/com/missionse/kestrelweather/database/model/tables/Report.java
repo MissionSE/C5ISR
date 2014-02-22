@@ -6,8 +6,6 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.missionse.kestrelweather.database.model.Entity;
 
-import org.joda.time.DateTime;
-
 /**
  * Report object.
  */
