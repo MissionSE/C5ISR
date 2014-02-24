@@ -186,10 +186,16 @@ public class KestrelConnectorFragment extends Fragment {
 		mContinueButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View view) {
-				getActivity().getFragmentManager().beginTransaction()
-						.replace(R.id.content, ReportDetailFragment.newInstance(false), "report_addon")
-						.addToBackStack("report_addon")
-						.commit();
+				Activity activity = getActivity();
+				if (activity != null) {
+					activity.getFragmentManager().beginTransaction()
+							.setCustomAnimations(
+									R.animator.slide_from_right, R.animator.slide_to_left,
+									R.animator.slide_from_left, R.animator.slide_to_right)
+							.replace(R.id.content, ReportDetailFragment.newInstance(false), "report_addon")
+							.addToBackStack("report_addon")
+							.commit();
+				}
 			}
 		});
 	}

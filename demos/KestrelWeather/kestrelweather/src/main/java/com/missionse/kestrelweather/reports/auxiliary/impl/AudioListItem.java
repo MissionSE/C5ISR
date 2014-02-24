@@ -42,6 +42,9 @@ public class AudioListItem implements AuxiliaryDataListItem {
 	@Override
 	public void onClick() {
 		mFragmentManager.beginTransaction()
+				.setCustomAnimations(
+						R.animator.slide_from_right, R.animator.slide_to_left,
+						R.animator.slide_from_left, R.animator.slide_to_right)
 				.replace(R.id.content, AudioViewFragment.newInstance(true), "audio_overview")
 				.addToBackStack("audio_overview")
 				.commit();
