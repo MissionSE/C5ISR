@@ -4,6 +4,7 @@ var path = require('path');
 var fs = require('fs');
 var randomstring = require('randomstring');
 var _ = require('underscore');
+
 var debug = require('debug')('kestrel:handler');
 var postReport = 'postReport';
 

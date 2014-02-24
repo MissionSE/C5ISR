@@ -1,5 +1,4 @@
 var debug = require('debug')('kestrel:handler');
-var stringifyObject = require('stringify-object');
 
 module.exports = function(db) {
 	return function(req, res) {

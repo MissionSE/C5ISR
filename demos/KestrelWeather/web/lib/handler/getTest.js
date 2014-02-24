@@ -1,16 +1,15 @@
 var request = require('request');
-var requestify = require('requestify'); 
+var requestify = require('requestify');
 var fs = require('fs');
 var path = require('path');
 var randomstring = require('randomstring');
 var debug = require('debug')('kestrel:handler');
-var test = 'test';
 
 var webRoot = path.join(__dirname, '../..');
 
 module.exports = function(db) {
 	return function(req, res) {
-		debug(test, 'GET test type ' + req.params.type);
+		debug('GET test type ' + req.params.type);
 
 		if (req.params.type.toLowerCase() == 'json') {
 			requestify.post('http://localhost:3000/upload', {
@@ -20,7 +19,7 @@ module.exports = function(db) {
 
 				createdat: Date.now(),
 				updatedat: Date.now(),
-				
+
 				kestrel: {
 					temperature: (Math.random() * 150 - 50).toFixed(2),
 					humidity: (Math.random() * 100).toFixed(2),
