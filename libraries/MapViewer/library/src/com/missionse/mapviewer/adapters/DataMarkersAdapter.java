@@ -25,21 +25,18 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
     private boolean mFullInfoWindowEnabled = false;
     private int mInfoLayout;
     private View mInfoView;
-    private DataViewBinder<TMarkerData> mInfoViewBinder;
     private GoogleMap mMap;
     private SparseArray<BitmapDescriptor> mMarkerIcons = new SparseArray<BitmapDescriptor>();
     private HashMap<TMarkerKey, Marker> mMarkers = new HashMap<TMarkerKey, Marker>();
     private HashMap<Marker, TMarkerData> mMarkersData = new HashMap<Marker, TMarkerData>();
 
-    protected DataMarkersAdapter(Context context, GoogleMap map, int infoLayout, DataViewBinder<TMarkerData> infoViewBinder) {
+    protected DataMarkersAdapter(Context context, GoogleMap map, int infoLayout) {
         this.mContext = context;
         this.mMap = map;
         this.mInfoLayout = infoLayout;
-        this.mInfoViewBinder = infoViewBinder;
     }
 
     private View getInfoView(Marker marker) {
-        Log.d(TAG, "gentInfoView calling getInfoView");
         this.mInfoView = getInfoView(marker, this.mMarkersData.get(marker), this.mInfoView);
         return this.mInfoView;
     }
@@ -67,42 +64,29 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
         return this.mData;
     }
 
-    public void setData(TData data) {
-        setData(data, true);
-    }
-
     public abstract int getIconType(TMarkerData markerData);
 
     protected View getInfoView(Marker marker, TMarkerData markerData, View view) {
-        Log.d(TAG, "getInfoView");
         if ((view == null) && (this.mInfoLayout > 0)) {
             view = ((LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(this.mInfoLayout, null);
-            Log.d(TAG, "inflated view=" + view);
             view.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-        if (this.mInfoViewBinder != null)
-            this.mInfoViewBinder.setViewValue(view, markerData);
         return view;
     }
 
     @Override
     public View getInfoWindow(Marker marker) {
-        Log.d(TAG, "getInfoWindow");
         View view = null;
         if (this.mFullInfoWindowEnabled) {
-            Log.d(TAG, "getInfoWindow calling getInfoView");
             view = getInfoView(marker);
         }
-        Log.d(TAG, "view=" + view);
         return view;
     }
 
     @Override
     public View getInfoContents(Marker marker) {
-        Log.d(TAG, "getInfoContents");
         View view = null;
         if (!this.mFullInfoWindowEnabled) {
-            Log.d(TAG, "getInfoContents calling getInfoView");
             view = getInfoView(marker);
         }
         return view;
@@ -124,6 +108,8 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
 
     public abstract TMarkerKey getMarkerKey(TMarkerData markerData);
 
+    public abstract LatLng getMarkerPosition(TMarkerData markerData);
+
     public abstract double getMarkerLatitude(TMarkerData markerData);
 
     public abstract double getMarkerLongitude(TMarkerData markerData);
@@ -140,7 +126,7 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
                 .icon(bitmapDescriptor);
     }
 
-    public void setData(TData data, boolean paramBoolean) {
+    public void setData(TData data) {
         this.mData = data;
         HashMap<TMarkerKey, Marker> markers = new HashMap<TMarkerKey, Marker>();
         for (int i = 0; i < getCount(); i++) {
@@ -159,10 +145,6 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
 
     public void setFullInfoWindowEnabled(boolean enabled) {
         this.mFullInfoWindowEnabled = enabled;
-    }
-
-    public void setInfoViewBinder(DataViewBinder<TMarkerData> paramDataViewBinder) {
-        this.mInfoViewBinder = paramDataViewBinder;
     }
 
     public void setMarkerData(Marker marker, TMarkerData markerData) {

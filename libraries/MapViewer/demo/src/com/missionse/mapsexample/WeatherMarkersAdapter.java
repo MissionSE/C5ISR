@@ -11,6 +11,7 @@ import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.missionse.mapsexample.openweathermap.OpenWeatherMapData;
@@ -25,7 +26,7 @@ public class WeatherMarkersAdapter extends DataMarkersAdapter<List<OpenWeatherMa
     private OpenWeatherMapData mCurrentMarkerData;
 
     public WeatherMarkersAdapter(Context context, GoogleMap map) {
-        super(context, map, R.layout.observation_map_callout, null);
+        super(context, map, R.layout.observation_map_callout);
 
         setFullInfoWindowEnabled(true);
     }
@@ -80,6 +81,11 @@ public class WeatherMarkersAdapter extends DataMarkersAdapter<List<OpenWeatherMa
     @Override
     public String getMarkerKey(OpenWeatherMapData openWeatherMapData) {
         return Integer.toString(openWeatherMapData.getId());
+    }
+
+    @Override
+    public LatLng getMarkerPosition(OpenWeatherMapData openWeatherMapData) {
+        return new LatLng(openWeatherMapData.getCoord().getLat(), openWeatherMapData.getCoord().getLon());
     }
 
     @Override
