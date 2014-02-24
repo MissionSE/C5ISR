@@ -60,4 +60,7 @@
     <dimen name="info_window_data_margin_corner">28dp</dimen>
     <dimen name="info_window_data_margin_side">1dp</dimen>
 
+    <dimen name="callout_inner_radius">115.0dip</dimen>
+    <dimen name="callout_outer_radius">120.0dip</dimen>
+
 </resources>

@@ -1,62 +1,65 @@
 package com.missionse.mapsexample;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.gson.reflect.TypeToken;
+import com.google.maps.android.MarkerManager;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.missionse.mapsexample.openweathermap.OpenWeatherMapData;
 
 
-public class CustomMarkerInfoWindowActivity extends Activity {
+public class CustomMarkerInfoWindowActivity extends Activity implements
+        GoogleMap.OnMapLongClickListener,
+        GoogleMap.OnCameraChangeListener,
+        GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnMapClickListener,
+        GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = CustomMarkerInfoWindowActivity.class.getSimpleName();
-
+    private static final float CALLOUT_ZOOM = 10.0F;
     private GoogleMap mMap;
-
+    private Marker mCurrentMarker;
+    private WeatherMarkersAdapter mMarkersAdapter;
     private Marker mMarker;
+    private MarkerManager mMarkerManager;
 
-    class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-        // These a both viewgroups containing an ImageView with id "badge" and two TextViews with id
-        // "title" and "snippet".
-        private final View mWindow;
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
 
-        CustomInfoWindowAdapter() {
-            mWindow = getLayoutInflater().inflate(R.layout.marker_info_window_2, null);
-        }
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-            return mWindow;
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            return null;
-        }
     }
 
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        hideObservationCallout();
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Log.d(TAG, "onMarkerClick");
+        showObservationCallout(marker);
+        return true;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,33 +103,53 @@ public class CustomMarkerInfoWindowActivity extends Activity {
         }
     }
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
     private void setUpMap() {
         final double ten = 10;
         final double five = 5;
         final double radius = 400000;
 
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+        this.mMarkersAdapter = new WeatherMarkersAdapter(this, this.mMap);
 
-        Bitmap icon = drawableToBitmap(getResources().getDrawable(R.drawable.marker));
-        mMarker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(ten, 0))
-                .title("Marker")
-                .icon(BitmapDescriptorFactory.fromBitmap(icon)));
-
+        mMap.setOnCameraChangeListener(this);
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapClickListener(this);
+        mMap.setInfoWindowAdapter(this.mMarkersAdapter);
+        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMapLongClickListener(this);
     }
 
-    public static Bitmap drawableToBitmap (Drawable drawable) {
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
+    private void hideObservationCallout() {
+        if (this.mCurrentMarker != null) {
+            this.mCurrentMarker.hideInfoWindow();
+            this.mCurrentMarker = null;
+        }
+    }
+
+    private void showObservationCallout(Marker marker) {
+        this.mCurrentMarker = marker;
+        marker.showInfoWindow();
+    }
+
+    @Override
+    public void onMapLongClick(final LatLng latLng) {
+        String url = "http://api.openweathermap.org/data/2.5/weather?lat=" + latLng.latitude + "&lon=" + latLng.longitude;
+        Log.d(TAG, "url=" + url);
+        Ion.with(this, url).as(new TypeToken<OpenWeatherMapData>() {
+        }).setCallback(new FutureCallback<OpenWeatherMapData>() {
+            @Override
+            public void onCompleted(Exception e, OpenWeatherMapData openWeatherMapData) {
+                if (e != null) {
+                    Log.e(TAG, "Error getting openweathermap data.", e);
+                } else {
+                    if (openWeatherMapData != null) {
+                        Log.d(TAG, openWeatherMapData.toString());
+                        mMarkersAdapter.addMarker(openWeatherMapData);
+                    } else {
+                        Log.e(TAG, "No data obtained from openweathermap.org");
+                    }
+                }
+            }
+        });
     }
 
 }

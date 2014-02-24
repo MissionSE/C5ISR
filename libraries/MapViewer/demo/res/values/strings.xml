@@ -87,5 +87,8 @@
     <string name="wind_direction">Wind Direction</string>
     <string name="time_format">Time Format</string>
     <string name="date_format">Date Format</string>
+    <string name="minAbbr">min</string>
+    <string name="hAbbr">h</string>
+    <string name='days'>days</string>
 
 </resources>
