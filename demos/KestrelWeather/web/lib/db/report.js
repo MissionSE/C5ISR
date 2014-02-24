@@ -3,23 +3,35 @@ var Schema = mongoose.Schema;
 var autoIncrement = require('mongoose-auto-increment');
 
 var ReportSchema = new Schema({
-	userId: String,
+	userid: String,
 	latitude: Number,
 	longitude: Number,
-	updatedAt: { type: Date, default: Date.now },
-	createdAt: { type: Date, default: Date.now },
-	weather: { 
+
+	updatedat: { type: Date, default: Date.now },
+	createdat: { type: Date, default: Date.now },
+
+	kestrel: { 
 		temperature: Number,
 		humidity: Number,
 		pressure: Number,
-		pressureTrend: String,
-		heatIndex: Number,
-		windSpeed: Number,
-		windDirection: Number,
-		windChill: Number,
-		dewPoint: Number
+		pressuretrend: String,
+		heatindex: Number,
+		windspeed: Number,
+		winddirection: Number,
+		windchill: Number,
+		dewpoint: Number
 	},
-	notes: [String],
+
+	weather: {
+		conditioncode: Number,
+		description: String
+	},
+
+	notes: [{
+		title: String,
+		content: String
+	}],
+	
 	images: [String],
 	audio: [String],
 	video: [String]

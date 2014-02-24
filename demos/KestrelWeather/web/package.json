@@ -16,6 +16,8 @@
 		"randomstring":"*",
 		"request":"*",
 		"underscore":"*",
-		"debug":"*"
+		"debug":"*",
+		"requestify":"*",
+		"stringify-object":"*"
 	}
 }

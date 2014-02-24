@@ -7,10 +7,20 @@ var _ = require('underscore');
 var debug = require('debug')('kestrel:handler');
 var postReport = 'postReport';
 
-var stagingArea = path.join(__dirname, '../../public/staging');
+var stagingArea = path.join(__dirname, '../../public');
 
 module.exports = function(db) {
 	return function(req, res) {
+		if (req.method.toLowerCase() !== 'post') {
+			res.writeHead(200, {'content-type': 'text/plain'});
+			res.end('Please use POST.');
+			return;
+		}
+
+		var contentType = req.get('Content-Type');
+		debug(postReport, 'content-type: ' + contentType);
+		debug(postReport, 'content-length: ' + req.get('Content-Length'));
+
 		var form = new formidable.IncomingForm(),
 			files = [],
 			fields = [];
@@ -21,51 +31,118 @@ module.exports = function(db) {
 		form.on('field', function(field, value) {
 			fields.push([field, value]);
 		})
+		.on('fileBegin', function(name, file) {
+			debug(postReport, 'file name: ' + file.name);
+			debug(postReport, 'file mime: ' + file.type);
+
+			if (file.type.search('image') >= 0) {
+				file.path = stagingArea + '/images/' + path.basename(file.path);
+			} else if (file.type.search('audio') >= 0) {
+				file.path = stagingArea + '/audio/' + path.basename(file.path);
+			}
+			// video support
+			// else if (file.type.search('image') >= 0) {
+			//	debug(postReport, 'storing in images');
+			//}
+		})
+		.on('progress', function(bytesReceived, bytesExpected) {
+			debug(postReport, bytesReceived + '/' + bytesExpected);
+		})
+		.on('aborted', function(name, file) {
+			debug(postReport, '-> post aborted');
+		})
 		.on('file', function(name, file) {
 			files.push(file);
 		})
-		.on('progress', function(bytesReceived, bytesExpected) {
-			//debug(postReport, bytesReceived + '/' + bytesExpected);
-		})
 		.on('end', function() {
-			debug(postReport, '-> upload done');
-			debug(postReport, '\n'+ util.inspect(fields));
-			debug(postReport, '\n'+ util.inspect(files));
+			debug(postReport, '-> post end');
+			debug(postReport, '\nFields: '+ util.inspect(fields));
+			debug(postReport, '\nFiles: '+ util.inspect(files));
 
 			var data = _.object(fields);
-			//save a new report and add an event log entry
-			var newReport = new db.Report({
-				userId: data.userId,
-				latitude: data.latitude,
-				longitude: data.longitude
-			});
-			newReport.weather.temperature = data.temperature;
-			newReport.weather.humidity = data.humidity;
-			newReport.weather.pressure = data.pressure;
-			newReport.weather.pressureTrend = data.pressureTrend;
-			newReport.weather.heatIndex = data.heatIndex;
-			newReport.weather.windSpeed = data.windSpeed;
-			newReport.weather.windDirection = data.windDirection;
-			newReport.weather.windChill = data.windChill;
-			newReport.weather.dewPoint = data.dewPoint;
 
-			for (var index = 0; index < files.length; index++) {
-				newReport.images.push(files[index].path);
+			// if json, then create a new report
+			if (contentType == 'application/json') {
+
+				//save a new report and add an event log entry
+				var newReport = new db.Report({
+					userId: data.userid,
+					latitude: data.latitude,
+					longitude: data.longitude,
+					createdat: data.createdat,
+					updatedat: data.updatedat
+				});
+				newReport.kestrel.temperature = data.kestrel.temperature;
+				newReport.kestrel.humidity = data.kestrel.humidity;
+				newReport.kestrel.pressure = data.kestrel.pressure;
+				newReport.kestrel.pressuretrend = data.kestrel.pressuretrend;
+				newReport.kestrel.heatindex = data.kestrel.heatindex;
+				newReport.kestrel.windspeed = data.kestrel.windspeed;
+				newReport.kestrel.winddirection = data.kestrel.winddirection;
+				newReport.kestrel.windchill = data.kestrel.windchill;
+				newReport.kestrel.dewpoint = data.kestrel.dewpoint;
+
+				newReport.weather.conditioncode = data.weather.conditioncode;
+				newReport.weather.description = data.weather.description;
+
+				for (var index = 0; index < data.notes.length; index++) {
+					newReport.notes.push(data.notes[index]);
+				}
+
+				newReport.save(function(err, newReport) {
+					if (!err) {
+						res.writeHead(200, {'content-type': 'text/plain'});
+						debug(postReport, JSON.stringify(newReport));
+						res.end(JSON.stringify( { id : newReport._id }));
+
+						var newEvent = new db.Event({
+							reportId: newReport._id,
+							eventType: 'create'
+						});
+						newEvent.save(function(err, newEvent) {
+							debug(postReport, newEvent.eventType + ' event logged');
+						});
+					} else {
+						res.writeHead(404, {'content-type': 'text/plain'});
+						res.end(JSON.stringify({
+							status: 'nok'
+						}));
+					}
+				});
+			} else {
+				db.Report.findById(data.id).exec(function(err, reports) {
+					if (err || !reports) {
+						debug(postReport, 'invalid id specified for file upload');
+						res.writeHead(404, {'content-type': 'text/plain'});
+						res.end(JSON.stringify({
+							status: 'nok'
+						}));
+					} else {
+						for (var index = 0; index < files.length; index++) {
+							var publicPath = files[index].path.split('public')[1];
+							debug (postReport, 'saving ' + publicPath + ' to ' + data.id);
+							if (files[index].type.search('image') >= 0) {
+								db.Report.update( { _id: data.id }, { $push: { images: publicPath } }, { upsert: true }, function(err) {
+									if (err) {
+										debug(postReport, "query update failed");
+									}
+								});
+							} else if (files[index].type.search('audio') >= 0) {
+								db.Report.update( { _id: data.id }, { $push: { audio: publicPath } }, { upsert: true }, function(err) {
+									if (err) {
+										debug(postReport, "query update failed");
+									}
+								});
+							}
+						}
+
+						res.writeHead(200, {'content-type': 'text/plain'});
+						res.end(JSON.stringify({
+							status: 'ok'
+						}));
+					}
+				});
 			}
-
-			newReport.save(function(err, newReport) {
-				res.writeHead(200, {'content-type': 'text/plain'});
-				debug(postReport, JSON.stringify(newReport));
-				res.end(JSON.stringify( { id : newReport._id }));
-
-				var newEvent = new db.Event({
-					reportId: newReport._id,
-					eventType: 'create'
-				});
-				newEvent.save(function(err, newEvent) {
-					debug(postReport, newEvent.eventType + ' event logged');
-				});
-			});
 		});
 
 		form.parse(req);

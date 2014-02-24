@@ -6,9 +6,11 @@ module.exports = function(db) {
 
 		db.Event.find().lean().exec(function(err, events) {
 			if (events) {
-				res.send(events);
+				res.writeHead(200, {'content-type': 'text/plain'});
+				res.end(JSON.stringify(events));
 			} else {
-				res.send('No events found.');
+				res.writeHead(404, {'content-type': 'text/plain'});
+				res.end();
 			}
 		});
 	}

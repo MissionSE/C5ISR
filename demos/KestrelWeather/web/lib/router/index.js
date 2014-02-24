@@ -17,7 +17,7 @@ module.exports = function (server, handler) {
 	impl.implements(handler, { getEvent: impl.F });
 
 	server.get('/', handler.getIndex);
-	server.get('/test', handler.getTest);
+	server.get('/test/:type', handler.getTest);
 
 	server.get('/report', handler.getAllReports);
 	server.get('/report/all', handler.getAllReports);

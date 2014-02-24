@@ -10,6 +10,9 @@ var EventSchema = new Schema({
 	versionKey: false
 });
 
-EventSchema.plugin(autoIncrement.plugin, 'Event');
+EventSchema.plugin(autoIncrement.plugin, {
+	model: 'Event',
+	startAt: 1
+});
 
 module.exports = mongoose.model('Event', EventSchema);

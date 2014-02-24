@@ -6,9 +6,11 @@ module.exports = function(db) {
 
 		db.Report.find().lean().exec(function(err, reports) {
 			if (reports) {
-				res.send(reports);
+				res.writeHead(200, {'content-type': 'text/plain'});
+				res.end(JSON.stringify(reports));
 			} else {
-				res.send('No reports found.');
+				res.writeHead(404, {'content-type': 'text/plain'});
+				res.end();
 			}
 		});
 	}

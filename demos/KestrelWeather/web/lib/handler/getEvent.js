@@ -7,9 +7,11 @@ module.exports = function(db) {
 		var eventId = req.params.id;
 		db.Event.findById(eventId).lean().exec(function(err, events) {
 			if (events) {
-				res.send(events);
+				res.writeHead(200, {'content-type': 'text/plain'});
+				res.end(JSON.stringify(events));
 			} else {
-				res.send('No event with that ID found.');
+				res.writeHead(404, {'content-type': 'text/plain'});
+				res.end();
 			}
 		});
 	}
