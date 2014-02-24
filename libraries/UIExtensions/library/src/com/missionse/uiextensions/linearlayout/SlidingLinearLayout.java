@@ -2,6 +2,7 @@ package com.missionse.uiextensions.linearlayout;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.util.AttributeSet;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -21,6 +22,30 @@ public class SlidingLinearLayout extends LinearLayout {
 
 		mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 	}
+
+	/**
+	 * Creates a new SlidingLinearLayout.
+	 * @param context the context to which this layout belongs
+	 * @param attrs the attributes for the layout
+	 */
+	public SlidingLinearLayout(final Context context, final AttributeSet attrs) {
+		super(context, attrs);
+
+		mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+	}
+
+	/**
+	 * Creates a new SlidingLinearLayout.
+	 * @param context the context to which this layout belongs
+	 * @param attrs the attributes for the layout
+	 * @param defStyle the style
+	 */
+	public SlidingLinearLayout(final Context context, final AttributeSet attrs, final int defStyle) {
+		super(context, attrs, defStyle);
+
+		mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+	}
+
 
 	/**
 	 * Retrieves the current 'X' position of the layout.
