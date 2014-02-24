@@ -26,13 +26,12 @@ import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
  */
 public class PhotoOverviewFragment extends Fragment {
 	private static final int ADD_PHOTO_REQUEST = 10;
-	private static final String EDITABLE_REPORT = "is_report_editable";
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
 
 	private PhotoAdapter mPhotoAdapter;
 	private Activity mActivity;
-	private boolean mEditable = false;
+	private boolean mEditable = true;
 	private int mReportId = INVALID_REPORT_ID;
 
 	/**
@@ -43,24 +42,13 @@ public class PhotoOverviewFragment extends Fragment {
 
 	/**
 	 * A factory method used to create a new instance of the fragment with the provided parameters.
-	 * @param editable Whether or not the report is editable.
-	 * @return A new instance of a PhotoOverviewFragment.
-	 */
-	public static PhotoOverviewFragment newInstance(final boolean editable) {
-		return newInstance(editable, INVALID_REPORT_ID);
-	}
-
-	/**
-	 * A factory method used to create a new instance of the fragment with the provided parameters.
-	 * @param editable Whether or not the report is editable.
 	 * @param reportId The database report id that is associated with the report (if one exists).
 	 * @return A new instance of a PhotoOverviewFragment.
 	 */
-	public static PhotoOverviewFragment newInstance(final boolean editable, final int reportId) {
+	public static PhotoOverviewFragment newInstance(final int reportId) {
 		PhotoOverviewFragment fragment = new PhotoOverviewFragment();
 
 		Bundle arguments = new Bundle();
-		arguments.putBoolean(EDITABLE_REPORT, editable);
 		arguments.putInt(REPORT_ID, reportId);
 		fragment.setArguments(arguments);
 
@@ -83,7 +71,6 @@ public class PhotoOverviewFragment extends Fragment {
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mEditable = getArguments().getBoolean(EDITABLE_REPORT);
 			mReportId = getArguments().getInt(REPORT_ID);
 		}
 
@@ -91,16 +78,16 @@ public class PhotoOverviewFragment extends Fragment {
 			setHasOptionsMenu(true);
 		}
 
-		mPhotoAdapter = new PhotoAdapter(mActivity, R.layout.fragment_report_list_entry);
+		mPhotoAdapter = new PhotoAdapter(mActivity, R.layout.fragment_report_item_list_entry);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View contentView = inflater.inflate(R.layout.fragment_report_photos, container, false);
 		if (contentView != null) {
-			ListView mPhotoList = (ListView) contentView.findViewById(R.id.fragment_report_photos_list);
-			mPhotoList.setAdapter(mPhotoAdapter);
-			mPhotoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			ListView photoList = (ListView) contentView.findViewById(R.id.fragment_report_photos_list);
+			photoList.setAdapter(mPhotoAdapter);
+			photoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
 					FragmentManager fragmentManager = getFragmentManager();
@@ -115,13 +102,13 @@ public class PhotoOverviewFragment extends Fragment {
 			});
 
 			if (mEditable) {
-				mPhotoList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-				mPhotoList.setMultiChoiceModeListener(new MediaMultiChoiceModeListener(mActivity, mPhotoList, mPhotoAdapter));
+				photoList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+				photoList.setMultiChoiceModeListener(new MediaMultiChoiceModeListener(mActivity, photoList, mPhotoAdapter));
 			}
 
 			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_photos_empty);
 			if (emptyView != null) {
-				mPhotoList.setEmptyView(emptyView);
+				photoList.setEmptyView(emptyView);
 			}
 		}
 

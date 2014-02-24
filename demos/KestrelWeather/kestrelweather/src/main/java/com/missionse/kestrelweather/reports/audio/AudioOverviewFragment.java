@@ -27,19 +27,18 @@ import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 
 /**
  * A simple {@link android.app.Fragment} subclass.
- * Use the {@link AudioViewFragment#newInstance} factory method to
+ * Use the {@link AudioOverviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.OnMediaPlayerEventListener {
+public class AudioOverviewFragment extends Fragment implements MediaPlayerWrapper.OnMediaPlayerEventListener {
 	private static final int ATTACH_AUDIO_REQUEST = 20;
-	private static final String EDITABLE_REPORT = "is_report_editable";
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
 	private static final int SKIP_INTERVAL_IN_MILLISECONDS = 5000;
 
 	private AudioAdapter mAudioAdapter;
 	private Activity mActivity;
-	private boolean mEditable;
+	private boolean mEditable = true;
 	private int mReportId = INVALID_REPORT_ID;
 
 	private ImageButton mPlayButton;
@@ -49,31 +48,20 @@ public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.On
 	/**
 	 * Constructor.
 	 */
-	public AudioViewFragment() {
+	public AudioOverviewFragment() {
 		mMediaWrapper = new MediaPlayerWrapper();
 		mMediaWrapper.setCompleteListener(this);
 	}
 
 	/**
 	 * A factory method used to create a new instance of the fragment with the provided parameters.
-	 * @param editable Whether or not the report is editable.
-	 * @return A new instance of an AudioViewFragment.
-	 */
-	public static AudioViewFragment newInstance(boolean editable) {
-		return newInstance(editable, INVALID_REPORT_ID);
-	}
-
-	/**
-	 * A factory method used to create a new instance of the fragment with the provided parameters.
-	 * @param editable Whether or not the report is editable.
 	 * @param reportId The database report id that is associated with the report (if one exists).
-	 * @return A new instance of an AudioViewFragment.
+	 * @return A new instance of an AudioOverviewFragment.
 	 */
-	public static AudioViewFragment newInstance(boolean editable, int reportId) {
-		AudioViewFragment fragment = new AudioViewFragment();
+	public static AudioOverviewFragment newInstance(final int reportId) {
+		AudioOverviewFragment fragment = new AudioOverviewFragment();
 
 		Bundle args = new Bundle();
-		args.putBoolean(EDITABLE_REPORT, editable);
 		args.putInt(REPORT_ID, reportId);
 		fragment.setArguments(args);
 
@@ -96,7 +84,6 @@ public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.On
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mEditable = getArguments().getBoolean(EDITABLE_REPORT);
 			mReportId = getArguments().getInt(REPORT_ID);
 		}
 
@@ -104,7 +91,7 @@ public class AudioViewFragment extends Fragment implements MediaPlayerWrapper.On
 			setHasOptionsMenu(true);
 		}
 
-		mAudioAdapter = new AudioAdapter(mActivity, R.layout.fragment_report_list_entry);
+		mAudioAdapter = new AudioAdapter(mActivity, R.layout.fragment_report_item_list_entry);
 	}
 
 	@Override

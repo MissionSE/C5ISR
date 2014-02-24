@@ -9,14 +9,17 @@ import com.missionse.kestrelweather.reports.readings.ReadingsListItem;
  * A readings list item for Heat Index.
  */
 public class HeatIndexListItem implements ReadingsListItem {
-	private Context mContext;
+	private final Context mContext;
+	private final int mReportId;
 
 	/**
 	 * Constructor.
 	 * @param context The current Context.
+	 * @param reportId The id of the report.
 	 */
-	public HeatIndexListItem(final Context context) {
+	public HeatIndexListItem(final Context context, final int reportId) {
 		mContext = context;
+		mReportId = reportId;
 	}
 
 	@Override

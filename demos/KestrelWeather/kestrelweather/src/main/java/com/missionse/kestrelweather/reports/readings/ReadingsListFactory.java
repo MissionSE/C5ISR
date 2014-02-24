@@ -25,19 +25,20 @@ public final class ReadingsListFactory {
 	/**
 	 * Creates an returns a list of ReadingsListItems.
 	 * @param context The current context.
+	 * @param reportId The id of the report.
 	 * @return A list of ReadingsListItems.
 	 */
-	public static List<ReadingsListItem> getListItems(final Context context) {
+	public static List<ReadingsListItem> getListItems(final Context context, final int reportId) {
 		List<ReadingsListItem> readingsListItems = new ArrayList<ReadingsListItem>();
-		readingsListItems.add(new DewPointListItem(context));
-		readingsListItems.add(new TemperatureListItem(context));
-		readingsListItems.add(new HumidityListItem(context));
-		readingsListItems.add(new PressureListItem(context));
-		readingsListItems.add(new PressureTrendListItem(context));
-		readingsListItems.add(new HeatIndexListItem(context));
-		readingsListItems.add(new WindSpeedListItem(context));
-		readingsListItems.add(new WindDirectionListItem(context));
-		readingsListItems.add(new WindChillListItem(context));
+		readingsListItems.add(new DewPointListItem(context, reportId));
+		readingsListItems.add(new TemperatureListItem(context, reportId));
+		readingsListItems.add(new HumidityListItem(context, reportId));
+		readingsListItems.add(new PressureListItem(context, reportId));
+		readingsListItems.add(new PressureTrendListItem(context, reportId));
+		readingsListItems.add(new HeatIndexListItem(context, reportId));
+		readingsListItems.add(new WindSpeedListItem(context, reportId));
+		readingsListItems.add(new WindDirectionListItem(context, reportId));
+		readingsListItems.add(new WindChillListItem(context, reportId));
 
 		return readingsListItems;
 	}

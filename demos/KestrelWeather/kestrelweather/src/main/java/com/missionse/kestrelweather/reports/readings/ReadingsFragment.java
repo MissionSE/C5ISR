@@ -30,14 +30,6 @@ public class ReadingsFragment extends Fragment {
 	}
 
 	/**
-	 * Creates a new readings fragment with an unspecified report id.
-	 * @return A new instance of the fragment.
-	 */
-	public static ReadingsFragment newInstance() {
-		return ReadingsFragment.newInstance(INVALID_REPORT_ID);
-	}
-
-	/**
 	 * Creates a new readings fragment with a specified report id.
 	 * @param reportId - The database ID associated with the report.
 	 * @return A new instance of the fragment.
@@ -71,7 +63,7 @@ public class ReadingsFragment extends Fragment {
 			mReportId = getArguments().getInt(REPORT_ID);
 		}
 
-		List<ReadingsListItem> readingsListItems = ReadingsListFactory.getListItems(mActivity);
+		List<ReadingsListItem> readingsListItems = ReadingsListFactory.getListItems(mActivity, mReportId);
 		mReadingsAdapter = new ReadingsAdapter(mActivity, R.layout.fragment_report_detail_readings_list_entry, readingsListItems);
 	}
 

@@ -9,14 +9,17 @@ import com.missionse.kestrelweather.reports.readings.ReadingsListItem;
  * A readings list item for Wind Chill.
  */
 public class WindChillListItem implements ReadingsListItem {
-	private Context mContext;
+	private final Context mContext;
+	private final int mReportId;
 
 	/**
 	 * Constructor.
 	 * @param context The current Context.
+	 * @param reportId The id of the report.
 	 */
-	public WindChillListItem(final Context context) {
+	public WindChillListItem(final Context context, final int reportId) {
 		mContext = context;
+		mReportId = reportId;
 	}
 
 	@Override

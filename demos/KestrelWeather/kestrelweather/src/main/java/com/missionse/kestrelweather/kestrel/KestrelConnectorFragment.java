@@ -192,7 +192,7 @@ public class KestrelConnectorFragment extends Fragment {
 							.setCustomAnimations(
 									R.animator.slide_from_right, R.animator.slide_to_left,
 									R.animator.slide_from_left, R.animator.slide_to_right)
-							.replace(R.id.content, ReportDetailFragment.newInstance(false), "report_addon")
+							.replace(R.id.content, ReportDetailFragment.newInstance(1), "report_addon") //TODO: get report id
 							.addToBackStack("report_addon")
 							.commit();
 				}

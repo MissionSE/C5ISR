@@ -16,15 +16,14 @@ import com.missionse.kestrelweather.reports.readings.ReadingsFragment;
 import com.missionse.uiextensions.viewpager.SectionFragmentPagerAdapter;
 
 /**
- * This fragment will be how the user will create new reports.
+ * Provides a fragment to show the details of a report.
  */
 public class ReportDetailFragment extends Fragment {
-	private static final String EDITABLE_REPORT = "edit_report";
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
 
 	private Activity mActivity;
-	private boolean mEditable = false;
+	private boolean mEditable = true;
 	private int mReportId = INVALID_REPORT_ID;
 
 	/**
@@ -34,26 +33,14 @@ public class ReportDetailFragment extends Fragment {
 	}
 
 	/**
-	 * @param editable - Boolean to determine if the report is editable.
-	 * @return A new instance of fragment ReportDetailFragment.
-	 * @see ReportDetailFragment#newInstance(boolean, int)
+	 * A factory method used to create a new instance of this fragment.
+	 * @param reportId The database ID associated with the report.
+	 * @return A new instance of the fragment ReportDetailFragment.
 	 */
-	public static ReportDetailFragment newInstance(boolean editable) {
-		return newInstance(editable, INVALID_REPORT_ID);
-	}
-
-	/**
-	 * Use this factory method to create a new instance of
-	 * this fragment using the provided parameters.
-	 * @param editable - Boolean to determine if the report is editable.
-	 * @param reportId - The database ID associated with the report.
-	 * @return A new instance of fragment ReportDetailFragment.
-	 */
-	public static ReportDetailFragment newInstance(boolean editable, int reportId) {
+	public static ReportDetailFragment newInstance(final int reportId) {
 		ReportDetailFragment fragment = new ReportDetailFragment();
 
 		Bundle bundle = new Bundle();
-		bundle.putBoolean(EDITABLE_REPORT, editable);
 		bundle.putInt(REPORT_ID, reportId);
 		fragment.setArguments(bundle);
 
@@ -76,11 +63,8 @@ public class ReportDetailFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mEditable = getArguments().getBoolean(EDITABLE_REPORT);
 			mReportId = getArguments().getInt(REPORT_ID);
 		}
-
-		setRetainInstance(true);
 	}
 
 	@Override

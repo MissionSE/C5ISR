@@ -16,7 +16,7 @@ import com.missionse.kestrelweather.database.model.tables.Note;
  */
 public class NoteAdapter extends ArrayAdapter<Note> {
 	private static final int BYTES_IN_KILOBYTE = 1024;
-	private static int RESOURCE_LAYOUT_ID = R.layout.fragment_report_list_entry;
+	private static int RESOURCE_LAYOUT_ID = R.layout.fragment_report_item_list_entry;
 
 
 	public NoteAdapter(Context context) {

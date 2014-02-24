@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="wrap_content"
+	android:layout_width="match_parent"
+	android:layout_gravity="center"
+	android:orientation="horizontal"
+	android:padding="10dp">
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/report_detail_title"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:text="@string/unknown"
+			android:textSize="24sp"
+			android:textStyle="bold">
+		</TextView>
+
+		<TextView
+			android:id="@+id/report_detail_timestamp"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="@string/unknown"
+			android:textSize="18sp"
+			android:textColor="@color/gray_medium">
+		</TextView>
+	</LinearLayout>
+
+	<ImageView
+		android:id="@+id/report_detail_sync_status_icon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:paddingRight="10dp"
+		android:src="@drawable/report_status_not_synced"
+		android:contentDescription="@string/sync_status_description"/>
+</RelativeLayout>

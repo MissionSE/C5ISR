@@ -102,10 +102,14 @@
 	<string name="kestrel_simulation_wind_chill">Wind Chill</string>
 	<string name="kestrel_simulation_dew_pt">Dew Point</string>
 
+	<!-- Fragment: Report List -->
+	<string name="report_list_empty">No reports.</string>
+
 	<!-- Fragment: Report Details -->
 	<string name="kestrel_readings">Kestrel Readings</string>
 	<string name="auxiliary_data">Auxiliary Data</string>
 	<string name="icon_description">The icon for a list item.</string>
+	<string name="sync_status_description">The icon representing the current sync status.</string>
 
 	<!-- Fragment: Report Photos -->
 	<string name="action_add">Add</string>

@@ -12,7 +12,7 @@
 		android:layout_width="75dp"
 		android:padding="10dp"
 		android:contentDescription="@string/image_thumbnail"
-		android:src="@drawable/ic_launcher">
+		android:src="@drawable/ic_action_warning">
 	</ImageView>
 
 	<LinearLayout

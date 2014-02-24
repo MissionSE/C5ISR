@@ -11,17 +11,20 @@ import com.missionse.kestrelweather.reports.notes.NoteOverviewFragment;
  * An auxiliary data list item for Notes.
  */
 public class NotesListItem implements AuxiliaryDataListItem {
-	private Context mContext;
-	private FragmentManager mFragmentManager;
+	private final Context mContext;
+	private final FragmentManager mFragmentManager;
+	private final int mReportId;
 
 	/**
 	 * Constructor.
 	 * @param context The current Context.
 	 * @param fragmentManager The fragment manager.
+	 * @param reportId The id of the report.
 	 */
-	public NotesListItem(final Context context, final FragmentManager fragmentManager) {
+	public NotesListItem(final Context context, final FragmentManager fragmentManager, final int reportId) {
 		mContext = context;
 		mFragmentManager = fragmentManager;
+		mReportId = reportId;
 	}
 
 	@Override
@@ -45,7 +48,7 @@ public class NotesListItem implements AuxiliaryDataListItem {
 				.setCustomAnimations(
 						R.animator.slide_from_right, R.animator.slide_to_left,
 						R.animator.slide_from_left, R.animator.slide_to_right)
-				.replace(R.id.content, NoteOverviewFragment.newInstance(true), "notes_overview")
+				.replace(R.id.content, NoteOverviewFragment.newInstance(mReportId), "notes_overview")
 				.addToBackStack("notes_overview")
 				.commit();
 	}

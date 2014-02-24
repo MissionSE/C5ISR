@@ -31,14 +31,6 @@ public class AuxiliaryDataFragment extends Fragment {
 	}
 
 	/**
-	 * Creates a new auxiliary data fragment with an unspecified report id.
-	 * @return A new instance of the fragment.
-	 */
-	public static AuxiliaryDataFragment newInstance() {
-		return AuxiliaryDataFragment.newInstance(INVALID_REPORT_ID);
-	}
-
-	/**
 	 * Creates a new auxiliary data fragment with a specified report id.
 	 * @param reportId - The database ID associated with the report.
 	 * @return A new instance of the fragment.
@@ -74,7 +66,7 @@ public class AuxiliaryDataFragment extends Fragment {
 
 		if (mActivity != null) {
 			List<AuxiliaryDataListItem> auxiliaryDataListItems = AuxiliaryDataListFactory.getListItems(
-					mActivity, mActivity.getFragmentManager());
+					mActivity, mActivity.getFragmentManager(), mReportId);
 			mAuxiliaryDataAdapter = new AuxiliaryDataAdapter(
 					mActivity, R.layout.fragment_report_detail_auxiliary_data_list_entry, auxiliaryDataListItems);
 		}
