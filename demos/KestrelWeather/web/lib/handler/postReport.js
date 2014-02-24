@@ -25,12 +25,10 @@ module.exports = function(db) {
 			files.push(file);
 		})
 		.on('progress', function(bytesReceived, bytesExpected) {
-			debug(postReport, bytesReceived + '/' + bytesExpected);
+			//debug(postReport, bytesReceived + '/' + bytesExpected);
 		})
 		.on('end', function() {
 			debug(postReport, '-> upload done');
-			res.writeHead(200, {'content-type': 'text/plain'});
-			
 			debug(postReport, '\n'+ util.inspect(fields));
 			debug(postReport, '\n'+ util.inspect(files));
 
@@ -56,8 +54,9 @@ module.exports = function(db) {
 			}
 
 			newReport.save(function(err, newReport) {
+				res.writeHead(200, {'content-type': 'text/plain'});
 				debug(postReport, JSON.stringify(newReport));
-				res.end('' + newReport._id);
+				res.end(JSON.stringify( { id : newReport._id }));
 
 				var newEvent = new db.Event({
 					reportId: newReport._id,
