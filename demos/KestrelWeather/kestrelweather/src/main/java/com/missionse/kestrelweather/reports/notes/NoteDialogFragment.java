@@ -1,5 +1,7 @@
 package com.missionse.kestrelweather.reports.notes;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,92 +20,87 @@ import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 
 /**
- * Created by rvieras on 2/20/14.
+ * Provides a dialog fragment used to view and edit a note.
  */
-public class NoteDialog extends DialogFragment {
-	private static final String TAG = NoteDialog.class.getSimpleName();
-	private static final String EDITABLE_NOTE = "is_note_editable";
+public class NoteDialogFragment extends DialogFragment {
+	private static final String TAG = NoteDialogFragment.class.getSimpleName();
 	private static final String NOTE_ID = "note_id";
 	private static final String REPORT_ID = "report_id";
-	private static final int INVALID_DB_ID = -1;
+	private static final int INVALID_NOTE_ID = -1;
+	private static final int INVALID_REPORT_ID = -1;
 
-	private boolean mEditableNote;
-	private int mNoteId;
-	private int mReportId;
+	private Activity mActivity;
+	private boolean mEditableNote = true;
+	private int mNoteId = INVALID_NOTE_ID;
+	private int mReportId = INVALID_REPORT_ID;
+
 	private Note mNote;
 	private Report mReport;
 	private EditText mTitleField;
 	private EditText mContentField;
 
 	/**
-	 * Default constructor needed by API.
+	 * Constructor.
 	 */
-	public NoteDialog() {
+	public NoteDialogFragment() {
 	}
 
 	/**
-	 * Use the parameters to determain who you would like the note to be.
-	 * @param editable Makes the note editable or note.
-	 * @param noteId The ID associated with the note
-	 * @param reportId The ID associated with the report.
-	 * @return Instance of NoteDialog.
+	 * A factory method used to create a new instance of the fragment with the provided parameters.
+	 * @param reportId The database report id that is associated with the report.
+	 * @param noteId The database note id that is associated with the note.
+	 * @return A new instance of a NoteDialogFragment.
 	 */
-	public static NoteDialog newInstance(final boolean editable, final int noteId, final int reportId) {
-		NoteDialog fragment = new NoteDialog();
+	public static NoteDialogFragment newInstance(final int noteId, final int reportId) {
+		NoteDialogFragment fragment = new NoteDialogFragment();
+
 		Bundle args = new Bundle();
-		args.putBoolean(EDITABLE_NOTE, editable);
 		args.putInt(NOTE_ID, noteId);
 		args.putInt(REPORT_ID, reportId);
 		fragment.setArguments(args);
+
 		return fragment;
 	}
 
-	/**
-	 * Creates a NoteDialog that assumes the note is new and editable.
-	 * @param reportId The ID to associate the report too.
-	 * @return Instance of NoteDialog.
-	 */
-	public static NoteDialog newInsance(final int reportId) {
-		return newInstance(true, INVALID_DB_ID, reportId);
+	@Override
+	public void onAttach(final Activity activity) {
+		super.onAttach(activity);
+		mActivity = activity;
 	}
 
-	/**
-	 * Creates a NOteDialog that assumes the note already has a report associated with it.
-	 * Use the given parameters to make that Note editable.
-	 * @param editable Makes the note editable.
-	 * @param mNoteId The ID of the note.
-	 * @return Instance of NoteDialog.
-	 */
-	public static NoteDialog newInstance(final boolean editable, final int mNoteId) {
-		return newInstance(editable, mNoteId, INVALID_DB_ID);
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mActivity = null;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mEditableNote = getArguments().getBoolean(EDITABLE_NOTE);
 			mNote = getNoteFromId(getArguments().getInt(NOTE_ID));
 			mReport = getReportFromId(getArguments().getInt(REPORT_ID));
-			//setDialogTitle();
 		}
 	}
 
 	private void setDialogTitle() {
-		if (mEditableNote) {
-			if (mNoteId == INVALID_DB_ID) {
-				getDialog().setTitle("Create Note");
+		Dialog dialog = getDialog();
+		if (dialog != null) {
+			if (mEditableNote) {
+				if (mNoteId == INVALID_NOTE_ID) {
+					dialog.setTitle("Create Note");
+				} else {
+					dialog.setTitle("Modify Note");
+				}
 			} else {
-				getDialog().setTitle("Modify Note");
+				dialog.setTitle("View Note");
 			}
-		} else {
-			getDialog().setTitle("View Note");
 		}
 	}
 
 	private Report getReportFromId(final int id) {
 		mReportId = id;
-		if (id == INVALID_DB_ID) {
+		if (id == INVALID_NOTE_ID) {
 			return null;
 		} else {
 			return getReportTable().queryForId(id);
@@ -112,13 +109,12 @@ public class NoteDialog extends DialogFragment {
 
 	private Note getNoteFromId(final int id) {
 		mNoteId = id;
-		if (id == INVALID_DB_ID) {
+		if (id == INVALID_NOTE_ID) {
 			return new Note();
 		} else {
 			return getNoteTable().queryForId(id);
 		}
 	}
-
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -179,25 +175,61 @@ public class NoteDialog extends DialogFragment {
 		}
 	}
 
-	private boolean validate() {
-		return mTitleField.getText().toString().trim().length() > 0 &&
-				mContentField.getText().toString().trim().length() > 0;
+	private String getTitle() {
+		String title = null;
+		if (mTitleField != null && mTitleField.getText() != null) {
+			title = mTitleField.getText().toString();
+		}
+
+		return title;
+	}
+
+	private String getContent() {
+		String content = null;
+		if (mContentField != null && mContentField.getText() != null) {
+			content = mContentField.getText().toString();
+		}
+
+		return content;
+	}
+
+	private boolean fieldsValid() {
+		boolean fieldsValid = false;
+		String title = getTitle();
+		String content = getContent();
+		if (title != null && content != null) {
+			if (title.trim().length() > 0 && content.trim().length() > 0) {
+				fieldsValid = true;
+			}
+		}
+
+		return fieldsValid;
 	}
 
 	private void onOkButtonPressed() {
 		if (!mEditableNote) {
 			onCancelButtonPressed();
 		} else {
-			if (validate()) {
-				mNote.setTitle(mTitleField.getText().toString().trim());
-				mNote.setContent(mContentField.getText().toString().trim());
-				if (mNoteId == INVALID_DB_ID) {
+			if (fieldsValid()) {
+				String title = getTitle();
+				if (title != null) {
+					mNote.setTitle(title.trim());
+				}
+
+				String content = getContent();
+				if (content != null) {
+					mNote.setContent(content.trim());
+				}
+
+				if (mNoteId == INVALID_NOTE_ID) {
 					//TODO: Create new note.
 				} else {
 					//TODO: Update existing note.
 				}
 			} else {
-				Toast.makeText(getActivity(), "Invalid input. Fields cannot be blank.", Toast.LENGTH_SHORT).show();
+				if (mActivity != null) {
+					Toast.makeText(mActivity, "Invalid input. Fields cannot be blank.", Toast.LENGTH_SHORT).show();
+				}
 			}
 		}
 	}

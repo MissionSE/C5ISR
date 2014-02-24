@@ -28,7 +28,7 @@ public class NoteOverviewFragment extends Fragment {
 
 	private NoteAdapter mNoteAdapter;
 	private Activity mActivity;
-	private boolean mEditable = false;
+	private boolean mEditable = true;
 	private int mReportId = INVALID_REPORT_ID;
 
 	/**
@@ -115,7 +115,7 @@ public class NoteOverviewFragment extends Fragment {
 		if (item.getItemId() == R.id.action_add_note) {
 			FragmentManager fragmentManager = getFragmentManager();
 			if (fragmentManager != null) {
-				DialogFragment dialogFragment = NoteDialog.newInstance(true, -1);
+				DialogFragment dialogFragment = NoteDialogFragment.newInstance(-1, -1);
 				dialogFragment.show(fragmentManager, "note_dialog");
 			}
 		}

@@ -4,32 +4,33 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:minHeight="400dip">
+	android:layout_height="wrap_content">
 
 	<EditText
 		android:id="@+id/note_editor_title"
 		android:singleLine="true"
 		android:maxLength="@integer/max_title_length"
 		android:hint="@string/hint_note_title"
-		android:layout_weight="1"
 		android:layout_width="match_parent"
-		android:layout_height="0dip"/>
+		android:layout_height="wrap_content"
+		android:paddingTop="15dp"
+		android:paddingBottom="15dp"/>
 
 	<View
 		android:layout_width="match_parent"
 		android:layout_height="1dip"
 		android:layout_marginLeft="4dip"
 		android:layout_marginRight="4dip"
-		android:background="?android:attr/dividerVertical"/>
+		android:background="?android:attr/dividerHorizontal"/>
 
 	<EditText
 		android:id="@+id/note_editor_content"
-		android:layout_weight="5"
 		android:maxLength="@integer/max_note_length"
-		android:background="#FFFFC0"
+		android:hint="@string/hint_note_content"
 		android:layout_width="match_parent"
-		android:layout_height="0dip"
+		android:layout_height="150dp"
+		android:paddingTop="15dp"
+		android:inputType="textAutoComplete|textMultiLine"
 		android:gravity="top"/>
 
 	<RelativeLayout

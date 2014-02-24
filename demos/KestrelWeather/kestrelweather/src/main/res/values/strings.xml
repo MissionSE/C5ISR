@@ -121,7 +121,8 @@
 	<!-- Fragment: Report Notes -->
 	<string name="no_notes">No notes attached.</string>
 	<string name="create_caps">CREATE</string>
-	<string name="hint_note_title">Note Title</string>
+	<string name="hint_note_title">Enter title</string>
+	<string name="hint_note_content">Enter content</string>
 
 	<!-- Fragment: Report Audio -->
 	<string name="default_time">00:00</string>
