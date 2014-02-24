@@ -9,12 +9,12 @@ import java.util.List;
 
 public class ResourcesHelper {
 
-    public static int getTemperatureColor(Context paramContext, int paramInt) {
-        return getTemperatureColorByIndex(paramContext, getTemperatureIndex(paramInt));
+    public static int getTemperatureColor(Context context, double temperature) {
+        return getTemperatureColorByIndex(context, getTemperatureIndex(getTemperatureIndex(temperature)));
     }
 
-    public static int getTemperatureColorByIndex(Context paramContext, int paramInt) {
-        return paramContext.getResources().obtainTypedArray(R.array.temperature_colors).getColor(paramInt, 0);
+    public static int getTemperatureColorByIndex(Context context, int index) {
+        return context.getResources().obtainTypedArray(R.array.temperature_colors).getColor(index, 0);
     }
 
     public static int getTemperatureIndex(double temperature) {
