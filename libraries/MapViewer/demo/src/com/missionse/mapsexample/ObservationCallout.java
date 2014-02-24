@@ -70,9 +70,9 @@ public class ObservationCallout extends Callout {
     }
 
     private void setPressure() {
-        View view = findViewById(R.id.observation_data_bottom_right);
-        TextView value = (TextView) view.findViewById(R.id.observation_data_bottom_right_value);
-        TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_right_unit);
+        View view = findViewById(R.id.observation_data_middle_right);
+        TextView value = (TextView) view.findViewById(R.id.observation_data_middle_right_value);
+        TextView unit = (TextView) view.findViewById(R.id.observation_data_middle_right_unit);
 
         value.setText(Integer.toString((int) this.mData.getMain().getPressure()));
         unit.setText("hPa");
@@ -81,9 +81,9 @@ public class ObservationCallout extends Callout {
     }
 
     private void setWindSpeed() {
-        View view = findViewById(R.id.observation_data_bottom_left);
-        TextView value = (TextView) view.findViewById(R.id.observation_data_bottom_left_value);
-        TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_left_unit);
+        View view = findViewById(R.id.observation_data_middle_left);
+        TextView value = (TextView) view.findViewById(R.id.observation_data_middle_left_value);
+        TextView unit = (TextView) view.findViewById(R.id.observation_data_middle_left_unit);
 
         //TODO convert value with respect to unit
         value.setText(Double.toString(mData.getWind().getSpeed()));
