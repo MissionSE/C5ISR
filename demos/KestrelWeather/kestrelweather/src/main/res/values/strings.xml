@@ -56,7 +56,7 @@
 	<string name="obtain_readings">Obtain Readings</string>
 	<string name="view_readings">View Readings</string>
 	<string name="notes">Notes</string>
-	<string name="pictures">Pictures</string>
+	<string name="photos">Photos</string>
 	<string name="audio_recording">Audio Recording</string>
 
 	<!-- Fragment: Kestrel Connector -->
@@ -103,10 +103,9 @@
 	<string name="kestrel_simulation_dew_pt">Dew Point</string>
 
 	<!-- Fragment: Report Details -->
-	<string name="readings">Readings</string>
-	<string name="weather_data">Weather Data</string>
+	<string name="kestrel_readings">Kestrel Readings</string>
 	<string name="auxiliary_data">Auxiliary Data</string>
-	<string name="icon_description">The icon for a reading.</string>
+	<string name="icon_description">The icon for a list item.</string>
 
 	<!-- Fragment: Report Photos -->
 	<string name="action_add">Add</string>

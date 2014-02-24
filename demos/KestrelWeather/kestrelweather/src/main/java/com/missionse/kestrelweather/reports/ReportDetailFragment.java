@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.reports.auxiliary.AuxiliaryDataFragment;
 import com.missionse.kestrelweather.reports.readings.ReadingsFragment;
 import com.missionse.uiextensions.viewpager.SectionFragmentPagerAdapter;
 
@@ -101,12 +102,10 @@ public class ReportDetailFragment extends Fragment {
 				FragmentManager fragmentManager = getChildFragmentManager();
 				if (fragmentManager != null) {
 					SectionFragmentPagerAdapter pagerAdapter = new SectionFragmentPagerAdapter(fragmentManager);
-					pagerAdapter.setPage(0, mActivity.getString(R.string.readings), ReadingsFragment.newInstance(mReportId));
-					pagerAdapter.setPage(1, mActivity.getString(R.string.weather_data), ReadingsFragment.newInstance(mReportId));
-					pagerAdapter.setPage(2, mActivity.getString(R.string.auxiliary_data), ReadingsFragment.newInstance(mReportId));
+					pagerAdapter.setPage(0, mActivity.getString(R.string.kestrel_readings), ReadingsFragment.newInstance(mReportId));
+					pagerAdapter.setPage(1, mActivity.getString(R.string.auxiliary_data), AuxiliaryDataFragment.newInstance(mReportId));
 
 					viewPager.setAdapter(pagerAdapter);
-					viewPager.setOffscreenPageLimit(2);
 				}
 			}
 		}

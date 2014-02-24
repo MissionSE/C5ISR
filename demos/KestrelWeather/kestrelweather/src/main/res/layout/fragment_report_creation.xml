@@ -76,7 +76,7 @@
 
 			<Button
 				android:id="@+id/report_get_pictures"
-				android:text="@string/pictures"
+				android:text="@string/photos"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:layout_weight=".2"/>
