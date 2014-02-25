@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Base Class for manipulators.
+ * @param <T> The Entity type that the table
  */
 public class BaseTable<T extends Entity> extends BaseDaoImpl<T, Integer> implements Dao<T, Integer> {
 	private static final String TAG = BaseTable.class.getSimpleName();

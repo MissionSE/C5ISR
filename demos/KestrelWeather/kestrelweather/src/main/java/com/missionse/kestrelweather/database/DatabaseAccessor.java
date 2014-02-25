@@ -1,6 +1,7 @@
 package com.missionse.kestrelweather.database;
 
 import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
+import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
@@ -53,4 +54,11 @@ public interface DatabaseAccessor {
 	 * @return Instance of NoteTable.
 	 */
 	NoteTable getNoteTable();
+
+	/**
+	 * Retieve a Report object based on the ID given.
+	 * @param id The database ID.
+	 * @return Instance of Report. Null if id does not exist.
+	 */
+	Report getReportById(int id);
 }

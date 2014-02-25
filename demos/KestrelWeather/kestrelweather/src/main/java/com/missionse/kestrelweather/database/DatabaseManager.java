@@ -3,6 +3,7 @@ package com.missionse.kestrelweather.database;
 import android.content.Context;
 
 import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
+import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
@@ -61,6 +62,11 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 	@Override
 	public NoteTable getNoteTable() {
 		return mLocalDatabaseHelper.getNoteTable();
+	}
+
+	@Override
+	public Report getReportById(int id) {
+		return getReportTable().queryForId(id);
 	}
 
 	@Override
