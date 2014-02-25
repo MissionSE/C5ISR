@@ -26,14 +26,13 @@ module.exports = function(db) {
 				}
 				fetchableReportIds = _.uniq(fetchableReportIds);
 			}
-			
+
 			res.writeHead(200, {'content-type': 'text/plain'});
-			res.end(JSON.stringify(
-				{
-					latestEvent: latestEventId,
-					toFetch: fetchableReportIds,
-					toRemove: removableReportIds
-				}));
+			res.end(JSON.stringify({
+				latestEvent: latestEventId,
+				toFetch: fetchableReportIds,
+				toRemove: removableReportIds
+			}));
 		});
 	}
 };

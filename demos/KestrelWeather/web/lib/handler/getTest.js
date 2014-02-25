@@ -50,14 +50,24 @@ module.exports = function(db) {
 				res.end(response.getBody());
 			});
 		} else if (req.params.type.toLowerCase() == 'multi') {
-			var postable = request.post('http://localhost:3000/upload', function(err, response, body) {
-				res.end(body);
-			});
+			db.Report.nextCount(function(err, count) {
+				if (count - 1 >= 0) {
+					var postable = request.post('http://localhost:3000/upload', function(err, response, body) {
+						res.end(body);
+					});
 
-			var form = postable.form();
-			form.append('id', 21);
-			form.append('upload', fs.createReadStream(webRoot + '/test/images/droplet.png'));
-			form.append('upload', fs.createReadStream(webRoot + '/test/audio/droplet.mp3'));
+					var form = postable.form();
+
+					form.append('id', count - 1);
+					form.append('upload', fs.createReadStream(webRoot + '/test/images/droplet.png'));
+					form.append('upload', fs.createReadStream(webRoot + '/test/audio/droplet.mp3'));
+				} else {
+					res.writeHead(404, {'content-type': 'text/plain'});
+					res.end(JSON.stringify({
+						status: 'nok'
+					}));
+				}
+			});
 		}
 	}
 };

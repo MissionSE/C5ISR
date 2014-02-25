@@ -11,7 +11,9 @@ module.exports = function(db) {
 				res.end(JSON.stringify(events));
 			} else {
 				res.writeHead(404, {'content-type': 'text/plain'});
-				res.end();
+				res.end(JSON.stringify({
+					status: 'nok'
+				}));
 			}
 		});
 	}
