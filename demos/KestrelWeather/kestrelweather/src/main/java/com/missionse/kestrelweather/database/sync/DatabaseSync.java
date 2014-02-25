@@ -17,7 +17,7 @@ import com.missionse.kestrelweather.database.util.IonUtil;
 import java.util.List;
 
 /**
- *
+ * Runnable to push dirty reports to the database.
  */
 public class DatabaseSync implements Runnable {
 	private static final String TAG = DatabaseSync.class.getSimpleName();
@@ -43,7 +43,7 @@ public class DatabaseSync implements Runnable {
 
 	private void uploadReport(final Report report) {
 		final GsonBuilder gsonBuilder = new GsonBuilder();
-		final Gson gson = gsonBuilder.registerTypeAdapter(Report.class, new ReportSerialization())
+		final Gson gson = gsonBuilder.registerTypeAdapter(Report.class, new ReportSerialization(mLocalHelper))
 				.setPrettyPrinting()
 				.create();
 		JsonParser jsonParser = new JsonParser();

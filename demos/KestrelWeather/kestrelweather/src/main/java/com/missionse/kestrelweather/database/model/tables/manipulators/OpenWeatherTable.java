@@ -6,10 +6,10 @@ import com.missionse.kestrelweather.database.model.tables.OpenWeather;
 import java.sql.SQLException;
 
 /**
- * Created by rvieras on 2/25/14.
+ * The DAO associated with OpenWeather.
  */
 public class OpenWeatherTable extends BaseTable<OpenWeather> {
-	public static final String TAG = OpenWeatherTable.class.getSimpleName();
+	//public static final String TAG = OpenWeatherTable.class.getSimpleName();
 
 	/**
 	 * Constructor.

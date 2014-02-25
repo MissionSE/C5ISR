@@ -16,6 +16,9 @@ public class OpenWeather extends Entity {
 	@DatabaseField(columnName = "description")
 	private String mDescription;
 
+	/**
+	 * Default constructor.  Needed for API.
+	 */
 	public OpenWeather() {
 		mConditionCode = 0;
 		mDescription = "";

@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * The DAO class associated with Notes.
  */
 public class NoteTable extends BaseTable<Note> {
-	private static final String TAG = NoteTable.class.getSimpleName();
+	//private static final String TAG = NoteTable.class.getSimpleName();
 
 	/**
 	 * Constructor.

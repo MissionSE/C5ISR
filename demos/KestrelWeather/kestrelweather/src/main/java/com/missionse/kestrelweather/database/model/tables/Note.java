@@ -1,8 +1,6 @@
 package com.missionse.kestrelweather.database.model.tables;
 
 import com.google.gson.JsonObject;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.missionse.kestrelweather.database.model.Entity;
@@ -14,20 +12,18 @@ import java.util.Map;
  */
 @DatabaseTable(daoClass = com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable.class)
 public class Note extends Entity {
-	@Expose(serialize = true, deserialize = true)
-	@SerializedName("title")
 	@DatabaseField(columnName = "title")
 	private String mTitle;
 
-	@Expose(serialize = true, deserialize = true)
-	@SerializedName("content")
 	@DatabaseField(columnName = "content")
 	private String mContent;
 
-	@Expose(serialize = false, deserialize = false)
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "report_id")
 	private Report mReport;
 
+	/**
+	 * Constructor. Needed for API.
+	 */
 	public Note() {
 		mTitle = "";
 		mContent = "";
@@ -63,6 +59,22 @@ public class Note extends Entity {
 	 */
 	public void setContent(String content) {
 		mContent = content;
+	}
+
+	/**
+	 * Getter.
+	 * @return Instance of Report associated with this Note.
+	 */
+	public Report getReport() {
+		return mReport;
+	}
+
+	/**
+	 * Setter.
+	 * @param report - The report to associate with.
+	 */
+	public void setReport(Report report) {
+		mReport = report;
 	}
 
 	@Override

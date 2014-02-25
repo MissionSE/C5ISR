@@ -34,7 +34,7 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	 * Return a list of supported classes for this database.
 	 * @return List<Class>s supported by this database.
 	 */
-	abstract public List<Class> getSupportedClasses();
+	public abstract List<Class> getSupportedClasses();
 
 	/**
 	 * Gets a list of a certain type of object from the local database.

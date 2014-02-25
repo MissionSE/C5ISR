@@ -56,7 +56,7 @@ public interface DatabaseAccessor {
 	NoteTable getNoteTable();
 
 	/**
-	 * Retieve a Report object based on the ID given.
+	 * Retrieve a Report object based on the ID given.
 	 * @param id The database ID.
 	 * @return Instance of Report. Null if id does not exist.
 	 */

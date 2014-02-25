@@ -5,32 +5,28 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
 import com.missionse.kestrelweather.database.model.tables.Note;
 import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.database.remote.RemoteDatabaseHelper;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Created by rvieras on 2/24/14.
+ * Serialization object that helps convert this object from/too JsonObject.
  */
 public class ReportSerialization implements JsonSerializer<Report>, JsonDeserializer<Report> {
 
-	private RemoteDatabaseHelper mRemoteDatabaseHelper = null;
 	private LocalDatabaseHelper mLocalDatabaseHelper = null;
 
-	public ReportSerialization() {
-
-	}
-
-	public ReportSerialization(LocalDatabaseHelper localHelper, RemoteDatabaseHelper remoteHelper) {
+	/**
+	 * Constructor.
+	 * @param localHelper Instance of LocalDatabaseHelper.
+	 */
+	public ReportSerialization(LocalDatabaseHelper localHelper) {
 		mLocalDatabaseHelper = localHelper;
-		mRemoteDatabaseHelper = remoteHelper;
 	}
 
 	@Override
@@ -55,7 +51,7 @@ public class ReportSerialization implements JsonSerializer<Report>, JsonDeserial
 		if (src.getNotes() != null) {
 			for (Note note : src.getNotes()) {
 				final JsonObject jsonNote = new JsonObject();
-				if (jsonNote != null) {
+				if (note != null) {
 					addEntryToJson(jsonNote, note.toMap());
 				}
 				jsonNotes.add(jsonNote);
@@ -67,9 +63,8 @@ public class ReportSerialization implements JsonSerializer<Report>, JsonDeserial
 	}
 
 	@Override
-	public Report deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-		Report report = null;
-
+	public Report deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+		Report report = mLocalDatabaseHelper.getReportTable().newReport();
 		if (json != null) {
 			report.populate(json.getAsJsonObject());
 		}

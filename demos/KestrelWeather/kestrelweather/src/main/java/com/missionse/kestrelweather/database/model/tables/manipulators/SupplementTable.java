@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * The DAO associated with Supplement table.
  */
 public class SupplementTable extends BaseTable<Supplement> {
-	private static final String TAG = SupplementTable.class.getSimpleName();
+	//private static final String TAG = SupplementTable.class.getSimpleName();
 
 	/**
 	 * Constructor.

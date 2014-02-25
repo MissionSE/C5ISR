@@ -27,26 +27,50 @@ public class Supplement extends Entity {
 		mType = SupplementType.UNKNOWN;
 	}
 
+	/**
+	 * Getter.
+	 * @return The string URI associated with this supplement.
+	 */
 	public String getUri() {
 		return mUri;
 	}
 
+	/**
+	 * Setter.
+	 * @param uri The uri to associate this supplement with.
+	 */
 	public void setUri(String uri) {
 		mUri = uri;
 	}
 
+	/**
+	 * Getter.
+	 * @return The SupplementType.
+	 */
 	public SupplementType getType() {
 		return mType;
 	}
 
+	/**
+	 * Setter.
+	 * @param type The SupplementType of this object.
+	 */
 	public void setType(SupplementType type) {
 		mType = type;
 	}
 
+	/**
+	 * Getter.
+	 * @return Instance of Report associated with this report.
+	 */
 	public Report getReport() {
 		return mReport;
 	}
 
+	/**
+	 * Setter.
+	 * @param report The Report to associate with.
+	 */
 	public void setReport(Report report) {
 		mReport = report;
 	}

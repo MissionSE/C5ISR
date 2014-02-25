@@ -1,7 +1,7 @@
 package com.missionse.kestrelweather.database;
 
 /**
- * Created by rvieras on 2/25/14.
+ * Life cycle needed byt the database.
  */
 public interface DatabaseLifeCycle {
 	/**

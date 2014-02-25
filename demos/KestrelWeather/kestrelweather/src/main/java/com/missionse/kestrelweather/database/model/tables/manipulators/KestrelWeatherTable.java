@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * The DAO associated with weather data table.
  */
 public class KestrelWeatherTable extends BaseTable<KestrelWeather> {
-	private static final String TAG = KestrelWeatherTable.class.getSimpleName();
+	//private static final String TAG = KestrelWeatherTable.class.getSimpleName();
 
 	/**
 	 * Constructor.

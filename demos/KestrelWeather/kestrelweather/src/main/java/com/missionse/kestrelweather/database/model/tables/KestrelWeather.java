@@ -55,74 +55,146 @@ public class KestrelWeather extends Entity {
 		mDewPoint = 0.0f;
 	}
 
+	/**
+	 * Getter.
+	 * @return The dew point.
+	 */
 	public float getDewPoint() {
 		return mDewPoint;
 	}
 
+	/**
+	 * Setter.
+	 * @param dewPoint The dewPoint.
+	 */
 	public void setDewPoint(float dewPoint) {
 		mDewPoint = dewPoint;
 	}
 
+	/**
+	 * Getter.
+	 * @return The heat index.
+	 */
 	public float getHeatIndex() {
 		return mHeatIndex;
 	}
 
+	/**
+	 * Setter.
+	 * @param heatIndex The heat index.
+	 */
 	public void setHeatIndex(float heatIndex) {
 		mHeatIndex = heatIndex;
 	}
 
+	/**
+	 * Getter.
+	 * @return The humidity.
+	 */
 	public int getHumidity() {
 		return mHumidity;
 	}
 
+	/**
+	 * Setter.
+	 * @param humidity The humidity.
+	 */
 	public void setHumidity(int humidity) {
-		mHumidity = mHumidity;
+		mHumidity = humidity;
 	}
 
+	/**
+	 * Getter.
+	 * @return The pressure.
+	 */
 	public float getPressure() {
 		return mPressure;
 	}
 
+	/**
+	 * Setter.
+	 * @param pressure The pressure.
+	 */
 	public void setPressure(float pressure) {
 		mPressure = pressure;
 	}
 
+	/**
+	 * Getter.
+	 * @return The pressure trend.
+	 */
 	public int getPressureTrend() {
 		return mPressureTrend;
 	}
 
+	/**
+	 * Setter.
+	 * @param pressureTrend The pressure trend.
+	 */
 	public void setPressureTrend(int pressureTrend) {
 		mPressureTrend = pressureTrend;
 	}
 
+	/**
+	 * Getter.
+	 * @return The temperature. In degrees celsius.
+	 */
 	public float getTemperature() {
 		return mTemperature;
 	}
 
+	/**
+	 * Setter.
+	 * @param temperature The temperature in degrees celsius.
+	 */
 	public void setTemperature(float temperature) {
 		mTemperature = temperature;
 	}
 
+	/**
+	 * Getter.
+	 * @return The wind chill.
+	 */
 	public float getWindChill() {
 		return mWindChill;
 	}
 
+	/**
+	 * Setter.
+	 * @param windChill The wind chill.
+	 */
 	public void setWindChill(float windChill) {
 		mWindChill = windChill;
 	}
 
+	/**
+	 * Getter.
+	 * @return The wind direction.
+	 */
 	public int getWindDirection() {
 		return mWindDirection;
 	}
 
+	/**
+	 * Setter.
+	 * @param windDirection The wind direction.
+	 */
 	public void setWindDirection(int windDirection) {
 		mWindDirection = windDirection;
 	}
 
+	/**
+	 * Getter.
+	 * @return The wind speed.
+	 */
 	public float getWindSpeed() {
 		return mWindSpeed;
 	}
 
+	/**
+	 * Setter.
+	 * @param windSpeed The wind speed.
+	 */
 	public void setWindSpeed(float windSpeed) {
 		mWindSpeed = windSpeed;
 	}

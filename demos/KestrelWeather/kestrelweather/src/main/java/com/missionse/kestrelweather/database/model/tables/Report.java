@@ -91,7 +91,7 @@ public class Report extends Entity {
 	}
 
 	/**
-	 * Setter
+	 * Setter.
 	 * @param longitude position of the device.
 	 */
 	public void setLongitude(double longitude) {

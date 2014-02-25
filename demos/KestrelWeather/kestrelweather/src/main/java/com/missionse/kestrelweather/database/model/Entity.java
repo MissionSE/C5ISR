@@ -121,7 +121,7 @@ public class Entity {
 
 	/**
 	 * Creates a map representation of the fields in the entity.
-	 * @return A map containting the fields in the entity.
+	 * @return A map containing the fields in the entity.
 	 */
 	public Map<String, String> toMap() {
 		Map<String, String> map = new HashMap<String, String>();
@@ -131,6 +131,10 @@ public class Entity {
 		return map;
 	}
 
+	/**
+	 * Populates this object based on the JsonObject param.
+	 * @param json - JsonObject param.
+	 */
 	public void populate(JsonObject json) {
 		int id = (json.get("_id") == null ? -1 : json.get("_id").getAsInt());
 		long update = (json.get("updatedat") == null ? 0 : json.get("updatedat").getAsLong());
