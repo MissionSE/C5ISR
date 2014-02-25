@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
-import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Note;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
@@ -221,7 +220,7 @@ public class NoteDialogFragment extends DialogFragment {
 				if (content != null) {
 					mNote.setContent(content.trim());
 				}
-				NoteTable noteTable = ((DatabaseAccessor) getActivity()).getNoteTable();
+				NoteTable noteTable = getNoteTable();
 				if (mNoteId == INVALID_NOTE_ID) {
 					noteTable.create(mNote);
 				} else {
@@ -242,11 +241,11 @@ public class NoteDialogFragment extends DialogFragment {
 
 
 	private NoteTable getNoteTable() {
-		return getRealActivity().getLocalDatabaseHelper().getNoteTable();
+		return getRealActivity().getDatabaseAccessor().getLocalDatabaseHelper().getNoteTable();
 	}
 
 	private ReportTable getReportTable() {
-		return getRealActivity().getLocalDatabaseHelper().getReportTable();
+		return getRealActivity().getDatabaseAccessor().getLocalDatabaseHelper().getReportTable();
 	}
 
 	private KestrelWeatherActivity getRealActivity() {

@@ -27,16 +27,16 @@ public class Report extends Entity {
 	@DatabaseField(columnName = "longitude")
 	private double mLongitude;
 
-	@DatabaseField(foreign = true, canBeNull = true)
+	@DatabaseField(foreign = true, canBeNull = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	private KestrelWeather mKestrelWeather;
 
-	@DatabaseField(foreign = true, canBeNull = true)
+	@DatabaseField(foreign = true, canBeNull = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	private OpenWeather mOpenWeather;
 
-	@ForeignCollectionField()
+	@ForeignCollectionField(eager = true)
 	private ForeignCollection<Supplement> mSupplements;
 
-	@ForeignCollectionField
+	@ForeignCollectionField(eager = true)
 	private ForeignCollection<Note> mNotes;
 
 	/**

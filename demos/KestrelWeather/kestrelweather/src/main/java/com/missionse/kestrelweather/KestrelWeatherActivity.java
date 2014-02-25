@@ -7,13 +7,6 @@ import android.view.MenuItem;
 
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.DatabaseManager;
-import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
-import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
-import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
-import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
-import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
-import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
-import com.missionse.kestrelweather.database.remote.RemoteDatabaseHelper;
 import com.missionse.kestrelweather.drawer.KestrelWeatherDrawerFactory;
 import com.missionse.kestrelweather.kestrel.KestrelConnectorFragment;
 import com.missionse.kestrelweather.kestrel.KestrelSimulationSettingsFragment;
@@ -28,7 +21,7 @@ import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigura
 /**
  * Main activity for the Kestrel Weather application.
  */
-public class KestrelWeatherActivity extends DrawerActivity implements DatabaseAccessor {
+public class KestrelWeatherActivity extends DrawerActivity {
 
 	private static final String TAG = KestrelWeatherActivity.class.getSimpleName();
 	private KestrelWeatherDrawerFactory mDrawerFactory;
@@ -218,38 +211,11 @@ public class KestrelWeatherActivity extends DrawerActivity implements DatabaseAc
 		}
 	}
 
-	@Override
-	public LocalDatabaseHelper getLocalDatabaseHelper() {
-		return mDatabaseManager.getLocalDatabaseHelper();
-	}
-
-	@Override
-	public RemoteDatabaseHelper getRemoteDatabaseHelper() {
-		return mDatabaseManager.getRemoteDatabaseHelper();
-	}
-
-	@Override
-	public ReportTable getReportTable() {
-		return mDatabaseManager.getReportTable();
-	}
-
-	@Override
-	public SupplementTable getSupplementTable() {
-		return mDatabaseManager.getSupplementTable();
-	}
-
-	@Override
-	public KestrelWeatherTable getKestrelWeatherTable() {
-		return mDatabaseManager.getKestrelWeatherTable();
-	}
-
-	@Override
-	public OpenWeatherTable getOpenWeatherTable() {
-		return mDatabaseManager.getOpenWeatherTable();
-	}
-
-	@Override
-	public NoteTable getNoteTable() {
-		return mDatabaseManager.getNoteTable();
+	/**
+	 * Getter.
+	 * @return Instance of DatabaseAccessor.
+	 */
+	public DatabaseAccessor getDatabaseAccessor() {
+		return mDatabaseManager;
 	}
 }

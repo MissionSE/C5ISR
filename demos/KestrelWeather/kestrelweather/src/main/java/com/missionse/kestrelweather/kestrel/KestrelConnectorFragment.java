@@ -21,12 +21,13 @@ import com.missionse.bluetooth.BluetoothConnector;
 import com.missionse.bluetooth.BluetoothIntentListener;
 import com.missionse.bluetooth.network.BluetoothNetworkService;
 import com.missionse.bluetooth.network.ServiceIdentifier;
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.communication.BluetoothDeviceListFragment;
 import com.missionse.kestrelweather.communication.KestrelMessage;
-import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
 import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.reports.ReportDetailFragment;
 
@@ -214,7 +215,8 @@ public class KestrelConnectorFragment extends Fragment {
 	}
 
 	private int createNewReport() {
-		ReportTable table = ((DatabaseAccessor) getActivity()).getReportTable();
+		ReportTable table = ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor().getReportTable();
+		KestrelWeatherTable weatherTable = ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor().getKestrelWeatherTable();
 		Report report = table.newReport();
 		KestrelWeather weatherData = new KestrelWeather();
 		weatherData.setTemperature(mKestrelMessage.getTemperature());
@@ -227,6 +229,7 @@ public class KestrelConnectorFragment extends Fragment {
 		weatherData.setWindChill(mKestrelMessage.getWindChill());
 		weatherData.setDewPoint(mKestrelMessage.getDewPoint());
 		report.setKestrelWeather(weatherData);
+		weatherTable.create(weatherData);
 		report.setUserName(UUID.randomUUID().toString());
 		report.setLatitude(DEFAULT_LAT);
 		report.setLongitude(DEFAULT_LNG);
