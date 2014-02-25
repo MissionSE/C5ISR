@@ -13,12 +13,20 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.ClusterRenderer;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
-public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
-        implements GoogleMap.InfoWindowAdapter {
+public abstract class DataMarkersAdapter<TData, TMarkerData extends ClusterItem, TMarkerKey>
+        implements GoogleMap.InfoWindowAdapter,
+        ClusterManager.OnClusterClickListener<TMarkerData>,
+        ClusterManager.OnClusterInfoWindowClickListener<TMarkerData>,
+        ClusterManager.OnClusterItemClickListener<TMarkerData>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<TMarkerData> {
     private static final String TAG = DataMarkersAdapter.class.getSimpleName();
     private Context mContext;
     private TData mData;
@@ -29,11 +37,22 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
     private SparseArray<BitmapDescriptor> mMarkerIcons = new SparseArray<BitmapDescriptor>();
     private HashMap<TMarkerKey, Marker> mMarkers = new HashMap<TMarkerKey, Marker>();
     private HashMap<Marker, TMarkerData> mMarkersData = new HashMap<Marker, TMarkerData>();
+    private ClusterManager<TMarkerData> mClusterManager;
 
     protected DataMarkersAdapter(Context context, GoogleMap map, int infoLayout) {
         this.mContext = context;
         this.mMap = map;
         this.mInfoLayout = infoLayout;
+
+        mClusterManager = new ClusterManager<TMarkerData>(mContext, mMap);
+        mClusterManager.setRenderer(getRenderer());
+        mMap.setOnCameraChangeListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnInfoWindowClickListener(mClusterManager);
+        mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterInfoWindowClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
     }
 
     private View getInfoView(Marker marker) {
@@ -41,16 +60,14 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
         return this.mInfoView;
     }
 
-    public Marker addMarker(TMarkerData markerData) {
-        Marker marker = getMarker(getMarkerKey(markerData));
-        if (marker == null) {
-            marker = this.mMap.addMarker(getMarkerOptions(markerData));
-        }
-        setMarkerData(marker, markerData);
-        return marker;
+    public void addMarker(TMarkerData markerData) {
+        mClusterManager.addItem(markerData);
+        mClusterManager.cluster();
     }
 
-    public abstract BitmapDescriptor createIcon(int resourceId);
+    public abstract BitmapDescriptor createClusterIcon(int index, Cluster<TMarkerData> cluster);
+
+    public abstract BitmapDescriptor createIcon(int index);
 
     protected Context getContext() {
         return this.mContext;
@@ -63,6 +80,8 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
 
         return this.mData;
     }
+
+    public abstract int getClusterIconType(Cluster<TMarkerData> cluster);
 
     public abstract int getIconType(TMarkerData markerData);
 
@@ -92,6 +111,16 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
         return view;
     }
 
+    protected BitmapDescriptor getClusterIcon(Cluster<TMarkerData> cluster) {
+        int iconType = getClusterIconType(cluster);
+
+        return createClusterIcon(iconType, cluster);
+    }
+
+    public ClusterManager<TMarkerData> getClusterManager() {
+        return mClusterManager;
+    }
+
     public GoogleMap getMap() {
         return this.mMap;
     }
@@ -114,17 +143,24 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
 
     public abstract double getMarkerLongitude(TMarkerData markerData);
 
-    protected MarkerOptions getMarkerOptions(TMarkerData markerData) {
+    protected BitmapDescriptor getMarkerIcon(TMarkerData markerData) {
         int iconType = getIconType(markerData);
         BitmapDescriptor bitmapDescriptor = this.mMarkerIcons.get(iconType);
         if (bitmapDescriptor == null) {
             bitmapDescriptor = createIcon(iconType);
             this.mMarkerIcons.put(iconType, bitmapDescriptor);
         }
+        return bitmapDescriptor;
+    }
+
+    protected MarkerOptions getMarkerOptions(TMarkerData markerData) {
+        BitmapDescriptor bitmapDescriptor = getMarkerIcon(markerData);
         return new MarkerOptions()
                 .position(new LatLng(getMarkerLatitude(markerData), getMarkerLongitude(markerData)))
                 .icon(bitmapDescriptor);
     }
+
+    public abstract ClusterRenderer<TMarkerData> getRenderer();
 
     public void setData(TData data) {
         this.mData = data;
@@ -152,4 +188,25 @@ public abstract class DataMarkersAdapter<TData, TMarkerData, TMarkerKey>
             marker.showInfoWindow();
         }
     }
+
+    @Override
+    public boolean onClusterClick(Cluster<TMarkerData> cluster) {
+        return false;
+    }
+
+    @Override
+    public void onClusterInfoWindowClick(Cluster<TMarkerData> cluster) {
+
+    }
+
+    @Override
+    public boolean onClusterItemClick(TMarkerData markerData) {
+        return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(TMarkerData markerData) {
+
+    }
+
 }

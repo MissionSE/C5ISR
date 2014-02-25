@@ -20,45 +20,16 @@ import com.google.gson.reflect.TypeToken;
 import com.google.maps.android.MarkerManager;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.missionse.mapsexample.model.WeatherObservation;
 import com.missionse.mapsexample.openweathermap.OpenWeatherMapData;
 
 
 public class CustomMarkerInfoWindowActivity extends Activity implements
-        GoogleMap.OnMapLongClickListener,
-        GoogleMap.OnCameraChangeListener,
-        GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnMapClickListener,
-        GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnMapLongClickListener {
 
     private static final String TAG = CustomMarkerInfoWindowActivity.class.getSimpleName();
-    private static final float CALLOUT_ZOOM = 10.0F;
     private GoogleMap mMap;
-    private Marker mCurrentMarker;
     private WeatherMarkersAdapter mMarkersAdapter;
-    private Marker mMarker;
-    private MarkerManager mMarkerManager;
-
-    @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-
-    }
-
-    @Override
-    public void onInfoWindowClick(Marker marker) {
-
-    }
-
-    @Override
-    public void onMapClick(LatLng latLng) {
-        hideObservationCallout();
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        Log.d(TAG, "onMarkerClick");
-        showObservationCallout(marker);
-        return true;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,30 +75,9 @@ public class CustomMarkerInfoWindowActivity extends Activity implements
     }
 
     private void setUpMap() {
-        final double ten = 10;
-        final double five = 5;
-        final double radius = 400000;
-
-        this.mMarkersAdapter = new WeatherMarkersAdapter(this, this.mMap);
-
-        mMap.setOnCameraChangeListener(this);
-        mMap.setOnMarkerClickListener(this);
-        mMap.setOnMapClickListener(this);
-        mMap.setInfoWindowAdapter(this.mMarkersAdapter);
-        mMap.setOnInfoWindowClickListener(this);
+        mMarkersAdapter = new WeatherMarkersAdapter(this, mMap);
+        mMap.setInfoWindowAdapter(mMarkersAdapter);
         mMap.setOnMapLongClickListener(this);
-    }
-
-    private void hideObservationCallout() {
-        if (this.mCurrentMarker != null) {
-            this.mCurrentMarker.hideInfoWindow();
-            this.mCurrentMarker = null;
-        }
-    }
-
-    private void showObservationCallout(Marker marker) {
-        this.mCurrentMarker = marker;
-        marker.showInfoWindow();
     }
 
     @Override
@@ -143,7 +93,7 @@ public class CustomMarkerInfoWindowActivity extends Activity implements
                 } else {
                     if (openWeatherMapData != null) {
                         Log.d(TAG, openWeatherMapData.toString());
-                        mMarkersAdapter.addMarker(openWeatherMapData);
+                        mMarkersAdapter.addMarker(new WeatherObservation(openWeatherMapData));
                     } else {
                         Log.e(TAG, "No data obtained from openweathermap.org");
                     }

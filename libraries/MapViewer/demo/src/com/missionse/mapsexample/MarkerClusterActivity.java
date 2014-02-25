@@ -151,7 +151,7 @@ public class MarkerClusterActivity extends Activity implements
     private void startDemo() {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.974500, -74.976600), 5));
 
-        mClusterManager = new ClusterManager<MyItem>(this, mMap);
+        mClusterManager = new ClusterManager<MyItem>(this, getMap());
         mClusterManager.setRenderer(new MyItemRenderer());
         getMap().setOnCameraChangeListener(mClusterManager);
         getMap().setOnMarkerClickListener(mClusterManager);

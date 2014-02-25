@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.missionse.mapsexample.openweathermap.OpenWeatherMapData;
+import com.missionse.mapsexample.model.WeatherObservation;
 import com.missionse.mapsexample.openweathermap.Weather;
 
 import org.joda.time.DateTime;
@@ -20,7 +20,7 @@ public class ObservationCallout extends Callout {
     private static final int SECONDS_IN_MINUTE = 60;
     private static final int MINUTES_IN_HOUR = 60;
     private static final int HOURS_IN_DAY = 24;
-    private OpenWeatherMapData mData;
+    private WeatherObservation mObservation;
 
     public ObservationCallout(Context context) {
         super(context);
@@ -34,8 +34,8 @@ public class ObservationCallout extends Callout {
         super(context, attributeSet, defStyle);
     }
 
-    public void setData(OpenWeatherMapData data) {
-        this.mData = data;
+    public void setData(WeatherObservation observation) {
+        this.mObservation = observation;
 
         setTemperature();
         setHumidity();
@@ -52,7 +52,7 @@ public class ObservationCallout extends Callout {
         TextView unit = (TextView) view.findViewById(R.id.observation_data_top_left_unit);
 
         //TODO convert value with respect to unit
-        value.setText(Integer.toString((int) (this.mData.getMain().getTemp() - 273.15)));
+        value.setText(Integer.toString((int) (this.mObservation.getData().getMain().getTemp() - 273.15)));
         unit.setText(getResources().getStringArray(R.array.temperature_units)[0]);
 
         view.setVisibility(VISIBLE);
@@ -63,7 +63,7 @@ public class ObservationCallout extends Callout {
         TextView value = (TextView) view.findViewById(R.id.observation_data_top_right_value);
         TextView unit = (TextView) view.findViewById(R.id.observation_data_top_right_unit);
 
-        value.setText(Integer.toString(this.mData.getMain().getHumidity()));
+        value.setText(Integer.toString(this.mObservation.getData().getMain().getHumidity()));
         unit.setText("%");
 
         view.setVisibility(VISIBLE);
@@ -74,7 +74,7 @@ public class ObservationCallout extends Callout {
         TextView value = (TextView) view.findViewById(R.id.observation_data_middle_right_value);
         TextView unit = (TextView) view.findViewById(R.id.observation_data_middle_right_unit);
 
-        value.setText(Integer.toString((int) this.mData.getMain().getPressure()));
+        value.setText(Integer.toString((int) this.mObservation.getData().getMain().getPressure()));
         unit.setText("hPa");
 
         view.setVisibility(VISIBLE);
@@ -86,7 +86,7 @@ public class ObservationCallout extends Callout {
         TextView unit = (TextView) view.findViewById(R.id.observation_data_middle_left_unit);
 
         //TODO convert value with respect to unit
-        value.setText(Double.toString(mData.getWind().getSpeed()));
+        value.setText(Double.toString(mObservation.getData().getWind().getSpeed()));
         unit.setText("mps");
 
         view.setVisibility(VISIBLE);
@@ -106,8 +106,8 @@ public class ObservationCallout extends Callout {
         TextView value = (TextView) view.findViewById(R.id.observation_data_top_center_value);
         TextView unit = (TextView) view.findViewById(R.id.observation_data_top_center_unit);
 
-        long dataDt = mData.getDt() * 1000L;
-        Log.d(TAG, "mData.getDt()=" + mData.getDt());
+        long dataDt = mObservation.getData().getDt() * 1000L;
+        Log.d(TAG, "mObservation.getDt()=" + mObservation.getData().getDt());
         DateTime dataTime = new DateTime(dataDt);
         DateTime now = DateTime.now();
         Log.d(TAG, "dataTime=" + dataTime.toString());
@@ -139,7 +139,7 @@ public class ObservationCallout extends Callout {
 
     private void setWeatherIcon() {
         View view = findViewById(R.id.observation_button);
-        Weather weather = mData.getWeathers().get(0);
+        Weather weather = mObservation.getData().getWeathers().get(0);
         if (weather != null) {
             view.getBackground().setLevel(weather.getId());
         }
