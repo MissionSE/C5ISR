@@ -1,22 +1,38 @@
 {
 	"name": "kestrel-weather-server",
-	"version": "0.0.1",
-	"description":"Kestrel Weather server application.",
+	"version": "0.1.0",
+	"author": "James Sant'Angelo <james.santangelo@missionse.com>",
+	"description":"kestrel weather server application",
 	"private": true,
 	"scripts": {
-		"start": "node server.js"
+		"start": "node server.js",
+		"test": "node test/testrunner.js"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MissionSE/C5ISR.git"
+	},
+	"keywords": [
+		"kestrel",
+		"weather",
+		"mse"
+	],
 	"dependencies": {
 		"express": "3.4.8",
-		"mongodb": "*",
-		"mongoose": "*",
-		"mongoose-auto-increment":"*",
-		"implementjs": "*",
-		"formidable":"*",
-		"randomstring":"*",
-		"request":"*",
-		"underscore":"*",
-		"debug":"*",
-		"requestify":"*"
+		"mongodb": "1.3.x",
+		"mongoose": "3.8.x",
+		"mongoose-auto-increment":"2.1.x",
+		"implementjs": "0.2.x",
+		"formidable":"1.0.x",
+		"underscore":"1.6.x",
+		// dev related dependencies
+		"debug":"0.7.x",
+		"requestify":"0.1.x",
+		"request":"2.34.x",
+		"randomstring":"1.0.x"
+	},
+	"license": "TBD",
+	"engines": {
+		"node": ">=0.10.26"
 	}
 }
