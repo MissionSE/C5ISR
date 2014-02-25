@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ClipData;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
+import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
 
 /**
  * A simple {@link android.app.Fragment} subclass.
@@ -40,7 +42,9 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 	private Activity mActivity;
 	private boolean mEditable = true;
 	private int mReportId = INVALID_REPORT_ID;
+	private Uri mPlayingUri;
 
+	private View mMediaControls;
 	private ImageButton mPlayButton;
 	private ImageButton mPauseButton;
 	private MediaPlayerWrapper mMediaWrapper;
@@ -103,14 +107,28 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 			mAudioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-					mMediaWrapper.setMediaSource(mActivity, mAudioAdapter.getItem(position));
+					mPlayingUri = mAudioAdapter.getItem(position);
+					mMediaControls.setVisibility(View.VISIBLE);
+					mMediaWrapper.setMediaSource(mActivity, mPlayingUri);
 					onMediaPlayButtonPressed();
 				}
 			});
 
 			if (mEditable) {
 				mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-				mAudioList.setMultiChoiceModeListener(new MediaMultiChoiceModeListener(mActivity, mAudioList, mAudioAdapter));
+				MediaMultiChoiceModeListener mediaMultiChoiceModeListener = new MediaMultiChoiceModeListener(
+						mActivity, mAudioList, mAudioAdapter);
+				mediaMultiChoiceModeListener.setUriRemovedListener(new UriRemovedListener() {
+					@Override
+					public void uriRemoved(final Uri uri) {
+						if (mPlayingUri.equals(uri)) {
+							mPlayingUri = null;
+							mMediaControls.setVisibility(View.GONE);
+							onMediaPauseButtonPressed();
+						}
+					}
+				});
+				mAudioList.setMultiChoiceModeListener(mediaMultiChoiceModeListener);
 			}
 
 			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_audio_empty);
@@ -188,6 +206,8 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 		mMediaWrapper.setCurrentTextView((TextView) root.findViewById(R.id.audio_control_current_time));
 		mPlayButton = (ImageButton) root.findViewById(R.id.audio_control_play_button);
 		mPauseButton = (ImageButton) root.findViewById(R.id.audio_control_pause_button);
+		mMediaControls = root.findViewById(R.id.fragment_report_audio_controls);
+
 		ImageButton fastForwardButton = (ImageButton) root.findViewById(R.id.audio_control_forward_button);
 		ImageButton rewindButton = (ImageButton) root.findViewById(R.id.audio_control_reverse_button);
 

@@ -33,7 +33,7 @@ public class NoteOverviewFragment extends Fragment {
 
 	/**
 	 * Constructor.
- 	 */
+	 */
 	public NoteOverviewFragment() {
 	}
 

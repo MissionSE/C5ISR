@@ -22,6 +22,7 @@ public class MediaMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 	private ListView mListView;
 	private UriAdapter mAdapter;
 
+	private UriRemovedListener mUriRemovedListener;
 	private final String mSelectItemsText;
 	private final String mItemsSelectedText;
 
@@ -37,6 +38,14 @@ public class MediaMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 
 		mSelectItemsText = context.getString(R.string.select_items);
 		mItemsSelectedText = context.getString(R.string.items_selected);
+	}
+
+	/**
+	 * Sets the UriRemovedLister to be notified when a uri is removed.
+	 * @param uriRemovedListener The listener to be notified.
+	 */
+	public void setUriRemovedListener(final UriRemovedListener uriRemovedListener) {
+		mUriRemovedListener = uriRemovedListener;
 	}
 
 	@Override
@@ -79,6 +88,9 @@ public class MediaMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 
 				for (Uri uri : selectedUris) {
 					mAdapter.remove(uri);
+					if (mUriRemovedListener != null) {
+						mUriRemovedListener.uriRemoved(uri);
+					}
 				}
 
 				actionMode.finish();
