@@ -15,4 +15,8 @@ EventSchema.plugin(autoIncrement.plugin, {
 	startAt: 1
 });
 
+EventSchema.statics.findAll = function(callback) {
+	this.find({}, callback);
+};
+
 module.exports = mongoose.model('Event', EventSchema);

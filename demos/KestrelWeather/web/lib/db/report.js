@@ -10,7 +10,7 @@ var ReportSchema = new Schema({
 	updatedat: { type: Date, default: Date.now },
 	createdat: { type: Date, default: Date.now },
 
-	kestrel: { 
+	kestrel: {
 		temperature: Number,
 		humidity: Number,
 		pressure: Number,
@@ -31,7 +31,7 @@ var ReportSchema = new Schema({
 		title: String,
 		content: String
 	}],
-	
+
 	images: [String],
 	audio: [String],
 	video: [String]
@@ -39,9 +39,12 @@ var ReportSchema = new Schema({
 	versionKey: false
 });
 
-ReportSchema.plugin(autoIncrement.plugin, 'Report');
+ReportSchema.plugin(autoIncrement.plugin, {
+	model: 'Report',
+	startAt: 1
+});
 
-ReportSchema.statics.getAll = function(callback) {
+ReportSchema.statics.findAll = function(callback) {
 	this.find({}, callback);
 };
 
