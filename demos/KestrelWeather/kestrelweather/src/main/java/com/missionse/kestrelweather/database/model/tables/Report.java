@@ -22,10 +22,10 @@ public class Report extends Entity {
 	private String mUserName;
 
 	@DatabaseField(columnName = "latitude")
-	private long mLatitude;
+	private double mLatitude;
 
 	@DatabaseField(columnName = "longitude")
-	private long mLongitude;
+	private double mLongitude;
 
 	@DatabaseField(foreign = true, canBeNull = true)
 	private KestrelWeather mKestrelWeather;
@@ -44,8 +44,8 @@ public class Report extends Entity {
 	 */
 	public Report() {
 		mUserName = "";
-		mLatitude = 0L;
-		mLongitude = 0L;
+		mLatitude = 0;
+		mLongitude = 0;
 		mKestrelWeather = null;
 		mNotes = null;
 	}
@@ -73,7 +73,7 @@ public class Report extends Entity {
 	 *
 	 * @return Latitude of the device.
 	 */
-	public long getLatitude() {
+	public double getLatitude() {
 		return mLatitude;
 	}
 
@@ -82,7 +82,7 @@ public class Report extends Entity {
 	 *
 	 * @param latitude position of the device.
 	 */
-	public void setLatitude(long latitude) {
+	public void setLatitude(double latitude) {
 		mLatitude = latitude;
 	}
 
@@ -91,7 +91,7 @@ public class Report extends Entity {
 	 *
 	 * @return Longitude of the device.
 	 */
-	public long getLongitude() {
+	public double getLongitude() {
 		return mLongitude;
 	}
 
@@ -100,7 +100,7 @@ public class Report extends Entity {
 	 *
 	 * @param longitude position of the device.
 	 */
-	public void setLongitude(long longitude) {
+	public void setLongitude(double longitude) {
 		mLongitude = longitude;
 	}
 
@@ -214,8 +214,8 @@ public class Report extends Entity {
 	public Map<String, String> toMap() {
 		Map<String, String> map = super.toMap();
 		map.put("userid", mUserName);
-		map.put("latitude", Long.toString(mLatitude));
-		map.put("longitude", Long.toString(mLongitude));
+		map.put("latitude", Double.toString(mLatitude));
+		map.put("longitude", Double.toString(mLongitude));
 
 		return map;
 	}
@@ -224,8 +224,8 @@ public class Report extends Entity {
 	public void populate(JsonObject json) {
 		super.populate(json);
 		String uid = (json.get("userid") == null ? "" : json.get("userid").getAsString());
-		long lat = (json.get("latitude") == null ? 0L : json.get("latitude").getAsLong());
-		long lng = (json.get("longitude") == null ? 0L : json.get("longitude").getAsLong());
+		double lat = (json.get("latitude") == null ? 0 : json.get("latitude").getAsDouble());
+		double lng = (json.get("longitude") == null ? 0 : json.get("longitude").getAsDouble());
 
 		setUserName(uid);
 		setLatitude(lat);

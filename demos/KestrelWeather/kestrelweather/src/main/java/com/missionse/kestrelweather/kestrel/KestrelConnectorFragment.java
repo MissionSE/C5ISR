@@ -24,12 +24,20 @@ import com.missionse.bluetooth.network.ServiceIdentifier;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.communication.BluetoothDeviceListFragment;
 import com.missionse.kestrelweather.communication.KestrelMessage;
+import com.missionse.kestrelweather.database.DatabaseAccessor;
+import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
+import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.reports.ReportDetailFragment;
+
+import java.util.UUID;
 
 public class KestrelConnectorFragment extends Fragment {
 
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static final int REQUEST_DEVICE_SELECTION = 2;
+	private static final double DEFAULT_LAT = 39.974374;
+	private static final double DEFAULT_LNG = -74.976540;
 
 	private Button mConnectToDeviceButton;
 	private Button mRequestReadingsButton;
@@ -37,6 +45,7 @@ public class KestrelConnectorFragment extends Fragment {
 	private ArrayAdapter<String> mReadingsAdapter;
 
 	private BluetoothConnector mBluetoothConnector;
+	private KestrelMessage mKestrelMessage;
 
 	private String mConnectedDevice = "";
 
@@ -188,16 +197,40 @@ public class KestrelConnectorFragment extends Fragment {
 			public void onClick(final View view) {
 				Activity activity = getActivity();
 				if (activity != null) {
+					int id = 0;
+					if (mKestrelMessage != null) {
+						id = createNewReport();
+					}
 					activity.getFragmentManager().beginTransaction()
 							.setCustomAnimations(
 									R.animator.slide_from_right, R.animator.slide_to_left,
 									R.animator.slide_from_left, R.animator.slide_to_right)
-							.replace(R.id.content, ReportDetailFragment.newInstance(1), "report_addon") //TODO: get report id
+							.replace(R.id.content, ReportDetailFragment.newInstance(id), "report_addon") //TODO: get report id
 							.addToBackStack("report_addon")
 							.commit();
 				}
 			}
 		});
+	}
+
+	private int createNewReport() {
+		ReportTable table = ((DatabaseAccessor)getActivity()).getReportTable();
+		Report report = table.newReport();
+		KestrelWeather weatherData = new KestrelWeather();
+		weatherData.setTemperature(mKestrelMessage.getTemperature());
+		weatherData.setHumidity(mKestrelMessage.getHumidity());
+		weatherData.setPressure(mKestrelMessage.getPressure());
+		weatherData.setPressureTrend(mKestrelMessage.getPressureTrend());
+		weatherData.setHeatIndex(mKestrelMessage.getHeatIndex());
+		weatherData.setWindSpeed(mKestrelMessage.getWindSpeed());
+		weatherData.setWindDirection(mKestrelMessage.getWindDirection());
+		weatherData.setWindChill(mKestrelMessage.getWindChill());
+		weatherData.setDewPoint(mKestrelMessage.getDewPoint());
+		report.setKestrelWeather(weatherData);
+		report.setUserName(UUID.randomUUID().toString());
+		report.setLatitude(DEFAULT_LAT);
+		report.setLongitude(DEFAULT_LNG);
+		return table.create(report);
 	}
 
 	private final Handler mBluetoothServiceMessageHandler = new Handler() {
@@ -240,6 +273,7 @@ public class KestrelConnectorFragment extends Fragment {
 					KestrelMessage kestrelMessage = null;
 					try {
 						kestrelMessage = KestrelMessage.translateRawMessage(message);
+						mKestrelMessage = kestrelMessage;
 					} catch (KestrelMessage.InvalidKestrelMessageException ex) {
 						ex.printStackTrace();
 					}

@@ -3,6 +3,11 @@
 
 	<string name="app_name">KestrelWeather</string>
 
+	<!-- Remote Database -->
+	<string name="remote_database">http://192.168.86.197:3000</string>
+	<string name="upload_report_url">%1$s/upload/</string>
+	<string name="retrieve_latest_url">%1$s/event/since/</string>
+
 	<!-- Option Menu -->
 	<string name="action_settings">Settings</string>
 	<string name="action_simulate_kestrel">Simulation Mode</string>

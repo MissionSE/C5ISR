@@ -27,7 +27,7 @@ public class Entity {
 	@Expose(serialize = false, deserialize = false)
 	@SerializedName("dirty")
 	@DatabaseField(columnName = "dirty")
-	private boolean mDirty = false;
+	private boolean mDirty = true;
 
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("updatedAt")

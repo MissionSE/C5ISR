@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Note;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
@@ -220,12 +221,13 @@ public class NoteDialogFragment extends DialogFragment {
 				if (content != null) {
 					mNote.setContent(content.trim());
 				}
-
+				NoteTable noteTable = ((DatabaseAccessor)getActivity()).getNoteTable();
 				if (mNoteId == INVALID_NOTE_ID) {
-					//TODO: Create new note.
+					noteTable.create(mNote);
 				} else {
-					//TODO: Update existing note.
+					noteTable.update(mNote);
 				}
+				dismiss();
 			} else {
 				if (mActivity != null) {
 					Toast.makeText(mActivity, "Invalid input. Fields cannot be blank.", Toast.LENGTH_SHORT).show();
@@ -237,6 +239,8 @@ public class NoteDialogFragment extends DialogFragment {
 	private void onCancelButtonPressed() {
 		dismiss();
 	}
+
+
 
 	private NoteTable getNoteTable() {
 		return getRealActivity().getLocalDatabaseHelper().getNoteTable();
