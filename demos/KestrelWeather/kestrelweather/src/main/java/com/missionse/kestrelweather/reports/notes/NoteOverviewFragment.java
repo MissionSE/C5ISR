@@ -115,13 +115,14 @@ public class NoteOverviewFragment extends Fragment {
 	}
 
 	private void populateAdapter() {
-		ReportTable reportTable = ((DatabaseAccessor)getActivity()).getReportTable();
+		ReportTable reportTable = ((DatabaseAccessor) getActivity()).getReportTable();
 		Report report = reportTable.queryForId(mReportId);
 		if (report != null) {
 			if (mNoteAdapter.isEmpty()) {
 				mNoteAdapter.addAll(report.getNotes());
 			} else {
-				mNoteAdapter.clear();;
+				mNoteAdapter.clear();
+				;
 				mNoteAdapter.addAll(report.getNotes());
 			}
 		} else {
@@ -147,7 +148,7 @@ public class NoteOverviewFragment extends Fragment {
 		FragmentManager fragmentManager = getFragmentManager();
 		if (fragmentManager != null) {
 			DialogFragment dialogFragment = NoteDialogFragment.newInstance(noteId, mReportId);
-			dialogFragment.setTargetFragment(NoteOverviewFragment.this, REQUEST_LIST_RELOAD );
+			dialogFragment.setTargetFragment(NoteOverviewFragment.this, REQUEST_LIST_RELOAD);
 			dialogFragment.show(fragmentManager, "note_dialog");
 		}
 	}

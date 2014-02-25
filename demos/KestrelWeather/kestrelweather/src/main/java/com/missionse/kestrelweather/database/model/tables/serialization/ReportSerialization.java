@@ -52,7 +52,7 @@ public class ReportSerialization implements JsonSerializer<Report>, JsonDeserial
 		jsonObject.add("weather", jsonOpen);
 
 		final JsonArray jsonNotes = new JsonArray();
-		if (src.getNotes() != null ) {
+		if (src.getNotes() != null) {
 			for (Note note : src.getNotes()) {
 				final JsonObject jsonNote = new JsonObject();
 				if (jsonNote != null) {

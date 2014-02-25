@@ -29,7 +29,7 @@ public class PhotosListItem implements AuxiliaryDataListItem {
 
 	@Override
 	public int getIcon() {
-		return R.drawable.ic_action_picture;
+		return R.drawable.ic_action_picture_black;
 	}
 
 	@Override

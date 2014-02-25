@@ -33,7 +33,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 		if (view != null) {
 			Note note = getItem(position);
 			if (note != null) {
-				hideThumbnail(view);
+				setThumbnail(view);
 				setFileName(view, note.getTitle());
 				setFileDateModified(view, note.getUpdateAt().toString());
 				setFileSize(view, note.getContent().length() * 8);
@@ -42,11 +42,11 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 		return view;
 	}
 
-	private void hideThumbnail(final View view) {
+	private void setThumbnail(final View view) {
 		if (view != null) {
 			ImageView thumbnailView = (ImageView) view.findViewById(R.id.report_item_thumbnail);
 			if (thumbnailView != null) {
-				thumbnailView.setVisibility(View.GONE);
+				thumbnailView.setImageResource(R.drawable.ic_action_note);
 			}
 		}
 	}

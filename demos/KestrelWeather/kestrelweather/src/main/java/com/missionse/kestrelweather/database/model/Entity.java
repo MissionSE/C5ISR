@@ -132,8 +132,8 @@ public class Entity {
 	}
 
 	public void populate(JsonObject json) {
-		int id = (json.get("_id") == null ?  -1 : json.get("_id").getAsInt());
-		long update =(json.get("updatedat") == null ? 0 : json.get("updatedat").getAsLong());
+		int id = (json.get("_id") == null ? -1 : json.get("_id").getAsInt());
+		long update = (json.get("updatedat") == null ? 0 : json.get("updatedat").getAsLong());
 		long create = (json.get("createdat") == null) ? 0 : json.get("createdat").getAsLong();
 
 		setId(id);

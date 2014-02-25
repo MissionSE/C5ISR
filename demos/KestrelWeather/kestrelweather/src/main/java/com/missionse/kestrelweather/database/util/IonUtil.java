@@ -24,7 +24,7 @@ public final class IonUtil {
 	public static void upload(Context context, JsonObject json, FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
-			res.getString(R.string.remote_database));
+				res.getString(R.string.remote_database));
 		Log.d(TAG, "Upload Json(\'" + json.toString() + "\') to remote database:" + remoteUrl);
 
 		Ion.with(context, remoteUrl).setJsonObjectBody(json).asJsonObject().setCallback(callback);

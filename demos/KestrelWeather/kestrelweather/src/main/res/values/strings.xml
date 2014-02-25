@@ -26,6 +26,7 @@
 	<string name="unknown">Unknown</string>
 	<string name="select_items">Select Items</string>
 	<string name="items_selected">selected</string>
+	<string name="feels_like">Feels</string>
 	<string name="celsius">ºC</string>
 	<string name="fahrenheit">ºF</string>
 
@@ -112,7 +113,7 @@
 	<string name="report_list_empty">No reports.</string>
 
 	<!-- Fragment: Report Details -->
-	<string name="weather">Weather</string>
+	<string name="weather">Weather Overview</string>
 	<string name="kestrel_readings">Kestrel Readings</string>
 	<string name="auxiliary_data">Auxiliary Data</string>
 	<string name="weather_status_description">The icon for the weather status.</string>

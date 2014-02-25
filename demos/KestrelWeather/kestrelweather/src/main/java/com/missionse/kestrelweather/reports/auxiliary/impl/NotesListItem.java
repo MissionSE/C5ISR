@@ -29,7 +29,7 @@ public class NotesListItem implements AuxiliaryDataListItem {
 
 	@Override
 	public int getIcon() {
-		return R.drawable.ic_action_warning;
+		return R.drawable.ic_action_note;
 	}
 
 	@Override

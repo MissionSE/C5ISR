@@ -73,7 +73,7 @@ public class PhotoAdapter extends UriAdapter {
 				if (thumbnail != null) {
 					thumbnailView.setImageBitmap(thumbnail);
 				} else {
-					thumbnailView.setImageResource(R.drawable.ic_action_picture);
+					thumbnailView.setImageResource(R.drawable.ic_action_picture_black);
 				}
 			}
 		}

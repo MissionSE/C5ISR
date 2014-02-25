@@ -52,7 +52,6 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
-	 *
 	 * @return String indicating device name.
 	 */
 	public String getUserName() {
@@ -61,7 +60,6 @@ public class Report extends Entity {
 
 	/**
 	 * Setter.
-	 *
 	 * @param userName The name of the device.
 	 */
 	public void setUserName(String userName) {
@@ -70,7 +68,6 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
-	 *
 	 * @return Latitude of the device.
 	 */
 	public double getLatitude() {
@@ -79,7 +76,6 @@ public class Report extends Entity {
 
 	/**
 	 * Setter.
-	 *
 	 * @param latitude position of the device.
 	 */
 	public void setLatitude(double latitude) {
@@ -88,7 +84,6 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
-	 *
 	 * @return Longitude of the device.
 	 */
 	public double getLongitude() {
@@ -97,7 +92,6 @@ public class Report extends Entity {
 
 	/**
 	 * Setter
-	 *
 	 * @param longitude position of the device.
 	 */
 	public void setLongitude(double longitude) {
@@ -106,7 +100,6 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
-	 *
 	 * @return Instance of KestrelWeather associated with this report.
 	 */
 	public KestrelWeather getKestrelWeather() {
@@ -115,7 +108,6 @@ public class Report extends Entity {
 
 	/**
 	 * Setter.
-	 *
 	 * @param kestrelWeather associated with this report.
 	 */
 	public void setKestrelWeather(KestrelWeather kestrelWeather) {
@@ -124,7 +116,6 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
-	 *
 	 * @return Instance of OpenWeather associated with this report.
 	 */
 	public OpenWeather getOpenWeather() {
@@ -133,7 +124,6 @@ public class Report extends Entity {
 
 	/**
 	 * Setter.
-	 *
 	 * @param openWeather associated with this report.
 	 */
 	public void setOpenWeather(OpenWeather openWeather) {
@@ -143,7 +133,6 @@ public class Report extends Entity {
 
 	/**
 	 * Add a Supplement to this report.
-	 *
 	 * @param supplement The supplement to be added.
 	 */
 	public void addSupplement(Supplement supplement) {
@@ -152,7 +141,6 @@ public class Report extends Entity {
 
 	/**
 	 * Remove supplement from this report.
-	 *
 	 * @param supplement The supplement to be removed.
 	 */
 	public void removeSupplement(Supplement supplement) {
@@ -161,7 +149,6 @@ public class Report extends Entity {
 
 	/**
 	 * Add a Note to this report.
-	 *
 	 * @param note The Note to be added.
 	 */
 	public void addNote(Note note) {
@@ -170,7 +157,6 @@ public class Report extends Entity {
 
 	/**
 	 * Remove Note from this report.
-	 *
 	 * @param note The Note to be removed.
 	 */
 	public void removeNote(Note note) {
@@ -179,7 +165,6 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
-	 *
 	 * @return Instance of ForeignCollection.
 	 */
 	public ForeignCollection<Supplement> getSupplements() {
@@ -188,7 +173,6 @@ public class Report extends Entity {
 
 	/**
 	 * Setter.
-	 *
 	 * @param supplements set the supplement collection.
 	 */
 	public void setSupplements(ForeignCollection<Supplement> supplements) {
@@ -197,7 +181,6 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
-	 *
 	 * @return A List<Note>.
 	 */
 	public List<Note> getNotes() {

@@ -214,7 +214,7 @@ public class KestrelConnectorFragment extends Fragment {
 	}
 
 	private int createNewReport() {
-		ReportTable table = ((DatabaseAccessor)getActivity()).getReportTable();
+		ReportTable table = ((DatabaseAccessor) getActivity()).getReportTable();
 		Report report = table.newReport();
 		KestrelWeather weatherData = new KestrelWeather();
 		weatherData.setTemperature(mKestrelMessage.getTemperature());

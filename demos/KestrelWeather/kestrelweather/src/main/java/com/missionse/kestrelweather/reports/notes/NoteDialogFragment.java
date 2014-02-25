@@ -221,7 +221,7 @@ public class NoteDialogFragment extends DialogFragment {
 				if (content != null) {
 					mNote.setContent(content.trim());
 				}
-				NoteTable noteTable = ((DatabaseAccessor)getActivity()).getNoteTable();
+				NoteTable noteTable = ((DatabaseAccessor) getActivity()).getNoteTable();
 				if (mNoteId == INVALID_NOTE_ID) {
 					noteTable.create(mNote);
 				} else {
@@ -239,7 +239,6 @@ public class NoteDialogFragment extends DialogFragment {
 	private void onCancelButtonPressed() {
 		dismiss();
 	}
-
 
 
 	private NoteTable getNoteTable() {

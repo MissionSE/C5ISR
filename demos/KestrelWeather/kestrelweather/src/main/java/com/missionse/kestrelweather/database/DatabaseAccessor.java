@@ -14,49 +14,42 @@ import com.missionse.kestrelweather.database.remote.RemoteDatabaseHelper;
 public interface DatabaseAccessor {
 	/**
 	 * Getter.
-	 *
 	 * @return Instance of LocalDatabaseHelper.
 	 */
 	LocalDatabaseHelper getLocalDatabaseHelper();
 
 	/**
 	 * Getter.
-	 *
 	 * @return Instance of RemoteDatabaseHelper.
 	 */
 	RemoteDatabaseHelper getRemoteDatabaseHelper();
 
 	/**
 	 * Getter.
-	 *
 	 * @return Instance of ReportTable.
 	 */
 	ReportTable getReportTable();
 
 	/**
 	 * Getter.
-	 *
 	 * @return Instance of SupplementTable.
 	 */
 	SupplementTable getSupplementTable();
 
 	/**
 	 * Getter.
-	 *
 	 * @return Instance of KestrelWeather.
 	 */
 	KestrelWeatherTable getKestrelWeatherTable();
 
 	/**
 	 * Getter.
-	 *
 	 * @return Instance of OpenWeatherTable.
 	 */
 	OpenWeatherTable getOpenWeatherTable();
 
 	/**
 	 * Getter.
-	 *
 	 * @return Instance of NoteTable.
 	 */
 	NoteTable getNoteTable();

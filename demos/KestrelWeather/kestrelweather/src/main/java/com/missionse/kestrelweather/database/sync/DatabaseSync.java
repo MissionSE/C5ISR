@@ -8,11 +8,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.koushikdutta.async.future.FutureCallback;
-import com.missionse.kestrelweather.database.util.IonUtil;
 import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.serialization.ReportSerialization;
 import com.missionse.kestrelweather.database.remote.RemoteDatabaseHelper;
+import com.missionse.kestrelweather.database.util.IonUtil;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class DatabaseSync implements Runnable {
 				.setPrettyPrinting()
 				.create();
 		JsonParser jsonParser = new JsonParser();
-		JsonObject json = (JsonObject)jsonParser.parse(gson.toJson(report));
+		JsonObject json = (JsonObject) jsonParser.parse(gson.toJson(report));
 		IonUtil.upload(mContext, json, new FutureCallback<JsonObject>() {
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {

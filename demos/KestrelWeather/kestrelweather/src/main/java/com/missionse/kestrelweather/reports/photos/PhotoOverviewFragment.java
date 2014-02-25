@@ -42,7 +42,7 @@ public class PhotoOverviewFragment extends Fragment {
 
 	/**
 	 * A factory method used to create a new instance of the fragment with the provided parameters.
-	 * @param reportId The database report id that is associated with the report (if one exists).
+	 * @param reportId The database report id that is associated with the report.
 	 * @return A new instance of a PhotoOverviewFragment.
 	 */
 	public static PhotoOverviewFragment newInstance(final int reportId) {
