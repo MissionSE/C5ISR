@@ -1,10 +1,17 @@
 package com.missionse.kestrelweather.database.model.tables;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.missionse.kestrelweather.database.model.Entity;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Report object.
@@ -12,15 +19,23 @@ import com.missionse.kestrelweather.database.model.Entity;
 @DatabaseTable(daoClass = com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable.class)
 public class Report extends Entity {
 	@DatabaseField(columnName = "devicename")
-	private String mDeviceName;
+	private String mUserName;
+
 	@DatabaseField(columnName = "latitude")
 	private long mLatitude;
+
 	@DatabaseField(columnName = "longitude")
 	private long mLongitude;
+
 	@DatabaseField(foreign = true, canBeNull = true)
-	private WeatherData mWeatherData;
-	@ForeignCollectionField
+	private KestrelWeather mKestrelWeather;
+
+	@DatabaseField(foreign = true, canBeNull = true)
+	private OpenWeather mOpenWeather;
+
+	@ForeignCollectionField()
 	private ForeignCollection<Supplement> mSupplements;
+
 	@ForeignCollectionField
 	private ForeignCollection<Note> mNotes;
 
@@ -28,30 +43,34 @@ public class Report extends Entity {
 	 * Default Constructor.
 	 */
 	public Report() {
-		mDeviceName = "";
+		mUserName = "";
 		mLatitude = 0L;
 		mLongitude = 0L;
-		mWeatherData = null;
+		mKestrelWeather = null;
+		mNotes = null;
 	}
 
 	/**
 	 * Getter.
+	 *
 	 * @return String indicating device name.
 	 */
-	public String getDeviceName() {
-		return mDeviceName;
+	public String getUserName() {
+		return mUserName;
 	}
 
 	/**
 	 * Setter.
-	 * @param deviceName The name of the device.
+	 *
+	 * @param userName The name of the device.
 	 */
-	public void setDeviceName(String deviceName) {
-		mDeviceName = deviceName;
+	public void setUserName(String userName) {
+		mUserName = userName;
 	}
 
 	/**
 	 * Getter.
+	 *
 	 * @return Latitude of the device.
 	 */
 	public long getLatitude() {
@@ -60,6 +79,7 @@ public class Report extends Entity {
 
 	/**
 	 * Setter.
+	 *
 	 * @param latitude position of the device.
 	 */
 	public void setLatitude(long latitude) {
@@ -68,6 +88,7 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
+	 *
 	 * @return Longitude of the device.
 	 */
 	public long getLongitude() {
@@ -76,6 +97,7 @@ public class Report extends Entity {
 
 	/**
 	 * Setter
+	 *
 	 * @param longitude position of the device.
 	 */
 	public void setLongitude(long longitude) {
@@ -84,23 +106,44 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
-	 * @return Instance of WeatherData associated with this report.
+	 *
+	 * @return Instance of KestrelWeather associated with this report.
 	 */
-	public WeatherData getWeatherData() {
-		return mWeatherData;
+	public KestrelWeather getKestrelWeather() {
+		return mKestrelWeather;
 	}
 
 	/**
 	 * Setter.
-	 * @param weatherData associated with this report.
+	 *
+	 * @param kestrelWeather associated with this report.
 	 */
-	public void setWeatherData(WeatherData weatherData) {
-		mWeatherData = weatherData;
+	public void setKestrelWeather(KestrelWeather kestrelWeather) {
+		mKestrelWeather = kestrelWeather;
+	}
+
+	/**
+	 * Getter.
+	 *
+	 * @return Instance of OpenWeather associated with this report.
+	 */
+	public OpenWeather getOpenWeather() {
+		return mOpenWeather;
+	}
+
+	/**
+	 * Setter.
+	 *
+	 * @param openWeather associated with this report.
+	 */
+	public void setOpenWeather(OpenWeather openWeather) {
+		mOpenWeather = openWeather;
 	}
 
 
 	/**
 	 * Add a Supplement to this report.
+	 *
 	 * @param supplement The supplement to be added.
 	 */
 	public void addSupplement(Supplement supplement) {
@@ -109,6 +152,7 @@ public class Report extends Entity {
 
 	/**
 	 * Remove supplement from this report.
+	 *
 	 * @param supplement The supplement to be removed.
 	 */
 	public void removeSupplement(Supplement supplement) {
@@ -117,6 +161,7 @@ public class Report extends Entity {
 
 	/**
 	 * Add a Note to this report.
+	 *
 	 * @param note The Note to be added.
 	 */
 	public void addNote(Note note) {
@@ -125,6 +170,7 @@ public class Report extends Entity {
 
 	/**
 	 * Remove Note from this report.
+	 *
 	 * @param note The Note to be removed.
 	 */
 	public void removeNote(Note note) {
@@ -133,6 +179,7 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
+	 *
 	 * @return Instance of ForeignCollection.
 	 */
 	public ForeignCollection<Supplement> getSupplements() {
@@ -141,9 +188,63 @@ public class Report extends Entity {
 
 	/**
 	 * Setter.
+	 *
 	 * @param supplements set the supplement collection.
 	 */
 	public void setSupplements(ForeignCollection<Supplement> supplements) {
 		mSupplements = supplements;
+	}
+
+	/**
+	 * Getter.
+	 *
+	 * @return A List<Note>.
+	 */
+	public List<Note> getNotes() {
+		List<Note> notes = new LinkedList<Note>();
+		if (mNotes != null) {
+			for (Note note : mNotes) {
+				notes.add(note);
+			}
+		}
+		return notes;
+	}
+
+	@Override
+	public Map<String, String> toMap() {
+		Map<String, String> map = super.toMap();
+		map.put("userid", mUserName);
+		map.put("latitude", Long.toString(mLatitude));
+		map.put("longitude", Long.toString(mLongitude));
+
+		return map;
+	}
+
+	@Override
+	public void populate(JsonObject json) {
+		super.populate(json);
+		String uid = (json.get("userid") == null ? "" : json.get("userid").getAsString());
+		long lat = (json.get("latitude") == null ? 0L : json.get("latitude").getAsLong());
+		long lng = (json.get("longitude") == null ? 0L : json.get("longitude").getAsLong());
+
+		setUserName(uid);
+		setLatitude(lat);
+		setLongitude(lng);
+
+		final KestrelWeather kestrelWeather = new KestrelWeather();
+		kestrelWeather.populate(json.getAsJsonObject("kestrel"));
+		setKestrelWeather(kestrelWeather);
+
+		final OpenWeather openWeather = new OpenWeather();
+		openWeather.populate(json.getAsJsonObject("weather"));
+		setOpenWeather(openWeather);
+
+		JsonArray jsonArray = json.getAsJsonArray("notes");
+		if (jsonArray != null) {
+			for (JsonElement jElem : jsonArray) {
+				Note note = new Note();
+				note.populate(jElem.getAsJsonObject());
+			}
+		}
 	}
 }

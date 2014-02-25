@@ -5,8 +5,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.DatabaseManager;
 import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
+import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 import com.missionse.kestrelweather.database.remote.RemoteDatabaseHelper;
 import com.missionse.kestrelweather.drawer.KestrelWeatherDrawerFactory;
 import com.missionse.kestrelweather.kestrel.KestrelConnectorFragment;
@@ -22,8 +28,9 @@ import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigura
 /**
  * Main activity for the Kestrel Weather application.
  */
-public class KestrelWeatherActivity extends DrawerActivity {
+public class KestrelWeatherActivity extends DrawerActivity implements DatabaseAccessor {
 
+	private static final String TAG = KestrelWeatherActivity.class.getSimpleName();
 	private KestrelWeatherDrawerFactory mDrawerFactory;
 	private TiledMap mTiledMap;
 	private KestrelSimulator mKestrelSimulator;
@@ -70,6 +77,24 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	protected void onStop() {
 		super.onStop();
 		mKestrelSimulator.onStop();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mDatabaseManager.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mDatabaseManager.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mDatabaseManager.onDestroy();
 	}
 
 	@Override
@@ -193,19 +218,38 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		}
 	}
 
-	/**
-	 * Retrieve the local database helper.
-	 * @return An instance of LocalDatabaseHelper.
-	 */
+	@Override
 	public LocalDatabaseHelper getLocalDatabaseHelper() {
-		return mDatabaseManager.getLocalHelper();
+		return mDatabaseManager.getLocalDatabaseHelper();
 	}
 
-	/**
-	 * Retrieve the remote database helper.
-	 * @return An instance of RemoteDatabaseHelper.
-	 */
-	public RemoteDatabaseHelper getRemoteDatabaseHelepr() {
-		return mDatabaseManager.getRemoteHelper();
+	@Override
+	public RemoteDatabaseHelper getRemoteDatabaseHelper() {
+		return mDatabaseManager.getRemoteDatabaseHelper();
+	}
+
+	@Override
+	public ReportTable getReportTable() {
+		return mDatabaseManager.getReportTable();
+	}
+
+	@Override
+	public SupplementTable getSupplementTable() {
+		return mDatabaseManager.getSupplementTable();
+	}
+
+	@Override
+	public KestrelWeatherTable getKestrelWeatherTable() {
+		return mDatabaseManager.getKestrelWeatherTable();
+	}
+
+	@Override
+	public OpenWeatherTable getOpenWeatherTable() {
+		return mDatabaseManager.getOpenWeatherTable();
+	}
+
+	@Override
+	public NoteTable getNoteTable() {
+		return mDatabaseManager.getNoteTable();
 	}
 }

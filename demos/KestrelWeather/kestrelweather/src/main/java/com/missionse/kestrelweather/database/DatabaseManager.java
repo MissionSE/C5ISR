@@ -3,13 +3,18 @@ package com.missionse.kestrelweather.database;
 import android.content.Context;
 
 import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
+import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 import com.missionse.kestrelweather.database.remote.RemoteDatabaseHelper;
 
 /**
  * Manages the connections to the databases for all databases in this
  * application.
  */
-public class DatabaseManager {
+public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 	private LocalDatabaseHelper mLocalDatabaseHelper;
 	private RemoteDatabaseHelper mRemoteDatabaseHelper;
 
@@ -23,27 +28,54 @@ public class DatabaseManager {
 		mRemoteDatabaseHelper = new RemoteDatabaseHelper(context);
 	}
 
-	/**
-	 * Getter for local database helper.
-	 * @return An instance of LocalDatabaseHelper.
-	 */
-	public LocalDatabaseHelper getLocalHelper() {
+	@Override
+	public LocalDatabaseHelper getLocalDatabaseHelper() {
 		return mLocalDatabaseHelper;
 	}
 
-	/**
-	 * Getter for remote database helper.
-	 * @return An instance of RemoteDatabaseHelper.
-	 */
-	public RemoteDatabaseHelper getRemoteHelper() {
+	@Override
+	public RemoteDatabaseHelper getRemoteDatabaseHelper() {
 		return mRemoteDatabaseHelper;
 	}
 
-	/**
-	 * Stop all database related processes.
-	 */
-	public void destroy() {
+	@Override
+	public ReportTable getReportTable() {
+		return mLocalDatabaseHelper.getReportTable();
+	}
+
+	@Override
+	public SupplementTable getSupplementTable() {
+		return mLocalDatabaseHelper.getSupplementTable();
+	}
+
+	@Override
+	public KestrelWeatherTable getKestrelWeatherTable() {
+		return mLocalDatabaseHelper.getKestrelWeatherTable();
+	}
+
+	@Override
+	public OpenWeatherTable getOpenWeatherTable() {
+		return mLocalDatabaseHelper.getOpenWeatherTable();
+	}
+
+	@Override
+	public NoteTable getNoteTable() {
+		return mLocalDatabaseHelper.getNoteTable();
+	}
+
+	@Override
+	public void onDestroy() {
 		mLocalDatabaseHelper = null;
 		mRemoteDatabaseHelper = null;
+	}
+
+	@Override
+	public void onPause() {
+
+	}
+
+	@Override
+	public void onResume() {
+
 	}
 }

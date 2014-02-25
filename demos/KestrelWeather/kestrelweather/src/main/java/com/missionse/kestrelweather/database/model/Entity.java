@@ -1,19 +1,41 @@
 package com.missionse.kestrelweather.database.model;
 
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
 import org.joda.time.DateTime;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Base class for database tables.
  */
 public class Entity {
+	@Expose(serialize = true, deserialize = true)
+	@SerializedName("_id")
 	@DatabaseField(columnName = "_id", generatedId = true)
 	private int mId;
+
+	@Expose(serialize = false, deserialize = false)
+	@SerializedName("remote_id")
+	@DatabaseField(columnName = "remote_id")
+	private int mRemoteId;
+
+	@Expose(serialize = false, deserialize = false)
+	@SerializedName("dirty")
 	@DatabaseField(columnName = "dirty")
 	private boolean mDirty = false;
+
+	@Expose(serialize = true, deserialize = true)
+	@SerializedName("updatedAt")
 	@DatabaseField(columnName = "update_at")
 	private DateTime mUpdateAt = DateTime.now();
+
+	@Expose(serialize = true, deserialize = true)
+	@SerializedName("createdAt")
 	@DatabaseField(columnName = "created_at")
 	private DateTime mCreatedAt = DateTime.now();
 
@@ -31,6 +53,22 @@ public class Entity {
 	 */
 	public void setId(final int id) {
 		mId = id;
+	}
+
+	/**
+	 * Return the database ID associated with this object.
+	 * @return The database ID.
+	 */
+	public int getRemoteId() {
+		return mRemoteId;
+	}
+
+	/**
+	 * Set the database ID associated with this object.
+	 * @param id The database ID.
+	 */
+	public void setRemoteId(final int id) {
+		mRemoteId = id;
 	}
 
 	/**
@@ -81,4 +119,27 @@ public class Entity {
 		mCreatedAt = createdAt;
 	}
 
+	/**
+	 * Creates a map representation of the fields in the entity.
+	 * @return A map containting the fields in the entity.
+	 */
+	public Map<String, String> toMap() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("updatedat", Long.toString(mUpdateAt.getMillis()));
+		map.put("createdat", Long.toString(mCreatedAt.getMillis()));
+
+		return map;
+	}
+
+	public void populate(JsonObject json) {
+		int id = (json.get("_id") == null ?  -1 : json.get("_id").getAsInt());
+		long update =(json.get("updatedat") == null ? 0 : json.get("updatedat").getAsLong());
+		long create = (json.get("createdat") == null) ? 0 : json.get("createdat").getAsLong();
+
+		setId(id);
+		setUpdateAt(new DateTime(update));
+		setCreatedAt(new DateTime(create));
+		setDirty(false);
+		setRemoteId(id);
+	}
 }
