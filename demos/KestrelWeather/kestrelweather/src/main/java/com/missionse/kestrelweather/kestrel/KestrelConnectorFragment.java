@@ -159,7 +159,7 @@ public class KestrelConnectorFragment extends Fragment {
 	private void setInitialButtonStates() {
 		mConnectToDeviceButton.setEnabled(true);
 		mRequestReadingsButton.setEnabled(false);
-		mContinueButton.setEnabled(true);
+		mContinueButton.setEnabled(false);
 	}
 
 	private void setButtonBehavior() {
