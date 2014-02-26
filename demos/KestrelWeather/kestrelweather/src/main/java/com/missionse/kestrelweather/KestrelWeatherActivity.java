@@ -14,6 +14,7 @@ import com.missionse.kestrelweather.kestrel.KestrelSimulator;
 import com.missionse.kestrelweather.map.MapViewerFragment;
 import com.missionse.kestrelweather.map.TileProviderFactory;
 import com.missionse.kestrelweather.map.TiledMap;
+import com.missionse.kestrelweather.reports.RemoteReportListFragment;
 import com.missionse.kestrelweather.reports.ReportListFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
@@ -58,6 +59,18 @@ public class KestrelWeatherActivity extends DrawerActivity {
 				TileProviderFactory.createUrlTileProvider(getString(R.string.wind_overlay_url)));
 
 		mKestrelSimulator.onCreate();
+		//TODO: Robert - Delete when done testing.
+//		List<Report> reports = getDatabaseAccessor().getReportTable().queryForAll();
+//		for (Report report : reports) {
+//			Log.d(TAG, "Display Report info:\n-------------------------------");
+//			Log.d(TAG, "id=" + report.getId());
+//			Log.d(TAG, "remoteId=" + report.getRemoteId());
+//			Log.d(TAG, "dirty=" + report.isDirty());
+//			Log.d(TAG, "Listing Notes:");
+//			for (Note note : report.getNotes()) {
+//				Log.d(TAG, "  (" + note.getId() + ") Title:" + note.getTitle() + "  Content:" + note.getContent());
+//			}
+//		}
 	}
 
 	@Override
@@ -109,6 +122,8 @@ public class KestrelWeatherActivity extends DrawerActivity {
 			displayCreateReport();
 		} else if (index == KestrelWeatherDrawerFactory.REPORT_SYNC) {
 			displayReportSync();
+		} else if (index == KestrelWeatherDrawerFactory.REPORT_DATABASE) {
+			displayDatabaseReport();
 		}
 	}
 
@@ -150,6 +165,19 @@ public class KestrelWeatherActivity extends DrawerActivity {
 				.replace(R.id.content, reportListFragment, "report_list")
 				.addToBackStack("report_list")
 				.commit();
+	}
+
+	private void displayDatabaseReport() {
+		FragmentManager fragmentManager = getFragmentManager();
+		RemoteReportListFragment reportListFragment = (RemoteReportListFragment) fragmentManager
+		   .findFragmentByTag("database_list");
+		if (reportListFragment == null) {
+			reportListFragment = new RemoteReportListFragment();
+		}
+		fragmentManager.beginTransaction()
+		   .replace(R.id.content, reportListFragment, "database_list")
+		   .addToBackStack("database_list")
+		   .commit();
 	}
 
 	@Override

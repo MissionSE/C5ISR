@@ -1,7 +1,5 @@
 package com.missionse.kestrelweather.database.model.tables;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
@@ -213,21 +211,5 @@ public class Report extends Entity {
 		setUserName(uid);
 		setLatitude(lat);
 		setLongitude(lng);
-
-		final KestrelWeather kestrelWeather = new KestrelWeather();
-		kestrelWeather.populate(json.getAsJsonObject("kestrel"));
-		setKestrelWeather(kestrelWeather);
-
-		final OpenWeather openWeather = new OpenWeather();
-		openWeather.populate(json.getAsJsonObject("weather"));
-		setOpenWeather(openWeather);
-
-		JsonArray jsonArray = json.getAsJsonArray("notes");
-		if (jsonArray != null) {
-			for (JsonElement jElem : jsonArray) {
-				Note note = new Note();
-				note.populate(jElem.getAsJsonObject());
-			}
-		}
 	}
 }

@@ -38,7 +38,6 @@ public class BaseTable<T extends Entity> extends BaseDaoImpl<T, Integer> impleme
 	@Override
 	public int create(T data) {
 		try {
-			data.setCreatedAt(DateTime.now());
 			return super.create(data);
 		} catch (SQLException exp) {
 			Log.e(TAG, "Unable to create report in database.", exp);

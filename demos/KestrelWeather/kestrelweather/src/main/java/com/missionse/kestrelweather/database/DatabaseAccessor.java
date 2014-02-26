@@ -61,4 +61,22 @@ public interface DatabaseAccessor {
 	 * @return Instance of Report. Null if id does not exist.
 	 */
 	Report getReportById(int id);
+
+	/**
+	 * Getter.
+	 * @return Get the users current name.
+	 */
+	String getUserName();
+
+	/**
+	 * Getter.
+	 * @return Get the latest event id.
+	 */
+	String getLatestEvent();
+
+	/**
+	 * Setter.
+	 * @param latestEvent The new latestEvent id.
+	 */
+	 void setLatestEvent(String latestEvent);
 }

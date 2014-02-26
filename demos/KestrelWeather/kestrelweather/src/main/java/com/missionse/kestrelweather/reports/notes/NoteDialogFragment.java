@@ -211,6 +211,7 @@ public class NoteDialogFragment extends DialogFragment {
 			onCancelButtonPressed();
 		} else {
 			if (fieldsValid()) {
+				Log.d(TAG, "Saving note to reportId=" + mReportId);
 				String title = getTitle();
 				if (title != null) {
 					mNote.setTitle(title.trim());
@@ -222,6 +223,7 @@ public class NoteDialogFragment extends DialogFragment {
 				}
 				NoteTable noteTable = getNoteTable();
 				if (mNoteId == INVALID_NOTE_ID) {
+					mNote.setReport(mReport);
 					noteTable.create(mNote);
 				} else {
 					noteTable.update(mNote);

@@ -7,6 +7,7 @@
 	<string name="remote_database">http://192.168.86.197:3000</string>
 	<string name="upload_report_url">%1$s/upload/</string>
 	<string name="retrieve_latest_url">%1$s/event/since/</string>
+	<string name="retrieve_report_url">%1$s/report/</string>
 
 	<!-- Option Menu -->
 	<string name="action_settings">Settings</string>
@@ -76,7 +77,7 @@
 	<string name="error_bluetooth_not_enabled">Error: Bluetooth is not enabled.</string>
 	<string name="error_unable_to_request">Error: Unable to send request.</string>
 
-	<!-- Fragment: Kestrel Simulation Settings -->
+	<!-- Fragment: Kestrel Simulation UserSettings -->
 	<string-array name="kestrel_simulation_pressure_trend_entries">
 		<item>Up</item>
 		<item>Down</item>

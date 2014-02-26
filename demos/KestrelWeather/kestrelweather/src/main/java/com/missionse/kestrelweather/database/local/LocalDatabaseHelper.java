@@ -8,6 +8,7 @@ import com.missionse.kestrelweather.database.model.tables.Note;
 import com.missionse.kestrelweather.database.model.tables.OpenWeather;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
+import com.missionse.kestrelweather.database.model.tables.UserSettings;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
@@ -40,6 +41,7 @@ public class LocalDatabaseHelper extends SqlLiteOpenHelper {
 		ret.add(KestrelWeather.class);
 		ret.add(Supplement.class);
 		ret.add(Report.class);
+		ret.add(UserSettings.class);
 		return ret;
 	}
 

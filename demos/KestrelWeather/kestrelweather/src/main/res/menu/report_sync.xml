@@ -3,7 +3,7 @@
 	tools:context="com.missionse.kestrelweather.KestrelWeatherActivity">
 
 	<item
-		android:id="@+id/action_delete_selected"
+		android:id="@+id/action_sync_reports"
 		android:icon="@drawable/ic_action_reload"
 		android:title="@string/action_sync"
 		android:orderInCategory="100"

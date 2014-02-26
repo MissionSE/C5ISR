@@ -24,24 +24,24 @@ import com.missionse.kestrelweather.database.sync.DatabaseSync;
 import java.util.List;
 
 /**
- * Provides a fragment to show a list of reports.
+ * Created by rvieras on 2/26/14.
  */
-public class ReportListFragment extends Fragment {
+public class RemoteReportListFragment  extends Fragment {
 	private Activity mActivity;
 	private ReportAdapter mReportAdapter;
 
 	/**
 	 * Default constructor.
 	 */
-	public ReportListFragment() {
+	public RemoteReportListFragment() {
 	}
 
 	/**
 	 * A factory method used to create a new instance of this fragment.
 	 * @return A new instance of the fragment ReportListFragment.
 	 */
-	public static ReportListFragment newInstance() {
-		return new ReportListFragment();
+	public static RemoteReportListFragment newInstance() {
+		return new RemoteReportListFragment();
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class ReportListFragment extends Fragment {
 
 		if (mActivity != null) {
 			DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
-			ReportTable reportTable = databaseAccessor.getReportTable();
+			ReportTable reportTable = databaseAccessor.getRemoteDatabaseHelper().getReportTable();
 			List<Report> reports = reportTable.queryForAll();
 			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header, reports);
 		}
@@ -84,12 +84,12 @@ public class ReportListFragment extends Fragment {
 						if (fragmentManager != null) {
 							Fragment reportDetailFragment = ReportDetailFragment.newInstance(mReportAdapter.getItem(position).getId());
 							fragmentManager.beginTransaction()
-									.setCustomAnimations(
-											R.animator.slide_from_right, R.animator.slide_to_left,
-											R.animator.slide_from_left, R.animator.slide_to_right)
-									.replace(R.id.content, reportDetailFragment, "report_detail")
-									.addToBackStack("report_detail")
-									.commit();
+							   .setCustomAnimations(
+								  R.animator.slide_from_right, R.animator.slide_to_left,
+								  R.animator.slide_from_left, R.animator.slide_to_right)
+							   .replace(R.id.content, reportDetailFragment, "report_detail")
+							   .addToBackStack("report_detail")
+							   .commit();
 						}
 					}
 				});
@@ -114,7 +114,7 @@ public class ReportListFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_sync_reports) {
 			(new DatabaseSync(getActivity(),
-				((KestrelWeatherActivity) getActivity()).getDatabaseAccessor())).execute();
+			   ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor())).execute();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

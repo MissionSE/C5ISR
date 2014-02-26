@@ -86,7 +86,10 @@ public class WeatherOverviewFragment extends Fragment {
 
 						TextView weatherConditionView = (TextView) contentView.findViewById(R.id.report_detail_weather_condition);
 						if (weatherConditionView != null) {
-							weatherConditionView.setText(report.getOpenWeather().getDescription());
+							//TODO: Currently OpenWeather is null
+							if (report.getOpenWeather() != null) {
+								weatherConditionView.setText(report.getOpenWeather().getDescription());
+							}
 						}
 
 						TextView latitudeView = (TextView) contentView.findViewById(R.id.report_detail_latitude);

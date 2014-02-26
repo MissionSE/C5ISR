@@ -1,5 +1,8 @@
 package com.missionse.kestrelweather.database.model;
 
+import android.util.Log;
+
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -136,14 +139,42 @@ public class Entity {
 	 * @param json - JsonObject param.
 	 */
 	public void populate(JsonObject json) {
-		int id = (json.get("_id") == null ? -1 : json.get("_id").getAsInt());
-		long update = (json.get("updatedat") == null ? 0 : json.get("updatedat").getAsLong());
-		long create = (json.get("createdat") == null) ? 0 : json.get("createdat").getAsLong();
+		int id = parseId(json.get("_id"));
+		long update = parseDate(json.get("updatedat"));
+		long create = parseDate(json.get("createdat"));
 
 		setId(id);
 		setUpdateAt(new DateTime(update));
 		setCreatedAt(new DateTime(create));
 		setDirty(false);
 		setRemoteId(id);
+	}
+
+	/*
+	 * This was needed to because some ID are formatted as hash from the remote database.
+	 * Hash format is currently not supported locally so it is defaulted to '0' so the local
+	 * database can correctly insert it into the local database.
+	 */
+	private int parseId(JsonElement element) {
+		try {
+			return (element == null ? 0 : element.getAsInt());
+		} catch (NumberFormatException e) {
+			Log.d("Entity", "Unable to read db id... defaulting to 0");
+			return 0;
+		}
+	}
+
+	/*
+	 * This was needed to support both long dates formatted in milliseconds from epoch
+	 * as well as string gmt format.
+	 */
+	private long parseDate(JsonElement element) {
+		try {
+			return (element == null ? 0 : element.getAsLong());
+		} catch (NumberFormatException e) {
+			Log.d("Entity", "Unable to parse as long:" + element.toString());
+			Log.d("Entity", "parse as string..");
+			return DateTime.parse(element.getAsString()).getMillis();
+		}
 	}
 }

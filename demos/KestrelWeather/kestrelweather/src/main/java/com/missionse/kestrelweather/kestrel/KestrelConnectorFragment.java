@@ -25,13 +25,12 @@ import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.communication.BluetoothDeviceListFragment;
 import com.missionse.kestrelweather.communication.KestrelMessage;
+import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.reports.ReportDetailFragment;
-
-import java.util.UUID;
 
 public class KestrelConnectorFragment extends Fragment {
 
@@ -215,8 +214,8 @@ public class KestrelConnectorFragment extends Fragment {
 	}
 
 	private int createNewReport() {
-		ReportTable table = ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor().getReportTable();
-		KestrelWeatherTable weatherTable = ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor().getKestrelWeatherTable();
+		ReportTable table = getDatabaseAccessor().getReportTable();
+		KestrelWeatherTable weatherTable = getDatabaseAccessor().getKestrelWeatherTable();
 		Report report = table.newReport();
 		KestrelWeather weatherData = new KestrelWeather();
 		weatherData.setTemperature(mKestrelMessage.getTemperature());
@@ -230,10 +229,15 @@ public class KestrelConnectorFragment extends Fragment {
 		weatherData.setDewPoint(mKestrelMessage.getDewPoint());
 		report.setKestrelWeather(weatherData);
 		weatherTable.create(weatherData);
-		report.setUserName(UUID.randomUUID().toString());
+		report.setUserName(getDatabaseAccessor().getUserName());
 		report.setLatitude(DEFAULT_LAT);
 		report.setLongitude(DEFAULT_LNG);
-		return table.create(report);
+		table.create(report);
+		return report.getId();
+	}
+
+	private DatabaseAccessor getDatabaseAccessor() {
+		return ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor();
 	}
 
 	private final Handler mBluetoothServiceMessageHandler = new Handler() {
