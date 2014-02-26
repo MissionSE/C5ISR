@@ -67,7 +67,7 @@ module.exports = function(db) {
 
 				//save a new report and add an event log entry
 				var newReport = new db.Report({
-					userId: data.userid,
+					userid: data.userid,
 					latitude: data.latitude,
 					longitude: data.longitude,
 					createdat: data.createdat,
@@ -119,28 +119,41 @@ module.exports = function(db) {
 							status: 'nok'
 						}));
 					} else {
-						for (var index = 0; index < files.length; index++) {
-							var publicPath = files[index].path.split('public')[1];
-							debug (postReport, 'saving ' + publicPath + ' to ' + data.id);
-							if (files[index].type.search('image') >= 0) {
-								db.Report.update( { _id: data.id }, { $push: { images: publicPath } }, { upsert: true }, function(err) {
-									if (err) {
-										debug(postReport, "query update failed");
-									}
-								});
-							} else if (files[index].type.search('audio') >= 0) {
-								db.Report.update( { _id: data.id }, { $push: { audio: publicPath } }, { upsert: true }, function(err) {
-									if (err) {
-										debug(postReport, "query update failed");
-									}
-								});
-							}
+						var publicPath = files[0].path.split('public')[1];
+						debug (postReport, 'saving ' + publicPath + ' to ' + data.id);
+						if (files[0].type.search('image') >= 0) {
+							db.Report.update( { _id: data.id }, { $push: { images: publicPath } }, { upsert: true }, function(err) {
+								if (err) {
+									debug(postReport, "query update failed");
+									res.writeHead(404, {'content-type': 'text/plain'});
+									res.end(JSON.stringify({
+										status: 'nok'
+									}));
+								} else {
+									res.writeHead(200, {'content-type': 'text/plain'});
+									res.end(JSON.stringify({
+										status: 'ok',
+										url: publicPath
+									}));
+								}
+							});
+						} else if (files[0].type.search('audio') >= 0) {
+							db.Report.update( { _id: data.id }, { $push: { audio: publicPath } }, { upsert: true }, function(err) {
+								if (err) {
+									debug(postReport, "query update failed");
+									res.writeHead(404, {'content-type': 'text/plain'});
+									res.end(JSON.stringify({
+										status: 'nok'
+									}));
+								} else {
+									res.writeHead(200, {'content-type': 'text/plain'});
+									res.end(JSON.stringify({
+										status: 'ok',
+										url: publicPath
+									}));
+								}
+							});
 						}
-
-						res.writeHead(200, {'content-type': 'text/plain'});
-						res.end(JSON.stringify({
-							status: 'ok'
-						}));
 					}
 				});
 			}
