@@ -7,8 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.DatabaseAccessor;
+import com.missionse.kestrelweather.database.model.tables.Report;
 
 import java.util.List;
 
@@ -17,10 +21,9 @@ import java.util.List;
  */
 public class ReadingsFragment extends Fragment {
 	private static final String REPORT_ID = "report_id";
-	private static final int INVALID_REPORT_ID = -1;
 
 	private Activity mActivity;
-	private int mReportId = INVALID_REPORT_ID;
+	private int mReportId;
 	private ReadingsAdapter mReadingsAdapter;
 
 	/**
@@ -63,8 +66,14 @@ public class ReadingsFragment extends Fragment {
 			mReportId = getArguments().getInt(REPORT_ID);
 		}
 
-		List<ReadingsListItem> readingsListItems = ReadingsListFactory.getListItems(mActivity, mReportId);
-		mReadingsAdapter = new ReadingsAdapter(mActivity, R.layout.fragment_report_detail_readings_list_entry, readingsListItems);
+		if (mActivity != null) {
+			DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
+			Report report = databaseAccessor.getReportById(mReportId);
+			if (report != null) {
+				List<ReadingsListItem> readingsListItems = ReadingsListFactory.getListItems(mActivity, report);
+				mReadingsAdapter = new ReadingsAdapter(mActivity, R.layout.fragment_report_detail_readings_list_entry, readingsListItems);
+			}
+		}
 	}
 
 	@Override
@@ -74,6 +83,11 @@ public class ReadingsFragment extends Fragment {
 			ListView readingsList = (ListView) view.findViewById(R.id.report_detail_readings_list);
 			if (readingsList != null) {
 				readingsList.setAdapter(mReadingsAdapter);
+
+				TextView emptyView = (TextView) view.findViewById(R.id.report_detail_readings_list_empty);
+				if (emptyView != null) {
+					readingsList.setEmptyView(emptyView);
+				}
 			}
 		}
 

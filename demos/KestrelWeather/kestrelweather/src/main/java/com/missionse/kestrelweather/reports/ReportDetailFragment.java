@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.DatabaseAccessor;
+import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.reports.auxiliary.AuxiliaryDataFragment;
 import com.missionse.kestrelweather.reports.readings.ReadingsFragment;
 import com.missionse.kestrelweather.reports.weather.WeatherOverviewFragment;
@@ -24,7 +27,6 @@ public class ReportDetailFragment extends Fragment {
 	private static final int INVALID_REPORT_ID = -1;
 
 	private Activity mActivity;
-	private boolean mEditable = true;
 	private int mReportId = INVALID_REPORT_ID;
 
 	/**
@@ -72,14 +74,22 @@ public class ReportDetailFragment extends Fragment {
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_report_detail, container, false);
 		if (view != null) {
-			TextView reportTitle = (TextView) view.findViewById(R.id.report_detail_title);
-			if (reportTitle != null) {
-				reportTitle.setText("Test Report");
-			}
+			if (mActivity != null) {
+				DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
+				if (databaseAccessor != null) {
+					Report report = databaseAccessor.getReportById(mReportId);
+					if (report != null) {
+						TextView reportTitle = (TextView) view.findViewById(R.id.report_detail_title);
+						if (reportTitle != null) {
+							reportTitle.setText(report.getUserName());
+						}
 
-			TextView reportTimestamp = (TextView) view.findViewById(R.id.report_detail_timestamp);
-			if (reportTimestamp != null) {
-				reportTimestamp.setText("Fakeday 2014");
+						TextView reportTimestamp = (TextView) view.findViewById(R.id.report_detail_timestamp);
+						if (reportTimestamp != null) {
+							reportTimestamp.setText(report.getCreatedAt().toString());
+						}
+					}
+				}
 			}
 
 			ViewPager viewPager = (ViewPager) view.findViewById(R.id.report_detail_view_pager);

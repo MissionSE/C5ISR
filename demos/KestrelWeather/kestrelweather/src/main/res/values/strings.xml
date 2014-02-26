@@ -119,6 +119,7 @@
 	<string name="weather_status_description">The icon for the weather status.</string>
 	<string name="icon_description">The icon for a list item.</string>
 	<string name="sync_status_description">The icon representing the current sync status.</string>
+	<string name="readings_error">Unable to fetch readings.</string>
 
 	<!-- Fragment: Report Photos -->
 	<string name="action_add">Add</string>

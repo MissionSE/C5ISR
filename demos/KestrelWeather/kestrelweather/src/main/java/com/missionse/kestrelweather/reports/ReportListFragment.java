@@ -13,9 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.DatabaseAccessor;
+import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,11 +60,12 @@ public class ReportListFragment extends Fragment {
 
 		setHasOptionsMenu(true);
 
-		List<Integer> reports = new ArrayList<Integer>();
-		reports.add(1);
-		reports.add(2);
-		reports.add(3);
-		mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header, reports);
+		if (mActivity != null) {
+			DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
+			ReportTable reportTable = databaseAccessor.getReportTable();
+			List<Report> reports = reportTable.queryForAll();
+			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header, reports);
+		}
 	}
 
 	@Override
@@ -69,27 +73,29 @@ public class ReportListFragment extends Fragment {
 		View contentView = inflater.inflate(R.layout.fragment_report_list, container, false);
 		if (contentView != null) {
 			ListView reportList = (ListView) contentView.findViewById(R.id.fragment_report_list);
-			reportList.setAdapter(mReportAdapter);
-			reportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-					FragmentManager fragmentManager = getFragmentManager();
-					if (fragmentManager != null) {
-						Fragment reportDetailFragment = ReportDetailFragment.newInstance(mReportAdapter.getItem(position));
-						fragmentManager.beginTransaction()
-								.setCustomAnimations(
-										R.animator.slide_from_right, R.animator.slide_to_left,
-										R.animator.slide_from_left, R.animator.slide_to_right)
-								.replace(R.id.content, reportDetailFragment, "report_detail")
-								.addToBackStack("report_detail")
-								.commit();
+			if (reportList != null) {
+				reportList.setAdapter(mReportAdapter);
+				reportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
+						FragmentManager fragmentManager = getFragmentManager();
+						if (fragmentManager != null) {
+							Fragment reportDetailFragment = ReportDetailFragment.newInstance(mReportAdapter.getItem(position).getId());
+							fragmentManager.beginTransaction()
+									.setCustomAnimations(
+											R.animator.slide_from_right, R.animator.slide_to_left,
+											R.animator.slide_from_left, R.animator.slide_to_right)
+									.replace(R.id.content, reportDetailFragment, "report_detail")
+									.addToBackStack("report_detail")
+									.commit();
+						}
 					}
-				}
-			});
+				});
 
-			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_photos_empty);
-			if (emptyView != null) {
-				reportList.setEmptyView(emptyView);
+				TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_list_empty);
+				if (emptyView != null) {
+					reportList.setEmptyView(emptyView);
+				}
 			}
 		}
 

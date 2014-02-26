@@ -2,6 +2,7 @@ package com.missionse.kestrelweather.reports.readings;
 
 import android.content.Context;
 
+import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.reports.readings.impl.DewPointListItem;
 import com.missionse.kestrelweather.reports.readings.impl.HeatIndexListItem;
 import com.missionse.kestrelweather.reports.readings.impl.HumidityListItem;
@@ -25,20 +26,20 @@ public final class ReadingsListFactory {
 	/**
 	 * Creates an returns a list of ReadingsListItems.
 	 * @param context The current context.
-	 * @param reportId The id of the report.
+	 * @param report The report used to get the readings.
 	 * @return A list of ReadingsListItems.
 	 */
-	public static List<ReadingsListItem> getListItems(final Context context, final int reportId) {
+	public static List<ReadingsListItem> getListItems(final Context context, final Report report) {
 		List<ReadingsListItem> readingsListItems = new ArrayList<ReadingsListItem>();
-		readingsListItems.add(new DewPointListItem(context, reportId));
-		readingsListItems.add(new TemperatureListItem(context, reportId));
-		readingsListItems.add(new HumidityListItem(context, reportId));
-		readingsListItems.add(new PressureListItem(context, reportId));
-		readingsListItems.add(new PressureTrendListItem(context, reportId));
-		readingsListItems.add(new HeatIndexListItem(context, reportId));
-		readingsListItems.add(new WindSpeedListItem(context, reportId));
-		readingsListItems.add(new WindDirectionListItem(context, reportId));
-		readingsListItems.add(new WindChillListItem(context, reportId));
+		readingsListItems.add(new DewPointListItem(context, report));
+		readingsListItems.add(new TemperatureListItem(context, report));
+		readingsListItems.add(new HumidityListItem(context, report));
+		readingsListItems.add(new PressureListItem(context, report));
+		readingsListItems.add(new PressureTrendListItem(context, report));
+		readingsListItems.add(new HeatIndexListItem(context, report));
+		readingsListItems.add(new WindSpeedListItem(context, report));
+		readingsListItems.add(new WindDirectionListItem(context, report));
+		readingsListItems.add(new WindChillListItem(context, report));
 
 		return readingsListItems;
 	}

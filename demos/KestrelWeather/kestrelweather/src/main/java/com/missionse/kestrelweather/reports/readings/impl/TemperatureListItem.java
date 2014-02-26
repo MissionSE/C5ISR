@@ -3,6 +3,7 @@ package com.missionse.kestrelweather.reports.readings.impl;
 import android.content.Context;
 
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.reports.readings.ReadingsListItem;
 
 /**
@@ -10,16 +11,16 @@ import com.missionse.kestrelweather.reports.readings.ReadingsListItem;
  */
 public class TemperatureListItem implements ReadingsListItem {
 	private final Context mContext;
-	private final int mReportId;
+	private final Report mReport;
 
 	/**
 	 * Constructor.
 	 * @param context The current Context.
-	 * @param reportId The id of the report.
+	 * @param report The report used to populate the data.
 	 */
-	public TemperatureListItem(final Context context, final int reportId) {
+	public TemperatureListItem(final Context context, final Report report) {
 		mContext = context;
-		mReportId = reportId;
+		mReport = report;
 	}
 
 	@Override
@@ -29,7 +30,7 @@ public class TemperatureListItem implements ReadingsListItem {
 
 	@Override
 	public String getReading() {
-		return "73";
+		return Float.toString(mReport.getKestrelWeather().getTemperature());
 	}
 
 	@Override

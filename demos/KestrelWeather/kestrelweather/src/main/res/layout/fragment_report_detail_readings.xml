@@ -5,6 +5,17 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent">
 
+	<TextView
+		android:id="@+id/report_detail_readings_list_empty"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:gravity="center"
+		android:text="@string/readings_error"
+		android:textSize="22sp"
+		android:textColor="@color/gray_medium"
+		android:visibility="gone">
+	</TextView>
+
 	<ListView
 		android:id="@+id/report_detail_readings_list"
 		android:layout_height="match_parent"

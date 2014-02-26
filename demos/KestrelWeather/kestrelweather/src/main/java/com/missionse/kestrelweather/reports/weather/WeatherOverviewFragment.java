@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.DatabaseAccessor;
+import com.missionse.kestrelweather.database.model.tables.Report;
 
 /**
  * A fragment used to display an overview of the weather conditions of a report.
@@ -71,24 +74,32 @@ public class WeatherOverviewFragment extends Fragment {
 				weatherStatusIcon.setImageResource(R.drawable.weather_pict_cloudy);
 			}
 
-			TextView temperatureView = (TextView) contentView.findViewById(R.id.report_detail_temperature);
-			if (temperatureView != null) {
-				temperatureView.setText("70º");
-			}
+			if (mActivity != null) {
+				DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
+				if (databaseAccessor != null) {
+					Report report = databaseAccessor.getReportById(mReportId);
+					if (report != null) {
+						TextView temperatureView = (TextView) contentView.findViewById(R.id.report_detail_temperature);
+						if (temperatureView != null) {
+							temperatureView.setText(Float.toString(report.getKestrelWeather().getTemperature()));
+						}
 
-			TextView weatherConditionView = (TextView) contentView.findViewById(R.id.report_detail_weather_condition);
-			if (weatherConditionView != null) {
-				weatherConditionView.setText("Cloudy");
-			}
+						TextView weatherConditionView = (TextView) contentView.findViewById(R.id.report_detail_weather_condition);
+						if (weatherConditionView != null) {
+							weatherConditionView.setText(report.getOpenWeather().getDescription());
+						}
 
-			TextView latitudeView = (TextView) contentView.findViewById(R.id.report_detail_latitude);
-			if (latitudeView != null) {
-				latitudeView.setText("34.82938293");
-			}
+						TextView latitudeView = (TextView) contentView.findViewById(R.id.report_detail_latitude);
+						if (latitudeView != null) {
+							latitudeView.setText(Double.toString(report.getLatitude()));
+						}
 
-			TextView longitudeView = (TextView) contentView.findViewById(R.id.report_detail_longitude);
-			if (longitudeView != null) {
-				longitudeView.setText("-75.23590239");
+						TextView longitudeView = (TextView) contentView.findViewById(R.id.report_detail_longitude);
+						if (longitudeView != null) {
+							longitudeView.setText(Double.toString(report.getLongitude()));
+						}
+					}
+				}
 			}
 		}
 
