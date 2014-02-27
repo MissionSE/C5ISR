@@ -7,9 +7,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.util.TypedValue;
 
 
@@ -38,10 +36,6 @@ public class TextDrawable extends Drawable {
     @Override
     public void draw(Canvas canvas) {
         Rect bounds = getBounds();
-        Log.d("TextDrawable", "bounds.centerX=" + bounds.centerX());
-        Log.d("TextDrawable", "bounds.centerY=" + bounds.centerY());
-        Log.d("TextDrawable", "bounds=" + bounds.toString());
-
 
         canvas.drawText(mText, 0, mText.length(),
                 bounds.centerX(), bounds.centerY(), mPaint);

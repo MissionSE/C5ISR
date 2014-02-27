@@ -1,23 +1,13 @@
 package com.missionse.mapsexample;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.reflect.TypeToken;
-import com.google.maps.android.MarkerManager;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.missionse.mapsexample.model.WeatherObservation;
@@ -76,7 +66,6 @@ public class CustomMarkerInfoWindowActivity extends Activity implements
 
     private void setUpMap() {
         mMarkersAdapter = new WeatherMarkersAdapter(this, mMap);
-        mMap.setInfoWindowAdapter(mMarkersAdapter);
         mMap.setOnMapLongClickListener(this);
     }
 

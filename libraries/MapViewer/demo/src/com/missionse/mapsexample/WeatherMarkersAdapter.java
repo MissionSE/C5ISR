@@ -15,17 +15,20 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.view.ClusterRenderer;
-import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.missionse.mapsexample.model.WeatherObservation;
 import com.missionse.mapsexample.utils.BitmapHelper;
 import com.missionse.mapsexample.utils.ResourcesHelper;
 import com.missionse.mapviewer.adapters.DataMarkersAdapter;
+import com.missionse.mapviewer.clustering.DefaultClusterRenderer;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
 public class WeatherMarkersAdapter extends DataMarkersAdapter<List<WeatherObservation>, WeatherObservation, String> {
     private static final String TAG = WeatherMarkersAdapter.class.getSimpleName();
     private WeatherObservation mCurrentObservation;
+    private Cluster<WeatherObservation> mCurrentCluster;
 
     public WeatherMarkersAdapter(Context context, GoogleMap map) {
         super(context, map, R.layout.observation_map_callout);
@@ -57,7 +60,7 @@ public class WeatherMarkersAdapter extends DataMarkersAdapter<List<WeatherObserv
     }
 
     @Override
-    public BitmapDescriptor createIcon(int index) {
+    public BitmapDescriptor createClusterItemIcon(int index) {
         ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
         shapeDrawable.getPaint().setColor(ResourcesHelper.getTemperatureColorByIndex(getContext(), index));
         Drawable[] arrayOfDrawable = new Drawable[2];
@@ -71,11 +74,6 @@ public class WeatherMarkersAdapter extends DataMarkersAdapter<List<WeatherObserv
     }
 
     @Override
-    public int getCount() {
-        return getData().size();
-    }
-
-    @Override
     public int getClusterIconType(Cluster<WeatherObservation> cluster) {
         int iconType = 0;
         for (WeatherObservation observation : cluster.getItems()) {
@@ -86,7 +84,7 @@ public class WeatherMarkersAdapter extends DataMarkersAdapter<List<WeatherObserv
     }
 
     @Override
-    public int getIconType(WeatherObservation observation) {
+    public int getClusterItemIconType(WeatherObservation observation) {
         return ResourcesHelper.getTemperatureIndex(observation.getData().getMain().getTemp());
     }
 
@@ -100,6 +98,26 @@ public class WeatherMarkersAdapter extends DataMarkersAdapter<List<WeatherObserv
                 marker.showInfoWindow();
             }
             this.mCurrentObservation = observation;
+        } else {
+            view = paramView;
+        }
+        return view;
+    }
+
+    @Override
+    protected View getInfoView(final Marker marker, Cluster<WeatherObservation> cluster, View paramView) {
+        View view;
+        if (mCurrentCluster != cluster) {
+            view = super.getInfoView(marker, cluster, paramView);
+            DateTime now = DateTime.now();
+            for (WeatherObservation observation : cluster.getItems()) {
+                ((ObservationCallout) view).setData(observation);
+
+            }
+            if (marker.isInfoWindowShown()) {
+                marker.showInfoWindow();
+            }
+            this.mCurrentCluster = cluster;
         } else {
             view = paramView;
         }
@@ -138,7 +156,10 @@ public class WeatherMarkersAdapter extends DataMarkersAdapter<List<WeatherObserv
 
     @Override
     public ClusterRenderer<WeatherObservation> getRenderer() {
-        return new WeatherObservationRenderer();
+        WeatherObservationRenderer renderer = new WeatherObservationRenderer();
+        renderer.setClusterItemInfoWindowAdapter(this);
+        renderer.setClusterInfoWindowAdapter(this);
+        return renderer;
     }
 
     private class WeatherObservationRenderer extends DefaultClusterRenderer<WeatherObservation> {
@@ -154,12 +175,12 @@ public class WeatherMarkersAdapter extends DataMarkersAdapter<List<WeatherObserv
 
         @Override
         protected void onBeforeClusterItemRendered(WeatherObservation observation, MarkerOptions markerOptions) {
-            markerOptions.icon(getMarkerIcon(observation));
+            markerOptions.icon(getClusterItemIcon(observation)).draggable(false).anchor(0.5F, 0.5F);
         }
 
         @Override
         protected void onBeforeClusterRendered(Cluster<WeatherObservation> cluster, MarkerOptions markerOptions) {
-            markerOptions.icon(getClusterIcon(cluster));
+            markerOptions.icon(getClusterIcon(cluster)).draggable(false).anchor(0.5F, 0.5F);
         }
     }
 
