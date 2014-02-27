@@ -3,12 +3,14 @@ package com.missionse.kestrelweather.reports.auxiliary;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 
 import java.util.List;
@@ -17,10 +19,11 @@ import java.util.List;
  * Provides a fragment used to display the auxiliary of a report.
  */
 public class AuxiliaryDataFragment extends Fragment {
+	private static final String TAG = AuxiliaryDataFragment.class.getSimpleName();
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
 
-	private Activity mActivity;
+	private KestrelWeatherActivity mActivity;
 	private int mReportId = INVALID_REPORT_ID;
 	private AuxiliaryDataAdapter mAuxiliaryDataAdapter;
 
@@ -48,7 +51,11 @@ public class AuxiliaryDataFragment extends Fragment {
 	@Override
 	public void onAttach(final Activity activity) {
 		super.onAttach(activity);
-		mActivity = activity;
+		try {
+			mActivity = (KestrelWeatherActivity) activity;
+		} catch (ClassCastException e) {
+			Log.e(TAG, "Unable to cast activity.", e);
+		}
 	}
 
 	@Override
@@ -66,7 +73,7 @@ public class AuxiliaryDataFragment extends Fragment {
 
 		if (mActivity != null) {
 			List<AuxiliaryDataListItem> auxiliaryDataListItems = AuxiliaryDataListFactory.getListItems(
-					mActivity, mActivity.getFragmentManager(), mReportId);
+					mActivity, mReportId);
 			mAuxiliaryDataAdapter = new AuxiliaryDataAdapter(
 					mActivity, R.layout.fragment_report_detail_auxiliary_data_list_entry, auxiliaryDataListItems);
 		}

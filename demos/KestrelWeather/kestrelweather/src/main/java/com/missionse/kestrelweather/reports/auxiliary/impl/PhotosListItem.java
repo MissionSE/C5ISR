@@ -3,7 +3,9 @@ package com.missionse.kestrelweather.reports.auxiliary.impl;
 import android.app.FragmentManager;
 import android.content.Context;
 
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.reports.auxiliary.AuxiliaryDataListItem;
 import com.missionse.kestrelweather.reports.photos.PhotoOverviewFragment;
 
@@ -13,17 +15,18 @@ import com.missionse.kestrelweather.reports.photos.PhotoOverviewFragment;
 public class PhotosListItem implements AuxiliaryDataListItem {
 	private final Context mContext;
 	private final FragmentManager mFragmentManager;
+	private final DatabaseAccessor mDatabaseAccessor;
 	private final int mReportId;
 
 	/**
 	 * Constructor.
-	 * @param context The current Context.
-	 * @param fragmentManager The fragment manager.
+	 * @param activity Instance of KestrelWeatherActivity.
 	 * @param reportId The id of the report.
 	 */
-	public PhotosListItem(final Context context, final FragmentManager fragmentManager, final int reportId) {
-		mContext = context;
-		mFragmentManager = fragmentManager;
+	public PhotosListItem(final KestrelWeatherActivity activity, final int reportId) {
+		mContext = activity;
+		mFragmentManager = activity.getFragmentManager();
+		mDatabaseAccessor = activity.getDatabaseAccessor();
 		mReportId = reportId;
 	}
 
@@ -34,7 +37,7 @@ public class PhotosListItem implements AuxiliaryDataListItem {
 
 	@Override
 	public int getCount() {
-		return 0;
+		return mDatabaseAccessor.getPhotoSupplements(mReportId).size();
 	}
 
 	@Override

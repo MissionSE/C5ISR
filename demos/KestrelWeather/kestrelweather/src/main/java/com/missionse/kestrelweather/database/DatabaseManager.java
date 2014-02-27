@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
+import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.UserSettings;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
@@ -14,6 +16,8 @@ import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTab
 import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.UserSettingsTable;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -111,6 +115,29 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 		}
 		return settings;
 	}
+
+	@Override
+	public List<Supplement> getPhotoSupplements(final int reportId) {
+		return getFilteredSupplements(reportId, SupplementType.PHOTO);
+	}
+
+	@Override
+	public List<Supplement> getAudioSupplements(final int reportId) {
+		return getFilteredSupplements(reportId, SupplementType.AUDIO);
+	}
+
+	private List<Supplement> getFilteredSupplements(final int reportId, SupplementType type) {
+		List<Supplement> supplements = getSupplementTable().queryForAll();
+		List<Supplement> retList = new LinkedList<Supplement>();
+		for (Supplement supp : supplements) {
+			if (supp.getType() == type &&
+			   supp.getReport().getId() == reportId) {
+				retList.add(supp);
+			}
+		}
+		return retList;
+	}
+
 	@Override
 	public void onDestroy() {
 		mLocalDatabaseHelper = null;

@@ -17,7 +17,6 @@ import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.util.IonUtil;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -96,14 +95,9 @@ public class DatabasePuller implements Runnable {
 	}
 
 	private boolean remoteReportExists(int id) {
-		try {
 			List<Report> reports =
 			   mAccessor.getReportTable().queryForEq("remote_id", id);
 			return reports.size() > 0;
-		} catch (SQLException e) {
-			Log.d(TAG, "unable to determine if remote id exists.", e);
-			return false;
-		}
 	}
 
 	private void createReportFromJson(final JsonObject json) {

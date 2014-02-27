@@ -16,7 +16,6 @@ import com.missionse.kestrelweather.kestrel.KestrelSimulator;
 import com.missionse.kestrelweather.map.MapViewerFragment;
 import com.missionse.kestrelweather.map.TileProviderFactory;
 import com.missionse.kestrelweather.map.TiledMap;
-import com.missionse.kestrelweather.reports.RemoteReportListFragment;
 import com.missionse.kestrelweather.reports.ReportListFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
@@ -182,15 +181,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	}
 
 	private void displayDatabaseReport() {
-		FragmentManager fragmentManager = getFragmentManager();
-		RemoteReportListFragment reportListFragment = (RemoteReportListFragment) fragmentManager
-		   .findFragmentByTag("database_list");
-		if (reportListFragment == null) {
-			reportListFragment = new RemoteReportListFragment();
-		}
-		fragmentManager.beginTransaction()
-		   .replace(R.id.content, reportListFragment, "database_list")
-		   .commit();
+
 	}
 
 	@Override

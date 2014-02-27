@@ -1,11 +1,14 @@
 package com.missionse.kestrelweather.database;
 
 import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
+
+import java.util.List;
 
 /**
  * Accessor functions to the database.
@@ -65,4 +68,18 @@ public interface DatabaseAccessor {
 	 * @param latestEvent The new latestEvent id.
 	 */
 	 void setLatestEvent(String latestEvent);
+
+	/**
+	 * Getter.
+	 * @param reportId The DB report ID
+	 * @return List of supplements that are of type SupplementType.PHOTO.
+	 */
+	 List<Supplement> getPhotoSupplements(int reportId);
+
+	/**
+	 * Getter.
+	 * @param reportId The DB report ID
+	 * @return List of supplements that are of type SupplementType.AUDIO.
+	 */
+	 List<Supplement> getAudioSupplements(int reportId);
 }

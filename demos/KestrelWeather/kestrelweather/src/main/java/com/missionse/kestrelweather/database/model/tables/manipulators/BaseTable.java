@@ -85,4 +85,14 @@ public class BaseTable<T extends Entity> extends BaseDaoImpl<T, Integer> impleme
 			return INVALID_DB_ID;
 		}
 	}
+
+	@Override
+	public List<T> queryForEq(String fieldName, Object value) {
+		try {
+			return super.queryForEq(fieldName, value);
+		} catch (SQLException e) {
+			Log.e(TAG, "Unable to queryForEq", e);
+			return Collections.emptyList();
+		}
+	}
 }
