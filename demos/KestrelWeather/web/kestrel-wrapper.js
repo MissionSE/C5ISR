@@ -4,9 +4,9 @@ var child = new (forever.Monitor)('server.js', {
 	max: 5,
 	silent: true,
 	sourceDir: './',
-	logFile: './logs/kestrel.out',
-	outFile: './logs/kestrel.out',
-	errFile: './logs/kestrel.out'
+	logFile: __dirname + '/logs/kestrel.out',
+	outFile: __dirname + '/logs/kestrel.out',
+	errFile: __dirname + '/logs/kestrel.out'
 });
 
 child.on('exit', function () {
