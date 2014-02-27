@@ -10,7 +10,6 @@ import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
@@ -53,8 +52,6 @@ public class WeatherMarkersAdapter extends DataMarkersAdapter<List<WeatherObserv
         int i = (int) (10.0F * getContext().getResources().getDisplayMetrics().density);
         layerDrawable.setLayerInset(1, i, i, i, i);
         layerDrawable.setLayerInset(2, 0, 13, 0, -13);
-
-        int j = (int) (getContext().getResources().getDisplayMetrics().density);
 
         return BitmapDescriptorFactory.fromBitmap(BitmapHelper.getDrawableBitmap(layerDrawable));
     }
@@ -122,36 +119,6 @@ public class WeatherMarkersAdapter extends DataMarkersAdapter<List<WeatherObserv
             view = paramView;
         }
         return view;
-    }
-
-    @Override
-    public WeatherObservation getMarkerData(int index) {
-        return getData().get(index);
-    }
-
-    @Override
-    public String getMarkerKey(WeatherObservation observation) {
-        return Integer.toString(observation.getData().getId());
-    }
-
-    @Override
-    public LatLng getMarkerPosition(WeatherObservation observation) {
-        return observation.getPosition();
-    }
-
-    @Override
-    public double getMarkerLatitude(WeatherObservation observation) {
-        return observation.getData().getCoord().getLat();
-    }
-
-    @Override
-    public double getMarkerLongitude(WeatherObservation observation) {
-        return observation.getData().getCoord().getLon();
-    }
-
-    @Override
-    protected MarkerOptions getMarkerOptions(WeatherObservation observation) {
-        return super.getMarkerOptions(observation).draggable(false).anchor(0.5F, 0.5F);
     }
 
     @Override

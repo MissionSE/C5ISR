@@ -9,9 +9,7 @@ import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
@@ -106,13 +104,6 @@ public abstract class DataMarkersAdapter<TData, TMarkerData extends ClusterItem,
         return bitmapDescriptor;
     }
 
-    protected MarkerOptions getMarkerOptions(TMarkerData markerData) {
-        BitmapDescriptor bitmapDescriptor = getClusterItemIcon(markerData);
-        return new MarkerOptions()
-                .position(new LatLng(getMarkerLatitude(markerData), getMarkerLongitude(markerData)))
-                .icon(bitmapDescriptor);
-    }
-
     public void setFullInfoWindowEnabled(boolean enabled) {
         this.mFullInfoWindowEnabled = enabled;
     }
@@ -176,16 +167,6 @@ public abstract class DataMarkersAdapter<TData, TMarkerData extends ClusterItem,
     public abstract int getClusterIconType(Cluster<TMarkerData> cluster);
 
     public abstract int getClusterItemIconType(TMarkerData markerData);
-
-    public abstract TMarkerData getMarkerData(int paramInt);
-
-    public abstract TMarkerKey getMarkerKey(TMarkerData markerData);
-
-    public abstract LatLng getMarkerPosition(TMarkerData markerData);
-
-    public abstract double getMarkerLatitude(TMarkerData markerData);
-
-    public abstract double getMarkerLongitude(TMarkerData markerData);
 
     protected abstract ClusterRenderer<TMarkerData> getRenderer();
 
