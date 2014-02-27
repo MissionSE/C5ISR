@@ -1,6 +1,6 @@
 var forever = require('forever-monitor');
 
-var child = new (forever.Monitor)(__dirname + 'server.js', {
+var child = new (forever.Monitor)('./server.js', {
 	max: 5,
 	silent: true,
 	sourceDir: './',
