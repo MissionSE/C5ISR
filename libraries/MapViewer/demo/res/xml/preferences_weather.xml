@@ -1,19 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/units">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:persistent="true">
+    <PreferenceCategory android:title="Units">
         <ListPreference
             android:entries="@array/pref_temp_units"
-            android:title="@string/basic"
-            android:key="pref_temp_units"
-            android:defaultValue="@string/default_metric"
-            android:dialogTitle="@string/units"
-            android:entryValues="@array/pref_temp_units_values" />
-        <Preference android:title="@string/advanced" android:key="advanced_pref" />
+            android:title="@string/title_temp"
+            android:key="com_missionse_mapsexample_weather_temperature_units"
+            android:defaultValue="@array/pref_temp_units"
+            android:dialogTitle="@string/title_temp_units"
+            android:entryValues="@array/pref_temp_units"/>
+        <ListPreference
+            android:entries="@array/pref_wind_speed_units"
+            android:title="@string/title_wind_speed"
+            android:key="com_missionse_mapsexample_weather_windspeed_units"
+            android:defaultValue="@array/pref_wind_speed_values"
+            android:dialogTitle="@string/title_wind_speed_units"
+            android:entryValues="@array/pref_wind_speed_values"/>
+        <ListPreference
+            android:entries="@array/pref_pressure_units"
+            android:title="@string/title_pressure"
+            android:key="com_missionse_mapsexample_weather_pressure_units"
+            android:defaultValue="@array/pref_pressure_values"
+            android:dialogTitle="@string/title_pressure_units"
+            android:entryValues="@array/pref_pressure_values"/>
+        <ListPreference
+            android:entries="@array/rainfall_units"
+            android:title="@string/title_rainfall"
+            android:key="com_missionse_mapsexample_weather_rainfall_units"
+            android:defaultValue="@array/rainfall_units_values"
+            android:dialogTitle="@string/title_rainfall_units"
+            android:entryValues="@array/rainfall_units_values"/>
     </PreferenceCategory>
-
+    <PreferenceCategory android:title="Updates">
+        <ListPreference
+            android:entries="@array/widget_update_interval"
+            android:title="Update interval"
+            android:key="com_missionse_mapsexample_weather_widget_update_interval"
+            android:defaultValue="@array/widget_update_interval_values"
+            android:dialogTitle="Update Interval"
+            android:entryValues="@array/widget_update_interval_values"/>
+    </PreferenceCategory>
     <PreferenceCategory android:title="About">
-        <Preference android:title="Build version" />
-        <Preference android:title="Open Source Licenses" />
+        <Preference
+            android:title="About Maps Example"
+            android:key="com_missionse_mapsexample_about"/>
     </PreferenceCategory>
 </PreferenceScreen>
