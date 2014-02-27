@@ -20,4 +20,10 @@ To start the server with debug information, run:
 
 	DEBUG=kestrel:* node server
 
-See the [debug](https://github.com/visionmedia/debug) node.js module for more information on the DEBUG parameter.
+See the [debug](https://www.npmjs.org/package/debug) module for more information on the DEBUG parameter.
+
+For a production environment, a wrapper has been provided that utilizes the [forever](https://www.npmjs.org/package/forever) module to daemonize the process. To use this feature, run:
+
+	node kestrel-wrapper.js
+
+This should be executed from the relevant startup script. Note that the main server script is referenced with a relative path, and will it is therefore necessary to change directory to the `web` directory in which these scripts live.
