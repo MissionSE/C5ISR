@@ -31,19 +31,12 @@ public class KestrelWeatherDrawerFactory {
 				R.id.drawer_layout);
 
 		createNavigationDrawer(container);
-		createSyncDrawer(container);
 
 		return container;
 	}
 
 	private void createNavigationDrawer(final DrawerConfigurationContainer container) {
 		DrawerConfiguration configuration = new DrawerConfiguration(mContext, DrawerType.LEFT, R.id.navigation_drawer);
-		container.addConfiguration(configuration);
-	}
-
-	private void createSyncDrawer(final DrawerConfigurationContainer container) {
-		DrawerConfiguration configuration = new DrawerConfiguration(mContext, DrawerType.RIGHT, R.id.sync_drawer);
-		//configuration.setShouldCloseOnSelect(false);
 		container.addConfiguration(configuration);
 	}
 

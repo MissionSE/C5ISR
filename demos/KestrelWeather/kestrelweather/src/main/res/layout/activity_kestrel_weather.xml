@@ -13,6 +13,4 @@
 
 	<!-- The Navigation Drawer -->
 	<include layout="@layout/drawer_navigation"/>
-	<!-- The Notification Drawer -->
-	<include layout="@layout/drawer_sync"/>
 </android.support.v4.widget.DrawerLayout>
