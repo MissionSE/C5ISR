@@ -22,6 +22,8 @@
 	<string name="cont">Continue</string>
 	<string name="create">Create</string>
 	<string name="edit">Edit</string>
+	<string name="exit">Exit</string>
+	<string name="exit_prompt">Are you sure you want to exit?</string>
 	<string name="no_description">No description.</string>
 	<string name="image_thumbnail">Thumbnail of the image.</string>
 	<string name="unknown">Unknown</string>

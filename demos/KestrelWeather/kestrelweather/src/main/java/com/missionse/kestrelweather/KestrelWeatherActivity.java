@@ -1,6 +1,8 @@
 package com.missionse.kestrelweather;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -125,6 +127,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 
 	@Override
 	protected void onNavigationItemSelected(int index) {
+		clearBackStack();
 		if (index == KestrelWeatherDrawerFactory.MAP_OVERVIEW) {
 			displayMapOverview();
 		} else if (index == KestrelWeatherDrawerFactory.CREATE_REPORT) {
@@ -134,6 +137,11 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		} else if (index == KestrelWeatherDrawerFactory.REPORT_DATABASE) {
 			displayDatabaseReport();
 		}
+	}
+
+	private void clearBackStack() {
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 	}
 
 	private void displayMapOverview() {
@@ -146,7 +154,6 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		}
 		fragmentManager.beginTransaction()
 				.replace(R.id.content, mapViewerFragment, "map")
-				.addToBackStack("map")
 				.commit();
 	}
 
@@ -159,7 +166,6 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		}
 		fragmentManager.beginTransaction()
 				.replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
-				.addToBackStack("kestrelconnector")
 				.commit();
 	}
 
@@ -172,7 +178,6 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		}
 		fragmentManager.beginTransaction()
 				.replace(R.id.content, reportListFragment, "report_list")
-				.addToBackStack("report_list")
 				.commit();
 	}
 
@@ -185,7 +190,6 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		}
 		fragmentManager.beginTransaction()
 		   .replace(R.id.content, reportListFragment, "database_list")
-		   .addToBackStack("database_list")
 		   .commit();
 	}
 
@@ -241,8 +245,21 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	@Override
 	public void onBackPressed() {
 		int backStackEntries = getFragmentManager().getBackStackEntryCount();
-		if (backStackEntries == 1) {
-			finish();
+		if (backStackEntries == 0) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.exit_prompt)
+				.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						finish();
+					}
+				})
+				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						//Nothing to do.
+					}
+				});
+			// Create the AlertDialog object and return it
+			builder.create().show();
 		} else {
 			super.onBackPressed();
 		}
