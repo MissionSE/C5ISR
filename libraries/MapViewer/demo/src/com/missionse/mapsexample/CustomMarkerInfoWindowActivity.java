@@ -1,8 +1,8 @@
 package com.missionse.mapsexample;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,8 +36,10 @@ public class CustomMarkerInfoWindowActivity extends Activity implements
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                Intent i = new Intent(this, WeatherSettingsActivity.class);
-                startActivity(i);
+                // Display the fragment as the main content.
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new WeatherPreferenceFragment())
+                        .commit();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -49,6 +51,7 @@ public class CustomMarkerInfoWindowActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_marker_info_window);
 
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_weather, false);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         setUpMapIfNeeded();
