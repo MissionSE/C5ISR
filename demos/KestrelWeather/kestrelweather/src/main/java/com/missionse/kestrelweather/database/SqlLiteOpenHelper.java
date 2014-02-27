@@ -8,9 +8,18 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
+import com.missionse.kestrelweather.database.model.tables.Note;
+import com.missionse.kestrelweather.database.model.tables.OpenWeather;
+import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.database.model.tables.Supplement;
+import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,20 +45,6 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public abstract List<Class> getSupportedClasses();
 
-	/**
-	 * Gets a list of a certain type of object from the local database.
-	 * @param <T> The type of the object.
-	 * @param clazz The class of the object.
-	 * @return List of type <T> objects from the local database.
-	 */
-	public <T> List<T> fetchAll(final Class<T> clazz) {
-		try {
-			return getDao(clazz).queryForAll();
-		} catch (SQLException sqlException) {
-			sqlException.printStackTrace();
-		}
-		return Collections.emptyList();
-	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
@@ -60,6 +55,21 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 			}
 		} catch (SQLException exp) {
 			Log.e(TAG, "Cannot create database.", exp);
+			throw new RuntimeException(exp);
+		}
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
+						  int oldVersion, int newVersion) {
+		try {
+			Log.i(TAG, "onUpgrade");
+			for (Class clazz : getSupportedClasses()) {
+				TableUtils.dropTable(connectionSource, clazz, true);
+			}
+			onCreate(db, connectionSource);
+		} catch (SQLException exp) {
+			Log.e(TAG, "Cannot drop database.", exp);
 			throw new RuntimeException(exp);
 		}
 	}
@@ -81,18 +91,43 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 		return objectDao;
 	}
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
-			int oldVersion, int newVersion) {
-		try {
-			Log.i(TAG, "onUpgrade");
-			for (Class clazz : getSupportedClasses()) {
-				TableUtils.dropTable(connectionSource, clazz, true);
-			}
-			onCreate(db, connectionSource);
-		} catch (SQLException exp) {
-			Log.e(TAG, "Cannot drop database.", exp);
-			throw new RuntimeException(exp);
-		}
+	/**
+	 * Getter.
+	 * @return Instance of ReportTable.
+	 */
+	public ReportTable getReportTable() {
+		return (ReportTable) getObjectDao(Report.class);
+	}
+
+	/**
+	 * Getter.
+	 * @return Instance of SupplementTable.
+	 */
+	public SupplementTable getSupplementTable() {
+		return (SupplementTable) getObjectDao(Supplement.class);
+	}
+
+	/**
+	 * Getter.
+	 * @return Instance of KestrelWeather.
+	 */
+	public KestrelWeatherTable getKestrelWeatherTable() {
+		return (KestrelWeatherTable) getObjectDao(KestrelWeather.class);
+	}
+
+	/**
+	 * Getter.
+	 * @return Instance of OpenWeatherTable.
+	 */
+	public OpenWeatherTable getOpenWeatherTable() {
+		return (OpenWeatherTable) getObjectDao(OpenWeather.class);
+	}
+
+	/**
+	 * Getter.
+	 * @return Instance of NoteTable.
+	 */
+	public NoteTable getNoteTable() {
+		return (NoteTable) getObjectDao(Note.class);
 	}
 }

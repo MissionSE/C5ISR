@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.missionse.kestrelweather.database.local.LocalDatabaseHelper;
+import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Note;
 import com.missionse.kestrelweather.database.model.tables.Report;
 
@@ -19,14 +19,14 @@ import java.util.Map;
  */
 public class ReportSerialization implements JsonSerializer<Report>, JsonDeserializer<Report> {
 
-	private LocalDatabaseHelper mLocalDatabaseHelper = null;
+	private DatabaseAccessor mAccessor = null;
 
 	/**
 	 * Constructor.
-	 * @param localHelper Instance of LocalDatabaseHelper.
+	 * @param accessor Instance of DatabaseAccessor.
 	 */
-	public ReportSerialization(LocalDatabaseHelper localHelper) {
-		mLocalDatabaseHelper = localHelper;
+	public ReportSerialization(DatabaseAccessor accessor) {
+		mAccessor = accessor;
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class ReportSerialization implements JsonSerializer<Report>, JsonDeserial
 
 	@Override
 	public Report deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-		Report report = mLocalDatabaseHelper.getReportTable().newReport();
+		Report report = mAccessor.getReportTable().newReport();
 		if (json != null) {
 			report.populate(json.getAsJsonObject());
 		}

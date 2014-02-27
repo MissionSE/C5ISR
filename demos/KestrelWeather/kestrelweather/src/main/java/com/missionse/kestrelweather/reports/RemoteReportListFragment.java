@@ -64,7 +64,7 @@ public class RemoteReportListFragment  extends Fragment {
 
 		if (mActivity != null) {
 			DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
-			ReportTable reportTable = databaseAccessor.getRemoteDatabaseHelper().getReportTable();
+			ReportTable reportTable = databaseAccessor.getReportTable();
 			List<Report> reports = reportTable.queryForAll();
 			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header, reports);
 		}
@@ -114,7 +114,7 @@ public class RemoteReportListFragment  extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_sync_reports) {
 			(new DatabaseSync(getActivity(),
-			   ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor())).execute();
+			   ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor())).execute(true,true,false);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

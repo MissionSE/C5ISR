@@ -9,11 +9,6 @@ import com.missionse.kestrelweather.database.model.tables.OpenWeather;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.UserSettings;
-import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
-import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
-import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
-import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
-import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -43,45 +38,5 @@ public class LocalDatabaseHelper extends SqlLiteOpenHelper {
 		ret.add(Report.class);
 		ret.add(UserSettings.class);
 		return ret;
-	}
-
-	/**
-	 * Getter.
-	 * @return Instance of ReportTable.
-	 */
-	public ReportTable getReportTable() {
-		return (ReportTable) getObjectDao(Report.class);
-	}
-
-	/**
-	 * Getter.
-	 * @return Instance of SupplementTable.
-	 */
-	public SupplementTable getSupplementTable() {
-		return (SupplementTable) getObjectDao(Supplement.class);
-	}
-
-	/**
-	 * Getter.
-	 * @return Instance of KestrelWeather.
-	 */
-	public KestrelWeatherTable getKestrelWeatherTable() {
-		return (KestrelWeatherTable) getObjectDao(KestrelWeather.class);
-	}
-
-	/**
-	 * Getter.
-	 * @return Instance of OpenWeatherTable.
-	 */
-	public OpenWeatherTable getOpenWeatherTable() {
-		return (OpenWeatherTable) getObjectDao(OpenWeather.class);
-	}
-
-	/**
-	 * Getter.
-	 * @return Instance of NoteTable.
-	 */
-	public NoteTable getNoteTable() {
-		return (NoteTable) getObjectDao(Note.class);
 	}
 }

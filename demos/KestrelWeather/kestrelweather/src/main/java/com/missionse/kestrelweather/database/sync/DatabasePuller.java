@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
+import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
@@ -16,6 +17,9 @@ import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.util.IonUtil;
 
+import java.sql.SQLException;
+import java.util.List;
+
 /**
  * Handles the pulling of information from the remote database.
  */
@@ -23,6 +27,8 @@ public class DatabasePuller implements Runnable {
 	private static final String TAG = DatabasePuller.class.getSimpleName();
 	private DatabaseAccessor mAccessor;
 	private Context mContext;
+	private String mRemoteUrl;
+
 
 	/**
 	 * Constructor.
@@ -32,6 +38,7 @@ public class DatabasePuller implements Runnable {
 	public DatabasePuller(Context context, DatabaseAccessor accessor) {
 		mContext = context;
 		mAccessor = accessor;
+		mRemoteUrl = mContext.getString(R.string.remote_database) ;
 	}
 
 	@Override
@@ -45,10 +52,14 @@ public class DatabasePuller implements Runnable {
 					JsonArray fetchList = result.getAsJsonArray("toFetch");
 					JsonArray removeList = result.getAsJsonArray("toRemove");
 
+					int fetchListSize = fetchList.size();
+					Log.d(TAG, "Fetch Size>: " + fetchListSize);
 					for (JsonElement element : fetchList) {
 						pullReport(element.getAsString());
 					}
 
+					int removeListSize = removeList.size();
+					Log.d(TAG, "Remove Size>: " + removeListSize);
 					for (JsonElement element : removeList) {
 						removeReport(element.getAsString());
 					}
@@ -64,30 +75,49 @@ public class DatabasePuller implements Runnable {
 		});
 	}
 
-
+	/*
+	 * This logic will need to change once we implement the ability to
+	 * to modify a report remotely.
+	 */
 	private void pullReport(final String reportId) {
-		IonUtil.pullReport(mContext, reportId, new FutureCallback<JsonObject>() {
-			@Override
-			public void onCompleted(Exception e, JsonObject result) {
-				if (e == null) {
-					Log.d(TAG, "Parsing Report: " + result.toString());
-					createReportFromJson(result);
-				} else {
-					Log.e(TAG, "Unable to pull a single report with id:" + reportId, e);
+		if (!remoteReportExists(Integer.valueOf(reportId))) {
+			IonUtil.pullReport(mContext, reportId, new FutureCallback<JsonObject>() {
+				@Override
+				public void onCompleted(Exception e, JsonObject result) {
+					if (e == null) {
+						Log.d(TAG, "Parsing Report: " + result.toString());
+						createReportFromJson(result);
+					} else {
+						Log.e(TAG, "Unable to pull a single report with id:" + reportId, e);
+					}
 				}
-			}
-		});
+			});
+		}
+	}
+
+	private boolean remoteReportExists(int id) {
+		try {
+			List<Report> reports =
+			   mAccessor.getReportTable().queryForEq("remote_id", id);
+			return reports.size() > 0;
+		} catch (SQLException e) {
+			Log.d(TAG, "unable to determine if remote id exists.", e);
+			return false;
+		}
 	}
 
 	private void createReportFromJson(final JsonObject json) {
 		Report report = mAccessor.getReportTable().newReport();
 		report.populate(json);
+		report.setRemoteId(report.getId());
+		report.setId(0);
+		report.setDirty(false);
 
 		Log.d(TAG, "parse kestrelweather...");
 		final KestrelWeather kestrelWeather = new KestrelWeather();
 		if (json.getAsJsonObject("kestrel") != null) {
 			kestrelWeather.populate(json.getAsJsonObject("kestrel"));
-			mAccessor.getRemoteDatabaseHelper().getKestrelWeatherTable().create(kestrelWeather);
+			mAccessor.getKestrelWeatherTable().create(kestrelWeather);
 			report.setKestrelWeather(kestrelWeather);
 		} else {
 			Log.d(TAG, "kestrelweather is null... skipping");
@@ -97,20 +127,23 @@ public class DatabasePuller implements Runnable {
 		final OpenWeather openWeather = new OpenWeather();
 		if (json.getAsJsonObject("weather") != null) {
 			openWeather.populate(json.getAsJsonObject("weather"));
-			mAccessor.getRemoteDatabaseHelper().getOpenWeatherTable().create(openWeather);
+			mAccessor.getOpenWeatherTable().create(openWeather);
 			report.setOpenWeather(openWeather);
 		} else {
 			Log.d(TAG, "openweather is null... skipping");
 		}
 
+		mAccessor.getReportTable().create(report);
+
 		Log.d(TAG, "parse notes...");
 		JsonArray jsonArray = json.getAsJsonArray("notes");
 		if (jsonArray != null) {
 			for (JsonElement jElem : jsonArray) {
+				Log.d(TAG, "parsing note from: " + jElem.toString());
 				Note note = new Note();
 				note.populate(jElem.getAsJsonObject());
-				mAccessor.getRemoteDatabaseHelper().getNoteTable().create(note);
-				report.addNote(note);
+				note.setReport(report);
+				mAccessor.getNoteTable().create(note);
 			}
 		}
 
@@ -121,8 +154,6 @@ public class DatabasePuller implements Runnable {
 		Log.d(TAG, "parse photos...");
 		JsonArray imageArray = json.getAsJsonArray("images");
 		packReportSupplement(report, SupplementType.PHOTO, imageArray);
-
-		mAccessor.getRemoteDatabaseHelper().getReportTable().create(report);
 	}
 
 	private void packReportSupplement(Report report, SupplementType type, JsonArray jsonArray) {
@@ -130,9 +161,10 @@ public class DatabasePuller implements Runnable {
 			for (JsonElement jElem : jsonArray) {
 				Supplement supp = new Supplement();
 				supp.setType(type);
-				supp.setUri(jElem.getAsString());
-				mAccessor.getRemoteDatabaseHelper().getSupplementTable().create(supp);
-				report.addSupplement(supp);
+				supp.setUri(mRemoteUrl + jElem.getAsString());
+				supp.setDirty(false);
+				supp.setReport(report);
+				mAccessor.getSupplementTable().create(supp);
 			}
 		}
 	}
@@ -142,5 +174,4 @@ public class DatabasePuller implements Runnable {
 		Log.d(TAG, "Removing Report with id=" + id);
 		//TODO: Not yet implemented remotely or locally
 	}
-
 }

@@ -156,12 +156,15 @@ public class Entity {
 	 * database can correctly insert it into the local database.
 	 */
 	private int parseId(JsonElement element) {
-		try {
-			return (element == null ? 0 : element.getAsInt());
-		} catch (NumberFormatException e) {
-			Log.d("Entity", "Unable to read db id... defaulting to 0");
-			return 0;
+		int retValue = 0;
+		if (element != null) {
+			try {
+				retValue =  element.getAsInt();
+			} catch (NumberFormatException e) {
+				Log.d("Entity", "Unable to read db id... defaulting to 0");
+			}
 		}
+		return retValue;
 	}
 
 	/*
@@ -169,12 +172,16 @@ public class Entity {
 	 * as well as string gmt format.
 	 */
 	private long parseDate(JsonElement element) {
-		try {
-			return (element == null ? 0 : element.getAsLong());
-		} catch (NumberFormatException e) {
-			Log.d("Entity", "Unable to parse as long:" + element.toString());
-			Log.d("Entity", "parse as string..");
-			return DateTime.parse(element.getAsString()).getMillis();
+		long retValue = DateTime.now().getMillis();
+		if (element != null) {
+			try {
+				retValue = element.getAsLong();
+			} catch (NumberFormatException e) {
+				Log.d("Entity", "Unable to parse as long:" + element.toString());
+				Log.d("Entity", "parse as string..");
+				retValue =  DateTime.parse(element.getAsString()).getMillis();
+			}
 		}
+		return retValue;
 	}
 }

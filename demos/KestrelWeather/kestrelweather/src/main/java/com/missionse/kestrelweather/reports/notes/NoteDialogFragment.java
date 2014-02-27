@@ -243,11 +243,11 @@ public class NoteDialogFragment extends DialogFragment {
 
 
 	private NoteTable getNoteTable() {
-		return getRealActivity().getDatabaseAccessor().getLocalDatabaseHelper().getNoteTable();
+		return getRealActivity().getDatabaseAccessor().getNoteTable();
 	}
 
 	private ReportTable getReportTable() {
-		return getRealActivity().getDatabaseAccessor().getLocalDatabaseHelper().getReportTable();
+		return getRealActivity().getDatabaseAccessor().getReportTable();
 	}
 
 	private KestrelWeatherActivity getRealActivity() {

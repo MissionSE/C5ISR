@@ -7,8 +7,6 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.missionse.kestrelweather.database.model.Entity;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -130,38 +128,6 @@ public class Report extends Entity {
 
 
 	/**
-	 * Add a Supplement to this report.
-	 * @param supplement The supplement to be added.
-	 */
-	public void addSupplement(Supplement supplement) {
-		mSupplements.add(supplement);
-	}
-
-	/**
-	 * Remove supplement from this report.
-	 * @param supplement The supplement to be removed.
-	 */
-	public void removeSupplement(Supplement supplement) {
-		mSupplements.remove(supplement);
-	}
-
-	/**
-	 * Add a Note to this report.
-	 * @param note The Note to be added.
-	 */
-	public void addNote(Note note) {
-		mNotes.add(note);
-	}
-
-	/**
-	 * Remove Note from this report.
-	 * @param note The Note to be removed.
-	 */
-	public void removeNote(Note note) {
-		mNotes.remove(note);
-	}
-
-	/**
 	 * Getter.
 	 * @return Instance of ForeignCollection.
 	 */
@@ -179,16 +145,18 @@ public class Report extends Entity {
 
 	/**
 	 * Getter.
-	 * @return A List<Note>.
+	 * @return Instance of ForeignCollection.
 	 */
-	public List<Note> getNotes() {
-		List<Note> notes = new LinkedList<Note>();
-		if (mNotes != null) {
-			for (Note note : mNotes) {
-				notes.add(note);
-			}
-		}
-		return notes;
+	public ForeignCollection<Note> getNotes() {
+		return mNotes;
+	}
+
+	/**
+	 * Setter.
+	 * @param notes set the note collection.
+	 */
+	public void setNotes(ForeignCollection<Note> notes) {
+		mNotes = notes;
 	}
 
 	@Override

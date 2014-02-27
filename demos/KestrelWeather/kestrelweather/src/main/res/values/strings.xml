@@ -4,7 +4,7 @@
 	<string name="app_name">KestrelWeather</string>
 
 	<!-- Remote Database -->
-	<string name="remote_database">http://192.168.86.197:3000</string>
+	<string name="remote_database">http://198.74.57.149:3009</string>
 	<string name="upload_report_url">%1$s/upload/</string>
 	<string name="retrieve_latest_url">%1$s/event/since/</string>
 	<string name="retrieve_report_url">%1$s/report/</string>

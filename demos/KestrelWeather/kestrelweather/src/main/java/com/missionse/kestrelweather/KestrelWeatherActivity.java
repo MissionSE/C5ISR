@@ -71,6 +71,15 @@ public class KestrelWeatherActivity extends DrawerActivity {
 //				Log.d(TAG, "  (" + note.getId() + ") Title:" + note.getTitle() + "  Content:" + note.getContent());
 //			}
 //		}
+//		Log.d(TAG, "Dumping notes table...");
+//		for (Note note : getDatabaseAccessor().getNoteTable().queryForAll()) {
+//			StringBuilder builder = new StringBuilder();
+//			builder.append("\n");
+//			builder.append("ReportId=" + (note.getReport() == null ? "0" : note.getReport().getId()) + "\n" );
+//			builder.append("Id=" + note.getId() + "\n");
+//			builder.append("Title=" + note.getTitle() + " Content=" + note.getContent());
+//			Log.d(TAG, builder.toString());
+//		}
 	}
 
 	@Override

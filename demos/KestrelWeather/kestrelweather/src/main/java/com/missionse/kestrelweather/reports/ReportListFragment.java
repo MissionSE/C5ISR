@@ -114,7 +114,7 @@ public class ReportListFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_sync_reports) {
 			(new DatabaseSync(getActivity(),
-				((KestrelWeatherActivity) getActivity()).getDatabaseAccessor())).execute();
+				((KestrelWeatherActivity) getActivity()).getDatabaseAccessor())).execute(true,true,false);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

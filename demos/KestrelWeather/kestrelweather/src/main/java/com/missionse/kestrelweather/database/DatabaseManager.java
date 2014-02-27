@@ -13,7 +13,6 @@ import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeath
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.UserSettingsTable;
-import com.missionse.kestrelweather.database.remote.RemoteDatabaseHelper;
 
 import java.util.UUID;
 
@@ -23,7 +22,6 @@ import java.util.UUID;
  */
 public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 	private LocalDatabaseHelper mLocalDatabaseHelper;
-	private RemoteDatabaseHelper mRemoteDatabaseHelper;
 	private Context mContext;
 
 	/**
@@ -34,17 +32,6 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 	public DatabaseManager(Context context) {
 		mContext = context;
 		mLocalDatabaseHelper = new LocalDatabaseHelper(context);
-		mRemoteDatabaseHelper = new RemoteDatabaseHelper(context);
-	}
-
-	@Override
-	public LocalDatabaseHelper getLocalDatabaseHelper() {
-		return mLocalDatabaseHelper;
-	}
-
-	@Override
-	public RemoteDatabaseHelper getRemoteDatabaseHelper() {
-		return mRemoteDatabaseHelper;
 	}
 
 	@Override
@@ -127,7 +114,6 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 	@Override
 	public void onDestroy() {
 		mLocalDatabaseHelper = null;
-		mRemoteDatabaseHelper = null;
 	}
 
 	@Override
