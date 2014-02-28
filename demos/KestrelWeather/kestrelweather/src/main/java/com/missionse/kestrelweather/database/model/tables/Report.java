@@ -1,6 +1,8 @@
 package com.missionse.kestrelweather.database.model.tables;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonObject;
+import com.google.maps.android.clustering.ClusterItem;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -13,7 +15,7 @@ import java.util.Map;
  * Report object.
  */
 @DatabaseTable(daoClass = com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable.class)
-public class Report extends Entity {
+public class Report extends Entity implements ClusterItem {
 	@DatabaseField(columnName = "devicename")
 	private String mUserName;
 
@@ -180,4 +182,10 @@ public class Report extends Entity {
 		setLatitude(lat);
 		setLongitude(lng);
 	}
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(mLatitude, mLongitude);
+    }
+
 }
