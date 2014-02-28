@@ -4,6 +4,12 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.missionse.kestrelweather.KestrelWeatherActivity;
+import com.missionse.kestrelweather.database.DatabaseAccessor;
+import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
+
+import java.util.List;
 
 /**
  * Provides a fragment that displays a google map.
@@ -40,6 +46,12 @@ public class MapViewerFragment extends MapFragment {
 
 	private void setUpMap() {
         mMarkersAdapter = new ObservationCalloutMarkersAdapter(getActivity(), mMap);
+
+        DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor();
+        ReportTable reportTable = databaseAccessor.getReportTable();
+        List<Report> reports = reportTable.queryForAll();
+        mMarkersAdapter.setData(reports);
+
 		if (mMapLoadedListener != null) {
 			mMapLoadedListener.mapLoaded(mMap);
 		}

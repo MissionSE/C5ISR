@@ -8,7 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
-import com.missionse.kestrelweather.map.ObservationData;
+import com.missionse.kestrelweather.database.model.tables.Report;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -21,7 +21,7 @@ public class ObservationCallout extends FrameLayout {
     private static final int SECONDS_IN_MINUTE = 60;
     private static final int MINUTES_IN_HOUR = 60;
     private static final int HOURS_IN_DAY = 24;
-    private ObservationData mObservation;
+    private Report mReport;
 
     public ObservationCallout(Context context) {
         super(context);
@@ -35,8 +35,8 @@ public class ObservationCallout extends FrameLayout {
         super(context, attributeSet, defStyle);
     }
 
-    public void setData(ObservationData observation) {
-        this.mObservation = observation;
+    public void setData(Report report) {
+        this.mReport = report;
 
         setTemperature();
         setHumidity();
@@ -53,7 +53,7 @@ public class ObservationCallout extends FrameLayout {
         TextView unit = (TextView) view.findViewById(R.id.observation_data_top_left_unit);
 
         //TODO convert value with respect to unit
-        value.setText(Integer.toString((int) (this.mObservation.getTemp())));
+        value.setText(Integer.toString((int) (this.mReport.getKestrelWeather().getTemperature())));
         unit.setText(getResources().getStringArray(R.array.temperature_units)[0]);
 
         view.setVisibility(VISIBLE);
@@ -64,7 +64,7 @@ public class ObservationCallout extends FrameLayout {
         TextView value = (TextView) view.findViewById(R.id.observation_data_top_right_value);
         TextView unit = (TextView) view.findViewById(R.id.observation_data_top_right_unit);
 
-        value.setText(Integer.toString(this.mObservation.getHumidity()));
+        value.setText(Integer.toString(this.mReport.getKestrelWeather().getHumidity()));
         unit.setText("%");
 
         view.setVisibility(VISIBLE);
@@ -75,7 +75,7 @@ public class ObservationCallout extends FrameLayout {
         TextView value = (TextView) view.findViewById(R.id.observation_data_middle_right_value);
         TextView unit = (TextView) view.findViewById(R.id.observation_data_middle_right_unit);
 
-        value.setText(Integer.toString((int) this.mObservation.getPressure()));
+        value.setText(Integer.toString((int) this.mReport.getKestrelWeather().getPressure()));
         unit.setText("hPa");
 
         view.setVisibility(VISIBLE);
@@ -87,7 +87,7 @@ public class ObservationCallout extends FrameLayout {
         TextView unit = (TextView) view.findViewById(R.id.observation_data_middle_left_unit);
 
         //TODO convert value with respect to unit
-        value.setText(Double.toString(mObservation.getWindSpeed()));
+        value.setText(Integer.toString((int) mReport.getKestrelWeather().getWindSpeed()));
         unit.setText("mps");
 
         view.setVisibility(VISIBLE);
@@ -107,7 +107,7 @@ public class ObservationCallout extends FrameLayout {
         TextView value = (TextView) view.findViewById(R.id.observation_data_top_center_value);
         TextView unit = (TextView) view.findViewById(R.id.observation_data_top_center_unit);
 
-        DateTime dataTime = mObservation.getTime();
+        DateTime dataTime = mReport.getUpdateAt();
         DateTime now = DateTime.now();
         Log.d(TAG, "dataTime=" + dataTime.toString());
         Log.d(TAG, "now=" + now);
@@ -138,8 +138,8 @@ public class ObservationCallout extends FrameLayout {
 
     private void setWeatherIcon() {
         View view = findViewById(R.id.observation_button);
-        if (view.getBackground() != null) {
-            view.getBackground().setLevel(mObservation.getConditionCode());
+        if (view.getBackground() != null && mReport.getOpenWeather() != null) {
+            view.getBackground().setLevel(mReport.getOpenWeather().getConditionCode());
         }
     }
 

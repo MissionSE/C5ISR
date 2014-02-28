@@ -10,8 +10,8 @@
         android:background="@drawable/callout_weather_btn"/>
 
     <com.makeramen.RoundedImageView
-        android:id="@+id/imageView1"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/imageView1"
         android:layout_width="230dp"
         android:layout_height="230dp"
         android:layout_gravity="center"
@@ -48,7 +48,7 @@
             android:id="@+id/observation_data_top_center"
             style="@style/ObservationDataWidget"
             android:layout_gravity="top|center_horizontal"
-            android:layout_marginTop="@dimen/observation_callout_data_margin_corner">
+            android:layout_marginTop="@dimen/observation_callout_data_margin_side">
 
             <TextView
                 android:id="@+id/observation_data_top_center_value"
@@ -79,7 +79,7 @@
             android:id="@+id/observation_data_middle_left"
             style="@style/ObservationDataWidget"
             android:layout_gravity="center_vertical|left"
-            android:layout_marginRight="@dimen/observation_callout_data_margin_corner">
+            android:layout_marginRight="@dimen/observation_callout_data_margin_side">
 
             <TextView
                 android:id="@+id/observation_data_middle_left_value"
@@ -94,7 +94,7 @@
             android:id="@+id/observation_data_middle_right"
             style="@style/ObservationDataWidget"
             android:layout_gravity="center_vertical|right"
-            android:layout_marginLeft="@dimen/observation_callout_data_margin_corner">
+            android:layout_marginLeft="@dimen/observation_callout_data_margin_side">
 
             <TextView
                 android:id="@+id/observation_data_middle_right_value"
@@ -125,7 +125,7 @@
             android:id="@+id/observation_data_bottom_center"
             style="@style/ObservationDataWidget"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="@dimen/observation_callout_data_margin_corner">
+            android:layout_marginBottom="@dimen/observation_callout_data_margin_side">
 
             <TextView
                 android:id="@+id/observation_data_bottom_center_value"

@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.util.BitmapHelper;
 import com.missionse.kestrelweather.database.util.ResourcesHelper;
 import com.missionse.kestrelweather.graphics.drawable.TextDrawable;
@@ -25,12 +26,10 @@ import com.missionse.mapviewer.clustering.DefaultClusterRenderer;
 
 import org.joda.time.DateTime;
 
-import java.util.List;
-
-public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<List<ObservationData>, ObservationData, String> {
+public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report> {
     private static final String TAG = ObservationCalloutMarkersAdapter.class.getSimpleName();
-    private ObservationData mCurrentObservation;
-    private Cluster<ObservationData> mCurrentCluster;
+    private Report mCurrentObservation;
+    private Cluster<Report> mCurrentCluster;
 
     public ObservationCalloutMarkersAdapter(Context context, GoogleMap map) {
         super(context, map, R.layout.map_observation_callout);
@@ -39,7 +38,7 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<List<Ob
     }
 
     @Override
-    public BitmapDescriptor createClusterIcon(int index, Cluster<ObservationData> cluster) {
+    public BitmapDescriptor createClusterIcon(int index, Cluster<Report> cluster) {
         Drawable shadowDrawable = getContext().getResources().getDrawable(R.drawable.bg_cluster);
 
         ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
@@ -74,22 +73,22 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<List<Ob
     }
 
     @Override
-    public int getClusterIconType(Cluster<ObservationData> cluster) {
+    public int getClusterIconType(Cluster<Report> cluster) {
         int iconType = 0;
-        for (ObservationData observation : cluster.getItems()) {
-            iconType = ResourcesHelper.getTemperatureIndex(observation.getTemp());
+        for (Report observation : cluster.getItems()) {
+            iconType = ResourcesHelper.getTemperatureIndex(observation.getKestrelWeather().getTemperature());
             break;
         }
         return iconType;
     }
 
     @Override
-    public int getClusterItemIconType(ObservationData observation) {
-        return ResourcesHelper.getTemperatureIndex(observation.getTemp());
+    public int getClusterItemIconType(Report observation) {
+        return ResourcesHelper.getTemperatureIndex(observation.getKestrelWeather().getTemperature());
     }
 
     @Override
-    protected View getInfoView(final Marker marker, ObservationData observation, View paramView) {
+    protected View getInfoView(final Marker marker, Report observation, View paramView) {
         View view;
         if (this.mCurrentObservation != observation) {
             view = super.getInfoView(marker, observation, paramView);
@@ -105,12 +104,12 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<List<Ob
     }
 
     @Override
-    protected View getInfoView(final Marker marker, Cluster<ObservationData> cluster, View paramView) {
+    protected View getInfoView(final Marker marker, Cluster<Report> cluster, View paramView) {
         View view;
         if (mCurrentCluster != cluster) {
             view = super.getInfoView(marker, cluster, paramView);
             DateTime now = DateTime.now();
-            for (ObservationData observation : cluster.getItems()) {
+            for (Report observation : cluster.getItems()) {
                 ((ObservationCallout) view).setData(observation);
 
             }
@@ -125,31 +124,31 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<List<Ob
     }
 
     @Override
-    public ClusterRenderer<ObservationData> getRenderer() {
-        ObservationDataRenderer renderer = new ObservationDataRenderer();
+    public ClusterRenderer<Report> getRenderer() {
+        ReportRenderer renderer = new ReportRenderer();
         renderer.setClusterItemInfoWindowAdapter(this);
         renderer.setClusterInfoWindowAdapter(this);
         return renderer;
     }
 
-    private class ObservationDataRenderer extends DefaultClusterRenderer<ObservationData> {
+    private class ReportRenderer extends DefaultClusterRenderer<Report> {
 
-        public ObservationDataRenderer() {
+        public ReportRenderer() {
             super(getContext(), getMap(), getClusterManager());
         }
 
         @Override
-        protected boolean shouldRenderAsCluster(Cluster<ObservationData> cluster) {
+        protected boolean shouldRenderAsCluster(Cluster<Report> cluster) {
             return cluster.getSize() > 1;
         }
 
         @Override
-        protected void onBeforeClusterItemRendered(ObservationData observation, MarkerOptions markerOptions) {
+        protected void onBeforeClusterItemRendered(Report observation, MarkerOptions markerOptions) {
             markerOptions.icon(getClusterItemIcon(observation)).draggable(false).anchor(0.5F, 0.5F);
         }
 
         @Override
-        protected void onBeforeClusterRendered(Cluster<ObservationData> cluster, MarkerOptions markerOptions) {
+        protected void onBeforeClusterRendered(Cluster<Report> cluster, MarkerOptions markerOptions) {
             markerOptions.icon(getClusterIcon(cluster)).draggable(false).anchor(0.5F, 0.5F);
         }
     }
