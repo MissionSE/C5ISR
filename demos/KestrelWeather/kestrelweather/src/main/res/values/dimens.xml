@@ -6,4 +6,8 @@
 	<!-- Size of the photos in the photo selection grid. -->
 	<dimen name="photo_width">120dp</dimen>
 	<dimen name="photo_height">120dp</dimen>
+
+	<!-- Margins used to position data in observation callout -->
+    <dimen name="observation_callout_data_margin_corner">28dp</dimen>
+    <dimen name="observation_callout_data_margin_side">1dp</dimen>
 </resources>

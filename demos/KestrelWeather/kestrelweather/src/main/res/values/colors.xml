@@ -93,4 +93,18 @@
 	<color name="holo_red_12">#DB1313</color>
 	<color name="holo_red_13">#D30A0A</color>
 	<color name="holo_red_14">#CC0000</color>
+
+    <color name="cloudy">#ffcececd</color>
+    <color name="fair">#fffae616</color>
+    <color name="fog">#ffc6ded0</color>
+    <color name="heavyRain">#ff3c8ac5</color>
+    <color name="heavySnow">#ffffffff</color>
+    <color name="hot">#ffea661d</color>
+    <color name="lightRain">#ffa2c1e0</color>
+    <color name="lightSnow">#ffb4adbc</color>
+    <color name="overcast">#ff919191</color>
+    <color name="rainSnow">#ff9fb6cf</color>
+    <color name="showers">#ff68c6dc</color>
+    <color name="storm">#ff3a3a3a</color>
+    <color name="tint">#66ffbb33</color>
 </resources>

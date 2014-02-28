@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:maxLevel="232"
+        android:minLevel="200">
+        <shape android:shape="oval">
+            <solid android:color="@color/storm"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="321"
+        android:minLevel="300">
+        <shape android:shape="oval">
+            <solid android:color="@color/lightRain"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="501"
+        android:minLevel="500">
+        <shape android:shape="oval">
+            <solid android:color="@color/lightRain"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="504"
+        android:minLevel="502">
+        <shape android:shape="oval">
+            <solid android:color="@color/heavyRain"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="511"
+        android:minLevel="511">
+        <shape android:shape="oval">
+            <solid android:color="@color/rainSnow"/>
+        </shape>
+    </item>
+    <item android:maxLevel="531"
+        android:minLevel="520">
+        <shape android:shape="oval">
+            <solid android:color="@color/showers"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="601"
+        android:minLevel="600">
+        <shape android:shape="oval">
+            <solid android:color="@color/lightSnow"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="612"
+        android:minLevel="602">
+        <shape android:shape="oval">
+            <solid android:color="@color/heavySnow"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="616"
+        android:minLevel="615">
+        <shape android:shape="oval">
+            <solid android:color="@color/rainSnow"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="620"
+        android:minLevel="620">
+        <shape android:shape="oval">
+            <solid android:color="@color/lightSnow"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="622"
+        android:minLevel="621">
+        <shape android:shape="oval">
+            <solid android:color="@color/heavySnow"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="741"
+        android:minLevel="741">
+        <shape android:shape="oval">
+            <solid android:color="@color/fog"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="800"
+        android:minLevel="800">
+        <shape android:shape="oval">
+            <solid android:color="@color/fair"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="803"
+        android:minLevel="801">
+        <shape android:shape="oval">
+            <solid android:color="@color/cloudy"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="804"
+        android:minLevel="804">
+        <shape android:shape="oval">
+            <solid android:color="@color/overcast"/>
+        </shape>
+    </item>
+    <item
+        android:maxLevel="904"
+        android:minLevel="904">
+        <shape android:shape="oval">
+            <solid android:color="@color/hot"/>
+        </shape>
+    </item>
+</level-list>

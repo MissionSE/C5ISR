@@ -140,4 +140,11 @@
 	<!-- Fragment: Report Audio -->
 	<string name="default_time">00:00</string>
 	<string name="no_audio">No audio attached.</string>
+
+    <!-- Time -->
+    <string name="secAbbr">sec</string>
+    <string name="minAbbr">min</string>
+    <string name="hAbbr">h</string>
+    <string name='days'>days</string>
+
 </resources>
