@@ -12,7 +12,7 @@ module.exports = function(db) {
 		debug('GET test type ' + req.params.type);
 
 		if (req.params.type.toLowerCase() == 'json') {
-			requestify.post('http://localhost:3000/upload', {
+			requestify.post('http://localhost:3009/upload', {
 				userid: randomstring.generate(8),
 				latitude: (Math.random() * 180 - 90).toFixed(2),
 				longitude: (Math.random() * 360 - 180).toFixed(2),
@@ -52,7 +52,10 @@ module.exports = function(db) {
 		} else if (req.params.type.toLowerCase() == 'multi') {
 			db.Report.nextCount(function(err, count) {
 				if (count - 1 >= 0) {
-					var postable = request.post('http://localhost:3000/upload', function(err, response, body) {
+					var postable = request.post('http://localhost:3009/upload', function(err, response, body) {
+						debug('err:' + err);
+						debug('response:' + response);
+						debug('body:' + body);
 						res.end(body);
 					});
 
