@@ -12,6 +12,7 @@ public class MapViewerFragment extends MapFragment {
 
 	private GoogleMap mMap;
 	private MapLoadedListener mMapLoadedListener;
+    private ObservationCalloutMarkersAdapter mMarkersAdapter;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class MapViewerFragment extends MapFragment {
 	}
 
 	private void setUpMap() {
+        mMarkersAdapter = new ObservationCalloutMarkersAdapter(getActivity(), mMap);
 		if (mMapLoadedListener != null) {
 			mMapLoadedListener.mapLoaded(mMap);
 		}

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:id="@+id/observation_button"
+        android:layout_width="230.0dip"
+        android:layout_height="230.0dip"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/callout_weather_btn"/>
+
+    <com.makeramen.RoundedImageView
+        android:id="@+id/imageView1"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="230dp"
+        android:layout_height="230dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:scaleType="centerCrop"
+        app:is_oval="true"
+        app:round_background="true"
+        android:visibility="gone"/>
+
+    <FrameLayout
+        android:layout_width="230dp"
+        android:layout_height="230dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_callout">
+
+        <LinearLayout
+            android:id="@+id/observation_data_top_left"
+            style="@style/ObservationDataWidget"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="@dimen/observation_callout_data_margin_corner"
+            android:layout_marginTop="@dimen/observation_callout_data_margin_corner">
+
+            <TextView
+                android:id="@+id/observation_data_top_left_value"
+                style="@style/ObservationData.Value"/>
+
+            <TextView
+                android:id="@+id/observation_data_top_left_unit"
+                style="@style/ObservationData.Unit"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/observation_data_top_center"
+            style="@style/ObservationDataWidget"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="@dimen/observation_callout_data_margin_corner">
+
+            <TextView
+                android:id="@+id/observation_data_top_center_value"
+                style="@style/ObservationData.Value"/>
+
+            <TextView
+                android:id="@+id/observation_data_top_center_unit"
+                style="@style/ObservationData.Unit"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/observation_data_top_right"
+            style="@style/ObservationDataWidget"
+            android:layout_gravity="top|right"
+            android:layout_marginRight="@dimen/observation_callout_data_margin_corner"
+            android:layout_marginTop="@dimen/observation_callout_data_margin_corner">
+
+            <TextView
+                android:id="@+id/observation_data_top_right_value"
+                style="@style/ObservationData.Value"/>
+
+            <TextView
+                android:id="@+id/observation_data_top_right_unit"
+                style="@style/ObservationData.Unit"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/observation_data_middle_left"
+            style="@style/ObservationDataWidget"
+            android:layout_gravity="center_vertical|left"
+            android:layout_marginRight="@dimen/observation_callout_data_margin_corner">
+
+            <TextView
+                android:id="@+id/observation_data_middle_left_value"
+                style="@style/ObservationData.Value"/>
+
+            <TextView
+                android:id="@+id/observation_data_middle_left_unit"
+                style="@style/ObservationData.Unit"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/observation_data_middle_right"
+            style="@style/ObservationDataWidget"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginLeft="@dimen/observation_callout_data_margin_corner">
+
+            <TextView
+                android:id="@+id/observation_data_middle_right_value"
+                style="@style/ObservationData.Value"/>
+
+            <TextView
+                android:id="@+id/observation_data_middle_right_unit"
+                style="@style/ObservationData.Unit"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/observation_data_bottom_left"
+            style="@style/ObservationDataWidget"
+            android:layout_gravity="bottom|left"
+            android:layout_marginBottom="@dimen/observation_callout_data_margin_corner"
+            android:layout_marginLeft="@dimen/observation_callout_data_margin_corner">
+
+            <TextView
+                android:id="@+id/observation_data_bottom_left_value"
+                style="@style/ObservationData.Value"/>
+
+            <TextView
+                android:id="@+id/observation_data_bottom_left_unit"
+                style="@style/ObservationData.Unit"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/observation_data_bottom_center"
+            style="@style/ObservationDataWidget"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="@dimen/observation_callout_data_margin_corner">
+
+            <TextView
+                android:id="@+id/observation_data_bottom_center_value"
+                style="@style/ObservationData.Value"/>
+
+            <TextView
+                android:id="@+id/observation_data_bottom_center_unit"
+                style="@style/ObservationData.Unit"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/observation_data_bottom_right"
+            style="@style/ObservationDataWidget"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="@dimen/observation_callout_data_margin_corner"
+            android:layout_marginRight="@dimen/observation_callout_data_margin_corner">
+
+            <TextView
+                android:id="@+id/observation_data_bottom_right_value"
+                style="@style/ObservationData.Value"/>
+
+            <TextView
+                android:id="@+id/observation_data_bottom_right_unit"
+                style="@style/ObservationData.Unit"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
+</merge>
