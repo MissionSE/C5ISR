@@ -2,6 +2,7 @@
 
 <com.missionse.mapsexample.ObservationCallout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AppTheme.NoBackground"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_callout_tail"

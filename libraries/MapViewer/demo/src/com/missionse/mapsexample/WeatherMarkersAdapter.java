@@ -22,9 +22,7 @@ import com.missionse.mapviewer.clustering.DefaultClusterRenderer;
 
 import org.joda.time.DateTime;
 
-import java.util.List;
-
-public class WeatherMarkersAdapter extends DataMarkersAdapter<List<WeatherObservation>, WeatherObservation, String> {
+public class WeatherMarkersAdapter extends DataMarkersAdapter<WeatherObservation> {
     private static final String TAG = WeatherMarkersAdapter.class.getSimpleName();
     private WeatherObservation mCurrentObservation;
     private Cluster<WeatherObservation> mCurrentCluster;

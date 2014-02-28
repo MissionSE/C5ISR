@@ -17,7 +17,9 @@ import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.missionse.mapviewer.clustering.ClusterInfoWindowAdapter;
 import com.missionse.mapviewer.clustering.ClusterItemInfoWindowAdapter;
 
-public abstract class DataMarkersAdapter<TData, TMarkerData extends ClusterItem, TMarkerKey> implements
+import java.util.List;
+
+public abstract class DataMarkersAdapter<TMarkerData extends ClusterItem> implements
         ClusterManager.OnClusterClickListener<TMarkerData>,
         ClusterManager.OnClusterInfoWindowClickListener<TMarkerData>,
         ClusterManager.OnClusterItemClickListener<TMarkerData>,
@@ -26,7 +28,6 @@ public abstract class DataMarkersAdapter<TData, TMarkerData extends ClusterItem,
         ClusterItemInfoWindowAdapter<TMarkerData> {
     private static final String TAG = DataMarkersAdapter.class.getSimpleName();
     private Context mContext;
-    private TData mData;
     private boolean mFullInfoWindowEnabled = false;
     private int mInfoLayout;
     private View mInfoView;
@@ -57,11 +58,7 @@ public abstract class DataMarkersAdapter<TData, TMarkerData extends ClusterItem,
     }
 
     protected Context getContext() {
-        return this.mContext;
-    }
-
-    public TData getData() {
-        return this.mData;
+        return mContext;
     }
 
     protected View getInfoView(Marker marker, TMarkerData markerData, View view) {
@@ -106,6 +103,12 @@ public abstract class DataMarkersAdapter<TData, TMarkerData extends ClusterItem,
 
     public void setFullInfoWindowEnabled(boolean enabled) {
         this.mFullInfoWindowEnabled = enabled;
+    }
+
+    public void setData(List<TMarkerData> data) {
+        mClusterManager.clearItems();
+        mClusterManager.addItems(data);
+        mClusterManager.cluster();
     }
 
     @Override
@@ -160,13 +163,13 @@ public abstract class DataMarkersAdapter<TData, TMarkerData extends ClusterItem,
         return mInfoView;
     }
 
-    public abstract BitmapDescriptor createClusterIcon(int index, Cluster<TMarkerData> cluster);
+    protected abstract BitmapDescriptor createClusterIcon(int index, Cluster<TMarkerData> cluster);
 
-    public abstract BitmapDescriptor createClusterItemIcon(int index);
+    protected abstract BitmapDescriptor createClusterItemIcon(int index);
 
-    public abstract int getClusterIconType(Cluster<TMarkerData> cluster);
+    protected abstract int getClusterIconType(Cluster<TMarkerData> cluster);
 
-    public abstract int getClusterItemIconType(TMarkerData markerData);
+    protected abstract int getClusterItemIconType(TMarkerData markerData);
 
     protected abstract ClusterRenderer<TMarkerData> getRenderer();
 
