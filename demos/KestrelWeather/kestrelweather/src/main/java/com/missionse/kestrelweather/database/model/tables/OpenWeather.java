@@ -2,6 +2,7 @@ package com.missionse.kestrelweather.database.model.tables;
 
 import com.google.gson.JsonObject;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import com.missionse.kestrelweather.database.model.Entity;
 
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 /**
  * Created by rvieras on 2/24/14.
  */
+@DatabaseTable(daoClass = com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable.class)
 public class OpenWeather extends Entity {
 	@DatabaseField(columnName = "conditioncode")
 	private int mConditionCode;
