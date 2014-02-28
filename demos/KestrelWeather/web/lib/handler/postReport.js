@@ -36,15 +36,15 @@ module.exports = function(db) {
 			debug(postReport, 'file name: ' + file.name);
 			debug(postReport, 'file mime: ' + file.type);
 
-			if (file.type.search('image') >= 0) {
-				file.path = stagingArea + '/images/' + path.basename(file.path);
-			} else if (file.type.search('audio') >= 0) {
-				file.path = stagingArea + '/audio/' + path.basename(file.path);
+			if (file.type) {
+				if (file.type.search('image') >= 0) {
+					file.path = stagingArea + '/images/' + path.basename(file.path);
+				} else if (file.type.search('audio') >= 0) {
+					file.path = stagingArea + '/audio/' + path.basename(file.path);
+				}
+			} else {
+				file.path = stagingArea + '/unknown/' + path.basename(file.path);
 			}
-			// video support
-			// else if (file.type.search('image') >= 0) {
-			//	debug(postReport, 'storing in images');
-			//}
 		})
 		.on('progress', function(bytesReceived, bytesExpected) {
 			debug(postReport, bytesReceived + '/' + bytesExpected);
@@ -64,7 +64,6 @@ module.exports = function(db) {
 
 			// if json, then create a new report
 			if (contentType == 'application/json') {
-
 				//save a new report and add an event log entry
 				var newReport = new db.Report({
 					userid: data.userid,
@@ -119,46 +118,53 @@ module.exports = function(db) {
 							status: 'nok'
 						}));
 					} else {
-						var publicPath = files[0].path.split('public')[1];
-						debug (postReport, 'saving ' + publicPath + ' to ' + data.id);
-						if (files[0].type.search('image') >= 0) {
-							db.Report.update( { _id: data.id }, { $push: { images: publicPath } }, { upsert: true }, function(err) {
-								if (err) {
-									debug(postReport, "query update failed");
-									res.writeHead(404, {'content-type': 'text/plain'});
-									res.end(JSON.stringify({
-										status: 'nok'
-									}));
-								} else {
-									res.writeHead(200, {'content-type': 'text/plain'});
-									res.end(JSON.stringify({
-										status: 'ok',
-										url: publicPath
-									}));
-								}
-							});
-						} else if (files[0].type.search('audio') >= 0) {
-							db.Report.update( { _id: data.id }, { $push: { audio: publicPath } }, { upsert: true }, function(err) {
-								if (err) {
-									debug(postReport, "query update failed");
-									res.writeHead(404, {'content-type': 'text/plain'});
-									res.end(JSON.stringify({
-										status: 'nok'
-									}));
-								} else {
-									res.writeHead(200, {'content-type': 'text/plain'});
-									res.end(JSON.stringify({
-										status: 'ok',
-										url: publicPath
-									}));
-								}
-							});
+						if (files[0].type) {
+							var publicPath = files[0].path.split('public')[2]; //TODO: Fix this nonsense
+							debug(postReport, 'saving ' + publicPath + ' to ' + data.id);
+							if (files[0].type.search('image') >= 0) {
+								db.Report.update( { _id: data.id }, { $push: { images: publicPath } }, { upsert: true }, function(err) {
+									if (err) {
+										debug(postReport, "query update failed");
+										res.writeHead(404, {'content-type': 'text/plain'});
+										res.end(JSON.stringify({
+											status: 'nok'
+										}));
+									} else {
+										res.writeHead(200, {'content-type': 'text/plain'});
+										res.end(JSON.stringify({
+											status: 'ok',
+											url: publicPath
+										}));
+									}
+								});
+							} else if (files[0].type.search('audio') >= 0) {
+								db.Report.update( { _id: data.id }, { $push: { audio: publicPath } }, { upsert: true }, function(err) {
+									if (err) {
+										debug(postReport, "query update failed");
+										res.writeHead(404, {'content-type': 'text/plain'});
+										res.end(JSON.stringify({
+											status: 'nok'
+										}));
+									} else {
+										res.writeHead(200, {'content-type': 'text/plain'});
+										res.end(JSON.stringify({
+											status: 'ok',
+											url: publicPath
+										}));
+									}
+								});
+							}
+						} else {
+							debug(postReport, "no file mime type specified");
+							res.writeHead(404, {'content-type': 'text/plain'});
+							res.end(JSON.stringify({
+								status: 'nok'
+							}));
 						}
 					}
 				});
 			}
 		});
-
 		form.parse(req);
 	}
 };
