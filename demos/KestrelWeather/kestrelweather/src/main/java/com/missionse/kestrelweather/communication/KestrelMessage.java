@@ -83,15 +83,17 @@ public class KestrelMessage {
 	public String toString() {
 		String message = "";
 		message += mMessageType + TOKEN;
-		message += mKestrelWeather.getTemperature() + TOKEN;
-		message += mKestrelWeather.getHumidity() + TOKEN;
-		message += mKestrelWeather.getPressure() + TOKEN;
-		message += mKestrelWeather.getPressureTrend() + TOKEN;
-		message += mKestrelWeather.getHeatIndex() + TOKEN;
-		message += mKestrelWeather.getWindSpeed() + TOKEN;
-		message += mKestrelWeather.getWindDirection() + TOKEN;
-		message += mKestrelWeather.getWindChill() + TOKEN;
-		message += mKestrelWeather.getDewPoint() + TOKEN;
+		if (mKestrelWeather != null) {
+			message += mKestrelWeather.getTemperature() + TOKEN;
+			message += mKestrelWeather.getHumidity() + TOKEN;
+			message += mKestrelWeather.getPressure() + TOKEN;
+			message += mKestrelWeather.getPressureTrend() + TOKEN;
+			message += mKestrelWeather.getHeatIndex() + TOKEN;
+			message += mKestrelWeather.getWindSpeed() + TOKEN;
+			message += mKestrelWeather.getWindDirection() + TOKEN;
+			message += mKestrelWeather.getWindChill() + TOKEN;
+			message += mKestrelWeather.getDewPoint() + TOKEN;
+		}
 		return message;
 	}
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
-import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
 import com.missionse.kestrelweather.reports.auxiliary.AuxiliaryDataListItem;
 import com.missionse.kestrelweather.reports.notes.NoteOverviewFragment;
 
