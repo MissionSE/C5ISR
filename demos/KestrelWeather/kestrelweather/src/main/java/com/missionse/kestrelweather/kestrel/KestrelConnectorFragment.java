@@ -6,9 +6,11 @@ import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.koushikdutta.async.future.FutureCallback;
 import com.missionse.bluetooth.BluetoothConnector;
 import com.missionse.bluetooth.BluetoothIntentListener;
 import com.missionse.bluetooth.network.BluetoothNetworkService;
@@ -27,25 +33,30 @@ import com.missionse.kestrelweather.communication.BluetoothDeviceListFragment;
 import com.missionse.kestrelweather.communication.KestrelMessage;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
-import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
-import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
+import com.missionse.kestrelweather.database.model.tables.OpenWeather;
 import com.missionse.kestrelweather.reports.ReportDetailFragment;
+import com.missionse.kestrelweather.util.LocationHandler;
+import com.missionse.kestrelweather.util.OpenWeatherRequester;
+import com.missionse.kestrelweather.util.ReportBuilder;
+
+import java.util.Map;
 
 public class KestrelConnectorFragment extends Fragment {
-
+	private static final String TAG = KestrelConnectorFragment.class.getSimpleName();
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static final int REQUEST_DEVICE_SELECTION = 2;
-	private static final double DEFAULT_LAT = 39.974374;
-	private static final double DEFAULT_LNG = -74.976540;
 
 	private Button mConnectToDeviceButton;
 	private Button mRequestReadingsButton;
 	private Button mContinueButton;
 	private ArrayAdapter<String> mReadingsAdapter;
 
+	private LocationHandler mLocationHandler;
 	private BluetoothConnector mBluetoothConnector;
+
 	private KestrelMessage mKestrelMessage;
+	private Location mLocation;
+	private OpenWeather mOpenWeather;
 
 	private String mConnectedDevice = "";
 
@@ -54,6 +65,8 @@ public class KestrelConnectorFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 
 		if (getActivity() != null) {
+			mLocationHandler = new LocationHandler(getActivity());
+
 			if (BluetoothAdapter.getDefaultAdapter() == null) {
 				Toast.makeText(getActivity(), R.string.error_bluetooth_not_available, Toast.LENGTH_SHORT).show();
 				getActivity().getFragmentManager().popBackStack();
@@ -88,6 +101,11 @@ public class KestrelConnectorFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
+
+		if (mLocationHandler != null) {
+			mLocationHandler.onStart();
+		}
+
 		if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
@@ -100,6 +118,15 @@ public class KestrelConnectorFragment extends Fragment {
 	public synchronized void onResume() {
 		super.onResume();
 		mBluetoothConnector.startService();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		if (mLocationHandler != null) {
+			mLocationHandler.onStop();
+		}
 	}
 
 	@Override
@@ -197,47 +224,84 @@ public class KestrelConnectorFragment extends Fragment {
 			public void onClick(final View view) {
 				Activity activity = getActivity();
 				if (activity != null) {
-					int id = 0;
-					if (mKestrelMessage != null) {
-						id = createNewReport();
+					if (mKestrelMessage != null && mOpenWeather != null && mLocation != null) {
+						int id = ReportBuilder.buildReport(getDatabaseAccessor(), mKestrelMessage, mOpenWeather,
+								mLocation.getLatitude(), mLocation.getLongitude());
+
+						activity.getFragmentManager().beginTransaction()
+								.setCustomAnimations(
+										R.animator.slide_from_right, R.animator.slide_to_left,
+										R.animator.slide_from_left, R.animator.slide_to_right)
+								.replace(R.id.content, ReportDetailFragment.newInstance(id), "report_addon")
+								.addToBackStack("report_addon")
+								.commit();
 					}
-					activity.getFragmentManager().beginTransaction()
-							.setCustomAnimations(
-									R.animator.slide_from_right, R.animator.slide_to_left,
-									R.animator.slide_from_left, R.animator.slide_to_right)
-							.replace(R.id.content, ReportDetailFragment.newInstance(id), "report_addon") //TODO: get report id
-							.addToBackStack("report_addon")
-							.commit();
 				}
 			}
 		});
 	}
 
-	private int createNewReport() {
-		ReportTable table = getDatabaseAccessor().getReportTable();
-		KestrelWeatherTable weatherTable = getDatabaseAccessor().getKestrelWeatherTable();
-		Report report = table.newReport();
-		KestrelWeather weatherData = new KestrelWeather();
-		weatherData.setTemperature(mKestrelMessage.getTemperature());
-		weatherData.setHumidity(mKestrelMessage.getHumidity());
-		weatherData.setPressure(mKestrelMessage.getPressure());
-		weatherData.setPressureTrend(mKestrelMessage.getPressureTrend());
-		weatherData.setHeatIndex(mKestrelMessage.getHeatIndex());
-		weatherData.setWindSpeed(mKestrelMessage.getWindSpeed());
-		weatherData.setWindDirection(mKestrelMessage.getWindDirection());
-		weatherData.setWindChill(mKestrelMessage.getWindChill());
-		weatherData.setDewPoint(mKestrelMessage.getDewPoint());
-		report.setKestrelWeather(weatherData);
-		weatherTable.create(weatherData);
-		report.setUserName(getDatabaseAccessor().getUserName());
-		report.setLatitude(DEFAULT_LAT);
-		report.setLongitude(DEFAULT_LNG);
-		table.create(report);
-		return report.getId();
+	private DatabaseAccessor getDatabaseAccessor() {
+		DatabaseAccessor databaseAccessor = null;
+
+		KestrelWeatherActivity activity = (KestrelWeatherActivity) getActivity();
+		if (activity != null) {
+			databaseAccessor = activity.getDatabaseAccessor();
+		}
+
+		return databaseAccessor;
 	}
 
-	private DatabaseAccessor getDatabaseAccessor() {
-		return ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor();
+	private void getLocation() {
+		if (mLocationHandler != null) {
+			mLocation = mLocationHandler.getLocation();
+			if (mLocation != null) {
+				mReadingsAdapter.add("latitude: " + mLocation.getLatitude());
+				mReadingsAdapter.add("longitude: " + mLocation.getLongitude());
+			}
+		}
+	}
+
+	private void getOpenWeatherData() {
+		Activity activity = getActivity();
+		if (activity != null) {
+			if (mLocation != null) {
+				OpenWeatherRequester.queryOpenWeather(
+						activity,
+						Double.toString(mLocation.getLatitude()),
+						Double.toString(mLocation.getLongitude()),
+						new FutureCallback<JsonObject>() {
+							@Override
+							public void onCompleted(final Exception e, final JsonObject result) {
+								if (e == null && result != null) {
+									JsonArray weatherArray = result.getAsJsonArray("weather");
+									if (weatherArray != null && weatherArray.size() > 0) {
+										JsonObject weatherData = weatherArray.get(0).getAsJsonObject();
+										if (weatherData != null) {
+											mOpenWeather = new OpenWeather();
+
+											JsonPrimitive conditionCode = weatherData.getAsJsonPrimitive("id");
+											if (conditionCode != null) {
+												mOpenWeather.setConditionCode(conditionCode.getAsInt());
+												mReadingsAdapter.add("conditioncode: " + mOpenWeather.getConditionCode());
+											}
+
+											JsonPrimitive description = weatherData.getAsJsonPrimitive("description");
+											if (description != null) {
+												mOpenWeather.setDescription(description.getAsString());
+												mReadingsAdapter.add("description: " + mOpenWeather.getDescription());
+											}
+
+											mContinueButton.setEnabled(true);
+										}
+									}
+								} else {
+									Log.e(TAG, "Unable to retrieve open weather data.", e);
+								}
+							}
+						});
+			}
+		}
 	}
 
 	private final Handler mBluetoothServiceMessageHandler = new Handler() {
@@ -286,10 +350,17 @@ public class KestrelConnectorFragment extends Fragment {
 					}
 					if (kestrelMessage != null && kestrelMessage.isData()) {
 						mReadingsAdapter.clear();
-						for (String data : kestrelMessage.makePretty()) {
-							mReadingsAdapter.add(data);
+						KestrelWeather kestrelWeather = mKestrelMessage.getKestrelWeather();
+						if (kestrelWeather != null) {
+							Map<String, String> kestrelMap = kestrelWeather.toMap();
+							for (String reading : kestrelMap.keySet()) {
+								String formattedReading = reading + ": " + kestrelMap.get(reading);
+								mReadingsAdapter.add(formattedReading);
+							}
 						}
-						mContinueButton.setEnabled(true);
+
+						getLocation();
+						getOpenWeatherData();
 					}
 					break;
 				default:

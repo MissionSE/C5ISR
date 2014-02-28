@@ -14,6 +14,7 @@ import com.missionse.bluetooth.network.BluetoothNetworkService;
 import com.missionse.bluetooth.network.ServiceIdentifier;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.communication.KestrelMessage;
+import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
 
 import java.util.Random;
 
@@ -116,26 +117,28 @@ public class KestrelSimulator {
 			SharedPreferences mSharedPreferences = mActivity.getSharedPreferences(
 					KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0);
 
-			KestrelMessage dataMessage = new KestrelMessage(KestrelMessage.DATA);
+			KestrelWeather kestrelWeather = new KestrelWeather();
+			kestrelWeather.setTemperature(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_TEMPERATURE,
+					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+			kestrelWeather.setHumidity(mSharedPreferences.getInt(KestrelSimulationSharedPreferences.KESTREL_HUMIDITY,
+					KestrelSimulationSharedPreferences.NONSENSE_INT));
+			kestrelWeather.setPressure(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_PRESSURE,
+					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+			kestrelWeather.setPressureTrend(mSharedPreferences.getInt(KestrelSimulationSharedPreferences.KESTREL_PRESSURE_TREND,
+					KestrelSimulationSharedPreferences.NONSENSE_INT));
+			kestrelWeather.setHeatIndex(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_HEAT_IDX,
+					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+			kestrelWeather.setWindSpeed(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_WIND_SPD,
+					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+			kestrelWeather.setWindDirection(mSharedPreferences.getInt(KestrelSimulationSharedPreferences.KESTREL_WIND_DIR,
+					KestrelSimulationSharedPreferences.NONSENSE_INT));
+			kestrelWeather.setWindChill(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_WIND_CHILL,
+					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+			kestrelWeather.setDewPoint(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_DEW_PT,
+					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
 
-			dataMessage.setTemperature(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_TEMPERATURE,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
-			dataMessage.setHumidity(mSharedPreferences.getInt(KestrelSimulationSharedPreferences.KESTREL_HUMIDITY,
-					KestrelSimulationSharedPreferences.NONSENSE_INT));
-			dataMessage.setPressure(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_PRESSURE,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
-			dataMessage.setPressureTrend(mSharedPreferences.getInt(KestrelSimulationSharedPreferences.KESTREL_PRESSURE_TREND,
-					KestrelSimulationSharedPreferences.NONSENSE_INT));
-			dataMessage.setHeatIndex(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_HEAT_IDX,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
-			dataMessage.setWindSpeed(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_WIND_SPD,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
-			dataMessage.setWindDirection(mSharedPreferences.getInt(KestrelSimulationSharedPreferences.KESTREL_WIND_DIR,
-					KestrelSimulationSharedPreferences.NONSENSE_INT));
-			dataMessage.setWindChill(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_WIND_CHILL,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
-			dataMessage.setDewPoint(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_DEW_PT,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+			KestrelMessage dataMessage = new KestrelMessage(KestrelMessage.DATA);
+			dataMessage.setKestrelWeather(kestrelWeather);
 
 			mBluetoothConnector.getService().write(dataMessage.toString().getBytes());
 		}
@@ -144,17 +147,21 @@ public class KestrelSimulator {
 	private final Runnable mSendRandomDataMessageRunnable = new Runnable() {
 		@Override
 		public void run() {
-			KestrelMessage dataMessage = new KestrelMessage(KestrelMessage.DATA);
 			Random random = new Random(System.currentTimeMillis());
-			dataMessage.setTemperature(random.nextFloat() * 200 - 100);
-			dataMessage.setHumidity(random.nextInt(100));
-			dataMessage.setPressure(random.nextFloat() * 2 + 29);
-			dataMessage.setPressureTrend(random.nextInt(1));
-			dataMessage.setHeatIndex(random.nextFloat() * dataMessage.getHumidity() / 10 + dataMessage.getTemperature());
-			dataMessage.setWindSpeed(random.nextFloat() * 30);
-			dataMessage.setWindDirection(random.nextInt(360));
-			dataMessage.setWindChill(random.nextFloat() * -1 * dataMessage.getWindSpeed() / 6);
-			dataMessage.setDewPoint(random.nextFloat() * 60);
+
+			KestrelWeather kestrelWeather = new KestrelWeather();
+			kestrelWeather.setTemperature(random.nextFloat() * 200 - 100);
+			kestrelWeather.setHumidity(random.nextInt(100));
+			kestrelWeather.setPressure(random.nextFloat() * 2 + 29);
+			kestrelWeather.setPressureTrend(random.nextInt(1));
+			kestrelWeather.setHeatIndex(random.nextFloat() * kestrelWeather.getHumidity() / 10 + kestrelWeather.getTemperature());
+			kestrelWeather.setWindSpeed(random.nextFloat() * 30);
+			kestrelWeather.setWindDirection(random.nextInt(360));
+			kestrelWeather.setWindChill(random.nextFloat() * -1 * kestrelWeather.getWindSpeed() / 6);
+			kestrelWeather.setDewPoint(random.nextFloat() * 60);
+
+			KestrelMessage dataMessage = new KestrelMessage(KestrelMessage.DATA);
+			dataMessage.setKestrelWeather(kestrelWeather);
 
 			mBluetoothConnector.getService().write(dataMessage.toString().getBytes());
 		}

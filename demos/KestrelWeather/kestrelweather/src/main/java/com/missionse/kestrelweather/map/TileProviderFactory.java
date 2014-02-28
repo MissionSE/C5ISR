@@ -26,7 +26,7 @@ public final class TileProviderFactory {
 			public synchronized URL getTileUrl(int x, int y, int zoom) {
 				String address = String.format(tileAddress, zoom, x, y);
 
-				URL url = null;
+				URL url;
 				try {
 					url = new URL(address);
 				} catch (MalformedURLException exception) {

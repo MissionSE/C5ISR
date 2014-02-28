@@ -22,11 +22,11 @@ public final class IonUtil {
 
 	/**
 	 * Upload report via ION.
-	 * @param context The application context.
+	 * @param context The current context.
 	 * @param json The json string that represents a report.
 	 * @param callback The callback class.
 	 */
-	public static void upload(Context context, JsonObject json, FutureCallback<JsonObject> callback) {
+	public static void upload(final Context context, final JsonObject json, final FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
 				res.getString(R.string.remote_database));
@@ -43,11 +43,11 @@ public final class IonUtil {
 
 	/**
 	 * Pull latest event via ION.
-	 * @param context The application context.
+	 * @param context The current context.
 	 * @param latestId The latest id pulled.
 	 * @param callback The callback class.
 	 */
-	public static void pullLatestEvent(Context context, String latestId, FutureCallback<JsonObject> callback) {
+	public static void pullLatestEvent(final Context context, final String latestId, final FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(
 			res.getString(R.string.retrieve_latest_url),
@@ -59,11 +59,11 @@ public final class IonUtil {
 
 	/**
 	 * Pull report via ION.
-	 * @param context The application context.
+	 * @param context The current context.
 	 * @param reportId The report to pull.
 	 * @param callback The callback class.
 	 */
-	public static void pullReport(Context context, String reportId, FutureCallback<JsonObject> callback) {
+	public static void pullReport(final Context context, final String reportId, final FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(
 		   res.getString(R.string.retrieve_report_url),
@@ -81,12 +81,12 @@ public final class IonUtil {
 
 	/**
 	 * Upload a single media file to the database.
-	 * @param context The application context.
+	 * @param context The current context.
 	 * @param reportId The remote database report id to upload.
 	 * @param media  Instance of File that points to the media to be uploaded.
 	 * @param callback Instance of FutureCallback<JsonObject>.
 	 */
-	public static void uploadMedia(Context context, int reportId, File media, FutureCallback<JsonObject> callback) {
+	public static void uploadMedia(final Context context, final int reportId, final File media, final FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
 		   res.getString(R.string.remote_database));

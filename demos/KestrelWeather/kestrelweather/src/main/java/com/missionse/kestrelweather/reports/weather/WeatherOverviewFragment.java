@@ -79,15 +79,16 @@ public class WeatherOverviewFragment extends Fragment {
 				if (databaseAccessor != null) {
 					Report report = databaseAccessor.getReportById(mReportId);
 					if (report != null) {
-						TextView temperatureView = (TextView) contentView.findViewById(R.id.report_detail_temperature);
-						if (temperatureView != null) {
-							temperatureView.setText(Float.toString(report.getKestrelWeather().getTemperature()));
+						if (report.getKestrelWeather() != null) {
+							TextView temperatureView = (TextView) contentView.findViewById(R.id.report_detail_temperature);
+							if (temperatureView != null) {
+								temperatureView.setText(Float.toString(report.getKestrelWeather().getTemperature()));
+							}
 						}
 
-						TextView weatherConditionView = (TextView) contentView.findViewById(R.id.report_detail_weather_condition);
-						if (weatherConditionView != null) {
-							//TODO: Currently OpenWeather is null
-							if (report.getOpenWeather() != null) {
+						if (report.getOpenWeather() != null) {
+							TextView weatherConditionView = (TextView) contentView.findViewById(R.id.report_detail_weather_condition);
+							if (weatherConditionView != null) {
 								weatherConditionView.setText(report.getOpenWeather().getDescription());
 							}
 						}

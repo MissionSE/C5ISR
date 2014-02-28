@@ -9,6 +9,9 @@
 	<string name="retrieve_latest_url">%1$s/event/since/</string>
 	<string name="retrieve_report_url">%1$s/report/</string>
 
+	<!-- Open Weather -->
+	<string name="open_weather_api">http://api.openweathermap.org/data/2.5/weather?lat=%1$s&amp;lon=%2$s</string>
+
 	<!-- Option Menu -->
 	<string name="action_settings">Settings</string>
 	<string name="action_simulate_kestrel">Simulation Mode</string>
@@ -41,25 +44,25 @@
 
 	<!-- Map Overlay -->
 	<string name="rain_overlay_name">Rain</string>
-	<string name="rain_overlay_url" formatted="false">http://tile.openweathermap.org/map/rain/%d/%d/%d.png</string>
+	<string name="rain_overlay_url">http://tile.openweathermap.org/map/rain/%1$d/%2$d/%3$d.png</string>
 
 	<string name="cloud_overlay_name">Clouds</string>
-	<string name="cloud_overlay_url" formatted="false">http://tile.openweathermap.org/map/clouds/%d/%d/%d.png</string>
+	<string name="cloud_overlay_url">http://tile.openweathermap.org/map/clouds/%1$d/%2$d/%3$d.png</string>
 
 	<string name="snow_overlay_name">Snow</string>
-	<string name="snow_overlay_url" formatted="false">http://tile.openweathermap.org/map/snow/%d/%d/%d.png</string>
+	<string name="snow_overlay_url">http://tile.openweathermap.org/map/snow/%1$d/%2$d/%3$d.png</string>
 
 	<string name="pressure_overlay_name">Pressure</string>
-	<string name="pressure_overlay_url" formatted="false">http://tile.openweathermap.org/map/pressure/%d/%d/%d.png</string>
+	<string name="pressure_overlay_url">http://tile.openweathermap.org/map/pressure/%1$d/%2$d/%3$d.png</string>
 
 	<string name="temp_overlay_name">Temperature</string>
-	<string name="temp_overlay_url" formatted="false">http://tile.openweathermap.org/map/temp/%d/%d/%d.png</string>
+	<string name="temp_overlay_url">http://tile.openweathermap.org/map/temp/%1$d/%2$d/%3$d.png</string>
 
 	<string name="precipitation_overlay_name">Precipitation</string>
-	<string name="precipitation_overlay_url" formatted="false">http://tile.openweathermap.org/map/precipitation/%d/%d/%d.png</string>
+	<string name="precipitation_overlay_url">http://tile.openweathermap.org/map/precipitation/%1$d/%2$d/%3$d.png</string>
 
 	<string name="wind_overlay_name">Wind</string>
-	<string name="wind_overlay_url" formatted="false">http://tile.openweathermap.org/map/wind/%d/%d/%d.png</string>
+	<string name="wind_overlay_url">http://tile.openweathermap.org/map/wind/%1$d/%2$d/%3$d.png</string>
 
 	<!-- Fragment: Create Report -->
 	<string name="obtain_readings">Obtain Readings</string>
