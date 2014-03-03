@@ -18,8 +18,8 @@
 			android:layout_width="match_parent"
 			android:text="@string/unknown"
 			android:textSize="24sp"
-			android:textStyle="bold">
-		</TextView>
+			android:textStyle="bold"
+			android:maxLength="@integer/max_title_length"/>
 
 		<TextView
 			android:id="@+id/report_detail_timestamp"
@@ -27,8 +27,7 @@
 			android:layout_width="wrap_content"
 			android:text="@string/unknown"
 			android:textSize="18sp"
-			android:textColor="@color/gray_medium">
-		</TextView>
+			android:textColor="@color/gray_medium"/>
 	</LinearLayout>
 
 	<ImageView

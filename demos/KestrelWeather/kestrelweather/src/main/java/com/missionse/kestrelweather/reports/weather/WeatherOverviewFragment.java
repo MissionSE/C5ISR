@@ -14,6 +14,8 @@ import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Report;
 
+import java.util.Formatter;
+
 /**
  * A fragment used to display an overview of the weather conditions of a report.
  */
@@ -69,11 +71,6 @@ public class WeatherOverviewFragment extends Fragment {
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View contentView = inflater.inflate(R.layout.fragment_report_detail_weather, container, false);
 		if (contentView != null) {
-			ImageView weatherStatusIcon = (ImageView) contentView.findViewById(R.id.report_detail_weather_icon);
-			if (weatherStatusIcon != null) {
-				weatherStatusIcon.setImageResource(R.drawable.weather_pict_cloudy);
-			}
-
 			if (mActivity != null) {
 				DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
 				if (databaseAccessor != null) {
@@ -82,7 +79,9 @@ public class WeatherOverviewFragment extends Fragment {
 						if (report.getKestrelWeather() != null) {
 							TextView temperatureView = (TextView) contentView.findViewById(R.id.report_detail_temperature);
 							if (temperatureView != null) {
-								temperatureView.setText(Float.toString(report.getKestrelWeather().getTemperature()));
+								Formatter formatter = new Formatter();
+								String temperature = formatter.format("%.1f", report.getKestrelWeather().getTemperature()).toString();
+								temperatureView.setText(temperature + " " + getString(R.string.celsius));
 							}
 						}
 
@@ -90,6 +89,12 @@ public class WeatherOverviewFragment extends Fragment {
 							TextView weatherConditionView = (TextView) contentView.findViewById(R.id.report_detail_weather_condition);
 							if (weatherConditionView != null) {
 								weatherConditionView.setText(report.getOpenWeather().getDescription());
+							}
+
+							ImageView weatherIconView = (ImageView) contentView.findViewById(R.id.report_detail_weather_icon);
+							if (weatherIconView != null) {
+								weatherIconView.setImageResource(R.drawable.weather_icon_type);
+								weatherIconView.setImageLevel(report.getOpenWeather().getConditionCode());
 							}
 						}
 
