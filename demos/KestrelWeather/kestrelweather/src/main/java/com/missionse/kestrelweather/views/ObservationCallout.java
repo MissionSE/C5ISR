@@ -2,7 +2,6 @@ package com.missionse.kestrelweather.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -42,9 +41,11 @@ public class ObservationCallout extends FrameLayout {
 		setHumidity();
 		setPressure();
 		setWindSpeed();
+		setWindDirection();
 		setDelay();
 		setWeatherIcon();
-//        setBottomCenter();
+		setDewPoint();
+		setWindChill();
 	}
 
 	private void setTemperature() {
@@ -93,12 +94,37 @@ public class ObservationCallout extends FrameLayout {
 		view.setVisibility(VISIBLE);
 	}
 
-	private void setBottomCenter() {
+	private void setWindDirection() {
+		View view = findViewById(R.id.observation_data_bottom_left);
+		TextView value = (TextView) view.findViewById(R.id.observation_data_bottom_left_value);
+		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_left_unit);
+
+		//TODO convert value with respect to unit
+		value.setText(Integer.toString(mReport.getKestrelWeather().getWindDirection()));
+		unit.setText("°");
+
+		view.setVisibility(VISIBLE);
+	}
+
+	private void setWindChill() {
+		View view = findViewById(R.id.observation_data_bottom_right);
+		TextView value = (TextView) view.findViewById(R.id.observation_data_bottom_right_value);
+		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_right_unit);
+
+		//TODO convert value with respect to unit
+		value.setText(Integer.toString((int) mReport.getKestrelWeather().getWindChill()));
+		unit.setText(getResources().getStringArray(R.array.temperature_units)[0]);
+
+		view.setVisibility(VISIBLE);
+	}
+
+	private void setDewPoint() {
 		View view = findViewById(R.id.observation_data_bottom_center);
 		TextView value = (TextView) view.findViewById(R.id.observation_data_bottom_center_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_center_unit);
 
-		value.setText("1234567890");
+		value.setText(Integer.toString((int) mReport.getKestrelWeather().getDewPoint()));
+		unit.setText(getResources().getStringArray(R.array.temperature_units)[0]);
 		view.setVisibility(VISIBLE);
 	}
 
@@ -109,8 +135,6 @@ public class ObservationCallout extends FrameLayout {
 
 		DateTime dataTime = mReport.getUpdateAt();
 		DateTime now = DateTime.now();
-		Log.d(TAG, "dataTime=" + dataTime.toString());
-		Log.d(TAG, "now=" + now);
 		Seconds sec = Seconds.secondsBetween(dataTime, now);
 		Minutes min = sec.toStandardMinutes();
 		Hours hours = sec.toStandardHours();
@@ -130,7 +154,7 @@ public class ObservationCallout extends FrameLayout {
 			unit.setText(R.string.hAbbr);
 		} else {
 			value.setText(Integer.toString(days.getDays()));
-			value.setText(R.string.days);
+			unit.setText(R.string.days);
 		}
 
 		view.setVisibility(VISIBLE);
