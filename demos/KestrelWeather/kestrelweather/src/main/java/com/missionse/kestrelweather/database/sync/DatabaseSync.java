@@ -35,10 +35,11 @@ public class DatabaseSync extends AsyncTask<Boolean, Void, Void> {
 		if (params.length < 3) {
 			throw new IllegalArgumentException("Missing arguments...");
 		}
-
 		if (params[PUSH_REPORT_IDX]) {
 			DatabaseReportPusher pusher = new DatabaseReportPusher(mContext, mAccessor);
+			DatabaseMediaPusher mediaPusher = new DatabaseMediaPusher(mContext, mAccessor);
 			pusher.run();
+			mediaPusher.run();
 		}
 		if (params[PULL_REMOTE_IDX]) {
 			DatabasePuller puller = new DatabasePuller(mContext, mAccessor);

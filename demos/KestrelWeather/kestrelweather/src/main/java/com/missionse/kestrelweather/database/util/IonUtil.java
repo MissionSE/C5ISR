@@ -89,9 +89,21 @@ public final class IonUtil {
 	public static void uploadMedia(final Context context, final int reportId, final File media, final FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
-		   res.getString(R.string.remote_database));
+			res.getString(R.string.remote_database));
 		Log.d(TAG, "Upload Media(\'" + media.getAbsolutePath() + "\') to reportid=" + reportId + " to remote database:" + remoteUrl);
 
-		Ion.with(context, remoteUrl).setMultipartFile(media.getName(), media).asJsonObject().setCallback(callback);
+		try {
+			Ion.with(context, remoteUrl)
+				.setMultipartParameter("id", Integer.toString(reportId))
+				.setMultipartFile(media.getName(),
+						MediaResolver.getMimeType(media.getAbsolutePath()), media)
+				.asJsonObject()
+				.setCallback(callback)
+				.get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -228,6 +228,9 @@ public class NoteDialogFragment extends DialogFragment {
 				} else {
 					noteTable.update(mNote);
 				}
+				if (getTargetFragment() != null) {
+					getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
+				}
 				dismiss();
 			} else {
 				if (mActivity != null) {

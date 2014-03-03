@@ -11,6 +11,7 @@ import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 import com.missionse.kestrelweather.database.util.IonUtil;
+import com.missionse.kestrelweather.database.util.MediaResolver;
 
 import java.io.File;
 
@@ -51,7 +52,9 @@ public class DatabaseMediaPusher implements Runnable {
 
 	private void syncSupplement(Supplement supplement, Report report) {
 		Uri mediaUri = Uri.parse(supplement.getUri());
-		File media = new File(mediaUri.getPath());
+		String mediaPath = MediaResolver.getPath(mContext, mediaUri);
+		Log.d(TAG, "Push Media path is set too: " + mediaPath);
+		File media = new File(mediaPath);
 		int remoteId = report.getRemoteId();
 		push(media, remoteId, supplement.getId());
 	}
@@ -61,8 +64,12 @@ public class DatabaseMediaPusher implements Runnable {
 			new FutureCallback<JsonObject>() {
 				@Override
 				public void onCompleted(Exception e, JsonObject result) {
-					Log.d(TAG, "Received new media path: " + result.toString());
-					flipDirtyFlag(supplementId);
+					if (e == null) {
+						Log.d(TAG, "Received new media path: " + result.toString());
+						flipDirtyFlag(supplementId);
+					} else {
+						Log.d(TAG, "Failed to upload media file...", e);
+					}
 				}
 		});
 	}

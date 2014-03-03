@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,9 +24,13 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.model.SupplementType;
+import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
+import com.missionse.kestrelweather.util.ReportBuilder;
 
 /**
  * A simple {@link android.app.Fragment} subclass.
@@ -33,13 +38,14 @@ import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
  * create an instance of this fragment.
  */
 public class AudioOverviewFragment extends Fragment implements MediaPlayerWrapper.OnMediaPlayerEventListener {
+	private static final String TAG = AudioOverviewFragment.class.getSimpleName();
 	private static final int ATTACH_AUDIO_REQUEST = 20;
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
 	private static final int SKIP_INTERVAL_IN_MILLISECONDS = 5000;
 
 	private AudioAdapter mAudioAdapter;
-	private Activity mActivity;
+	private KestrelWeatherActivity mActivity;
 	private boolean mEditable = true;
 	private int mReportId = INVALID_REPORT_ID;
 	private Uri mPlayingUri;
@@ -75,7 +81,11 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 	@Override
 	public void onAttach(final Activity activity) {
 		super.onAttach(activity);
-		mActivity = activity;
+		try {
+			mActivity = (KestrelWeatherActivity) activity;
+		} catch (ClassCastException e) {
+			Log.e(TAG, "Unable to cast activity.", e);
+		}
 	}
 
 	@Override
@@ -137,6 +147,8 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 			}
 
 			initializeMediaComponents(contentView);
+
+			populateAdapter();
 		}
 
 		return contentView;
@@ -179,6 +191,7 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 			if (resultData != null) {
 				if (resultData.getData() != null) {
 					mAudioAdapter.add(resultData.getData());
+					createNewSupplement(resultData.getData().toString());
 				} else {
 					ClipData clipData = resultData.getClipData();
 					if (clipData != null) {
@@ -191,6 +204,16 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 					}
 				}
 			}
+		}
+	}
+
+	private void createNewSupplement(String uri) {
+		ReportBuilder.buildSupplement(mActivity, uri, mReportId,		   SupplementType.AUDIO);
+	}
+
+	private void populateAdapter() {
+		for (Supplement sup : mActivity.getDatabaseAccessor().getAudioSupplements(mReportId)) {
+			mAudioAdapter.add(Uri.parse(sup.getUri()));
 		}
 	}
 

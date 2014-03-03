@@ -1,9 +1,12 @@
 package com.missionse.kestrelweather.util;
 
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
+import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
 import com.missionse.kestrelweather.database.model.tables.OpenWeather;
 import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
@@ -44,5 +47,23 @@ public final class ReportBuilder {
 		reportTable.create(report);
 
 		return report.getId();
+	}
+
+	/**
+	 * Create a Supplement entry into the database.
+	 * @param activity Instance of KestrelWeatherActivity.
+	 * @param uri The string uri that points too the supplement.
+	 * @param reportId The database report id associated with the supplement.
+	 * @param type The supplementType.
+	 * @return returns the database ID of the newly created supplement.
+	 */
+	public static int buildSupplement(KestrelWeatherActivity activity, String uri,
+			int reportId, SupplementType type) {
+		Supplement supp = new Supplement();
+		supp.setType(type);
+		supp.setUri(uri);
+		supp.setReport(activity.getDatabaseAccessor().getReportById(reportId));
+		activity.getDatabaseAccessor().getSupplementTable().create(supp);
+		return supp.getId();
 	}
 }

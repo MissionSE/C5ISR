@@ -5,7 +5,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ClipData;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,19 +20,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.missionse.imageviewer.ImageFragmentFactory;
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.model.SupplementType;
+import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
+import com.missionse.kestrelweather.util.ReportBuilder;
 
 /**
  * A fragment used to manage the photos attached to a report.
  */
 public class PhotoOverviewFragment extends Fragment {
+	private static final String TAG = PhotoOverviewFragment.class.getSimpleName();
 	private static final int ADD_PHOTO_REQUEST = 10;
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
 
 	private PhotoAdapter mPhotoAdapter;
-	private Activity mActivity;
+	private KestrelWeatherActivity mActivity;
 	private boolean mEditable = true;
 	private int mReportId = INVALID_REPORT_ID;
 
@@ -58,7 +65,11 @@ public class PhotoOverviewFragment extends Fragment {
 	@Override
 	public void onAttach(final Activity activity) {
 		super.onAttach(activity);
-		mActivity = activity;
+		try {
+			mActivity = (KestrelWeatherActivity) activity;
+		} catch (ClassCastException e) {
+			Log.e(TAG, "Unable to cast activity.", e);
+		}
 	}
 
 	@Override
@@ -110,6 +121,8 @@ public class PhotoOverviewFragment extends Fragment {
 			if (emptyView != null) {
 				photoList.setEmptyView(emptyView);
 			}
+
+			populateAdapter();
 		}
 
 		return contentView;
@@ -143,6 +156,7 @@ public class PhotoOverviewFragment extends Fragment {
 			if (resultData != null) {
 				if (resultData.getData() != null) {
 					mPhotoAdapter.add(resultData.getData());
+					createNewSupplement(resultData.getData().toString());
 				} else {
 					ClipData clipData = resultData.getClipData();
 					if (clipData != null) {
@@ -155,6 +169,17 @@ public class PhotoOverviewFragment extends Fragment {
 					}
 				}
 			}
+		}
+	}
+
+	private void createNewSupplement(String uri) {
+		ReportBuilder.buildSupplement(mActivity, uri, mReportId,
+		   SupplementType.PHOTO);
+	}
+
+	private void populateAdapter() {
+		for (Supplement sup : mActivity.getDatabaseAccessor().getAudioSupplements(mReportId)) {
+			mPhotoAdapter.add(Uri.parse(sup.getUri()));
 		}
 	}
 }

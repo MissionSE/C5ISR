@@ -148,8 +148,8 @@ public class NoteOverviewFragment extends Fragment {
 		FragmentManager fragmentManager = getFragmentManager();
 		if (fragmentManager != null) {
 			DialogFragment dialogFragment = NoteDialogFragment.newInstance(noteId, mReportId);
-			dialogFragment.setTargetFragment(NoteOverviewFragment.this, REQUEST_LIST_RELOAD);
-			dialogFragment.show(fragmentManager, "note_dialog");
+			dialogFragment.setTargetFragment(this, REQUEST_LIST_RELOAD);
+			dialogFragment.show(getChildFragmentManager(), "note_dialog");
 		}
 	}
 
