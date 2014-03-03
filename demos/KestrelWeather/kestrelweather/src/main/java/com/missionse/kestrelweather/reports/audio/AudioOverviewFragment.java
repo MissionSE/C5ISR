@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
@@ -136,6 +137,7 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 							mMediaControls.setVisibility(View.GONE);
 							onMediaPauseButtonPressed();
 						}
+						ReportBuilder.removeSupplement(mActivity, uri.toString(), mReportId);
 					}
 				});
 				mAudioList.setMultiChoiceModeListener(mediaMultiChoiceModeListener);
@@ -190,20 +192,29 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 		if (requestCode == ATTACH_AUDIO_REQUEST && resultCode == Activity.RESULT_OK) {
 			if (resultData != null) {
 				if (resultData.getData() != null) {
-					mAudioAdapter.add(resultData.getData());
-					createNewSupplement(resultData.getData().toString());
+					addPreventDuplicateEntry(resultData.getData());
 				} else {
 					ClipData clipData = resultData.getClipData();
 					if (clipData != null) {
 						for (int index = 0; index < clipData.getItemCount(); ++index) {
 							ClipData.Item item = clipData.getItemAt(index);
 							if (item != null) {
-								mAudioAdapter.add(item.getUri());
+								addPreventDuplicateEntry(item.getUri());
 							}
 						}
 					}
 				}
 			}
+		}
+	}
+
+	private void addPreventDuplicateEntry(Uri uri) {
+		if (!mAudioAdapter.contains(uri)) {
+			mAudioAdapter.add(uri);
+			createNewSupplement(uri.toString());
+		} else {
+			Toast.makeText(mActivity, mActivity.getString(R.string.already_exists), Toast.LENGTH_SHORT)
+				.show();
 		}
 	}
 

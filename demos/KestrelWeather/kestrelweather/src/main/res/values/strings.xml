@@ -3,6 +3,9 @@
 
 	<string name="app_name">KestrelWeather</string>
 
+	<!-- Toast Messages -->
+	<string name="already_exists">Media file has already been added.</string>
+
 	<!-- Remote Database -->
 	<string name="remote_database">http://198.74.57.149:3009</string>
 	<string name="upload_report_url">%1$s/upload/</string>

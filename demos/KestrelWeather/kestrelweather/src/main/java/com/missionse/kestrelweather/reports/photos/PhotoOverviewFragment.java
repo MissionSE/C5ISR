@@ -20,6 +20,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -29,6 +30,7 @@ import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
+import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
 import com.missionse.kestrelweather.util.ReportBuilder;
 
 import java.io.File;
@@ -36,7 +38,7 @@ import java.io.File;
 /**
  * A fragment used to manage the photos attached to a report.
  */
-public class PhotoOverviewFragment extends Fragment {
+public class PhotoOverviewFragment extends Fragment implements UriRemovedListener {
 	private static final String TAG = PhotoOverviewFragment.class.getSimpleName();
 	private static final int ADD_PHOTO_REQUEST = 10;
 	private static final String REPORT_ID = "report_id";
@@ -120,7 +122,10 @@ public class PhotoOverviewFragment extends Fragment {
 
 			if (mEditable) {
 				photoList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-				photoList.setMultiChoiceModeListener(new MediaMultiChoiceModeListener(mActivity, photoList, mPhotoAdapter));
+				MediaMultiChoiceModeListener multiChoiceModeListener =
+					new MediaMultiChoiceModeListener(mActivity, photoList, mPhotoAdapter);
+				multiChoiceModeListener.setUriRemovedListener(this);
+				photoList.setMultiChoiceModeListener(multiChoiceModeListener);
 			}
 
 			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_photos_empty);
@@ -161,20 +166,29 @@ public class PhotoOverviewFragment extends Fragment {
 		if (requestCode == ADD_PHOTO_REQUEST && resultCode == Activity.RESULT_OK) {
 			if (resultData != null) {
 				if (resultData.getData() != null) {
-					mPhotoAdapter.add(resultData.getData());
-					createNewSupplement(resultData.getData().toString());
+					addPreventDuplicateEntry(resultData.getData());
 				} else {
 					ClipData clipData = resultData.getClipData();
 					if (clipData != null) {
 						for (int index = 0; index < clipData.getItemCount(); ++index) {
 							ClipData.Item item = clipData.getItemAt(index);
 							if (item != null) {
-								mPhotoAdapter.add(item.getUri());
+								addPreventDuplicateEntry(item.getUri());
 							}
 						}
 					}
 				}
 			}
+		}
+	}
+
+	private void addPreventDuplicateEntry(Uri uri) {
+		if (!mPhotoAdapter.contains(uri)) {
+			mPhotoAdapter.add(uri);
+			createNewSupplement(uri.toString());
+		} else {
+			Toast.makeText(mActivity, mActivity.getString(R.string.already_exists), Toast.LENGTH_SHORT)
+				.show();
 		}
 	}
 
@@ -228,5 +242,10 @@ public class PhotoOverviewFragment extends Fragment {
 					});
 			fileIndex++;
 		}
+	}
+
+	@Override
+	public void uriRemoved(Uri uri) {
+		ReportBuilder.removeSupplement(mActivity, uri.toString(), mReportId);
 	}
 }

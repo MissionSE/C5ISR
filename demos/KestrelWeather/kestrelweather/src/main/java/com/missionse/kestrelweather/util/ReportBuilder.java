@@ -10,6 +10,9 @@ import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
+
+import java.util.List;
 
 /**
  * Provides the functionality to build a report.
@@ -65,5 +68,18 @@ public final class ReportBuilder {
 		supp.setReport(activity.getDatabaseAccessor().getReportById(reportId));
 		activity.getDatabaseAccessor().getSupplementTable().create(supp);
 		return supp.getId();
+	}
+
+	public static int removeSupplement(KestrelWeatherActivity activity, String uri, int reportId) {
+		SupplementTable table = activity.getDatabaseAccessor().getSupplementTable();
+		List<Supplement> supplementList = table.queryForAll();
+		for (Supplement supp : supplementList) {
+			if (supp.getReport().getId() == reportId) {
+				if (supp.getUri().equals(uri)) {
+					return table.delete(supp);
+				}
+			}
+		}
+		return 0;
 	}
 }
