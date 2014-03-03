@@ -2,7 +2,6 @@ package com.missionse.kestrelweather.reports.audio;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,22 +49,6 @@ public class AudioAdapter extends UriAdapter {
 		}
 
 		return view;
-	}
-
-	/**
-	 * Determine if uri is currently in the list.
-	 * @param uri The uri to check.
-	 * @return true if value exists in the list.
-	 */
-	public boolean contains(Uri uri) {
-		if (uri != null && uri.getPath() != null) {
-			for (int idx = 0; idx < getCount(); idx++) {
-				if (uri.getPath().equals(getItem(idx).getPath())) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	private void setThumbnail(final View view) {

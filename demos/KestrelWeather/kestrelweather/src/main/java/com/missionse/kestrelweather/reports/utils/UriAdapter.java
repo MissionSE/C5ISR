@@ -106,4 +106,20 @@ public abstract class UriAdapter extends ArrayAdapter<Uri> {
 		String pre = ("KMGTPE").charAt(exp - 1) + "";
 		return String.format("%.1f %sB", bytes / Math.pow(BYTES_IN_KILOBYTE, exp), pre);
 	}
+
+	/**
+	 * Determine if uri is currently in the list.
+	 * @param uri The uri to check.
+	 * @return true if value exists in the list.
+	 */
+	public boolean contains(Uri uri) {
+		if (uri != null && uri.getPath() != null) {
+			for (int idx = 0; idx < getCount(); idx++) {
+				if (uri.getPath().equals(getItem(idx).getPath())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
