@@ -208,7 +208,7 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 	}
 
 	private void createNewSupplement(String uri) {
-		ReportBuilder.buildSupplement(mActivity, uri, mReportId,		   SupplementType.AUDIO);
+		ReportBuilder.buildSupplement(mActivity, uri, mReportId, SupplementType.AUDIO);
 	}
 
 	private void populateAdapter() {

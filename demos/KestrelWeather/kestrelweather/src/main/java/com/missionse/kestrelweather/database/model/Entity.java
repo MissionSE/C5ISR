@@ -159,7 +159,7 @@ public class Entity {
 		int retValue = 0;
 		if (element != null) {
 			try {
-				retValue =  element.getAsInt();
+				retValue = element.getAsInt();
 			} catch (NumberFormatException e) {
 				Log.d("Entity", "Unable to read db id... defaulting to 0");
 			}
@@ -179,7 +179,7 @@ public class Entity {
 			} catch (NumberFormatException e) {
 				Log.d("Entity", "Unable to parse as long:" + element.toString());
 				Log.d("Entity", "parse as string..");
-				retValue =  DateTime.parse(element.getAsString()).getMillis();
+				retValue = DateTime.parse(element.getAsString()).getMillis();
 			}
 		}
 		return retValue;

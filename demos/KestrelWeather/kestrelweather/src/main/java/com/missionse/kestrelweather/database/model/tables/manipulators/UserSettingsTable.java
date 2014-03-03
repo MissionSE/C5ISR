@@ -6,7 +6,7 @@ import com.missionse.kestrelweather.database.model.tables.UserSettings;
 import java.sql.SQLException;
 
 /**
- *	The DAO associated with UserSettings object.
+ * The DAO associated with UserSettings object.
  */
 public class UserSettingsTable extends BaseTable<UserSettings> {
 	/**

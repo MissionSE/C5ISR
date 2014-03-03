@@ -18,7 +18,7 @@ public class MapViewerFragment extends MapFragment {
 
 	private GoogleMap mMap;
 	private MapLoadedListener mMapLoadedListener;
-    private ObservationCalloutMarkersAdapter mMarkersAdapter;
+	private ObservationCalloutMarkersAdapter mMarkersAdapter;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -45,12 +45,12 @@ public class MapViewerFragment extends MapFragment {
 	}
 
 	private void setUpMap() {
-        mMarkersAdapter = new ObservationCalloutMarkersAdapter(getActivity(), mMap);
+		mMarkersAdapter = new ObservationCalloutMarkersAdapter(getActivity(), mMap);
 
-        DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor();
-        ReportTable reportTable = databaseAccessor.getReportTable();
-        List<Report> reports = reportTable.queryForAll();
-        mMarkersAdapter.setData(reports);
+		DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor();
+		ReportTable reportTable = databaseAccessor.getReportTable();
+		List<Report> reports = reportTable.queryForAll();
+		mMarkersAdapter.setData(reports);
 
 		if (mMapLoadedListener != null) {
 			mMapLoadedListener.mapLoaded(mMap);

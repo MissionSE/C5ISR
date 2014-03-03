@@ -15,13 +15,13 @@ import android.webkit.MimeTypeMap;
  */
 public final class MediaResolver {
 
-	private MediaResolver() { }
+	private MediaResolver() {
+	}
 
 	/**
 	 * Get a file path from a Uri. This will get the the path for Storage Access
 	 * Framework Documents, as well as the _data field for the MediaStore and
 	 * other file-based ContentProviders.
-	 *
 	 * @param context The context.
 	 * @param uri The Uri to query.
 	 */
@@ -48,7 +48,7 @@ public final class MediaResolver {
 
 				final String id = DocumentsContract.getDocumentId(uri);
 				final Uri contentUri = ContentUris.withAppendedId(
-				   Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+						Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
 				return getDataColumn(context, contentUri, null, null);
 			}
@@ -68,8 +68,8 @@ public final class MediaResolver {
 				}
 
 				final String selection = "_id=?";
-				final String[] selectionArgs = new String[] {
-				   split[1]
+				final String[] selectionArgs = new String[]{
+						split[1]
 				};
 
 				return getDataColumn(context, contentUri, selection, selectionArgs);
@@ -90,7 +90,6 @@ public final class MediaResolver {
 	/**
 	 * Get the value of the data column for this Uri. This is useful for
 	 * MediaStore Uris, and other file-based ContentProviders.
-	 *
 	 * @param context The context.
 	 * @param uri The Uri to query.
 	 * @param selection (Optional) Filter used in the query.
@@ -98,15 +97,15 @@ public final class MediaResolver {
 	 * @return The value of the _data column, which is typically a file path.
 	 */
 	public static String getDataColumn(Context context, Uri uri, String selection,
-									String[] selectionArgs) {
+			String[] selectionArgs) {
 		Cursor cursor = null;
 		final String column = "_data";
 		final String[] projection = {
-		   column
+				column
 		};
 		try {
 			cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-			   null);
+					null);
 			if (cursor != null && cursor.moveToFirst()) {
 				final int column_index = cursor.getColumnIndexOrThrow(column);
 				return cursor.getString(column_index);

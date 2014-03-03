@@ -61,7 +61,7 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
-						  int oldVersion, int newVersion) {
+			int oldVersion, int newVersion) {
 		try {
 			Log.i(TAG, "onUpgrade");
 			for (Class clazz : getSupportedClasses()) {

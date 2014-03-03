@@ -174,7 +174,7 @@ public class PhotoOverviewFragment extends Fragment {
 
 	private void createNewSupplement(String uri) {
 		ReportBuilder.buildSupplement(mActivity, uri, mReportId,
-		   SupplementType.PHOTO);
+				SupplementType.PHOTO);
 	}
 
 	private void populateAdapter() {

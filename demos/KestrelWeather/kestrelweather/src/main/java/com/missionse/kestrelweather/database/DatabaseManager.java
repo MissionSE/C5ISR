@@ -131,7 +131,7 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 		List<Supplement> retList = new LinkedList<Supplement>();
 		for (Supplement supp : supplements) {
 			if (supp.getType() == type &&
-			   supp.getReport().getId() == reportId) {
+					supp.getReport().getId() == reportId) {
 				retList.add(supp);
 			}
 		}

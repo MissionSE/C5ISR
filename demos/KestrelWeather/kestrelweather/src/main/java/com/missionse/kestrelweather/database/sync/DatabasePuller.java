@@ -37,7 +37,7 @@ public class DatabasePuller implements Runnable {
 	public DatabasePuller(Context context, DatabaseAccessor accessor) {
 		mContext = context;
 		mAccessor = accessor;
-		mRemoteUrl = mContext.getString(R.string.remote_database) ;
+		mRemoteUrl = mContext.getString(R.string.remote_database);
 	}
 
 	@Override
@@ -95,9 +95,9 @@ public class DatabasePuller implements Runnable {
 	}
 
 	private boolean remoteReportExists(int id) {
-			List<Report> reports =
-			   mAccessor.getReportTable().queryForEq("remote_id", id);
-			return reports.size() > 0;
+		List<Report> reports =
+				mAccessor.getReportTable().queryForEq("remote_id", id);
+		return reports.size() > 0;
 	}
 
 	private void createReportFromJson(final JsonObject json) {

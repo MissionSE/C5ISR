@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="temperature_colors">
-        <item>#ff300030</item>
-        <item>#ff630063</item>
-        <item>#ff940094</item>
-        <item>#ffc700c7</item>
-        <item>#fff800fc</item>
-        <item>#ffc600fc</item>
-        <item>#ff9300fc</item>
-        <item>#ff6100fc</item>
-        <item>#ff2e00fc</item>
-        <item>#ff0032fc</item>
-        <item>#ff0065fc</item>
-        <item>#ff0097fc</item>
-        <item>#ff00cafc</item>
-        <item>#ff00e8f0</item>
-        <item>#ff00d79d</item>
-        <item>#ff00e650</item>
-        <item>#ff00f028</item>
-        <item>#ff78fa00</item>
-        <item>#ffc8fa00</item>
-        <item>#fffcfc00</item>
-        <item>#fffcdf00</item>
-        <item>#fffcc600</item>
-        <item>#fffcad00</item>
-        <item>#fffc9300</item>
-        <item>#ffe67a00</item>
-        <item>#ffe66300</item>
-        <item>#ffdb4b1f</item>
-        <item>#ffc7321e</item>
-        <item>#ffb3191c</item>
-        <item>#ffa8001c</item>
-        <item>#ffb30030</item>
-        <item>#ffc70063</item>
-        <item>#fffc009b</item>
-    </array>
-    <string-array name="temperature_units">
-        <item>°C</item>
-        <item>°F</item>
-    </string-array>
+	<array name="temperature_colors">
+		<item>#ff300030</item>
+		<item>#ff630063</item>
+		<item>#ff940094</item>
+		<item>#ffc700c7</item>
+		<item>#fff800fc</item>
+		<item>#ffc600fc</item>
+		<item>#ff9300fc</item>
+		<item>#ff6100fc</item>
+		<item>#ff2e00fc</item>
+		<item>#ff0032fc</item>
+		<item>#ff0065fc</item>
+		<item>#ff0097fc</item>
+		<item>#ff00cafc</item>
+		<item>#ff00e8f0</item>
+		<item>#ff00d79d</item>
+		<item>#ff00e650</item>
+		<item>#ff00f028</item>
+		<item>#ff78fa00</item>
+		<item>#ffc8fa00</item>
+		<item>#fffcfc00</item>
+		<item>#fffcdf00</item>
+		<item>#fffcc600</item>
+		<item>#fffcad00</item>
+		<item>#fffc9300</item>
+		<item>#ffe67a00</item>
+		<item>#ffe66300</item>
+		<item>#ffdb4b1f</item>
+		<item>#ffc7321e</item>
+		<item>#ffb3191c</item>
+		<item>#ffa8001c</item>
+		<item>#ffb30030</item>
+		<item>#ffc70063</item>
+		<item>#fffc009b</item>
+	</array>
+	<string-array name="temperature_units">
+		<item>°C</item>
+		<item>°F</item>
+	</string-array>
 </resources>

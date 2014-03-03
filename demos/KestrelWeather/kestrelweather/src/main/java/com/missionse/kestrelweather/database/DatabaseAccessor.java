@@ -67,19 +67,19 @@ public interface DatabaseAccessor {
 	 * Setter.
 	 * @param latestEvent The new latestEvent id.
 	 */
-	 void setLatestEvent(String latestEvent);
+	void setLatestEvent(String latestEvent);
 
 	/**
 	 * Getter.
 	 * @param reportId The DB report ID
 	 * @return List of supplements that are of type SupplementType.PHOTO.
 	 */
-	 List<Supplement> getPhotoSupplements(int reportId);
+	List<Supplement> getPhotoSupplements(int reportId);
 
 	/**
 	 * Getter.
 	 * @param reportId The DB report ID
 	 * @return List of supplements that are of type SupplementType.AUDIO.
 	 */
-	 List<Supplement> getAudioSupplements(int reportId);
+	List<Supplement> getAudioSupplements(int reportId);
 }

@@ -85,7 +85,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		for (Note note : getDatabaseAccessor().getNoteTable().queryForAll()) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("\n");
-			builder.append("ReportId=" + (note.getReport() == null ? "0" : note.getReport().getId()) + "\n" );
+			builder.append("ReportId=" + (note.getReport() == null ? "0" : note.getReport().getId()) + "\n");
 			builder.append("Id=" + note.getId() + "\n");
 			builder.append("Title=" + note.getTitle() + " Content=" + note.getContent());
 			Log.d(TAG, builder.toString());
@@ -252,16 +252,16 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		if (backStackEntries == 0) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.exit_prompt)
-				.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						finish();
-					}
-				})
-				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						//Nothing to do.
-					}
-				});
+					.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							finish();
+						}
+					})
+					.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							//Nothing to do.
+						}
+					});
 			// Create the AlertDialog object and return it
 			builder.create().show();
 		} else {

@@ -7,7 +7,7 @@ import com.missionse.kestrelweather.database.DatabaseAccessor;
 
 /**
  * Class that forces the database to sync with the remote.
- *
+ * <p/>
  * 0 Push Report Database
  * 1 Pull Remote Latest
  * 2 Push Media Database

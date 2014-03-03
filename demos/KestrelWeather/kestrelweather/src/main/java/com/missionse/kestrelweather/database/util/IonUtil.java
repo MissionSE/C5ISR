@@ -18,7 +18,8 @@ import java.util.concurrent.ExecutionException;
 public final class IonUtil {
 	private static final String TAG = IonUtil.class.getSimpleName();
 
-	private IonUtil() { }
+	private IonUtil() {
+	}
 
 	/**
 	 * Upload report via ION.
@@ -50,8 +51,8 @@ public final class IonUtil {
 	public static void pullLatestEvent(final Context context, final String latestId, final FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(
-			res.getString(R.string.retrieve_latest_url),
-			res.getString(R.string.remote_database));
+				res.getString(R.string.retrieve_latest_url),
+				res.getString(R.string.remote_database));
 		Log.d(TAG, "Pulling latest with latestCode:" + latestId + " from URL:" + remoteUrl);
 
 		Ion.with(context, remoteUrl + latestId).asJsonObject().setCallback(callback);
@@ -66,12 +67,12 @@ public final class IonUtil {
 	public static void pullReport(final Context context, final String reportId, final FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(
-		   res.getString(R.string.retrieve_report_url),
-		   res.getString(R.string.remote_database));
+				res.getString(R.string.retrieve_report_url),
+				res.getString(R.string.remote_database));
 		Log.d(TAG, "Pulling report with id:" + reportId + " from URL:" + remoteUrl);
 
 		try {
-			Ion.with(context, remoteUrl +  reportId).asJsonObject().setCallback(callback).get();
+			Ion.with(context, remoteUrl + reportId).asJsonObject().setCallback(callback).get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
@@ -83,23 +84,23 @@ public final class IonUtil {
 	 * Upload a single media file to the database.
 	 * @param context The current context.
 	 * @param reportId The remote database report id to upload.
-	 * @param media  Instance of File that points to the media to be uploaded.
+	 * @param media Instance of File that points to the media to be uploaded.
 	 * @param callback Instance of FutureCallback<JsonObject>.
 	 */
 	public static void uploadMedia(final Context context, final int reportId, final File media, final FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
-			res.getString(R.string.remote_database));
+				res.getString(R.string.remote_database));
 		Log.d(TAG, "Upload Media(\'" + media.getAbsolutePath() + "\') to reportid=" + reportId + " to remote database:" + remoteUrl);
 
 		try {
 			Ion.with(context, remoteUrl)
-				.setMultipartParameter("id", Integer.toString(reportId))
-				.setMultipartFile(media.getName(),
-						MediaResolver.getMimeType(media.getAbsolutePath()), media)
-				.asJsonObject()
-				.setCallback(callback)
-				.get();
+					.setMultipartParameter("id", Integer.toString(reportId))
+					.setMultipartFile(media.getName(),
+							MediaResolver.getMimeType(media.getAbsolutePath()), media)
+					.asJsonObject()
+					.setCallback(callback)
+					.get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {

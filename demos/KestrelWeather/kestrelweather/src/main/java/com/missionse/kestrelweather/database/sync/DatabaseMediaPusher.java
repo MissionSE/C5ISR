@@ -61,17 +61,17 @@ public class DatabaseMediaPusher implements Runnable {
 
 	private void push(final File media, final int remoteId, final int supplementId) {
 		IonUtil.uploadMedia(mContext, remoteId, media,
-			new FutureCallback<JsonObject>() {
-				@Override
-				public void onCompleted(Exception e, JsonObject result) {
-					if (e == null) {
-						Log.d(TAG, "Received new media path: " + result.toString());
-						flipDirtyFlag(supplementId);
-					} else {
-						Log.d(TAG, "Failed to upload media file...", e);
+				new FutureCallback<JsonObject>() {
+					@Override
+					public void onCompleted(Exception e, JsonObject result) {
+						if (e == null) {
+							Log.d(TAG, "Received new media path: " + result.toString());
+							flipDirtyFlag(supplementId);
+						} else {
+							Log.d(TAG, "Failed to upload media file...", e);
+						}
 					}
-				}
-		});
+				});
 	}
 
 	private void flipDirtyFlag(final int id) {

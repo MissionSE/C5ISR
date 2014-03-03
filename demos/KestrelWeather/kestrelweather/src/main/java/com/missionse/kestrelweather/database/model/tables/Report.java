@@ -183,9 +183,9 @@ public class Report extends Entity implements ClusterItem {
 		setLongitude(lng);
 	}
 
-    @Override
-    public LatLng getPosition() {
-        return new LatLng(mLatitude, mLongitude);
-    }
+	@Override
+	public LatLng getPosition() {
+		return new LatLng(mLatitude, mLongitude);
+	}
 
 }
