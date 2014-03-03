@@ -1,6 +1,6 @@
 {
 	"name": "kestrel-weather-server",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"author": "James Sant'Angelo <james.santangelo@missionse.com>",
 	"description":"kestrel weather server application",
 	"private": true,
@@ -25,11 +25,12 @@
 		"implementjs": "0.2.x",
 		"formidable":"1.0.x",
 		"underscore":"1.6.x",
+		"commander":"2.1.x",
 		"debug":"0.7.x",
 		"requestify":"0.1.x",
 		"request":"2.34.x",
 		"randomstring":"1.0.x",
-		"forever-monitor":"1.2.*"
+		"forever-monitor":"1.2.x"
 	},
 	"license": "TBD",
 	"engines": {
