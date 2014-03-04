@@ -10,6 +10,8 @@ var ReportSchema = new Schema({
 	updatedat: { type: Date, default: Date.now },
 	createdat: { type: Date, default: Date.now },
 
+	title: String,
+
 	kestrel: {
 		temperature: Number,
 		humidity: Number,

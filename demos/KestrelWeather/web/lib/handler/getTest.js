@@ -20,6 +20,8 @@ module.exports = function(db) {
 				createdat: Date.now(),
 				updatedat: Date.now(),
 
+				title: 'some title!',
+
 				kestrel: {
 					temperature: (Math.random() * 150 - 50).toFixed(2),
 					humidity: (Math.random() * 100).toFixed(2),

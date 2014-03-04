@@ -70,7 +70,8 @@ module.exports = function(db) {
 					latitude: data.latitude,
 					longitude: data.longitude,
 					createdat: data.createdat,
-					updatedat: data.updatedat
+					updatedat: data.updatedat,
+					title: data.title
 				});
 				newReport.kestrel.temperature = data.kestrel.temperature;
 				newReport.kestrel.humidity = data.kestrel.humidity;
