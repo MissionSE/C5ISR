@@ -41,6 +41,7 @@
 	<string name="celsius_word">Celsius</string>
 	<string name="celsius">ºC</string>
 	<string name="fahrenheit">ºF</string>
+	<string name="sync">Sync</string>
 
 	<!-- Navigation Drawer -->
 	<string name="drawer_overview">OVERVIEW</string>

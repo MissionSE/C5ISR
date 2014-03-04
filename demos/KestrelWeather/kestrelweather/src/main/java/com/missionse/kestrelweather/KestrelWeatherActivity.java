@@ -21,7 +21,7 @@ import com.missionse.kestrelweather.map.MapViewerFragment;
 import com.missionse.kestrelweather.map.TileProviderFactory;
 import com.missionse.kestrelweather.map.TiledMap;
 import com.missionse.kestrelweather.preferences.SettingsActivity;
-import com.missionse.kestrelweather.reports.ReportListFragment;
+import com.missionse.kestrelweather.reports.ReportSyncFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 
@@ -152,7 +152,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		} else if (index == KestrelWeatherDrawerFactory.REPORT_SYNC) {
 			displayReportSync();
 		} else if (index == KestrelWeatherDrawerFactory.REPORT_DATABASE) {
-			displayDatabaseReport();
+			displayReportDatabase();
 		}
 	}
 
@@ -188,17 +188,17 @@ public class KestrelWeatherActivity extends DrawerActivity {
 
 	private void displayReportSync() {
 		FragmentManager fragmentManager = getFragmentManager();
-		ReportListFragment reportListFragment = (ReportListFragment) fragmentManager
+		ReportSyncFragment reportSyncFragment = (ReportSyncFragment) fragmentManager
 				.findFragmentByTag("report_list");
-		if (reportListFragment == null) {
-			reportListFragment = new ReportListFragment();
+		if (reportSyncFragment == null) {
+			reportSyncFragment = new ReportSyncFragment();
 		}
 		fragmentManager.beginTransaction()
-				.replace(R.id.content, reportListFragment, "report_list")
+				.replace(R.id.content, reportSyncFragment, "report_list")
 				.commit();
 	}
 
-	private void displayDatabaseReport() {
+	private void displayReportDatabase() {
 
 	}
 

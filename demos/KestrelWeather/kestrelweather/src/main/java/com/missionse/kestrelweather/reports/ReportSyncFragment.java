@@ -3,16 +3,13 @@ package com.missionse.kestrelweather.reports;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,28 +22,31 @@ import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTab
 import com.missionse.kestrelweather.database.sync.DatabaseSync;
 import com.missionse.kestrelweather.database.sync.SyncStatusListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Provides a fragment to show a list of reports.
  */
-public class ReportListFragment extends Fragment implements SyncStatusListener {
-	private static final String TAG = ReportListFragment.class.getSimpleName();
+public class ReportSyncFragment extends Fragment implements SyncStatusListener {
+	private static final String TAG = ReportSyncFragment.class.getSimpleName();
 	private Activity mActivity;
 	private ReportAdapter mReportAdapter;
+	private TextView mUnsyncedCountView;
+	private Button mSyncButton;
 
 	/**
 	 * Default constructor.
 	 */
-	public ReportListFragment() {
+	public ReportSyncFragment() {
 	}
 
 	/**
 	 * A factory method used to create a new instance of this fragment.
-	 * @return A new instance of the fragment ReportListFragment.
+	 * @return A new instance of the fragment ReportSyncFragment.
 	 */
-	public static ReportListFragment newInstance() {
-		return new ReportListFragment();
+	public static ReportSyncFragment newInstance() {
+		return new ReportSyncFragment();
 	}
 
 	@Override
@@ -65,19 +65,43 @@ public class ReportListFragment extends Fragment implements SyncStatusListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setHasOptionsMenu(true);
-
 		if (mActivity != null) {
 			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
-					queryReports());
+				new ArrayList<Report>());
 		}
+	}
+
+	private List<Report> queryReports() {
+		DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
+		ReportTable reportTable = databaseAccessor.getReportTable();
+		List<Report> allReports = reportTable.queryForAll();
+		List<Report> dirtyReports = new ArrayList<Report>();
+
+		for (Report report : allReports) {
+			if (report.isDirty()) {
+				dirtyReports.add(report);
+			}
+		}
+
+		mUnsyncedCountView.setText("Unsynced reports: " + dirtyReports.size());
+		if (dirtyReports.isEmpty()) {
+			mSyncButton.setEnabled(false);
+			mUnsyncedCountView.setTextColor(getResources().getColor(R.color.gray_medium));
+			mUnsyncedCountView.setBackgroundColor(getResources().getColor(R.color.gray_light));
+		} else {
+			mSyncButton.setEnabled(true);
+			mUnsyncedCountView.setTextColor(getResources().getColor(R.color.white));
+			mUnsyncedCountView.setBackgroundColor(getResources().getColor(R.color.holo_green_dark));
+		}
+		return dirtyReports;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View contentView = inflater.inflate(R.layout.fragment_report_list, container, false);
+		View contentView = inflater.inflate(R.layout.fragment_report_sync, container, false);
 		if (contentView != null) {
-			ListView reportList = (ListView) contentView.findViewById(R.id.fragment_report_list);
+			mUnsyncedCountView = (TextView) contentView.findViewById(R.id.fragment_report_sync_count);
+			ListView reportList = (ListView) contentView.findViewById(R.id.fragment_report_sync_list);
 			if (reportList != null) {
 				reportList.setAdapter(mReportAdapter);
 				reportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -97,10 +121,29 @@ public class ReportListFragment extends Fragment implements SyncStatusListener {
 					}
 				});
 
-				TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_list_empty);
+				TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_sync_list_empty);
 				if (emptyView != null) {
 					reportList.setEmptyView(emptyView);
 				}
+
+				mSyncButton = (Button) contentView.findViewById(R.id.sync_btn);
+				mSyncButton.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(final View view) {
+						try {
+							KestrelWeatherActivity activity = (KestrelWeatherActivity) getActivity();
+							DatabaseSync sync = new DatabaseSync(activity);
+							sync.setSyncCompleteListener(ReportSyncFragment.this);
+							sync.execute(true, true, true);
+						} catch (ClassCastException e) {
+							Log.e(TAG, "Unable to cast activity.", e);
+						}
+					}
+				});
+
+				mReportAdapter.clear();
+				mReportAdapter.addAll(queryReports());
+				mReportAdapter.notifyDataSetChanged();
 			}
 		}
 
@@ -108,55 +151,15 @@ public class ReportListFragment extends Fragment implements SyncStatusListener {
 	}
 
 	@Override
-	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.report_sync, menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_sync_reports) {
-			try {
-				KestrelWeatherActivity activity = (KestrelWeatherActivity) getActivity();
-				DatabaseSync sync = new DatabaseSync(activity);
-				sync.setSyncCompleteListener(this);
-				sync.execute(true, true, true);
-			} catch (ClassCastException e) {
-				Log.e(TAG, "Unable to cast activity.", e);
-			}
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
 	public void onSyncComplete() {
-		String syncEnded = getStringFromId(R.string.sync_ended);
-		List<Report> reports = queryReports();
 		mReportAdapter.clear();
-		mReportAdapter.addAll(reports);
+		mReportAdapter.addAll(queryReports());
 		mReportAdapter.notifyDataSetChanged();
-		Toast.makeText(mActivity, syncEnded, Toast.LENGTH_SHORT).show();
+		Toast.makeText(mActivity, getResources().getString(R.string.sync_ended), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onSyncStarted() {
-		String syncStarted = getStringFromId(R.string.sync_started);
-		Toast.makeText(mActivity, syncStarted, Toast.LENGTH_SHORT).show();
-	}
-
-	private String getStringFromId(int id) {
-		String retValue = "";
-		Resources res = getResources();
-		if (res != null) {
-			retValue = res.getString(id);
-		}
-		return retValue;
-	}
-
-	private List<Report> queryReports() {
-		DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
-		ReportTable reportTable = databaseAccessor.getReportTable();
-		return reportTable.queryForAll();
+		Toast.makeText(mActivity, getResources().getString(R.string.sync_started), Toast.LENGTH_SHORT).show();
 	}
 }
