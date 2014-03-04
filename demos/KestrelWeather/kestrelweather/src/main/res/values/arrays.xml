@@ -39,4 +39,76 @@
 		<item>°C</item>
 		<item>°F</item>
 	</string-array>
+	<string-array name="pref_temp_units">
+		<item>Celsius (°C)</item>
+		<item>Fahrenheit (°F)</item>
+	</string-array>
+	<string-array name="pref_temp_values">
+		<item>CELSIUS</item>
+		<item>FAHRENHEIT</item>
+	</string-array>
+	<string-array name="pref_wind_speed_units">
+		<item>Meters per second (m/s)</item>
+		<item>Kilometers per hour (km/h)</item>
+		<item>Miles per hour (mph)</item>
+		<item>Knots (kn)</item>
+	</string-array>
+	<string-array name="pref_wind_speed_values">
+		<item>MPS</item>
+		<item>KMPH</item>
+		<item>MPH</item>
+		<item>KNOTS</item>
+	</string-array>
+	<string-array name="pref_wind_direction_units">
+		<item>Cardinal</item>
+		<item>Degrees</item>
+	</string-array>
+	<string-array name="pref_wind_direction_values">
+		<item>CARDINAL</item>
+		<item>DEGREES</item>
+	</string-array>
+	<string-array name="pref_pressure_units">
+		<item>Kilopascal (kPa)</item>
+		<item>Milibars (mb)</item>
+		<item>Inches of mercury (in)</item>
+	</string-array>
+	<string-array name="pref_pressure_values">
+		<item>KPA</item>
+		<item>MB</item>
+		<item>IN</item>
+	</string-array>
+	<string-array name="rainfall_units">
+		<item>cm</item>
+		<item>mm</item>
+		<item>inches</item>
+	</string-array>
+	<string-array name="rainfall_units_values">
+		<item>CM</item>
+		<item>MM</item>
+		<item>INCHES</item>
+	</string-array>
+	<string-array name="widget_update_interval">
+		<item>30 minutes</item>
+		<item>1 hour</item>
+		<item>2 hours</item>
+		<item>3 hours</item>
+		<item>4 hours</item>
+		<item>6 hours</item>
+		<item>12 hours</item>
+		<item>18 hours</item>
+		<item>24 hours</item>
+		<item>Never</item>
+	</string-array>
+	<string-array name="widget_update_interval_values">
+		<item>0.5</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>6</item>
+		<item>12</item>
+		<item>18</item>
+		<item>24</item>
+		<item>100000</item>
+	</string-array>
 </resources>

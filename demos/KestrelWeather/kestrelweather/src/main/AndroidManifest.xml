@@ -1,56 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.missionse.kestrelweather">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.missionse.kestrelweather" >
 
 	<uses-sdk
+		android:maxSdkVersion="19"
 		android:minSdkVersion="16"
-		android:targetSdkVersion="19"
-		android:maxSdkVersion="19" />
+		android:targetSdkVersion="19" />
 
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
 	<!-- External storage for caching. -->
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 	<!-- My Location -->
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 	<!-- Bluetooth -->
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 
 	<!-- Audio -->
-	<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 
 	<!-- Maps API needs OpenGL ES 2.0. -->
 	<uses-feature
 		android:glEsVersion="0x00020000"
-		android:required="true"/>
+		android:required="true" />
 
 	<application
 		android:allowBackup="true"
 		android:icon="@drawable/ic_launcher"
 		android:label="@string/app_name"
-		android:theme="@style/AppTheme">
+		android:theme="@style/AppTheme" >
 		<meta-data
 			android:name="com.google.android.maps.v2.API_KEY"
-			android:value="AIzaSyBbp5CoWPqnDfZNzG5oEoqf9c0bowoTGhU"/>
+			android:value="AIzaSyBbp5CoWPqnDfZNzG5oEoqf9c0bowoTGhU" />
 		<meta-data
 			android:name="com.google.android.gms.version"
-			android:value="@integer/google_play_services_version"/>
+			android:value="@integer/google_play_services_version" />
 
 		<activity
-			android:name=".KestrelWeatherActivity"
-			android:label="@string/app_name">
+			android:name="com.missionse.kestrelweather.KestrelWeatherActivity"
+			android:label="@string/app_name" >
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
+				<action android:name="android.intent.action.MAIN" />
 
-				<category android:name="android.intent.category.LAUNCHER"/>
+				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+		</activity>
+		<activity
+			android:name="com.missionse.kestrelweather.preferences.SettingsActivity"
+			android:label="@string/title_activity_settings"
+			android:parentActivityName=".KestrelWeatherActivity" >
+			<!-- Parent activity meta-data to support API level 7+ -->
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".KestrelWeatherActivity" />
+		</activity>
+		<activity
+			android:name="com.missionse.kestrelweather.preferences.OpenSourceLicenseInfoActivity"
+			android:label="Open Source Software License Info"
+			android:parentActivityName="com.missionse.kestrelweather.preferences.SettingsActivity" >
+			<!-- Parent activity meta-data to support API level 7+ -->
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.missionse.kestrelweather.preferences.SettingsActivity" />
 		</activity>
 	</application>
 

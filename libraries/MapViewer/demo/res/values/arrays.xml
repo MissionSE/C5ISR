@@ -1,279 +1,279 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="pref_precip_measurement">
-        <item>@string/in_mi</item>
-        <item>@string/km_cm_mm</item>
-    </string-array>
-    <string-array name="pref_precip_measurement_values">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-    <string-array name="pref_time_format">
-        <item>@string/TwelveHours</item>
-        <item>@string/TwentyFourHours</item>
-    </string-array>
-    <string-array name="pref_time_format_values">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-    <string-array name="pref_date_format">
-        <item>@string/mm_dd</item>
-        <item>@string/dd_mm</item>
-    </string-array>
-    <string-array name="pref_date_format_values">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-    <string-array name="pref_rain_my_accuweather">
-        <item>None</item>
-        <item>Raining</item>
-        <item>No Setting</item>
-    </string-array>
-    <string-array name="pref_rain_my_accuweather_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="pref_snow_my_accuweather">
-        <item>None</item>
-        <item>Snowing</item>
-        <item>No Setting</item>
-    </string-array>
-    <string-array name="pref_snow_my_accuweather_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="pref_ice_my_accuweather">
-        <item>None</item>
-        <item>Icy</item>
-        <item>No Setting</item>
-    </string-array>
-    <string-array name="pref_ice_my_accuweather_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="pref_thunderstorms_my_accuweather">
-        <item>None</item>
-        <item>Thunderstorms</item>
-        <item>No Setting</item>
-    </string-array>
-    <string-array name="pref_thunderstorms_my_accuweather_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="pref_fog_my_accuweather">
-        <item>None</item>
-        <item>Foggy</item>
-        <item>No Setting</item>
-    </string-array>
-    <string-array name="pref_temp_notification_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="pref_temp_notification_values_no_gps">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="pref_temp_notification_interval_values">
-        <item>5</item>
-        <item>10</item>
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-    </string-array>
-    <string-array name="pref_open_at_launch_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="pref_open_at_launch_values_no_gps">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="pref_push_alerts_values">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-    <string-array name="pref_notification_temperature_values">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-    <array
-        name="item_photo_values">
-        <item>
-            @drawable/photo_1
-        </item>
-        <item>
-            @drawable/photo_2
-        </item>
-        <item>
-            @drawable/photo_3
-        </item>
-        <item>
-            @drawable/photo_4
-        </item>
-        <item>
-            @drawable/photo_5
-        </item>
-        <item>
-            @drawable/photo_6
-        </item>
-        <item>
-            @drawable/photo_7
-        </item>
-        <item>
-            @drawable/photo_8
-        </item>
-        <item>
-            @drawable/photo_9
-        </item>
-        <item>
-            @drawable/photo_10
-        </item>
-        <item>
-            @drawable/photo_11
-        </item>
-        <item>
-            @drawable/photo_12
-        </item>
-        <item>
-            @drawable/photo_13
-        </item>
-        <item>
-            @drawable/photo_14
-        </item>
-        <item>
-            @drawable/photo_15
-        </item>
-        <item>
-            @drawable/photo_16
-        </item>
-        <item>
-            @drawable/photo_17
-        </item>
-        <item>
-            @drawable/photo_18
-        </item>
-        <item>
-            @drawable/photo_19
-        </item>
-        <item>
-            @drawable/photo_20
-        </item>
-    </array>
-    <string-array name="temperature_units">
-        <item>°C</item>
-        <item>°F</item>
-    </string-array>
-    <array name="temperature_colors">
-        <item>#ff300030</item>
-        <item>#ff630063</item>
-        <item>#ff940094</item>
-        <item>#ffc700c7</item>
-        <item>#fff800fc</item>
-        <item>#ffc600fc</item>
-        <item>#ff9300fc</item>
-        <item>#ff6100fc</item>
-        <item>#ff2e00fc</item>
-        <item>#ff0032fc</item>
-        <item>#ff0065fc</item>
-        <item>#ff0097fc</item>
-        <item>#ff00cafc</item>
-        <item>#ff00e8f0</item>
-        <item>#ff00d79d</item>
-        <item>#ff00e650</item>
-        <item>#ff00f028</item>
-        <item>#ff78fa00</item>
-        <item>#ffc8fa00</item>
-        <item>#fffcfc00</item>
-        <item>#fffcdf00</item>
-        <item>#fffcc600</item>
-        <item>#fffcad00</item>
-        <item>#fffc9300</item>
-        <item>#ffe67a00</item>
-        <item>#ffe66300</item>
-        <item>#ffdb4b1f</item>
-        <item>#ffc7321e</item>
-        <item>#ffb3191c</item>
-        <item>#ffa8001c</item>
-        <item>#ffb30030</item>
-        <item>#ffc70063</item>
-        <item>#fffc009b</item>
-    </array>
-    <string-array name="pref_temp_units">
-        <item>Celsius (°C)</item>
-        <item>Fahrenheit (°F)</item>
-    </string-array>
-    <string-array name="pref_temp_values">
-        <item>CELSIUS</item>
-        <item>FAHRENHEIT</item>
-    </string-array>
-    <string-array name="pref_wind_speed_units">
-        <item>Meters per second (m/s)</item>
-        <item>Kilometers per hour (km/h)</item>
-        <item>Miles per hour (mph)</item>
-        <item>Knots (kn)</item>
-    </string-array>
-    <string-array name="pref_wind_speed_values">
-        <item>MPS</item>
-        <item>KMPH</item>
-        <item>MPH</item>
-        <item>KNOTS</item>
-    </string-array>
-    <string-array name="pref_wind_direction_units">
-        <item>Cardinal</item>
-        <item>Degrees</item>
-    </string-array>
-    <string-array name="pref_wind_direction_values">
-        <item>CARDINAL</item>
-        <item>DEGREES</item>
-    </string-array>
-    <string-array name="pref_pressure_units">
-        <item>Kilopascal (kPa)</item>
-        <item>Milibars (mb)</item>
-        <item>Inches of mercury (in)</item>
-    </string-array>
-    <string-array name="pref_pressure_values">
-        <item>KPA</item>
-        <item>MB</item>
-        <item>IN</item>
-    </string-array>
-    <string-array name="rainfall_units">
-        <item>cm</item>
-        <item>mm</item>
-        <item>inches</item>
-    </string-array>
-    <string-array name="rainfall_units_values">
-        <item>CM</item>
-        <item>MM</item>
-        <item>INCHES</item>
-    </string-array>
-    <string-array name="widget_update_interval">
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>2 hours</item>
-        <item>3 hours</item>
-        <item>4 hours</item>
-        <item>6 hours</item>
-        <item>12 hours</item>
-        <item>18 hours</item>
-        <item>24 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="widget_update_interval_values">
-        <item>0.5</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>6</item>
-        <item>12</item>
-        <item>18</item>
-        <item>24</item>
-        <item>100000</item>
-    </string-array>
+	<string-array name="pref_precip_measurement">
+		<item>@string/in_mi</item>
+		<item>@string/km_cm_mm</item>
+	</string-array>
+	<string-array name="pref_precip_measurement_values">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
+	<string-array name="pref_time_format">
+		<item>@string/TwelveHours</item>
+		<item>@string/TwentyFourHours</item>
+	</string-array>
+	<string-array name="pref_time_format_values">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
+	<string-array name="pref_date_format">
+		<item>@string/mm_dd</item>
+		<item>@string/dd_mm</item>
+	</string-array>
+	<string-array name="pref_date_format_values">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
+	<string-array name="pref_rain_my_accuweather">
+		<item>None</item>
+		<item>Raining</item>
+		<item>No Setting</item>
+	</string-array>
+	<string-array name="pref_rain_my_accuweather_values">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string-array name="pref_snow_my_accuweather">
+		<item>None</item>
+		<item>Snowing</item>
+		<item>No Setting</item>
+	</string-array>
+	<string-array name="pref_snow_my_accuweather_values">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string-array name="pref_ice_my_accuweather">
+		<item>None</item>
+		<item>Icy</item>
+		<item>No Setting</item>
+	</string-array>
+	<string-array name="pref_ice_my_accuweather_values">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string-array name="pref_thunderstorms_my_accuweather">
+		<item>None</item>
+		<item>Thunderstorms</item>
+		<item>No Setting</item>
+	</string-array>
+	<string-array name="pref_thunderstorms_my_accuweather_values">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string-array name="pref_fog_my_accuweather">
+		<item>None</item>
+		<item>Foggy</item>
+		<item>No Setting</item>
+	</string-array>
+	<string-array name="pref_temp_notification_values">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string-array name="pref_temp_notification_values_no_gps">
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string-array name="pref_temp_notification_interval_values">
+		<item>5</item>
+		<item>10</item>
+		<item>15</item>
+		<item>30</item>
+		<item>60</item>
+	</string-array>
+	<string-array name="pref_open_at_launch_values">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string-array name="pref_open_at_launch_values_no_gps">
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string-array name="pref_push_alerts_values">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
+	<string-array name="pref_notification_temperature_values">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
+	<array
+		name="item_photo_values">
+		<item>
+			@drawable/photo_1
+		</item>
+		<item>
+			@drawable/photo_2
+		</item>
+		<item>
+			@drawable/photo_3
+		</item>
+		<item>
+			@drawable/photo_4
+		</item>
+		<item>
+			@drawable/photo_5
+		</item>
+		<item>
+			@drawable/photo_6
+		</item>
+		<item>
+			@drawable/photo_7
+		</item>
+		<item>
+			@drawable/photo_8
+		</item>
+		<item>
+			@drawable/photo_9
+		</item>
+		<item>
+			@drawable/photo_10
+		</item>
+		<item>
+			@drawable/photo_11
+		</item>
+		<item>
+			@drawable/photo_12
+		</item>
+		<item>
+			@drawable/photo_13
+		</item>
+		<item>
+			@drawable/photo_14
+		</item>
+		<item>
+			@drawable/photo_15
+		</item>
+		<item>
+			@drawable/photo_16
+		</item>
+		<item>
+			@drawable/photo_17
+		</item>
+		<item>
+			@drawable/photo_18
+		</item>
+		<item>
+			@drawable/photo_19
+		</item>
+		<item>
+			@drawable/photo_20
+		</item>
+	</array>
+	<string-array name="temperature_units">
+		<item>°C</item>
+		<item>°F</item>
+	</string-array>
+	<array name="temperature_colors">
+		<item>#ff300030</item>
+		<item>#ff630063</item>
+		<item>#ff940094</item>
+		<item>#ffc700c7</item>
+		<item>#fff800fc</item>
+		<item>#ffc600fc</item>
+		<item>#ff9300fc</item>
+		<item>#ff6100fc</item>
+		<item>#ff2e00fc</item>
+		<item>#ff0032fc</item>
+		<item>#ff0065fc</item>
+		<item>#ff0097fc</item>
+		<item>#ff00cafc</item>
+		<item>#ff00e8f0</item>
+		<item>#ff00d79d</item>
+		<item>#ff00e650</item>
+		<item>#ff00f028</item>
+		<item>#ff78fa00</item>
+		<item>#ffc8fa00</item>
+		<item>#fffcfc00</item>
+		<item>#fffcdf00</item>
+		<item>#fffcc600</item>
+		<item>#fffcad00</item>
+		<item>#fffc9300</item>
+		<item>#ffe67a00</item>
+		<item>#ffe66300</item>
+		<item>#ffdb4b1f</item>
+		<item>#ffc7321e</item>
+		<item>#ffb3191c</item>
+		<item>#ffa8001c</item>
+		<item>#ffb30030</item>
+		<item>#ffc70063</item>
+		<item>#fffc009b</item>
+	</array>
+	<string-array name="pref_temp_units">
+		<item>Celsius (°C)</item>
+		<item>Fahrenheit (°F)</item>
+	</string-array>
+	<string-array name="pref_temp_values">
+		<item>CELSIUS</item>
+		<item>FAHRENHEIT</item>
+	</string-array>
+	<string-array name="pref_wind_speed_units">
+		<item>Meters per second (m/s)</item>
+		<item>Kilometers per hour (km/h)</item>
+		<item>Miles per hour (mph)</item>
+		<item>Knots (kn)</item>
+	</string-array>
+	<string-array name="pref_wind_speed_values">
+		<item>MPS</item>
+		<item>KMPH</item>
+		<item>MPH</item>
+		<item>KNOTS</item>
+	</string-array>
+	<string-array name="pref_wind_direction_units">
+		<item>Cardinal</item>
+		<item>Degrees</item>
+	</string-array>
+	<string-array name="pref_wind_direction_values">
+		<item>CARDINAL</item>
+		<item>DEGREES</item>
+	</string-array>
+	<string-array name="pref_pressure_units">
+		<item>Kilopascal (kPa)</item>
+		<item>Milibars (mb)</item>
+		<item>Inches of mercury (in)</item>
+	</string-array>
+	<string-array name="pref_pressure_values">
+		<item>KPA</item>
+		<item>MB</item>
+		<item>IN</item>
+	</string-array>
+	<string-array name="rainfall_units">
+		<item>cm</item>
+		<item>mm</item>
+		<item>inches</item>
+	</string-array>
+	<string-array name="rainfall_units_values">
+		<item>CM</item>
+		<item>MM</item>
+		<item>INCHES</item>
+	</string-array>
+	<string-array name="widget_update_interval">
+		<item>30 minutes</item>
+		<item>1 hour</item>
+		<item>2 hours</item>
+		<item>3 hours</item>
+		<item>4 hours</item>
+		<item>6 hours</item>
+		<item>12 hours</item>
+		<item>18 hours</item>
+		<item>24 hours</item>
+		<item>Never</item>
+	</string-array>
+	<string-array name="widget_update_interval_values">
+		<item>0.5</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>6</item>
+		<item>12</item>
+		<item>18</item>
+		<item>24</item>
+		<item>100000</item>
+	</string-array>
 </resources>

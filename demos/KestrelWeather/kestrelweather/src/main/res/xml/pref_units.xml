@@ -1,0 +1,32 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<ListPreference
+		android:entries="@array/pref_temp_units"
+		android:title="@string/title_temp"
+		android:key="com_missionse_kestrelweather_temperature_units"
+		android:defaultValue="@array/pref_temp_units"
+		android:dialogTitle="@string/title_temp_units"
+		android:entryValues="@array/pref_temp_units"/>
+	<ListPreference
+		android:entries="@array/pref_wind_speed_units"
+		android:title="@string/title_wind_speed"
+		android:key="com_missionse_kestrelweather_windspeed_units"
+		android:defaultValue="@array/pref_wind_speed_values"
+		android:dialogTitle="@string/title_wind_speed_units"
+		android:entryValues="@array/pref_wind_speed_values"/>
+	<ListPreference
+		android:entries="@array/pref_pressure_units"
+		android:title="@string/title_pressure"
+		android:key="com_missionse_kestrelweather_pressure_units"
+		android:defaultValue="@array/pref_pressure_values"
+		android:dialogTitle="@string/title_pressure_units"
+		android:entryValues="@array/pref_pressure_values"/>
+	<ListPreference
+		android:entries="@array/rainfall_units"
+		android:title="@string/title_rainfall"
+		android:key="com_missionse_kestrelweather_rainfall_units"
+		android:defaultValue="@array/rainfall_units_values"
+		android:dialogTitle="@string/title_rainfall_units"
+		android:entryValues="@array/rainfall_units_values"/>
+
+</PreferenceScreen>

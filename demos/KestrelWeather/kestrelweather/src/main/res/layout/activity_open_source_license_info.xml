@@ -1,0 +1,11 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_margin="10.0dip">
+
+	<TextView
+		android:id="@+id/legal_info"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text=""/>
+</ScrollView>

@@ -3,7 +3,9 @@ package com.missionse.kestrelweather;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import com.missionse.kestrelweather.kestrel.KestrelSimulator;
 import com.missionse.kestrelweather.map.MapViewerFragment;
 import com.missionse.kestrelweather.map.TileProviderFactory;
 import com.missionse.kestrelweather.map.TiledMap;
+import com.missionse.kestrelweather.preferences.SettingsActivity;
 import com.missionse.kestrelweather.reports.ReportListFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
@@ -50,6 +53,10 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		PreferenceManager.setDefaultValues(this, R.xml.pref_units, false);
+		PreferenceManager.setDefaultValues(this, R.xml.pref_data_sync, false);
+
 		mTiledMap.addTileProvider(getString(R.string.rain_overlay_name),
 				TileProviderFactory.createUrlTileProvider(getString(R.string.rain_overlay_url)));
 		mTiledMap.addTileProvider(getString(R.string.cloud_overlay_name),
@@ -207,6 +214,8 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			Intent i = new Intent(this, SettingsActivity.class);
+			startActivity(i);
 			return true;
 		} else if (id == R.id.action_rain
 				|| id == R.id.action_cloud

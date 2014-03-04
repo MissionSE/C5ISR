@@ -1,0 +1,13 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<Preference
+		android:title="Build Version"
+		android:key="build_version"
+		android:summary=""/>
+	<Preference
+		android:title="Open Source Licenses"
+		android:key="open_source_license_info"
+		android:summary="Legal details for open source software"/>
+	<Preference android:title="2014 Mission Solutions Engineering, LLC"/>
+
+</PreferenceScreen>

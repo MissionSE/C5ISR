@@ -153,4 +153,14 @@
 	<string name="hAbbr">h</string>
 	<string name='days'>days</string>
 
+	<!-- Preferences -->
+	<string name="title_temp">Temperature</string>
+	<string name="title_wind_speed">Wind Speed</string>
+	<string name="title_temp_units">Temperature Units</string>
+	<string name="title_wind_speed_units">Wind Speed Units</string>
+	<string name="title_rainfall">Rainfall</string>
+	<string name="title_rainfall_units">Rainfall/Snowfall Units</string>
+	<string name="title_pressure_units">Pressure Units</string>
+	<string name="title_pressure">Pressure</string>
+
 </resources>
