@@ -1,8 +1,6 @@
 package com.missionse.kestrelweather;
 
-import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -259,20 +257,11 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	public void onBackPressed() {
 		int backStackEntries = getFragmentManager().getBackStackEntryCount();
 		if (backStackEntries == 0) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.exit_prompt)
-					.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							finish();
-						}
-					})
-					.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							//Nothing to do.
-						}
-					});
-			// Create the AlertDialog object and return it
-			builder.create().show();
+			if (getLeftDrawerList().getCheckedItemPosition() == 0) {
+				finish();
+			} else {
+				selectItem(0, getLeftDrawerList());
+			}
 		} else {
 			super.onBackPressed();
 		}
