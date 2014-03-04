@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.DatabaseManager;
@@ -38,6 +39,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	private TiledMap mTiledMap;
 	private KestrelSimulator mKestrelSimulator;
 	private DatabaseManager mDatabaseManager;
+	private Toast exitToast;
 
 	/**
 	 * Constructor.
@@ -267,7 +269,12 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		int backStackEntries = getFragmentManager().getBackStackEntryCount();
 		if (backStackEntries == 0) {
 			if (getLeftDrawerList().getCheckedItemPosition() == 0) {
-				finish();
+				if (exitToast != null && exitToast.getView().isShown()) {
+					finish();
+				} else {
+					exitToast = Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT);
+					exitToast.show();
+				}
 			} else {
 				selectItem(0, getLeftDrawerList());
 			}
