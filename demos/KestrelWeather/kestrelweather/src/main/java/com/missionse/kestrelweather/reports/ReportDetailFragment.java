@@ -20,6 +20,8 @@ import com.missionse.kestrelweather.reports.readings.ReadingsFragment;
 import com.missionse.kestrelweather.reports.weather.WeatherOverviewFragment;
 import com.missionse.uiextensions.viewpager.SectionFragmentPagerAdapter;
 
+import org.joda.time.format.DateTimeFormat;
+
 /**
  * Provides a fragment to show the details of a report.
  */
@@ -82,12 +84,12 @@ public class ReportDetailFragment extends Fragment {
 					if (report != null) {
 						TextView reportTitle = (TextView) view.findViewById(R.id.report_detail_title);
 						if (reportTitle != null) {
-							reportTitle.setText(report.getUserName());
+							reportTitle.setText(report.getTitle());
 						}
 
 						TextView reportTimestamp = (TextView) view.findViewById(R.id.report_detail_timestamp);
 						if (reportTimestamp != null) {
-							reportTimestamp.setText(report.getCreatedAt().toString());
+							reportTimestamp.setText(DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(report.getCreatedAt()));
 						}
 
 						ImageView reportSyncStatus = (ImageView) view.findViewById(R.id.report_detail_sync_status_icon);

@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Report;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.List;
 
 /**
@@ -18,6 +21,7 @@ import java.util.List;
  */
 public class ReportAdapter extends ArrayAdapter<Report> {
 	private int mResource;
+	private DateTimeFormatter mDateFormatter;
 
 	/**
 	 * Constructor.
@@ -27,6 +31,7 @@ public class ReportAdapter extends ArrayAdapter<Report> {
 	 */
 	public ReportAdapter(final Context context, final int resource, final List<Report> objects) {
 		super(context, resource, objects);
+		mDateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]");
 
 		mResource = resource;
 	}
@@ -43,12 +48,12 @@ public class ReportAdapter extends ArrayAdapter<Report> {
 
 			TextView reportTitle = (TextView) view.findViewById(R.id.report_detail_title);
 			if (reportTitle != null) {
-				reportTitle.setText(report.getUserName());
+				reportTitle.setText(report.getTitle());
 			}
 
 			TextView reportTimestamp = (TextView) view.findViewById(R.id.report_detail_timestamp);
 			if (reportTimestamp != null) {
-				reportTimestamp.setText(report.getCreatedAt().toString());
+				reportTimestamp.setText(mDateFormatter.print(report.getCreatedAt()));
 			}
 
 			ImageView reportSyncStatus = (ImageView) view.findViewById(R.id.report_detail_sync_status_icon);

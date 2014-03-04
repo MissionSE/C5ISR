@@ -41,6 +41,9 @@ public final class ReportBuilder {
 		report.setLatitude(latitude);
 		report.setLongitude(longitude);
 
+		//TODO: Replace this with something better.
+		report.setTitle(report.getOpenWeather().getDescription());
+
 		KestrelWeatherTable weatherTable = databaseAccessor.getKestrelWeatherTable();
 		weatherTable.create(kestrelWeather);
 
@@ -70,6 +73,13 @@ public final class ReportBuilder {
 		return supp.getId();
 	}
 
+	/**
+	 * Removes a supplement from a given report.
+	 * @param activity the parent activity
+	 * @param uri the supplement to be removed
+	 * @param reportId the report from which to remove the supplied uri
+	 * @return the number of rows changed
+	 */
 	public static int removeSupplement(KestrelWeatherActivity activity, String uri, int reportId) {
 		SupplementTable table = activity.getDatabaseAccessor().getSupplementTable();
 		List<Supplement> supplementList = table.queryForAll();
