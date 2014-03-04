@@ -214,7 +214,7 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 			createNewSupplement(uri.toString());
 		} else {
 			Toast.makeText(mActivity, mActivity.getString(R.string.already_exists), Toast.LENGTH_SHORT)
-				.show();
+					.show();
 		}
 	}
 

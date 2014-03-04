@@ -83,5 +83,5 @@
 		android:layout_height="wrap_content"
 		android:text="@string/discover_devices"
 		android:textColor="@color/background_holo_light"
-		android:background="@drawable/fragment_create_button_selector"/>
+		android:background="@drawable/fragment_default_yellow_button_selector"/>
 </LinearLayout>

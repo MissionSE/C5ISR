@@ -110,6 +110,13 @@
 					android:text="@string/unknown"
 					android:textSize="16sp"/>
 			</LinearLayout>
+
+			<View
+				android:layout_width="match_parent"
+				android:layout_height="1dip"
+				android:layout_marginLeft="1dip"
+				android:layout_marginRight="1dip"
+				android:background="?android:attr/dividerHorizontal"/>
 		</LinearLayout>
 	</RelativeLayout>
 </LinearLayout>

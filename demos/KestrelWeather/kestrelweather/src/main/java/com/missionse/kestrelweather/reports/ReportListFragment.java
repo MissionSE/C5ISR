@@ -69,7 +69,7 @@ public class ReportListFragment extends Fragment implements SyncStatusListener {
 
 		if (mActivity != null) {
 			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
-				queryReports());
+					queryReports());
 		}
 	}
 

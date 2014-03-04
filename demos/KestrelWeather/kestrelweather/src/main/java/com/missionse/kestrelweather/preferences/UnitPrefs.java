@@ -7,7 +7,8 @@ import android.content.Context;
  */
 public final class UnitPrefs {
 
-	private UnitPrefs() { }
+	private UnitPrefs() {
+	}
 
 	/**
 	 * Get the measure in the preferred unit for temperature.
@@ -40,7 +41,7 @@ public final class UnitPrefs {
 	/**
 	 * Get the measure in the preferred unit for pressure.
 	 * @param context the current context
-	 * @param pressure  the measured pressure
+	 * @param pressure the measured pressure
 	 * @return pressure in the preferred units
 	 */
 	public static float getPreferredPressure(Context context, float pressure) {

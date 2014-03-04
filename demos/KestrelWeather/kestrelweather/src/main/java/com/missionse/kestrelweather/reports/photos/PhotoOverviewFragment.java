@@ -5,10 +5,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ClipData;
 import android.content.Intent;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,18 +20,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 import com.missionse.imageviewer.ImageFragmentFactory;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
+import com.missionse.kestrelweather.reports.utils.FileDownloader;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
 import com.missionse.kestrelweather.util.ReportBuilder;
-
-import java.io.File;
 
 /**
  * A fragment used to manage the photos attached to a report.
@@ -123,7 +118,7 @@ public class PhotoOverviewFragment extends Fragment implements UriRemovedListene
 			if (mEditable) {
 				photoList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 				MediaMultiChoiceModeListener multiChoiceModeListener =
-					new MediaMultiChoiceModeListener(mActivity, photoList, mPhotoAdapter);
+						new MediaMultiChoiceModeListener(mActivity, photoList, mPhotoAdapter);
 				multiChoiceModeListener.setUriRemovedListener(this);
 				photoList.setMultiChoiceModeListener(multiChoiceModeListener);
 			}
@@ -188,59 +183,32 @@ public class PhotoOverviewFragment extends Fragment implements UriRemovedListene
 			createNewSupplement(uri.toString());
 		} else {
 			Toast.makeText(mActivity, mActivity.getString(R.string.already_exists), Toast.LENGTH_SHORT)
-				.show();
+					.show();
 		}
 	}
 
 	private void createNewSupplement(String uri) {
-		ReportBuilder.buildSupplement(mActivity, uri, mReportId,
-				SupplementType.PHOTO);
+		ReportBuilder.buildSupplement(mActivity, uri, mReportId, SupplementType.PHOTO);
 	}
 
 	private void populateAdapter() {
 		mPhotoAdapter.clear();
 
-		//TODO: Refactor.
-		int fileIndex = 0;
 		for (Supplement supplement : mActivity.getDatabaseAccessor().getPhotoSupplements(mReportId)) {
-			Log.d(TAG, "Processing URI: " + supplement.getUri());
-
-			File savedFile = new File(Environment.getExternalStorageDirectory(), "temp" + fileIndex + ".png");
-			Log.d(TAG, "Saving file to: " + savedFile.toString());
-			Ion.with(mActivity, supplement.getUri())
-					.write(savedFile)
-					.setCallback(new FutureCallback<File>() {
-						@Override
-						public void onCompleted(final Exception e, final File result) {
-							if (e == null) {
-								if (result != null) {
-									Log.d(TAG, "File output: " + result.toString());
-									MediaScannerConnection.scanFile(mActivity,
-											new String[]{result.toString()}, null,
-											new MediaScannerConnection.OnScanCompletedListener() {
-												public void onScanCompleted(final String path, final Uri uri) {
-													if (uri != null) {
-														if (mActivity != null) {
-															mActivity.runOnUiThread(new Runnable() {
-																@Override
-																public void run() {
-																	Log.d(TAG, "Scanned uri: " + uri.toString());
-																	mPhotoAdapter.add(uri);
-																}
-															});
-														}
-													}
-												}
-											});
-								} else {
-									Log.d(TAG, "File is null");
-								}
-							} else {
-								Log.d(TAG, "Caught exception while saving file: " + e.toString());
+			FileDownloader.downloadFile(mActivity, supplement.getUri(), new FileDownloader.OnFileDownloadCompleteListener() {
+				@Override
+				public void fileDownloadComplete(final Uri uri) {
+					if (mActivity != null) {
+						mActivity.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								Log.d(TAG, "Scanned URI: " + uri.toString());
+								mPhotoAdapter.add(uri);
 							}
-						}
-					});
-			fileIndex++;
+						});
+					}
+				}
+			});
 		}
 	}
 

@@ -62,7 +62,9 @@ public class DatabaseSync extends AsyncTask<Boolean, Void, Void> implements Sync
 		thread.start();
 		try {
 			thread.join();
-		} catch (InterruptedException e) { e.printStackTrace(); }
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -81,5 +83,6 @@ public class DatabaseSync extends AsyncTask<Boolean, Void, Void> implements Sync
 	}
 
 	@Override
-	public void onSyncStarted() { }
+	public void onSyncStarted() {
+	}
 }
