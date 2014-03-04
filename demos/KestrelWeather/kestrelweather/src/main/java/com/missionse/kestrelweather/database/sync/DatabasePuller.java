@@ -27,6 +27,9 @@ public class DatabasePuller implements Runnable {
 	private DatabaseAccessor mAccessor;
 	private Context mContext;
 	private String mRemoteUrl;
+	private SyncStatusListener mListener;
+	private int mFetchSize = 0;
+	private int mCurrentFetch = 0;
 
 
 	/**
@@ -51,8 +54,8 @@ public class DatabasePuller implements Runnable {
 					JsonArray fetchList = result.getAsJsonArray("toFetch");
 					JsonArray removeList = result.getAsJsonArray("toRemove");
 
-					int fetchListSize = fetchList.size();
-					Log.d(TAG, "Fetch Size>: " + fetchListSize);
+					mFetchSize = fetchList.size();
+					Log.d(TAG, "Fetch Size>: " + mFetchSize);
 					for (JsonElement element : fetchList) {
 						pullReport(element.getAsString());
 					}
@@ -65,13 +68,40 @@ public class DatabasePuller implements Runnable {
 
 					String newLatestId = result.get("latestEvent").getAsString();
 					Log.d(TAG, "Setting new latest event too:" + newLatestId);
-					mAccessor.setLatestEvent(newLatestId);
+					if (!newLatestId.equals(mAccessor.getLatestEvent())) {
+						mAccessor.setLatestEvent(newLatestId);
+					} else {
+						Log.d(TAG, "New event ID and Lastest event ID are the same... Issue?");
+					}
 
+					if (mFetchSize == 0 && removeListSize == 0) {
+						if (mListener != null) {
+							mListener.onSyncComplete();
+						}
+					}
 				} else {
 					Log.e(TAG, "Unable to pull from remote database.", e);
 				}
 			}
 		});
+	}
+
+	private void notifyPullComplete() {
+		mCurrentFetch += 1;
+		if (mCurrentFetch == mFetchSize) {
+			if (mListener != null) {
+				Log.d(TAG, "Notify listener that pull is complete...");
+				mListener.onSyncComplete();
+			}
+		}
+	}
+
+	/**
+	 * Set the sync status listener for this object.
+	 * @param listener Instance of SyncStatusListener.
+	 */
+	public void setSyncStatusListener(SyncStatusListener listener) {
+		mListener = listener;
 	}
 
 	/*
@@ -84,8 +114,19 @@ public class DatabasePuller implements Runnable {
 				@Override
 				public void onCompleted(Exception e, JsonObject result) {
 					if (e == null) {
-						Log.d(TAG, "Parsing Report: " + result.toString());
-						createReportFromJson(result);
+						JsonElement statusElem = result.get("status");
+						if (statusElem != null) {
+							String status = statusElem.getAsString();
+							if (status.equals("ok")) {
+								Log.d(TAG, "Parsing Report: " + result.toString());
+								createReportFromJson(result);
+							} else {
+								Log.d(TAG, "Bad status returned..." + status);
+							}
+						} else {
+							Log.d(TAG, "Parsing Report: " + result.toString());
+							createReportFromJson(result);
+						}
 					} else {
 						Log.e(TAG, "Unable to pull a single report with id:" + reportId, e);
 					}
@@ -148,6 +189,8 @@ public class DatabasePuller implements Runnable {
 		Log.d(TAG, "parse photos...");
 		JsonArray imageArray = json.getAsJsonArray("images");
 		packReportSupplement(report, SupplementType.PHOTO, imageArray);
+
+		notifyPullComplete();
 	}
 
 	private void packReportSupplement(Report report, SupplementType type, JsonArray jsonArray) {

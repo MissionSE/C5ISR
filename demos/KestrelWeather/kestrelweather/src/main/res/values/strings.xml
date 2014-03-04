@@ -5,6 +5,8 @@
 
 	<!-- Toast Messages -->
 	<string name="already_exists">Media file has already been added.</string>
+	<string name="sync_started">Synchronization started.</string>
+	<string name="sync_ended">Synchronization completed.</string>
 
 	<!-- Remote Database -->
 	<string name="remote_database">http://198.74.57.149:3009</string>

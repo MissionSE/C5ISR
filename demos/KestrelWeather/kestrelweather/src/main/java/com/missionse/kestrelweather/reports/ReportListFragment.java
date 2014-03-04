@@ -3,7 +3,9 @@ package com.missionse.kestrelweather.reports;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
@@ -20,13 +23,15 @@ import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.database.sync.DatabaseSync;
+import com.missionse.kestrelweather.database.sync.SyncStatusListener;
 
 import java.util.List;
 
 /**
  * Provides a fragment to show a list of reports.
  */
-public class ReportListFragment extends Fragment {
+public class ReportListFragment extends Fragment implements SyncStatusListener {
+	private static final String TAG = ReportListFragment.class.getSimpleName();
 	private Activity mActivity;
 	private ReportAdapter mReportAdapter;
 
@@ -63,10 +68,8 @@ public class ReportListFragment extends Fragment {
 		setHasOptionsMenu(true);
 
 		if (mActivity != null) {
-			DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
-			ReportTable reportTable = databaseAccessor.getReportTable();
-			List<Report> reports = reportTable.queryForAll();
-			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header, reports);
+			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
+				queryReports());
 		}
 	}
 
@@ -113,10 +116,47 @@ public class ReportListFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_sync_reports) {
-			(new DatabaseSync(getActivity(),
-					((KestrelWeatherActivity) getActivity()).getDatabaseAccessor())).execute(true, true, false);
+			try {
+				KestrelWeatherActivity activity = (KestrelWeatherActivity) getActivity();
+				DatabaseSync sync = new DatabaseSync(activity);
+				sync.setSyncCompleteListener(this);
+				sync.execute(true, true, true);
+			} catch (ClassCastException e) {
+				Log.e(TAG, "Unable to cast activity.", e);
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onSyncComplete() {
+		String syncEnded = getStringFromId(R.string.sync_ended);
+		List<Report> reports = queryReports();
+		mReportAdapter.clear();
+		mReportAdapter.addAll(reports);
+		mReportAdapter.notifyDataSetChanged();
+		Toast.makeText(mActivity, syncEnded, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onSyncStarted() {
+		String syncStarted = getStringFromId(R.string.sync_started);
+		Toast.makeText(mActivity, syncStarted, Toast.LENGTH_SHORT).show();
+	}
+
+	private String getStringFromId(int id) {
+		String retValue = "";
+		Resources res = getResources();
+		if (res != null) {
+			retValue = res.getString(id);
+		}
+		return retValue;
+	}
+
+	private List<Report> queryReports() {
+		DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
+		ReportTable reportTable = databaseAccessor.getReportTable();
+		return reportTable.queryForAll();
 	}
 }
