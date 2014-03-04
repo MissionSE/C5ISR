@@ -24,13 +24,26 @@ import com.missionse.kestrelweather.views.ObservationCallout;
 import com.missionse.mapviewer.adapters.DataMarkersAdapter;
 import com.missionse.mapviewer.clustering.DefaultClusterRenderer;
 
-import org.joda.time.DateTime;
+import java.util.Collection;
 
+/**
+ * This class is an adapter for display marker data in a marker info window.
+ */
 public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report> {
 	private static final String TAG = ObservationCalloutMarkersAdapter.class.getSimpleName();
-	private Report mCurrentObservation;
+	private static final float CLUSTER_ITEM_SHAPE_INSET_MULTIPLIER = 5.0F;
+	private static final float CLUSTER_SHAPE_INSET_MULTIPLIER = 10.0F;
+	private static final float CLUSTER_TEXT_INSET_MULTIPLIER = 6.0F;
+	private static final float MARKER_ANCHOR = 0.5F;
+	private Report mCurrentReport;
 	private Cluster<Report> mCurrentCluster;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param context the current context
+	 * @param map     the google map object
+	 */
 	public ObservationCalloutMarkersAdapter(Context context, GoogleMap map) {
 		super(context, map, R.layout.map_observation_callout);
 
@@ -51,9 +64,11 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 		arrayOfDrawable[1] = shapeDrawable;
 		arrayOfDrawable[2] = textDrawable;
 		LayerDrawable layerDrawable = new LayerDrawable(arrayOfDrawable);
-		int i = (int) (10.0F * getContext().getResources().getDisplayMetrics().density);
-		layerDrawable.setLayerInset(1, i, i, i, i);
-		layerDrawable.setLayerInset(2, 0, 13, 0, -13);
+		float density = getContext().getResources().getDisplayMetrics().density;
+		int shapeInset = (int) (density * CLUSTER_SHAPE_INSET_MULTIPLIER);
+		layerDrawable.setLayerInset(1, shapeInset, shapeInset, shapeInset, shapeInset);
+		int textInset = (int) (density * CLUSTER_TEXT_INSET_MULTIPLIER);
+		layerDrawable.setLayerInset(2, 0, textInset, 0, -textInset);
 
 		return BitmapDescriptorFactory.fromBitmap(BitmapHelper.getDrawableBitmap(layerDrawable));
 	}
@@ -66,59 +81,50 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 		arrayOfDrawable[0] = getContext().getResources().getDrawable(R.drawable.bg_marker);
 		arrayOfDrawable[1] = shapeDrawable;
 		LayerDrawable layerDrawable = new LayerDrawable(arrayOfDrawable);
-		int i = (int) (5.0F * getContext().getResources().getDisplayMetrics().density);
-		layerDrawable.setLayerInset(1, i, i, i, i);
+		int shapeInset = (int) (CLUSTER_ITEM_SHAPE_INSET_MULTIPLIER * getContext().getResources().getDisplayMetrics().density);
+		layerDrawable.setLayerInset(1, shapeInset, shapeInset, shapeInset, shapeInset);
 
 		return BitmapDescriptorFactory.fromBitmap(BitmapHelper.getDrawableBitmap(layerDrawable));
 	}
 
 	@Override
 	public int getClusterIconType(Cluster<Report> cluster) {
-		int iconType = 0;
-		for (Report observation : cluster.getItems()) {
-			iconType = ResourcesHelper.getTemperatureIndex(observation.getKestrelWeather().getTemperature());
-			break;
-		}
-		return iconType;
+		return ResourcesHelper.getTemperatureIndex(getLatestReport(cluster.getItems()).getKestrelWeather().getTemperature());
 	}
 
 	@Override
-	public int getClusterItemIconType(Report observation) {
-		return ResourcesHelper.getTemperatureIndex(observation.getKestrelWeather().getTemperature());
+	public int getClusterItemIconType(Report report) {
+		return ResourcesHelper.getTemperatureIndex(report.getKestrelWeather().getTemperature());
 	}
 
 	@Override
-	protected View getInfoView(final Marker marker, Report observation, View paramView) {
+	protected View getInfoView(final Marker marker, Report report, View currentView) {
 		View view;
-		if (this.mCurrentObservation != observation) {
-			view = super.getInfoView(marker, observation, paramView);
-			((ObservationCallout) view).setData(observation);
+		if (this.mCurrentReport != report) {
+			view = super.getInfoView(marker, report, currentView);
+			((ObservationCallout) view).setData(report);
 			if (marker.isInfoWindowShown()) {
 				marker.showInfoWindow();
 			}
-			this.mCurrentObservation = observation;
+			this.mCurrentReport = report;
 		} else {
-			view = paramView;
+			view = currentView;
 		}
 		return view;
 	}
 
 	@Override
-	protected View getInfoView(final Marker marker, Cluster<Report> cluster, View paramView) {
+	protected View getInfoView(final Marker marker, Cluster<Report> cluster, View currentView) {
 		View view;
 		if (mCurrentCluster != cluster) {
-			view = super.getInfoView(marker, cluster, paramView);
-			DateTime now = DateTime.now();
-			for (Report observation : cluster.getItems()) {
-				((ObservationCallout) view).setData(observation);
-
-			}
+			view = super.getInfoView(marker, cluster, currentView);
+			((ObservationCallout) view).setData(getLatestReport(cluster.getItems()));
 			if (marker.isInfoWindowShown()) {
 				marker.showInfoWindow();
 			}
 			this.mCurrentCluster = cluster;
 		} else {
-			view = paramView;
+			view = currentView;
 		}
 		return view;
 	}
@@ -131,6 +137,19 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 		return renderer;
 	}
 
+	private Report getLatestReport(Collection<Report> reports) {
+		Report latestReport = null;
+		for (Report report : reports) {
+			if (latestReport == null || report.getUpdateAt().isAfter(latestReport.getUpdateAt())) {
+				latestReport = report;
+			}
+		}
+		return latestReport;
+	}
+
+	/**
+	 * Renderer for marker icons.
+	 */
 	private class ReportRenderer extends DefaultClusterRenderer<Report> {
 
 		public ReportRenderer() {
@@ -144,12 +163,12 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 
 		@Override
 		protected void onBeforeClusterItemRendered(Report observation, MarkerOptions markerOptions) {
-			markerOptions.icon(getClusterItemIcon(observation)).draggable(false).anchor(0.5F, 0.5F);
+			markerOptions.icon(getClusterItemIcon(observation)).draggable(false).anchor(MARKER_ANCHOR, MARKER_ANCHOR);
 		}
 
 		@Override
 		protected void onBeforeClusterRendered(Cluster<Report> cluster, MarkerOptions markerOptions) {
-			markerOptions.icon(getClusterIcon(cluster)).draggable(false).anchor(0.5F, 0.5F);
+			markerOptions.icon(getClusterIcon(cluster)).draggable(false).anchor(MARKER_ANCHOR, MARKER_ANCHOR);
 		}
 	}
 
