@@ -81,7 +81,12 @@ public class WeatherOverviewFragment extends Fragment {
 							if (temperatureView != null) {
 								Formatter formatter = new Formatter();
 								String temperature = formatter.format("%.1f", report.getKestrelWeather().getTemperature()).toString();
-								temperatureView.setText(temperature + " " + getString(R.string.celsius));
+								temperatureView.setText(temperature);
+							}
+
+							TextView temperatureUnitsView = (TextView) contentView.findViewById(R.id.report_detail_temperature_units);
+							if (temperatureUnitsView != null) {
+								temperatureUnitsView.setText(getString(R.string.celsius_word));
 							}
 						}
 
