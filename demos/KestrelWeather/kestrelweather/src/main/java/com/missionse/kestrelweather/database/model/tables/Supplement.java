@@ -13,6 +13,8 @@ import com.missionse.kestrelweather.database.model.SupplementType;
 public class Supplement extends Entity {
 	@DatabaseField(columnName = "uri")
 	private String mUri;
+	@DatabaseField(columnName = "remote_url")
+	private String mRemoteUri;
 	@DatabaseField(columnName = "type", dataType = DataType.ENUM_INTEGER)
 	private SupplementType mType;
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "report_id")
@@ -41,6 +43,22 @@ public class Supplement extends Entity {
 	 */
 	public void setUri(String uri) {
 		mUri = uri;
+	}
+
+	/**
+	 * Getter.
+	 * @return The string uri associated with this supplement.
+	 */
+	public String getRemoteUri() {
+		return mRemoteUri;
+	}
+
+	/**
+	 * Setter.
+	 * @param uri The url to associate this supplement with.
+	 */
+	public void setRemoteUri(String uri) {
+		mRemoteUri = uri;
 	}
 
 	/**

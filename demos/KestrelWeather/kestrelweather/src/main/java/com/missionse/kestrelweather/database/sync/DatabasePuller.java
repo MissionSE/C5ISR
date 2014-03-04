@@ -196,12 +196,12 @@ public class DatabasePuller implements Runnable {
 	private void packReportSupplement(Report report, SupplementType type, JsonArray jsonArray) {
 		if (jsonArray != null) {
 			for (JsonElement jElem : jsonArray) {
-				Supplement supp = new Supplement();
-				supp.setType(type);
-				supp.setUri(mRemoteUrl + jElem.getAsString());
-				supp.setDirty(false);
-				supp.setReport(report);
-				mAccessor.getSupplementTable().create(supp);
+				Supplement supplement = new Supplement();
+				supplement.setType(type);
+				supplement.setRemoteUri(mRemoteUrl + jElem.getAsString());
+				supplement.setDirty(false);
+				supplement.setReport(report);
+				mAccessor.getSupplementTable().create(supplement);
 			}
 		}
 	}

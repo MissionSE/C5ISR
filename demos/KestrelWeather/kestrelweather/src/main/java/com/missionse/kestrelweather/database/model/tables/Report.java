@@ -19,6 +19,9 @@ public class Report extends Entity implements ClusterItem {
 	@DatabaseField(columnName = "devicename")
 	private String mUserName;
 
+	@DatabaseField(columnName = "title")
+	private String mTitle;
+
 	@DatabaseField(columnName = "latitude")
 	private double mLatitude;
 
@@ -177,10 +180,28 @@ public class Report extends Entity implements ClusterItem {
 		String uid = (json.get("userid") == null ? "" : json.get("userid").getAsString());
 		double lat = (json.get("latitude") == null ? 0 : json.get("latitude").getAsDouble());
 		double lng = (json.get("longitude") == null ? 0 : json.get("longitude").getAsDouble());
+		String title = (json.get("title") == null ? "" : json.get("title").getAsString());
 
 		setUserName(uid);
 		setLatitude(lat);
 		setLongitude(lng);
+		setTitle(title);
+	}
+
+	/**
+	 * Getter.
+	 * @return The title of the report.
+	 */
+	public String getTitle() {
+		return mTitle;
+	}
+
+	/**
+	 * Setter.
+	 * @param title The title to give this report.
+	 */
+	public void setTitle(String title) {
+		mTitle = title;
 	}
 
 	@Override
