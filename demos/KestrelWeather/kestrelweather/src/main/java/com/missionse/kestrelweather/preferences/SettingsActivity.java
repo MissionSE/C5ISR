@@ -1,6 +1,7 @@
 package com.missionse.kestrelweather.preferences;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -162,10 +163,32 @@ public class SettingsActivity extends PreferenceActivity {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.pref_about);
 
+			String str = null;
+			try {
+				Preference version = findPreference("build_version");
+				if (version != null) {
+					version.setSummary(getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName);
+				}
+			} catch (PackageManager.NameNotFoundException e) {
+				e.printStackTrace();
+			}
+			Preference localPreference5 = findPreference("version");
+			if (localPreference5 != null)
+				localPreference5.setSummary(str);
+
 			findPreference("open_source_license_info").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
 					getActivity().startActivity(new Intent(getActivity(), OpenSourceLicenseInfoActivity.class));
+					return true;
+				}
+			});
+
+			findPreference("company").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://asrcfederal.com/mse"));
+					startActivity(browserIntent);
 					return true;
 				}
 			});

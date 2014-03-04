@@ -8,6 +8,9 @@
 		android:title="Open Source Licenses"
 		android:key="open_source_license_info"
 		android:summary="Legal details for open source software"/>
-	<Preference android:title="2014 Mission Solutions Engineering, LLC"/>
+	<Preference
+		android:title="2014 Mission Solutions Engineering"
+		android:key="company"
+		android:summary="An ASRC Federal Company"/>
 
 </PreferenceScreen>
