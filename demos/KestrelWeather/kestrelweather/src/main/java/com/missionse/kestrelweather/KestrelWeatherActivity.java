@@ -21,6 +21,7 @@ import com.missionse.kestrelweather.map.MapViewerFragment;
 import com.missionse.kestrelweather.map.TileProviderFactory;
 import com.missionse.kestrelweather.map.TiledMap;
 import com.missionse.kestrelweather.preferences.SettingsActivity;
+import com.missionse.kestrelweather.reports.ReportDatabaseFragment;
 import com.missionse.kestrelweather.reports.ReportSyncFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
@@ -189,17 +190,25 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	private void displayReportSync() {
 		FragmentManager fragmentManager = getFragmentManager();
 		ReportSyncFragment reportSyncFragment = (ReportSyncFragment) fragmentManager
-				.findFragmentByTag("report_list");
+				.findFragmentByTag("report_sync");
 		if (reportSyncFragment == null) {
 			reportSyncFragment = new ReportSyncFragment();
 		}
 		fragmentManager.beginTransaction()
-				.replace(R.id.content, reportSyncFragment, "report_list")
+				.replace(R.id.content, reportSyncFragment, "report_sync")
 				.commit();
 	}
 
 	private void displayReportDatabase() {
-
+		FragmentManager fragmentManager = getFragmentManager();
+		ReportDatabaseFragment reportDatabaseFragment = (ReportDatabaseFragment) fragmentManager
+			.findFragmentByTag("report_database");
+		if (reportDatabaseFragment == null) {
+			reportDatabaseFragment = new ReportDatabaseFragment();
+		}
+		fragmentManager.beginTransaction()
+			.replace(R.id.content, reportDatabaseFragment, "report_database")
+			.commit();
 	}
 
 	@Override
