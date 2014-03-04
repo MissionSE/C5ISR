@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.preferences.UnitPrefs;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -53,9 +54,9 @@ public class ObservationCallout extends FrameLayout {
 		TextView value = (TextView) view.findViewById(R.id.observation_data_top_left_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_top_left_unit);
 
-		//TODO convert value with respect to unit
-		value.setText(Integer.toString((int) (this.mReport.getKestrelWeather().getTemperature())));
-		unit.setText(getResources().getStringArray(R.array.temperature_units)[0]);
+		float temperature = UnitPrefs.getPreferredTemperature(getContext(), this.mReport.getKestrelWeather().getTemperature());
+		value.setText(Integer.toString((int) temperature));
+		unit.setText(UnitPrefs.getPreferredTemperatureUnitAbbr(getContext()));
 
 		view.setVisibility(VISIBLE);
 	}
@@ -111,9 +112,9 @@ public class ObservationCallout extends FrameLayout {
 		TextView value = (TextView) view.findViewById(R.id.observation_data_bottom_right_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_right_unit);
 
-		//TODO convert value with respect to unit
-		value.setText(Integer.toString((int) mReport.getKestrelWeather().getWindChill()));
-		unit.setText(getResources().getStringArray(R.array.temperature_units)[0]);
+		float temperature = UnitPrefs.getPreferredTemperature(getContext(), this.mReport.getKestrelWeather().getTemperature());
+		value.setText(Integer.toString((int) temperature));
+		unit.setText(UnitPrefs.getPreferredTemperatureUnitAbbr(getContext()));
 
 		view.setVisibility(VISIBLE);
 	}
@@ -123,9 +124,9 @@ public class ObservationCallout extends FrameLayout {
 		TextView value = (TextView) view.findViewById(R.id.observation_data_bottom_center_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_center_unit);
 
-		value.setText(Integer.toString((int) mReport.getKestrelWeather().getDewPoint()));
-		unit.setText(getResources().getStringArray(R.array.temperature_units)[0]);
-		view.setVisibility(VISIBLE);
+		float temperature = UnitPrefs.getPreferredTemperature(getContext(), this.mReport.getKestrelWeather().getTemperature());
+		value.setText(Integer.toString((int) temperature));
+		unit.setText(UnitPrefs.getPreferredTemperatureUnitAbbr(getContext()));
 	}
 
 	private void setDelay() {

@@ -4,29 +4,33 @@
 		android:entries="@array/pref_temp_units"
 		android:title="@string/title_temp"
 		android:key="@string/key_units_temperature"
-		android:defaultValue="@array/pref_temp_units"
+		android:defaultValue="@string/celsius"
 		android:dialogTitle="@string/title_temp_units"
-		android:entryValues="@array/pref_temp_units"/>
+		android:entryValues="@array/pref_temp_units"
+		android:negativeButtonText="@null"/>
 	<ListPreference
 		android:entries="@array/pref_pressure_units"
 		android:title="@string/title_pressure"
 		android:key="@string/key_units_pressure"
-		android:defaultValue="@array/pref_pressure_values"
+		android:defaultValue="@string/kilopascal"
 		android:dialogTitle="@string/title_pressure_units"
-		android:entryValues="@array/pref_pressure_values"/>
+		android:entryValues="@array/pref_pressure_units"
+		android:negativeButtonText="@null"/>
 	<ListPreference
 		android:entries="@array/pref_wind_speed_units"
 		android:title="@string/title_wind_speed"
 		android:key="@string/key_units_wind_speed"
-		android:defaultValue="@array/pref_wind_speed_values"
+		android:defaultValue="@string/meters_per_second"
 		android:dialogTitle="@string/title_wind_speed_units"
-		android:entryValues="@array/pref_wind_speed_values"/>
+		android:entryValues="@array/pref_wind_speed_units"
+		android:negativeButtonText="@null"/>
 	<ListPreference
-		android:entries="@array/rainfall_units"
-		android:title="@string/title_rainfall"
+		android:entries="@array/pref_wind_direction_units"
+		android:title="@string/title_wind_direction"
 		android:key="@string/key_units_wind_direction"
-		android:defaultValue="@array/rainfall_units_values"
-		android:dialogTitle="@string/title_rainfall_units"
-		android:entryValues="@array/rainfall_units_values"/>
+		android:defaultValue="@string/degrees"
+		android:dialogTitle="@string/title_wind_direction_units"
+		android:entryValues="@array/pref_wind_direction_units"
+		android:negativeButtonText="@null"/>
 
 </PreferenceScreen>
