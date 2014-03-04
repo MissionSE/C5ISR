@@ -162,4 +162,9 @@ public class ReportSyncFragment extends Fragment implements SyncStatusListener {
 	public void onSyncStarted() {
 		Toast.makeText(mActivity, getResources().getString(R.string.sync_started), Toast.LENGTH_SHORT).show();
 	}
+
+	@Override
+	public void onSyncedReport(int reportId) {
+
+	}
 }

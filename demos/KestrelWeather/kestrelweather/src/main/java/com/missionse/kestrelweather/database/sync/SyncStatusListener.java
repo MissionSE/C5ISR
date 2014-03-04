@@ -13,4 +13,9 @@ public interface SyncStatusListener {
 	 * Called when the database has begin syncing.
 	 */
 	void onSyncStarted();
+
+	/**
+	 * Called when a report has been synced.
+	 */
+	void onSyncedReport(int reportId);
 }

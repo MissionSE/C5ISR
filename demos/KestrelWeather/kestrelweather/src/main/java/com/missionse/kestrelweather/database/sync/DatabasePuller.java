@@ -86,10 +86,11 @@ public class DatabasePuller implements Runnable {
 		});
 	}
 
-	private void notifyPullComplete() {
+	private void notifyPullComplete(int reportId) {
 		mCurrentFetch += 1;
-		if (mCurrentFetch == mFetchSize) {
-			if (mListener != null) {
+		if (mListener != null) {
+			mListener.onSyncedReport(reportId);
+			if (mCurrentFetch == mFetchSize) {
 				Log.d(TAG, "Notify listener that pull is complete...");
 				mListener.onSyncComplete();
 			}
@@ -132,6 +133,9 @@ public class DatabasePuller implements Runnable {
 					}
 				}
 			});
+		} else {
+			Log.d(TAG, "Remote report already exists..." + reportId);
+			notifyPullComplete(Integer.valueOf(reportId));
 		}
 	}
 
@@ -190,7 +194,7 @@ public class DatabasePuller implements Runnable {
 		JsonArray imageArray = json.getAsJsonArray("images");
 		packReportSupplement(report, SupplementType.PHOTO, imageArray);
 
-		notifyPullComplete();
+		notifyPullComplete(report.getId());
 	}
 
 	private void packReportSupplement(Report report, SupplementType type, JsonArray jsonArray) {
