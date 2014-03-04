@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
@@ -87,6 +88,15 @@ public class ReportDetailFragment extends Fragment {
 						TextView reportTimestamp = (TextView) view.findViewById(R.id.report_detail_timestamp);
 						if (reportTimestamp != null) {
 							reportTimestamp.setText(report.getCreatedAt().toString());
+						}
+
+						ImageView reportSyncStatus = (ImageView) view.findViewById(R.id.report_detail_sync_status_icon);
+						if (reportSyncStatus != null) {
+							if (report.isDirty()) {
+								reportSyncStatus.setImageResource(R.drawable.report_status_not_synced);
+							} else {
+								reportSyncStatus.setImageResource(R.drawable.report_status_synced);
+							}
 						}
 					}
 				}
