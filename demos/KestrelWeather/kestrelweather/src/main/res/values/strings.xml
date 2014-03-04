@@ -166,4 +166,21 @@
 	<string name="title_pressure_units">Pressure Units</string>
 	<string name="title_pressure">Pressure</string>
 
+	<string name="N">N</string>
+	<string name="NNE">NNE</string>
+	<string name="NE">NE</string>
+	<string name="ENE">ENE</string>
+	<string name="E">E</string>
+	<string name="ESE">ESE</string>
+	<string name="SE">SE</string>
+	<string name="SSE">SSE</string>
+	<string name="S">S</string>
+	<string name="SSW">SSW</string>
+	<string name="SW">SW</string>
+	<string name="WSW">WSW</string>
+	<string name="W">N</string>
+	<string name="WNW">WNW</string>
+	<string name="NW">NE</string>
+	<string name="NNW">ENE</string>
+
 </resources>
