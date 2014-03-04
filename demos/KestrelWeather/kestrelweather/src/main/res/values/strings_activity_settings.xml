@@ -2,6 +2,7 @@
 	<string name="title_activity_settings">Settings</string>
 
 	<!-- Strings related to Settings -->
+	<string name="pref_file_key_units">com.missionse.kestrelweather.PREFERENCE_FILE_KEY_UNITS</string>
 
 	<!-- Example General settings -->
 	<string name="pref_header_units">Units</string>

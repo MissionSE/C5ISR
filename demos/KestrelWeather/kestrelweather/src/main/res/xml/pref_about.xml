@@ -2,15 +2,15 @@
 
 	<Preference
 		android:title="Build Version"
-		android:key="build_version"
+		android:key="@string/key_about_version"
 		android:summary=""/>
 	<Preference
 		android:title="Open Source Licenses"
-		android:key="open_source_license_info"
+		android:key="@string/key_about_open_source_licenses"
 		android:summary="Legal details for open source software"/>
 	<Preference
 		android:title="2014 Mission Solutions Engineering"
-		android:key="company"
+		android:key="@string/key_about_company_name"
 		android:summary="An ASRC Federal Company"/>
 
 </PreferenceScreen>

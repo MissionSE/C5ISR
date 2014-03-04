@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- Unit keys -->
+	<string name="key_units_temperature">key_units_temperature</string>
+	<string name="key_units_pressure">key_units_pressure</string>
+	<string name="key_units_wind_speed">key_units_wind_speed</string>
+	<string name="key_units_wind_direction">key_units_wind_direction</string>
+
+	<!-- Sync keys -->
+	<string name="key_sync_enabled">key_sync_enabled</string>
+	<string name="key_sync_frequency">key_sync_frequency</string>
+
+	<!-- About keys -->
+	<string name="key_about_version">key_about_version</string>
+	<string name="key_about_open_source_licenses">key_about_open_source_licenses</string>
+	<string name="key_about_company_name">key_about_company_name</string>
+
+</resources>
