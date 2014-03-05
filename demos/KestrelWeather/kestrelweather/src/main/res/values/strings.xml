@@ -40,6 +40,7 @@
 	<string name="feels_like">Feels</string>
 	<string name="celsius_word">Celsius</string>
 	<string name="sync">Sync</string>
+
 	<!-- Navigation Drawer -->
 	<string name="drawer_overview">OVERVIEW</string>
 	<string name="drawer_create_report">CREATE</string>

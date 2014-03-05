@@ -185,7 +185,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	public void updateDrawerFooterTimeInformation() {
 		if (mDrawerTimestampFooter != null) {
 			mDrawerTimestampFooter.setText(getResources().getString(R.string.drawer_footer_time) + " " +
-				DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(new DateTime()));
+					DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(new DateTime()));
 		}
 	}
 
@@ -249,13 +249,13 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	private void displayReportDatabase() {
 		FragmentManager fragmentManager = getFragmentManager();
 		ReportDatabaseFragment reportDatabaseFragment = (ReportDatabaseFragment) fragmentManager
-			.findFragmentByTag("report_database");
+				.findFragmentByTag("report_database");
 		if (reportDatabaseFragment == null) {
 			reportDatabaseFragment = new ReportDatabaseFragment();
 		}
 		fragmentManager.beginTransaction()
-			.replace(R.id.content, reportDatabaseFragment, "report_database")
-			.commit();
+				.replace(R.id.content, reportDatabaseFragment, "report_database")
+				.commit();
 	}
 
 	@Override

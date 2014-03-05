@@ -61,7 +61,7 @@ public class ReportDatabaseFragment extends Fragment {
 
 		if (mActivity != null) {
 			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
-				new ArrayList<Report>());
+					new ArrayList<Report>());
 		}
 	}
 

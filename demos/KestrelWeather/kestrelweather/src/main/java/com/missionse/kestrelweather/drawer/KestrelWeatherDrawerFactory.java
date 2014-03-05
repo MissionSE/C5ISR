@@ -48,7 +48,7 @@ public class KestrelWeatherDrawerFactory {
 
 	private void createNavigationDrawer(final DrawerConfigurationContainer container) {
 		DrawerConfiguration configuration = new DrawerConfiguration(mContext, DrawerType.LEFT, R.id.navigation_drawer,
-			R.id.navigation_drawer_list);
+				R.id.navigation_drawer_list);
 		container.addConfiguration(configuration);
 	}
 
@@ -65,7 +65,7 @@ public class KestrelWeatherDrawerFactory {
 		overviewItem.setTextColorStateList(R.drawable.drawer_overview_text_selector, mContext);
 		menu.add(overviewItem);
 		DrawerSimpleItem createItem = DrawerSimpleItem.create(CREATE_REPORT, mContext.getResources().
-			getString(R.string.drawer_create_report), 0, true);
+				getString(R.string.drawer_create_report), 0, true);
 		createItem.setBackgroundDrawable(R.drawable.drawer_create_background_selector, mContext);
 		createItem.setTextColorStateList(R.drawable.drawer_create_text_selector, mContext);
 		menu.add(createItem);
@@ -75,7 +75,7 @@ public class KestrelWeatherDrawerFactory {
 		syncItem.setTextColorStateList(R.drawable.drawer_sync_text_selector, mContext);
 		menu.add(syncItem);
 		DrawerSimpleItem databaseItem = DrawerSimpleItem.create(REPORT_DATABASE, mContext.getResources().
-			getString(R.string.drawer_report_database), 0, true);
+				getString(R.string.drawer_report_database), 0, true);
 		databaseItem.setBackgroundDrawable(R.drawable.drawer_database_background_selector, mContext);
 		databaseItem.setTextColorStateList(R.drawable.drawer_database_text_selector, mContext);
 		menu.add(databaseItem);

@@ -67,7 +67,7 @@ public class ReportSyncFragment extends Fragment implements SyncStatusListener {
 
 		if (mActivity != null) {
 			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
-				new ArrayList<Report>());
+					new ArrayList<Report>());
 		}
 	}
 

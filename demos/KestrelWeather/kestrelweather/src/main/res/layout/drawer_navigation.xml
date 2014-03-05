@@ -7,6 +7,7 @@
 	android:orientation="vertical"
 	android:layout_gravity="start"
 	android:background="@color/background_holo_light">
+
 	<ListView
 		android:id="@+id/navigation_drawer_list"
 		android:layout_width="match_parent"
@@ -16,6 +17,7 @@
 		android:divider="@android:color/transparent"
 		android:dividerHeight="0dp">
 	</ListView>
+
 	<TextView
 		android:id="@+id/navigation_drawer_footer_count"
 		android:layout_width="match_parent"
@@ -26,6 +28,7 @@
 		android:text="@string/drawer_footer_count_none"
 		android:textAppearance="?android:textAppearanceSmall">
 	</TextView>
+
 	<TextView
 		android:id="@+id/navigation_drawer_footer_time"
 		android:layout_width="match_parent"

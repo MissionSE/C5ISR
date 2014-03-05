@@ -325,7 +325,7 @@ public class KestrelConnectorFragment extends Fragment {
 							mRequestReadingsButton.setEnabled(true);
 
 							mConnectToDeviceButton.setText(getResources().getString(R.string.disconnect_from_device)
-								+ " " + mConnectedDevice);
+									+ " " + mConnectedDevice);
 							break;
 						case BluetoothNetworkService.STATE_CONNECTING:
 							mRequestReadingsButton.setText(R.string.connecting);
