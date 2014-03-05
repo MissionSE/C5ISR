@@ -17,6 +17,7 @@ public class DrawerConfiguration {
 	private DrawerType mType;
 	private int mDrawerShadow;
 	private int mDrawer;
+	private int mDrawerList;
 	private int[] mActionMenuItemsToHideWhenDrawerOpen;
 	private int mDrawerOpenAccessibilityDescription;
 	private int mDrawerCloseAccessibilityDescription;
@@ -35,6 +36,21 @@ public class DrawerConfiguration {
 		mType = type;
 		setDefaults(context);
         setDrawer(layoutId);
+		setDrawerList(layoutId);
+	}
+
+	/**
+	 * Constructs a new DrawerConfiguration with default settings.
+	 * @param type the type of drawer (LEFT/RIGHT)
+	 * @param context the context of the parent activity
+	 * @param layoutId the layout ID of the View resource that will become the drawer
+	 * @param listId the resource ID of the ListView resource that comprises the drawer view
+	 */
+	public DrawerConfiguration(final Context context, final DrawerType type, final int layoutId, final int listId) {
+		mType = type;
+		setDefaults(context);
+		setDrawer(layoutId);
+		setDrawerList(listId);
 	}
 
 	private void setDefaults(final Context context) {
@@ -77,7 +93,7 @@ public class DrawerConfiguration {
 	}
 
 	/**
-	 * Gets the resource ID of the ListView that comprises the specific drawer within the DrawerLayout.
+	 * Gets the resource ID of the View that comprises the specific drawer within the DrawerLayout.
 	 * @return the resource ID
 	 */
 	public int getDrawer() {
@@ -85,11 +101,27 @@ public class DrawerConfiguration {
 	}
 
 	/**
-	 * Sets the resource ID of the ListView that will be the drawer within the DrawerLayout.
+	 * Sets the resource ID of the View that will be the drawer within the DrawerLayout.
 	 * @param drawer the resource ID
 	 */
 	public void setDrawer(final int drawer) {
 		mDrawer = drawer;
+	}
+
+	/**
+	 * Gets the resource ID of the View that comprises the ListView portion of the drawer.
+	 * @return the resource ID
+	 */
+	public int getDrawerList() {
+		return mDrawerList;
+	}
+
+	/**
+	 * Sets the resource ID of the ListView that comprises the drawer.
+	 * @param drawerList the resource ID
+	 */
+	public void setDrawerList(final int drawerList) {
+		mDrawerList = drawerList;
 	}
 
 	/**

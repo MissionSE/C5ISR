@@ -30,7 +30,9 @@ public abstract class DrawerActivity extends Activity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private DrawerLayout mDrawerLayout;
 
+	private View mLeftDrawer;
 	private ListView mLeftDrawerList;
+	private View mRightDrawer;
 	private ListView mRightDrawerList;
 
 	protected abstract DrawerConfigurationContainer getDrawerConfigurations();
@@ -63,7 +65,8 @@ public abstract class DrawerActivity extends Activity {
 	}
 
 	private void createLeftDrawer(final DrawerConfiguration drawerConfiguration) {
-		mLeftDrawerList = (ListView) findViewById(drawerConfiguration.getDrawer());
+		mLeftDrawer = findViewById(drawerConfiguration.getDrawer());
+		mLeftDrawerList = (ListView) findViewById(drawerConfiguration.getDrawerList());
 		mLeftDrawerList.setAdapter(drawerConfiguration.getBaseAdapter());
 		mLeftDrawerList.setOnItemClickListener(new DrawerItemClickListener(mLeftDrawerList));
 		if (drawerConfiguration.getDivider() != null) {
@@ -106,7 +109,8 @@ public abstract class DrawerActivity extends Activity {
 	}
 
 	private void createRightDrawer(final DrawerConfiguration drawerConfiguration) {
-		mRightDrawerList = (ListView) findViewById(drawerConfiguration.getDrawer());
+		mRightDrawer = findViewById(drawerConfiguration.getDrawer());
+		mRightDrawerList = (ListView) findViewById(drawerConfiguration.getDrawerList());
 		mRightDrawerList.setAdapter(drawerConfiguration.getBaseAdapter());
 		mRightDrawerList.setOnItemClickListener(new DrawerItemClickListener(mRightDrawerList));
 		if (drawerConfiguration.getDivider() != null) {
@@ -126,6 +130,14 @@ public abstract class DrawerActivity extends Activity {
 	 */
 	public DrawerLayout getDrawerLayout() {
 		return mDrawerLayout;
+	}
+
+	public View getLeftDrawer() {
+		return mLeftDrawer;
+	}
+
+	public View getRightDrawer() {
+		return mRightDrawer;
 	}
 
 	/**
@@ -205,13 +217,13 @@ public abstract class DrawerActivity extends Activity {
 	@Override
 	public boolean onKeyDown(final int keyCode, final KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			if (mDrawerLayout.isDrawerOpen(mLeftDrawerList)) {
-				mDrawerLayout.closeDrawer(mLeftDrawerList);
+			if (mDrawerLayout.isDrawerOpen(mLeftDrawer)) {
+				mDrawerLayout.closeDrawer(mLeftDrawer);
 			} else {
-				mDrawerLayout.openDrawer(mLeftDrawerList);
+				mDrawerLayout.openDrawer(mLeftDrawer);
 			}
-			if (mDrawerLayout.isDrawerOpen(mRightDrawerList)) {
-				mDrawerLayout.closeDrawer(mRightDrawerList);
+			if (mDrawerLayout.isDrawerOpen(mRightDrawer)) {
+				mDrawerLayout.closeDrawer(mRightDrawer);
 			}
 			return true;
 		}
@@ -249,11 +261,14 @@ public abstract class DrawerActivity extends Activity {
 			setTitle(selectedItem.getActionBarTitle());
 		}
 
-		if ((drawerList == mLeftDrawerList && mDrawerConfigurations.getLeftConfiguration().shouldCloseOnSelect())
-				|| (drawerList == mRightDrawerList && mDrawerConfigurations.getRightConfiguration()
-						.shouldCloseOnSelect())) {
-			if (mDrawerLayout.isDrawerOpen(drawerList)) {
-				mDrawerLayout.closeDrawer(drawerList);
+		if ((drawerList == mLeftDrawerList && mDrawerConfigurations.getLeftConfiguration().shouldCloseOnSelect())) {
+			if (mDrawerLayout.isDrawerOpen(mLeftDrawer)) {
+				mDrawerLayout.closeDrawer(mLeftDrawer);
+			}
+		} else if (drawerList == mRightDrawerList && mDrawerConfigurations.getRightConfiguration()
+						.shouldCloseOnSelect()) {
+			if (mDrawerLayout.isDrawerOpen(mRightDrawer)) {
+				mDrawerLayout.closeDrawer(mRightDrawer);
 			}
 		}
 
