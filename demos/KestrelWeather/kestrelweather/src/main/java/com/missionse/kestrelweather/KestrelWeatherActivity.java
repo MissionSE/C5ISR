@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.missionse.kestrelweather.database.DatabaseAccessor;
@@ -27,6 +28,9 @@ import com.missionse.kestrelweather.reports.ReportSyncFragment;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
 import java.util.List;
 
 /**
@@ -39,7 +43,9 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	private TiledMap mTiledMap;
 	private KestrelSimulator mKestrelSimulator;
 	private DatabaseManager mDatabaseManager;
-	private Toast exitToast;
+	private Toast mExitToast;
+	private TextView mDrawerCountFooter;
+	private TextView mDrawerTimestampFooter;
 
 	/**
 	 * Constructor.
@@ -142,8 +148,47 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	@Override
 	protected void onDrawerConfigurationComplete() {
 		mDrawerFactory.addNavigationMenuItems(getLeftDrawerAdapter());
+
+		mDrawerCountFooter = (TextView) getLeftDrawer().findViewById(R.id.navigation_drawer_footer_count);
+		mDrawerTimestampFooter = (TextView) getLeftDrawer().findViewById(R.id.navigation_drawer_footer_time);
+
+		updateDrawerFooterCountInformation();
+
 		selectItem(0, getLeftDrawerList());
 	}
+
+	/**
+	 * Notifies the activity to of a new unsynced item to reflect in the navigation drawer footer information.
+	 */
+	public void updateDrawerFooterCountInformation() {
+		List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
+		int unsyncedItemCount = 0;
+		for (Report report : allReports) {
+			if (report.isDirty()) {
+				unsyncedItemCount++;
+			}
+		}
+
+		if (mDrawerCountFooter != null) {
+			mDrawerCountFooter.setText(unsyncedItemCount + " " + getResources().getString(R.string.drawer_footer_count));
+			if (unsyncedItemCount > 0) {
+				mDrawerCountFooter.setTextColor(getResources().getColor(R.color.holo_red_light));
+			} else {
+				mDrawerCountFooter.setTextColor(getResources().getColor(R.color.gray_medium));
+			}
+		}
+	}
+
+	/**
+	 * Notifies the activity of a new sync event, which should be reflected in the navigation drawer.
+	 */
+	public void updateDrawerFooterTimeInformation() {
+		if (mDrawerTimestampFooter != null) {
+			mDrawerTimestampFooter.setText(getResources().getString(R.string.drawer_footer_time) + " " +
+				DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(new DateTime()));
+		}
+	}
+
 
 	@Override
 	protected void onNavigationItemSelected(int index) {
@@ -269,11 +314,11 @@ public class KestrelWeatherActivity extends DrawerActivity {
 		int backStackEntries = getFragmentManager().getBackStackEntryCount();
 		if (backStackEntries == 0) {
 			if (getLeftDrawerList().getCheckedItemPosition() == 0) {
-				if (exitToast != null && exitToast.getView().isShown()) {
+				if (mExitToast != null && mExitToast.getView().isShown()) {
 					finish();
 				} else {
-					exitToast = Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT);
-					exitToast.show();
+					mExitToast = Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT);
+					mExitToast.show();
 				}
 			} else {
 				selectItem(0, getLeftDrawerList());

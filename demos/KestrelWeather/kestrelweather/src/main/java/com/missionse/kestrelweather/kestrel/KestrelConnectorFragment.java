@@ -229,6 +229,9 @@ public class KestrelConnectorFragment extends Fragment {
 						int id = ReportBuilder.buildReport(getDatabaseAccessor(), mKestrelWeather, mOpenWeather,
 								mLocation.getLatitude(), mLocation.getLongitude());
 
+						//TODO: This should be moved to wherever we have the Save button on the ReportDetailFragment.
+						((KestrelWeatherActivity) activity).updateDrawerFooterCountInformation();
+
 						activity.getFragmentManager().beginTransaction()
 								.setCustomAnimations(
 										R.animator.slide_from_right, R.animator.slide_to_left,
@@ -321,8 +324,8 @@ public class KestrelConnectorFragment extends Fragment {
 									" " + mConnectedDevice);
 							mRequestReadingsButton.setEnabled(true);
 
-							mConnectToDeviceButton.setText(getResources().getString(R.string.disconnect_from_device) +
-									" " + mConnectedDevice);
+							mConnectToDeviceButton.setText(getResources().getString(R.string.disconnect_from_device)
+								+ " " + mConnectedDevice);
 							break;
 						case BluetoothNetworkService.STATE_CONNECTING:
 							mRequestReadingsButton.setText(R.string.connecting);

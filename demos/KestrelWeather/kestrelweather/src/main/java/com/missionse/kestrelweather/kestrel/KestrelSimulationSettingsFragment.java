@@ -16,6 +16,9 @@ import com.missionse.kestrelweather.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Displays a view via which the user can set values to be returned when prompted by a Kestrel Data request.
+ */
 public class KestrelSimulationSettingsFragment extends Fragment {
 	private SharedPreferences mSimulationPreferences = null;
 

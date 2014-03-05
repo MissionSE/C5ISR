@@ -50,6 +50,8 @@ public final class ReportBuilder {
 		OpenWeatherTable openWeatherTable = databaseAccessor.getOpenWeatherTable();
 		openWeatherTable.create(openWeather);
 
+		//TODO: Creation should happen on affirmation, not before (i.e., when the user presses the Save button).
+		//TODO: When the above is fixed, hunt down where we notify the activity of a new unsynced report.
 		reportTable.create(report);
 
 		return report.getId();

@@ -1,6 +1,13 @@
 package com.missionse.kestrelweather.kestrel;
 
-public class KestrelSimulationSharedPreferences {
+/**
+ * Defines String constants as keys for saving preferences for the Kestrel Simulator.
+ */
+public final class KestrelSimulationSharedPreferences {
+
+	private KestrelSimulationSharedPreferences() {
+
+	}
 
 	public static final String SIMULATION_PREFERENCES = "KestrelSimulationPreferences";
 

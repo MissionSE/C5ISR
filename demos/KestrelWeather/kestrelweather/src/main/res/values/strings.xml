@@ -48,6 +48,10 @@
 	<string name="drawer_create_report">CREATE</string>
 	<string name="drawer_sync_reports">SYNC</string>
 	<string name="drawer_report_database">DATABASE</string>
+	<string name="drawer_footer_count_none">No unsynced reports</string>
+	<string name="drawer_footer_count">unsynced report(s)</string>
+	<string name="drawer_footer_no_time">Last synced: Unknown</string>
+	<string name="drawer_footer_time">Last synced:</string>
 
 	<!-- Map Overlay -->
 	<string name="rain_overlay_name">Rain</string>
