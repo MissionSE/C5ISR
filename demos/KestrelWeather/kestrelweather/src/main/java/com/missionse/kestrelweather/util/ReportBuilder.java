@@ -1,6 +1,5 @@
 package com.missionse.kestrelweather.util;
 
-import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
@@ -10,9 +9,6 @@ import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
-import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
-
-import java.util.List;
 
 /**
  * Provides the functionality to build a report.
@@ -59,39 +55,20 @@ public final class ReportBuilder {
 
 	/**
 	 * Create a Supplement entry into the database.
-	 * @param activity Instance of KestrelWeatherActivity.
+	 * @param databaseAccessor An accessor to the database.
 	 * @param uri The string uri that points too the supplement.
 	 * @param reportId The database report id associated with the supplement.
 	 * @param type The supplementType.
 	 * @return returns the database ID of the newly created supplement.
 	 */
-	public static int buildSupplement(KestrelWeatherActivity activity, String uri,
-			int reportId, SupplementType type) {
-		Supplement supp = new Supplement();
-		supp.setType(type);
-		supp.setUri(uri);
-		supp.setReport(activity.getDatabaseAccessor().getReportById(reportId));
-		activity.getDatabaseAccessor().getSupplementTable().create(supp);
-		return supp.getId();
-	}
+	public static int buildSupplement(final DatabaseAccessor databaseAccessor, final String uri,
+			final int reportId, final SupplementType type) {
+		Supplement supplement = new Supplement();
+		supplement.setType(type);
+		supplement.setUri(uri);
+		supplement.setReport(databaseAccessor.getReportById(reportId));
+		databaseAccessor.getSupplementTable().create(supplement);
 
-	/**
-	 * Removes a supplement from a given report.
-	 * @param activity the parent activity
-	 * @param uri the supplement to be removed
-	 * @param reportId the report from which to remove the supplied uri
-	 * @return the number of rows changed
-	 */
-	public static int removeSupplement(KestrelWeatherActivity activity, String uri, int reportId) {
-		SupplementTable table = activity.getDatabaseAccessor().getSupplementTable();
-		List<Supplement> supplementList = table.queryForAll();
-		for (Supplement supp : supplementList) {
-			if (supp.getReport().getId() == reportId) {
-				if (supp.getUri().equals(uri)) {
-					return table.delete(supp);
-				}
-			}
-		}
-		return 0;
+		return supplement.getId();
 	}
 }

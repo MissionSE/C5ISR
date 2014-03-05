@@ -29,6 +29,7 @@ import com.missionse.kestrelweather.reports.utils.FileDownloader;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
 import com.missionse.kestrelweather.util.ReportBuilder;
+import com.missionse.kestrelweather.util.ReportRemover;
 
 /**
  * A fragment used to manage the photos attached to a report.
@@ -188,7 +189,9 @@ public class PhotoOverviewFragment extends Fragment implements UriRemovedListene
 	}
 
 	private void createNewSupplement(String uri) {
-		ReportBuilder.buildSupplement(mActivity, uri, mReportId, SupplementType.PHOTO);
+		if (mActivity != null) {
+			ReportBuilder.buildSupplement(mActivity.getDatabaseAccessor(), uri, mReportId, SupplementType.PHOTO);
+		}
 	}
 
 	private void populateAdapter() {
@@ -214,6 +217,8 @@ public class PhotoOverviewFragment extends Fragment implements UriRemovedListene
 
 	@Override
 	public void uriRemoved(Uri uri) {
-		ReportBuilder.removeSupplement(mActivity, uri.toString(), mReportId);
+		if (mActivity != null) {
+			ReportRemover.removeSupplements(mActivity.getDatabaseAccessor(), uri.toString(), mReportId);
+		}
 	}
 }

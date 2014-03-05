@@ -154,7 +154,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 
 		updateDrawerFooterCountInformation();
 
-		selectItem(0, getLeftDrawerList());
+		displayHome();
 	}
 
 	/**
@@ -321,7 +321,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 					mExitToast.show();
 				}
 			} else {
-				selectItem(0, getLeftDrawerList());
+				displayHome();
 			}
 		} else {
 			super.onBackPressed();
@@ -329,10 +329,18 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	}
 
 	/**
-	 * Getter.
+	 * Gets the database accessor.
 	 * @return Instance of DatabaseAccessor.
 	 */
 	public DatabaseAccessor getDatabaseAccessor() {
 		return mDatabaseManager;
+	}
+
+	/**
+	 * Switches the content frame to the default home fragment.
+	 */
+	public void displayHome() {
+		clearBackStack();
+		selectItem(0, getLeftDrawerList());
 	}
 }

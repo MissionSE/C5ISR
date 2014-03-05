@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.reports.auxiliary.AuxiliaryDataFragment;
 import com.missionse.kestrelweather.reports.readings.ReadingsFragment;
 import com.missionse.kestrelweather.reports.weather.WeatherOverviewFragment;
+import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.uiextensions.viewpager.SectionFragmentPagerAdapter;
 
 import org.joda.time.format.DateTimeFormat;
@@ -78,9 +80,9 @@ public class ReportDetailFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_report_detail, container, false);
 		if (view != null) {
 			if (mActivity != null) {
-				DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
+				final DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
 				if (databaseAccessor != null) {
-					Report report = databaseAccessor.getReportById(mReportId);
+					final Report report = databaseAccessor.getReportById(mReportId);
 					if (report != null) {
 						TextView reportTitle = (TextView) view.findViewById(R.id.report_detail_title);
 						if (reportTitle != null) {
@@ -98,6 +100,33 @@ public class ReportDetailFragment extends Fragment {
 								reportSyncStatus.setImageResource(R.drawable.report_status_not_synced);
 							} else {
 								reportSyncStatus.setImageResource(R.drawable.report_status_synced);
+							}
+						}
+
+						if (report.isDirty()) {
+							View reportSyncButtons = view.findViewById(R.id.report_detail_sync_buttons);
+							if (reportSyncButtons != null) {
+								reportSyncButtons.setVisibility(View.VISIBLE);
+							}
+
+							Button cancelReportButton = (Button) view.findViewById(R.id.report_detail_cancel_btn);
+							if (cancelReportButton != null) {
+								cancelReportButton.setOnClickListener(new View.OnClickListener() {
+									@Override
+									public void onClick(final View view) {
+										cancelReport();
+									}
+								});
+							}
+
+							Button saveReportButton = (Button) view.findViewById(R.id.report_detail_save_btn);
+							if (saveReportButton != null) {
+								saveReportButton.setOnClickListener(new View.OnClickListener() {
+									@Override
+									public void onClick(final View view) {
+										saveReport();
+									}
+								});
 							}
 						}
 					}
@@ -119,5 +148,31 @@ public class ReportDetailFragment extends Fragment {
 		}
 
 		return view;
+	}
+
+	private void cancelReport() {
+		KestrelWeatherActivity activity = (KestrelWeatherActivity) mActivity;
+		if (activity != null) {
+			DatabaseAccessor databaseAccessor = activity.getDatabaseAccessor();
+			if (databaseAccessor != null) {
+				Report report = databaseAccessor.getReportById(mReportId);
+				if (report != null) {
+					if (report.getRemoteId() == 0) {
+						ReportRemover.removeReport(databaseAccessor, report.getId());
+					}
+
+					activity.updateDrawerFooterCountInformation();
+					activity.displayHome();
+				}
+			}
+		}
+	}
+
+	private void saveReport() {
+		KestrelWeatherActivity activity = (KestrelWeatherActivity) mActivity;
+		if (activity != null) {
+			activity.updateDrawerFooterCountInformation();
+			activity.displayHome();
+		}
 	}
 }

@@ -32,6 +32,7 @@ import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
 import com.missionse.kestrelweather.util.ReportBuilder;
+import com.missionse.kestrelweather.util.ReportRemover;
 
 /**
  * A simple {@link android.app.Fragment} subclass.
@@ -137,7 +138,9 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 							mMediaControls.setVisibility(View.GONE);
 							onMediaPauseButtonPressed();
 						}
-						ReportBuilder.removeSupplement(mActivity, uri.toString(), mReportId);
+						if (mActivity != null) {
+							ReportRemover.removeSupplements(mActivity.getDatabaseAccessor(), uri.toString(), mReportId);
+						}
 					}
 				});
 				mAudioList.setMultiChoiceModeListener(mediaMultiChoiceModeListener);
@@ -219,7 +222,9 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 	}
 
 	private void createNewSupplement(String uri) {
-		ReportBuilder.buildSupplement(mActivity, uri, mReportId, SupplementType.AUDIO);
+		if (mActivity != null) {
+			ReportBuilder.buildSupplement(mActivity.getDatabaseAccessor(), uri, mReportId, SupplementType.AUDIO);
+		}
 	}
 
 	private void populateAdapter() {
