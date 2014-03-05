@@ -6,6 +6,8 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.missionse.kestrelweather.database.model.Entity;
 import com.missionse.kestrelweather.database.model.SupplementType;
 
+import org.joda.time.DateTime;
+
 /**
  * A report supplement class.  Used for holding video, photos etc.
  */
@@ -15,6 +17,12 @@ public class Supplement extends Entity {
 	private String mUri;
 	@DatabaseField(columnName = "remote_url")
 	private String mRemoteUri;
+	@DatabaseField(columnName = "filename")
+	private String mFileName;
+	@DatabaseField(columnName = "size")
+	private long mSize;
+	@DatabaseField(columnName = "date")
+	private DateTime mDate;
 	@DatabaseField(columnName = "type", dataType = DataType.ENUM_INTEGER)
 	private SupplementType mType;
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "report_id")
@@ -26,6 +34,10 @@ public class Supplement extends Entity {
 	 */
 	public Supplement() {
 		mUri = "";
+		mRemoteUri = "";
+		mFileName = "";
+		mSize = 0L;
+		mDate = DateTime.now();
 		mType = SupplementType.UNKNOWN;
 	}
 
@@ -91,5 +103,54 @@ public class Supplement extends Entity {
 	 */
 	public void setReport(Report report) {
 		mReport = report;
+	}
+
+	/**
+	 * Retrieve the size of the supplement.
+	 * @return The size of the supplement in long.
+	 */
+	public long getSize() {
+		return mSize;
+	}
+
+	/**
+	 * Set the size of the supplement.
+	 * @param size The size of the supplement.
+	 */
+	public void setSize(long size) {
+		mSize = size;
+	}
+
+	/**
+	 * Retrieve the file name of the supplement.
+	 * @return The supplement file name as a String.
+	 */
+	public String getFileName() {
+		return mFileName;
+	}
+
+	/**
+	 * Set the file name of the supplement.
+	 * @param fileName The file name as a String.
+	 */
+	public void setFileName(String fileName) {
+		mFileName = fileName;
+	}
+
+	/**
+	 * Retrieve the date when supplement was created.
+	 * This is the date that the file this supplement points to was created.
+	 * @return Instance of DateTime.
+	 */
+	public DateTime getDate() {
+		return mDate;
+	}
+
+	/**
+	 * Set the date that the file this supplement points too was created.
+	 * @param date Instance of DateTime to set.
+	 */
+	public void setDate(DateTime date) {
+		mDate = date;
 	}
 }
