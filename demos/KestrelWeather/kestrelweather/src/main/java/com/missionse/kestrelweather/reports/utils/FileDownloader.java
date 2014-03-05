@@ -28,10 +28,7 @@ public final class FileDownloader {
 	public static void downloadFile(final Context context, final String remoteFilePath,
 			final OnFileDownloadCompleteListener fileDownloadCompleteListener) {
 		File remoteFile = new File(remoteFilePath);
-//		File localFile = new File(Environment.getExternalStorageDirectory(), remoteFile.getName());
-//		File localFile = new File(context.getExternalFilesDir(null), remoteFile.getName());
-		File localFile = new File(context.getCacheDir(), remoteFile.getName());
-		Log.v(TAG, "Saving file to: " + localFile.toString());
+		File localFile = new File(context.getFilesDir(), remoteFile.getName());
 		Ion.with(context, remoteFilePath)
 				.write(localFile)
 				.setCallback(new FutureCallback<File>() {
@@ -39,15 +36,11 @@ public final class FileDownloader {
 					public void onCompleted(final Exception e, final File result) {
 						if (e == null) {
 							if (result != null) {
-								Log.d(TAG, "File output: " + result.toString());
 								MediaScannerConnection.scanFile(context,
 										new String[]{result.toString()}, null,
 										new MediaScannerConnection.OnScanCompletedListener() {
 											public void onScanCompleted(final String path, final Uri uri) {
 												if (uri != null) {
-													Log.v(TAG, "Scan complete.");
-													Log.v(TAG, "path: " + path);
-													Log.v(TAG, "uri: " + uri);
 													if (fileDownloadCompleteListener != null) {
 														fileDownloadCompleteListener.fileDownloadComplete(uri);
 													}

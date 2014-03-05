@@ -25,11 +25,14 @@ import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
+import com.missionse.kestrelweather.database.util.MediaResolver;
 import com.missionse.kestrelweather.reports.utils.FileDownloader;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
 import com.missionse.kestrelweather.util.ReportBuilder;
 import com.missionse.kestrelweather.util.ReportRemover;
+
+import java.io.File;
 
 /**
  * A fragment used to manage the photos attached to a report.
@@ -107,7 +110,8 @@ public class PhotoOverviewFragment extends Fragment implements UriRemovedListene
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
 					FragmentManager fragmentManager = getFragmentManager();
 					if (fragmentManager != null) {
-						Fragment imageFragment = ImageFragmentFactory.createImageFragment(mPhotoAdapter.getItem(position));
+						File image = new File(MediaResolver.getPath(mActivity, mPhotoAdapter.getItem(position)));
+						Fragment imageFragment = ImageFragmentFactory.createImageFragment(Uri.fromFile(image));
 						fragmentManager.beginTransaction()
 								.replace(R.id.content, imageFragment, "image_preview")
 								.addToBackStack("image_preview")
@@ -198,21 +202,45 @@ public class PhotoOverviewFragment extends Fragment implements UriRemovedListene
 		mPhotoAdapter.clear();
 
 		for (Supplement supplement : mActivity.getDatabaseAccessor().getPhotoSupplements(mReportId)) {
-			FileDownloader.downloadFile(mActivity, supplement.getUri(), new FileDownloader.OnFileDownloadCompleteListener() {
-				@Override
-				public void fileDownloadComplete(final Uri uri) {
-					if (mActivity != null) {
-						mActivity.runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								Log.d(TAG, "Scanned URI: " + uri.toString());
-								mPhotoAdapter.add(uri);
-							}
-						});
-					}
+			String localUri = supplement.getUri();
+			if (validString(localUri) && uriExist(localUri)) {
+				mPhotoAdapter.add(Uri.parse(localUri));
+			} else {
+				String remoteUri = supplement.getRemoteUri();
+				if (validString(remoteUri)) {
+					download(supplement);
 				}
-			});
+			}
 		}
+	}
+
+	private boolean uriExist(final String uriString) {
+		Uri uri = Uri.parse(uriString);
+		String uriPath = MediaResolver.getPath(mActivity, uri);
+		File uriAsFile = new File(uriPath);
+		return uriAsFile.exists();
+	}
+
+	private boolean validString(final String string) {
+		return string != null && string.length() > 0;
+	}
+
+	private void download(final Supplement supplement) {
+		FileDownloader.downloadFile(mActivity, supplement.getRemoteUri(), new FileDownloader.OnFileDownloadCompleteListener() {
+			@Override
+			public void fileDownloadComplete(final Uri uri) {
+				if (mActivity != null) {
+					mActivity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							supplement.setUri(uri.toString());
+							mActivity.getDatabaseAccessor().getSupplementTable().update(supplement);
+							mPhotoAdapter.add(uri);
+						}
+					});
+				}
+			}
+		});
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -12,9 +11,8 @@ import android.widget.Toast;
 
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.DatabaseManager;
-import com.missionse.kestrelweather.database.model.tables.Note;
 import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.database.model.tables.Supplement;
+import com.missionse.kestrelweather.database.util.DatabaseLogger;
 import com.missionse.kestrelweather.drawer.KestrelWeatherDrawerFactory;
 import com.missionse.kestrelweather.kestrel.KestrelConnectorFragment;
 import com.missionse.kestrelweather.kestrel.KestrelSimulationSettingsFragment;
@@ -39,6 +37,7 @@ import java.util.List;
 public class KestrelWeatherActivity extends DrawerActivity {
 
 	private static final String TAG = KestrelWeatherActivity.class.getSimpleName();
+	private static final boolean LOG_DB = false;
 	private KestrelWeatherDrawerFactory mDrawerFactory;
 	private TiledMap mTiledMap;
 	private KestrelSimulator mKestrelSimulator;
@@ -80,33 +79,11 @@ public class KestrelWeatherActivity extends DrawerActivity {
 				TileProviderFactory.createUrlTileProvider(getString(R.string.wind_overlay_url)));
 
 		mKestrelSimulator.onCreate();
-		//TODO: Robert - Delete when done testing.
-		List<Report> reports = getDatabaseAccessor().getReportTable().queryForAll();
-		for (Report report : reports) {
-			Log.d(TAG, "Display Report info:\n-------------------------------");
-			Log.d(TAG, "id=" + report.getId());
-			Log.d(TAG, "remoteId=" + report.getRemoteId());
-			Log.d(TAG, "dirty=" + report.isDirty());
-			Log.d(TAG, "Listing Notes:");
-			for (Note note : report.getNotes()) {
-				Log.d(TAG, "  (" + note.getId() + ") Title:" + note.getTitle() + "  Content:" + note.getContent());
-			}
-			for (Supplement sup : report.getSupplements()) {
-				Log.d(TAG, "  (" + sup.getId() + ") Uri:" + sup.getUri() + "  Type:" + sup.getType());
-			}
-		}
-		Log.d(TAG, "Dumping notes table...");
-		for (Note note : getDatabaseAccessor().getNoteTable().queryForAll()) {
-			StringBuilder builder = new StringBuilder();
-			builder.append("\n");
-			builder.append("ReportId=" + (note.getReport() == null ? "0" : note.getReport().getId()) + "\n");
-			builder.append("Id=" + note.getId() + "\n");
-			builder.append("Title=" + note.getTitle() + " Content=" + note.getContent());
-			Log.d(TAG, builder.toString());
-		}
-		Log.d(TAG, "Dumping supplement table...");
-		for (Supplement sup : getDatabaseAccessor().getSupplementTable().queryForAll()) {
-			Log.d(TAG, "  (" + sup.getId() + ") Uri:" + sup.getUri() + "  Type:" + sup.getType());
+
+		if (LOG_DB) {
+			DatabaseLogger.logReportTable(mDatabaseManager);
+			DatabaseLogger.logNoteTable(mDatabaseManager);
+			DatabaseLogger.logSupplementTable(mDatabaseManager);
 		}
 	}
 
