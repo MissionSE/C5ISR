@@ -56,9 +56,9 @@ public final class ReportBuilder {
 	/**
 	 * Create a Supplement entry into the database.
 	 * @param databaseAccessor An accessor to the database.
-	 * @param uri The string uri that points too the supplement.
+	 * @param uri The string uri that points to the supplement.
 	 * @param reportId The database report id associated with the supplement.
-	 * @param type The supplementType.
+	 * @param type The type of supplement.
 	 * @return returns the database ID of the newly created supplement.
 	 */
 	public static int buildSupplement(final DatabaseAccessor databaseAccessor, final String uri,
