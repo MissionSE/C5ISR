@@ -29,10 +29,14 @@ import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
+import com.missionse.kestrelweather.database.util.MediaResolver;
+import com.missionse.kestrelweather.reports.utils.FileDownloader;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
 import com.missionse.kestrelweather.util.ReportBuilder;
 import com.missionse.kestrelweather.util.ReportRemover;
+
+import java.io.File;
 
 /**
  * A simple {@link android.app.Fragment} subclass.
@@ -121,7 +125,9 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
 					mPlayingUri = mAudioAdapter.getItem(position);
 					mMediaControls.setVisibility(View.VISIBLE);
-					mMediaWrapper.setMediaSource(mActivity, mPlayingUri);
+					String uriPath = MediaResolver.getPath(mActivity, mPlayingUri);
+					File uriAsFile = new File(uriPath);
+					mMediaWrapper.setMediaSource(mActivity, Uri.fromFile(uriAsFile));
 					onMediaPlayButtonPressed();
 				}
 			});
@@ -228,9 +234,48 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 	}
 
 	private void populateAdapter() {
-		for (Supplement sup : mActivity.getDatabaseAccessor().getAudioSupplements(mReportId)) {
-			mAudioAdapter.add(Uri.parse(sup.getUri()));
+		mAudioAdapter.clear();
+
+		for (Supplement supplement : mActivity.getDatabaseAccessor().getAudioSupplements(mReportId)) {
+			String localUri = supplement.getUri();
+			if (validString(localUri) && uriExist(localUri)) {
+				mAudioAdapter.add(Uri.parse(localUri));
+			} else {
+				String remoteUri = supplement.getRemoteUri();
+				if (validString(remoteUri)) {
+					download(supplement);
+				}
+			}
 		}
+	}
+
+	private boolean uriExist(final String uriString) {
+		Uri uri = Uri.parse(uriString);
+		String uriPath = MediaResolver.getPath(mActivity, uri);
+		File uriAsFile = new File(uriPath);
+		return uriAsFile.exists();
+	}
+
+	private boolean validString(final String string) {
+		return string != null && string.length() > 0;
+	}
+
+	private void download(final Supplement supplement) {
+		FileDownloader.downloadFile(mActivity, supplement.getRemoteUri(), new FileDownloader.OnFileDownloadCompleteListener() {
+			@Override
+			public void fileDownloadComplete(final Uri uri) {
+				if (mActivity != null) {
+					mActivity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							supplement.setUri(uri.toString());
+							mActivity.getDatabaseAccessor().getSupplementTable().update(supplement);
+							mAudioAdapter.add(uri);
+						}
+					});
+				}
+			}
+		});
 	}
 
 	@Override
