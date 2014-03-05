@@ -31,11 +31,22 @@ var ReportSchema = new Schema({
 
 	notes: [{
 		title: String,
-		content: String
+		content: String,
+		size: Number,
+		createdat: { type: Date, default: Date.now }
 	}],
-
-	images: [String],
-	audio: [String],
+	images: [{
+		filename: String,
+		url: String,
+		size: Number,
+		date: { type: Date, default: Date.now }
+	}],
+	audio: [{
+		filename: String,
+		url: String,
+		size: Number,
+		date: { type: Date, default: Date.now }
+	}],
 	video: [String]
 }, {
 	versionKey: false

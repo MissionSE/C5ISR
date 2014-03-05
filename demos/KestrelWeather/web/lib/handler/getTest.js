@@ -39,13 +39,19 @@ module.exports = function(db) {
 				},
 				notes: [{
 					title: 'Note 1',
-					content: 'incoherent ranting'
+					content: 'incoherent ranting',
+					size: '23',
+					createdat: Date.now()
 				}, {
 					title: 'Note 2',
-					content: 'dear diary'
+					content: 'dear diary',
+					size: '55',
+					createdat: Date.now()
 				}, {
 					title: 'The Last Note',
-					content: 'an acute observation'
+					content: 'an acute observation',
+					size: '9',
+					createdat: Date.now()
 				}]
 			})
 			.then(function(response) {
@@ -64,8 +70,10 @@ module.exports = function(db) {
 					var form = postable.form();
 
 					form.append('id', count - 1);
+					form.append('filename', 'afile.jpg');
+					form.append('size', 101);
+					form.append('date', Date.now());
 					form.append('upload', fs.createReadStream(webRoot + '/test/images/droplet.png'));
-					form.append('upload', fs.createReadStream(webRoot + '/test/audio/droplet.mp3'));
 				} else {
 					res.writeHead(404, {'content-type': 'text/plain'});
 					res.end(JSON.stringify({

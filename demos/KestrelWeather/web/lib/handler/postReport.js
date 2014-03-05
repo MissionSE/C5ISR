@@ -36,15 +36,16 @@ module.exports = function(db) {
 			debug(postReport, 'file name: ' + file.name);
 			debug(postReport, 'file mime: ' + file.type);
 
+			var contentDir = '/unknown/';
 			if (file.type) {
 				if (file.type.search('image') >= 0) {
-					file.path = stagingArea + '/images/' + path.basename(file.path);
+					contentDir = '/images/';
 				} else if (file.type.search('audio') >= 0) {
-					file.path = stagingArea + '/audio/' + path.basename(file.path);
+					contentDir = '/audio/';
 				}
-			} else {
-				file.path = stagingArea + '/unknown/' + path.basename(file.path);
 			}
+			file.path = stagingArea + contentDir + path.basename(file.path);
+			file.publicPath = contentDir + path.basename(file.path);
 		})
 		.on('progress', function(bytesReceived, bytesExpected) {
 			debug(postReport, bytesReceived + '/' + bytesExpected);
@@ -94,7 +95,10 @@ module.exports = function(db) {
 					if (!err) {
 						res.writeHead(200, {'content-type': 'text/plain'});
 						debug(postReport, JSON.stringify(newReport));
-						res.end(JSON.stringify( { id : newReport._id }));
+						res.end(JSON.stringify({
+							status: 'ok',
+							id : newReport._id
+						}));
 
 						var newEvent = new db.Event({
 							reportId: newReport._id,
@@ -120,10 +124,21 @@ module.exports = function(db) {
 						}));
 					} else {
 						if (files[0].type) {
-							var publicPath = files[0].path.split('public')[2]; //TODO: Fix this nonsense
-							debug(postReport, 'saving ' + publicPath + ' to ' + data.id);
+							//debug(postReport, 'public path: ' + files[0].publicPath);
+							//var publicPath = files[0].path.split('public')[2]; //TODO: Fix this nonsense
+							debug(postReport, 'saving ' + files[0].publicPath + ' to ' + data.id);
 							if (files[0].type.search('image') >= 0) {
-								db.Report.update( { _id: data.id }, { $push: { images: publicPath } }, { upsert: true }, function(err) {
+								db.Report.update( { _id: data.id },
+									{
+										$push: {
+											images: {
+												filename: data.filename,
+												url: files[0].publicPath,
+												size: data.size,
+												date: data.date
+											}
+										}
+									}, { upsert: true }, function(err) {
 									if (err) {
 										debug(postReport, "query update failed");
 										res.writeHead(404, {'content-type': 'text/plain'});
@@ -134,12 +149,22 @@ module.exports = function(db) {
 										res.writeHead(200, {'content-type': 'text/plain'});
 										res.end(JSON.stringify({
 											status: 'ok',
-											url: publicPath
+											url: files[0].publicPath
 										}));
 									}
 								});
 							} else if (files[0].type.search('audio') >= 0) {
-								db.Report.update( { _id: data.id }, { $push: { audio: publicPath } }, { upsert: true }, function(err) {
+								db.Report.update( { _id: data.id },
+									{
+										$push: {
+											audio: {
+												filename: data.filename,
+												url: files[0].publicPath,
+												size: data.size,
+												date: data.date
+											}
+										}
+									}, { upsert: true }, function(err) {
 									if (err) {
 										debug(postReport, "query update failed");
 										res.writeHead(404, {'content-type': 'text/plain'});
@@ -150,7 +175,7 @@ module.exports = function(db) {
 										res.writeHead(200, {'content-type': 'text/plain'});
 										res.end(JSON.stringify({
 											status: 'ok',
-											url: publicPath
+											url: files[0].publicPath
 										}));
 									}
 								});
