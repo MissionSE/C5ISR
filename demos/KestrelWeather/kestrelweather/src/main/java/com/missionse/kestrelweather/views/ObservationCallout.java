@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
@@ -53,10 +54,12 @@ public class ObservationCallout extends FrameLayout {
 		View view = findViewById(R.id.observation_data_top_left);
 		TextView value = (TextView) view.findViewById(R.id.observation_data_top_left_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_top_left_unit);
+		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_top_left_icon);
 
-		float temperature = UnitPrefs.getPreferredTemperature(getContext(), this.mReport.getKestrelWeather().getTemperature());
+		float temperature = UnitPrefs.getPreferredTemperature(getContext(), mReport.getKestrelWeather().getTemperature());
 		value.setText(Integer.toString((int) temperature));
 		unit.setText(UnitPrefs.getPreferredTemperatureUnitAbbr(getContext()));
+		icon.setImageResource(R.drawable.ic_temperature);
 
 		view.setVisibility(VISIBLE);
 	}
@@ -65,9 +68,11 @@ public class ObservationCallout extends FrameLayout {
 		View view = findViewById(R.id.observation_data_top_right);
 		TextView value = (TextView) view.findViewById(R.id.observation_data_top_right_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_top_right_unit);
+		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_top_right_icon);
 
-		value.setText(Integer.toString(this.mReport.getKestrelWeather().getHumidity()));
+		value.setText(Integer.toString(mReport.getKestrelWeather().getHumidity()));
 		unit.setText("%");
+		icon.setImageResource(R.drawable.ic_humidity);
 
 		view.setVisibility(VISIBLE);
 	}
@@ -76,9 +81,11 @@ public class ObservationCallout extends FrameLayout {
 		View view = findViewById(R.id.observation_data_middle_right);
 		TextView value = (TextView) view.findViewById(R.id.observation_data_middle_right_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_middle_right_unit);
+		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_middle_right_icon);
 
-		value.setText(Integer.toString((int) this.mReport.getKestrelWeather().getPressure()));
+		value.setText(Integer.toString((int) mReport.getKestrelWeather().getPressure()));
 		unit.setText("hPa");
+		icon.setImageResource(R.drawable.ic_pressure);
 
 		view.setVisibility(VISIBLE);
 	}
@@ -87,10 +94,12 @@ public class ObservationCallout extends FrameLayout {
 		View view = findViewById(R.id.observation_data_middle_left);
 		TextView value = (TextView) view.findViewById(R.id.observation_data_middle_left_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_middle_left_unit);
+		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_middle_left_icon);
 
 		//TODO convert value with respect to unit
 		value.setText(Integer.toString((int) mReport.getKestrelWeather().getWindSpeed()));
 		unit.setText("mps");
+		icon.setImageResource(R.drawable.ic_wind_speed);
 
 		view.setVisibility(VISIBLE);
 	}
@@ -99,10 +108,12 @@ public class ObservationCallout extends FrameLayout {
 		View view = findViewById(R.id.observation_data_bottom_left);
 		TextView value = (TextView) view.findViewById(R.id.observation_data_bottom_left_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_left_unit);
+		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_bottom_left_icon);
 
 		//TODO convert value with respect to unit
 		value.setText(Integer.toString(mReport.getKestrelWeather().getWindDirection()));
 		unit.setText("°");
+		icon.setImageResource(R.drawable.ic_wind_direction);
 
 		view.setVisibility(VISIBLE);
 	}
@@ -111,10 +122,12 @@ public class ObservationCallout extends FrameLayout {
 		View view = findViewById(R.id.observation_data_bottom_right);
 		TextView value = (TextView) view.findViewById(R.id.observation_data_bottom_right_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_right_unit);
+		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_bottom_right_icon);
 
-		float temperature = UnitPrefs.getPreferredTemperature(getContext(), this.mReport.getKestrelWeather().getTemperature());
+		float temperature = UnitPrefs.getPreferredTemperature(getContext(), mReport.getKestrelWeather().getTemperature());
 		value.setText(Integer.toString((int) temperature));
 		unit.setText(UnitPrefs.getPreferredTemperatureUnitAbbr(getContext()));
+		icon.setImageResource(R.drawable.ic_wind_chill);
 
 		view.setVisibility(VISIBLE);
 	}
@@ -123,10 +136,14 @@ public class ObservationCallout extends FrameLayout {
 		View view = findViewById(R.id.observation_data_bottom_center);
 		TextView value = (TextView) view.findViewById(R.id.observation_data_bottom_center_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_center_unit);
+		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_bottom_center_icon);
 
-		float temperature = UnitPrefs.getPreferredTemperature(getContext(), this.mReport.getKestrelWeather().getTemperature());
+		float temperature = UnitPrefs.getPreferredTemperature(getContext(), mReport.getKestrelWeather().getTemperature());
 		value.setText(Integer.toString((int) temperature));
 		unit.setText(UnitPrefs.getPreferredTemperatureUnitAbbr(getContext()));
+		icon.setImageResource(R.drawable.ic_dew_point);
+
+		view.setVisibility(VISIBLE);
 	}
 
 	private void setDelay() {

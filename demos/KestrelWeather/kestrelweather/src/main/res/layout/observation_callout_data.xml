@@ -39,9 +39,23 @@
 				android:id="@+id/observation_data_top_left_value"
 				style="@style/ObservationData.Value"/>
 
-			<TextView
-				android:id="@+id/observation_data_top_left_unit"
-				style="@style/ObservationData.Unit"/>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/observation_data_top_left_icon"
+					android:tint="@android:color/white"
+					android:layout_width="20dp"
+					android:layout_height="20dp"
+					android:scaleType="centerCrop"/>
+
+				<TextView
+					android:id="@+id/observation_data_top_left_unit"
+					style="@style/ObservationData.Unit"/>
+			</LinearLayout>
 		</LinearLayout>
 
 		<LinearLayout
@@ -70,9 +84,23 @@
 				android:id="@+id/observation_data_top_right_value"
 				style="@style/ObservationData.Value"/>
 
-			<TextView
-				android:id="@+id/observation_data_top_right_unit"
-				style="@style/ObservationData.Unit"/>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/observation_data_top_right_icon"
+					android:tint="@android:color/white"
+					android:layout_width="20dp"
+					android:layout_height="20dp"
+					android:scaleType="centerCrop"/>
+
+				<TextView
+					android:id="@+id/observation_data_top_right_unit"
+					style="@style/ObservationData.Unit"/>
+			</LinearLayout>
 		</LinearLayout>
 
 		<LinearLayout
@@ -85,9 +113,23 @@
 				android:id="@+id/observation_data_middle_left_value"
 				style="@style/ObservationData.Value"/>
 
-			<TextView
-				android:id="@+id/observation_data_middle_left_unit"
-				style="@style/ObservationData.Unit"/>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/observation_data_middle_left_icon"
+					android:tint="@android:color/white"
+					android:layout_width="20dp"
+					android:layout_height="20dp"
+					android:scaleType="centerCrop"/>
+
+				<TextView
+					android:id="@+id/observation_data_middle_left_unit"
+					style="@style/ObservationData.Unit"/>
+			</LinearLayout>
 		</LinearLayout>
 
 		<LinearLayout
@@ -100,9 +142,23 @@
 				android:id="@+id/observation_data_middle_right_value"
 				style="@style/ObservationData.Value"/>
 
-			<TextView
-				android:id="@+id/observation_data_middle_right_unit"
-				style="@style/ObservationData.Unit"/>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/observation_data_middle_right_icon"
+					android:tint="@android:color/white"
+					android:layout_width="20dp"
+					android:layout_height="20dp"
+					android:scaleType="centerCrop"/>
+
+				<TextView
+					android:id="@+id/observation_data_middle_right_unit"
+					style="@style/ObservationData.Unit"/>
+			</LinearLayout>
 		</LinearLayout>
 
 		<LinearLayout
@@ -116,9 +172,23 @@
 				android:id="@+id/observation_data_bottom_left_value"
 				style="@style/ObservationData.Value"/>
 
-			<TextView
-				android:id="@+id/observation_data_bottom_left_unit"
-				style="@style/ObservationData.Unit"/>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/observation_data_bottom_left_icon"
+					android:tint="@android:color/white"
+					android:layout_width="20dp"
+					android:layout_height="20dp"
+					android:scaleType="centerCrop"/>
+
+				<TextView
+					android:id="@+id/observation_data_bottom_left_unit"
+					style="@style/ObservationData.Unit"/>
+			</LinearLayout>
 		</LinearLayout>
 
 		<LinearLayout
@@ -131,9 +201,23 @@
 				android:id="@+id/observation_data_bottom_center_value"
 				style="@style/ObservationData.Value"/>
 
-			<TextView
-				android:id="@+id/observation_data_bottom_center_unit"
-				style="@style/ObservationData.Unit"/>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/observation_data_bottom_center_icon"
+					android:tint="@android:color/white"
+					android:layout_width="20dp"
+					android:layout_height="20dp"
+					android:scaleType="centerCrop"/>
+
+				<TextView
+					android:id="@+id/observation_data_bottom_center_unit"
+					style="@style/ObservationData.Unit"/>
+			</LinearLayout>
 		</LinearLayout>
 
 		<LinearLayout
@@ -147,9 +231,23 @@
 				android:id="@+id/observation_data_bottom_right_value"
 				style="@style/ObservationData.Value"/>
 
-			<TextView
-				android:id="@+id/observation_data_bottom_right_unit"
-				style="@style/ObservationData.Unit"/>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/observation_data_bottom_right_icon"
+					android:tint="@android:color/white"
+					android:layout_width="20dp"
+					android:layout_height="20dp"
+					android:scaleType="centerCrop"/>
+
+				<TextView
+					android:id="@+id/observation_data_bottom_right_unit"
+					style="@style/ObservationData.Unit"/>
+			</LinearLayout>
 		</LinearLayout>
 
 	</FrameLayout>
