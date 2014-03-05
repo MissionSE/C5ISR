@@ -35,13 +35,12 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 	private static final float CLUSTER_SHAPE_INSET_MULTIPLIER = 10.0F;
 	private static final float CLUSTER_TEXT_INSET_MULTIPLIER = 6.0F;
 	private static final float MARKER_ANCHOR = 0.5F;
-	private Report mCurrentReport;
-	private Cluster<Report> mCurrentCluster;
 
 	/**
 	 * Constructor.
+	 *
 	 * @param context the current context
-	 * @param map the google map object
+	 * @param map     the google map object
 	 */
 	public ObservationCalloutMarkersAdapter(Context context, GoogleMap map) {
 		super(context, map, R.layout.map_observation_callout);
@@ -99,15 +98,10 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 	@Override
 	protected View getInfoView(final Marker marker, Report report, View currentView) {
 		View view;
-		if (this.mCurrentReport != report) {
-			view = super.getInfoView(marker, report, currentView);
-			((ObservationCallout) view).setData(report);
-			if (marker.isInfoWindowShown()) {
-				marker.showInfoWindow();
-			}
-			this.mCurrentReport = report;
-		} else {
-			view = currentView;
+		view = super.getInfoView(marker, report, currentView);
+		((ObservationCallout) view).setData(report);
+		if (marker.isInfoWindowShown()) {
+			marker.showInfoWindow();
 		}
 		return view;
 	}
@@ -115,15 +109,10 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 	@Override
 	protected View getInfoView(final Marker marker, Cluster<Report> cluster, View currentView) {
 		View view;
-		if (mCurrentCluster != cluster) {
-			view = super.getInfoView(marker, cluster, currentView);
-			((ObservationCallout) view).setData(getLatestReport(cluster.getItems()));
-			if (marker.isInfoWindowShown()) {
-				marker.showInfoWindow();
-			}
-			this.mCurrentCluster = cluster;
-		} else {
-			view = currentView;
+		view = super.getInfoView(marker, cluster, currentView);
+		((ObservationCallout) view).setData(getLatestReport(cluster.getItems()));
+		if (marker.isInfoWindowShown()) {
+			marker.showInfoWindow();
 		}
 		return view;
 	}
