@@ -33,7 +33,6 @@ public class ReportSyncFragment extends Fragment implements SyncStatusListener {
 	private Activity mActivity;
 	private ReportAdapter mReportAdapter;
 	private TextView mUnsyncedCountView;
-	private Button mSyncButton;
 
 	/**
 	 * Default constructor.
@@ -67,7 +66,7 @@ public class ReportSyncFragment extends Fragment implements SyncStatusListener {
 
 		if (mActivity != null) {
 			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
-					new ArrayList<Report>());
+				new ArrayList<Report>());
 		}
 	}
 
@@ -85,11 +84,9 @@ public class ReportSyncFragment extends Fragment implements SyncStatusListener {
 
 		mUnsyncedCountView.setText(getResources().getString(R.string.report_sync_count) + " " + dirtyReports.size());
 		if (dirtyReports.isEmpty()) {
-			mSyncButton.setEnabled(false);
 			mUnsyncedCountView.setTextColor(getResources().getColor(R.color.gray_medium));
 			mUnsyncedCountView.setBackgroundColor(getResources().getColor(R.color.gray_light));
 		} else {
-			mSyncButton.setEnabled(true);
 			mUnsyncedCountView.setTextColor(getResources().getColor(R.color.white));
 			mUnsyncedCountView.setBackgroundColor(getResources().getColor(R.color.holo_green_dark));
 		}
@@ -111,12 +108,12 @@ public class ReportSyncFragment extends Fragment implements SyncStatusListener {
 						if (fragmentManager != null) {
 							Fragment reportDetailFragment = ReportDetailFragment.newInstance(mReportAdapter.getItem(position).getId());
 							fragmentManager.beginTransaction()
-									.setCustomAnimations(
-											R.animator.slide_from_right, R.animator.slide_to_left,
-											R.animator.slide_from_left, R.animator.slide_to_right)
-									.replace(R.id.content, reportDetailFragment, "report_detail")
-									.addToBackStack("report_detail")
-									.commit();
+								.setCustomAnimations(
+									R.animator.slide_from_right, R.animator.slide_to_left,
+									R.animator.slide_from_left, R.animator.slide_to_right)
+								.replace(R.id.content, reportDetailFragment, "report_detail")
+								.addToBackStack("report_detail")
+								.commit();
 						}
 					}
 				});
@@ -126,8 +123,8 @@ public class ReportSyncFragment extends Fragment implements SyncStatusListener {
 					reportList.setEmptyView(emptyView);
 				}
 
-				mSyncButton = (Button) contentView.findViewById(R.id.sync_btn);
-				mSyncButton.setOnClickListener(new View.OnClickListener() {
+				Button syncButton = (Button) contentView.findViewById(R.id.sync_btn);
+				syncButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(final View view) {
 						try {
