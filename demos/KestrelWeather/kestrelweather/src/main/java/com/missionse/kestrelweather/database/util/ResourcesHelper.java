@@ -4,9 +4,6 @@ import android.content.Context;
 
 import com.missionse.kestrelweather.R;
 
-/**
- * Created by Kyle on 2/28/14.
- */
 public class ResourcesHelper {
 
 	private ResourcesHelper() {
@@ -21,6 +18,6 @@ public class ResourcesHelper {
 	}
 
 	public static int getTemperatureIndex(double temperature) {
-		return Math.min(32, Math.max((int) Math.floor((temperature - 273.15 + 43) / 3), 0));
+		return Math.min(32, Math.max((int) Math.floor((temperature + 43) / 3), 0));
 	}
 }
