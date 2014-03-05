@@ -18,6 +18,9 @@ public class Note extends Entity {
 	@DatabaseField(columnName = "content")
 	private String mContent;
 
+	@DatabaseField(columnName = "size")
+	private long mSize;
+
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "report_id")
 	private Report mReport;
 
@@ -77,11 +80,28 @@ public class Note extends Entity {
 		mReport = report;
 	}
 
+	/**
+	 * Retrieve the size of the note.
+	 * @return The size of the note in long.
+	 */
+	public long getSize() {
+		return mSize;
+	}
+
+	/**
+	 * Set the size of the note.
+	 * @param size The size of the note.
+	 */
+	public void setSize(long size) {
+		mSize = size;
+	}
+
 	@Override
 	public Map<String, String> toMap() {
 		Map<String, String> map = super.toMap();
 		map.put("title", mTitle);
 		map.put("content", mContent);
+		map.put("size", Long.toString(mSize));
 
 		return map;
 	}
@@ -91,5 +111,6 @@ public class Note extends Entity {
 		super.populate(json);
 		setTitle((json.get("title") == null ? "" : json.get("title").getAsString()));
 		setContent((json.get("content") == null ? "" : json.get("content").getAsString()));
+		setSize((json.get("size") == null ? 0L : json.get("size").getAsLong()));
 	}
 }
