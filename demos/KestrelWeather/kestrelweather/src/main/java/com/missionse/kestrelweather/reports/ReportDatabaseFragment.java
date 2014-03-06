@@ -142,11 +142,6 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		mReportAdapter.addAll(queryReports());
 		mReportAdapter.notifyDataSetChanged();
 		Toast.makeText(mActivity, getResources().getString(R.string.sync_ended), Toast.LENGTH_SHORT).show();
-
-		if (getActivity() != null) {
-			((KestrelWeatherActivity) getActivity()).updateDrawerFooterTimeInformation();
-			((KestrelWeatherActivity) getActivity()).updateDrawerFooterCountInformation();
-		}
 	}
 
 	@Override

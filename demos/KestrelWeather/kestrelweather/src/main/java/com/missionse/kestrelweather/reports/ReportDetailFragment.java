@@ -186,8 +186,6 @@ public class ReportDetailFragment extends Fragment {
 				Report report = databaseAccessor.getReportById(mReportId);
 				if (report != null) {
 					ReportRemover.removeReport(databaseAccessor, report.getId());
-
-					activity.updateDrawerFooterCountInformation();
 					activity.displayHome();
 				}
 			}

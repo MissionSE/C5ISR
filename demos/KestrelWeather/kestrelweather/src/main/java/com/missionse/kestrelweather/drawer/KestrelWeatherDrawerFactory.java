@@ -20,7 +20,7 @@ public class KestrelWeatherDrawerFactory {
 
 	public static final int MAP_OVERVIEW = 101;
 	public static final int CREATE_REPORT = 102;
-	public static final int REPORT_SYNC = 103;
+	public static final int REPORT_DRAFT = 103;
 	public static final int REPORT_DATABASE = 104;
 
 	private Context mContext;
@@ -69,7 +69,7 @@ public class KestrelWeatherDrawerFactory {
 		createItem.setBackgroundDrawable(R.drawable.drawer_create_background_selector, mContext);
 		createItem.setTextColorStateList(R.drawable.drawer_create_text_selector, mContext);
 		menu.add(createItem);
-		DrawerSimpleItem syncItem = DrawerSimpleItem.create(REPORT_SYNC, mContext.getResources().getString(R.string.drawer_drafts),
+		DrawerSimpleItem syncItem = DrawerSimpleItem.create(REPORT_DRAFT, mContext.getResources().getString(R.string.drawer_drafts),
 				0, true);
 		syncItem.setBackgroundDrawable(R.drawable.drawer_sync_background_selector, mContext);
 		syncItem.setTextColorStateList(R.drawable.drawer_sync_text_selector, mContext);

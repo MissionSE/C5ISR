@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +35,6 @@ import com.missionse.kestrelweather.service.SyncService;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
@@ -181,16 +182,36 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		updateDrawerFooterCountInformation();
 
 		displayHome();
+
+		addDrawerEventListener(new DrawerLayout.DrawerListener() {
+			@Override
+			public void onDrawerSlide(final View drawerView, final float slideOffset) {
+
+			}
+
+			@Override
+			public void onDrawerOpened(final View drawerView) {
+				updateDrawerFooterCountInformation();
+				updateDrawerFooterTimeInformation();
+			}
+
+			@Override
+			public void onDrawerClosed(final View drawerView) {
+
+			}
+
+			@Override
+			public void onDrawerStateChanged(final int newState) {
+
+			}
+		});
 	}
 
-	/**
-	 * Notifies the activity to of a new unsynced item to reflect in the navigation drawer footer information.
-	 */
-	public void updateDrawerFooterCountInformation() {
+	private void updateDrawerFooterCountInformation() {
 		List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
 		int unsyncedItemCount = 0;
 		for (Report report : allReports) {
-			if (report.isDirty()) {
+			if (report.isDirty() && !report.isDraft()) {
 				unsyncedItemCount++;
 			}
 		}
@@ -205,13 +226,10 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		}
 	}
 
-	/**
-	 * Notifies the activity of a new sync event, which should be reflected in the navigation drawer.
-	 */
-	public void updateDrawerFooterTimeInformation() {
+	private void updateDrawerFooterTimeInformation() {
 		if (mDrawerTimestampFooter != null) {
 			mDrawerTimestampFooter.setText(getResources().getString(R.string.drawer_footer_time) + " "
-					+ DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(new DateTime()));
+				+ DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(mDatabaseManager.getLastSyncedTime()));
 		}
 	}
 
@@ -223,8 +241,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			displayMapOverview();
 		} else if (index == KestrelWeatherDrawerFactory.CREATE_REPORT) {
 			displayCreateReport();
-		} else if (index == KestrelWeatherDrawerFactory.REPORT_SYNC) {
-			displayReportSync();
+		} else if (index == KestrelWeatherDrawerFactory.REPORT_DRAFT) {
+			displayReportDrafts();
 		} else if (index == KestrelWeatherDrawerFactory.REPORT_DATABASE) {
 			displayReportDatabase();
 		}
@@ -272,7 +290,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		mOnMap = false;
 	}
 
-	private void displayReportSync() {
+	private void displayReportDrafts() {
 		FragmentManager fragmentManager = getFragmentManager();
 		ReportDraftFragment reportDraftFragment = (ReportDraftFragment) fragmentManager
 				.findFragmentByTag("report_sync");

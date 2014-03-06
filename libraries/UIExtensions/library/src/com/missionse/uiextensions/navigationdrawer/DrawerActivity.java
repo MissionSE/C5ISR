@@ -17,6 +17,9 @@ import com.missionse.uiextensions.R;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfiguration;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A base activity to be extended, provided basic operations and management of a NavigationDrawer.
  */
@@ -35,9 +38,13 @@ public abstract class DrawerActivity extends Activity {
 	private View mRightDrawer;
 	private ListView mRightDrawerList;
 
+	private List<DrawerLayout.DrawerListener> mDrawerEventListeners = new ArrayList<DrawerLayout.DrawerListener>();
+
 	protected abstract DrawerConfigurationContainer getDrawerConfigurations();
 
 	protected abstract void onNavigationItemSelected(int id);
+
+	protected abstract void onDrawerConfigurationComplete();
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -62,6 +69,36 @@ public abstract class DrawerActivity extends Activity {
 		}
 
 		onDrawerConfigurationComplete();
+
+		mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+			@Override
+			public void onDrawerSlide(final View drawerView, final float slideOffset) {
+				for (DrawerLayout.DrawerListener listener : mDrawerEventListeners) {
+					listener.onDrawerSlide(drawerView, slideOffset);
+				}
+			}
+
+			@Override
+			public void onDrawerOpened(final View drawerView) {
+				for (DrawerLayout.DrawerListener listener : mDrawerEventListeners) {
+					listener.onDrawerOpened(drawerView);
+				}
+			}
+
+			@Override
+			public void onDrawerClosed(final View drawerView) {
+				for (DrawerLayout.DrawerListener listener : mDrawerEventListeners) {
+					listener.onDrawerClosed(drawerView);
+				}
+			}
+
+			@Override
+			public void onDrawerStateChanged(final int newState) {
+				for (DrawerLayout.DrawerListener listener : mDrawerEventListeners) {
+					listener.onDrawerStateChanged(newState);
+				}
+			}
+		});
 	}
 
 	private void createLeftDrawer(final DrawerConfiguration drawerConfiguration) {
@@ -105,7 +142,7 @@ public abstract class DrawerActivity extends Activity {
 			}
 		};
 
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		mDrawerEventListeners.add(mDrawerToggle);
 	}
 
 	private void createRightDrawer(final DrawerConfiguration drawerConfiguration) {
@@ -120,8 +157,20 @@ public abstract class DrawerActivity extends Activity {
 		mDrawerLayout.setDrawerShadow(drawerConfiguration.getDrawerShadow(), Gravity.END);
 	}
 
-	protected void onDrawerConfigurationComplete() {
+	/**
+	 * Adds a DrawerListener to be notified of drawer events.
+	 * @param listener the listener to be notified
+	 */
+	public void addDrawerEventListener(final DrawerLayout.DrawerListener listener) {
+		mDrawerEventListeners.add(listener);
+	}
 
+	/**
+	 * Removes a DrawerListener to be notified of drawer events.
+	 * @param listener the listener to no longer be notified
+	 */
+	public void removeDrawerEventListener(final DrawerLayout.DrawerListener listener) {
+		mDrawerEventListeners.remove(listener);
 	}
 
 	/**
@@ -132,10 +181,18 @@ public abstract class DrawerActivity extends Activity {
 		return mDrawerLayout;
 	}
 
+	/**
+	 * Retrieves the left Drawer view.
+	 * @return the left Drawer view
+	 */
 	public View getLeftDrawer() {
 		return mLeftDrawer;
 	}
 
+	/**
+	 * Retrieves the right Drawer view.
+	 * @return the right Drawer view
+	 */
 	public View getRightDrawer() {
 		return mRightDrawer;
 	}

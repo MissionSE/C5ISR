@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 
+import org.joda.time.DateTime;
+
 /**
  * Class that forces the database to sync with the remote.
  * <p/>
@@ -54,6 +56,9 @@ public class DatabaseSync extends AsyncTask<Boolean, Void, Void> implements Sync
 			DatabaseMediaPusher mediaPusher = new DatabaseMediaPusher(mContext, mAccessor);
 			mediaPusher.run();
 		}
+
+		mAccessor.setLastSyncedTime(DateTime.now());
+
 		return null;
 	}
 
