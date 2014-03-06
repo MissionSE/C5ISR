@@ -27,7 +27,7 @@ import com.missionse.kestrelweather.map.TileProviderFactory;
 import com.missionse.kestrelweather.map.TiledMap;
 import com.missionse.kestrelweather.preferences.SettingsActivity;
 import com.missionse.kestrelweather.reports.ReportDatabaseFragment;
-import com.missionse.kestrelweather.reports.ReportSyncFragment;
+import com.missionse.kestrelweather.reports.ReportDraftFragment;
 import com.missionse.kestrelweather.service.AlarmReceiver;
 import com.missionse.kestrelweather.service.SyncService;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
@@ -264,16 +264,16 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 	private void displayReportSync() {
 		FragmentManager fragmentManager = getFragmentManager();
-		ReportSyncFragment reportSyncFragment = (ReportSyncFragment) fragmentManager
+		ReportDraftFragment reportDraftFragment = (ReportDraftFragment) fragmentManager
 				.findFragmentByTag("report_sync");
-		if (reportSyncFragment == null) {
-			reportSyncFragment = new ReportSyncFragment();
+		if (reportDraftFragment == null) {
+			reportDraftFragment = new ReportDraftFragment();
 		}
 		fragmentManager.beginTransaction()
 				.setCustomAnimations(
 						R.animator.slide_from_left, R.animator.slide_to_right,
 						R.animator.slide_from_left, R.animator.slide_to_right)
-				.replace(R.id.content, reportSyncFragment, "report_sync")
+				.replace(R.id.content, reportDraftFragment, "report_sync")
 				.commit();
 	}
 

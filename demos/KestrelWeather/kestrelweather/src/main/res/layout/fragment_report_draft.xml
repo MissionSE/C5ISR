@@ -6,7 +6,7 @@
 	android:orientation="vertical">
 
 	<TextView
-		android:id="@+id/fragment_report_sync_count"
+		android:id="@+id/fragment_report_draft_count"
 		android:layout_width="match_parent"
 		android:layout_height="?android:listPreferredItemHeightSmall"
 		android:gravity="center"
@@ -14,7 +14,7 @@
 		android:textColor="@color/gray_medium"
 		android:layout_margin="10dp"
 		android:background="@color/gray_light"
-		android:text="@string/report_sync_count"
+		android:text="@string/report_draft_count"
 		android:padding="5dp"/>
 
 	<FrameLayout
@@ -24,30 +24,19 @@
 		android:layout_margin="10dp">
 
 		<ListView
-			android:id="@+id/fragment_report_sync_list"
+			android:id="@+id/fragment_report_draft_list"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
 
 		<TextView
-			android:id="@+id/fragment_report_sync_list_empty"
+			android:id="@+id/fragment_report_draft_list_empty"
 			android:layout_height="match_parent"
 			android:layout_width="match_parent"
 			android:gravity="center"
-			android:text="@string/report_sync_list_empty"
+			android:text="@string/report_draft_list_empty"
 			android:textSize="22sp"
 			android:textColor="@color/gray_medium"
 			android:visibility="gone">
 		</TextView>
 	</FrameLayout>
-
-	<Button
-		android:id="@+id/sync_btn"
-		android:text="@string/sync"
-		style="?android:attr/borderlessButtonStyle"
-		android:background="@drawable/fragment_sync_button_selector"
-		android:textColor="@color/white"
-		android:layout_margin="10dp"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"/>
-
 </com.missionse.uiextensions.linearlayout.SlidingLinearLayout>

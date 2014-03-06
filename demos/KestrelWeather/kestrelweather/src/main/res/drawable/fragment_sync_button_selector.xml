@@ -3,8 +3,8 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:exitFadeDuration="@android:integer/config_mediumAnimTime">
 	<item android:state_pressed="true"
-		android:drawable="@color/holo_green_dark"/>
+		android:drawable="@color/holo_blue_dark"/>
 	<item android:state_enabled="true"
-		android:drawable="@color/holo_green_light"/>
+		android:drawable="@color/holo_blue_light"/>
 	<item android:drawable="@color/gray_disabled"/>
 </selector>

@@ -124,9 +124,9 @@
 	<string name="kestrel_simulation_wind_chill">Wind Chill</string>
 	<string name="kestrel_simulation_dew_pt">Dew Point</string>
 
-	<!-- Fragment: Report Sync -->
-	<string name="report_sync_list_empty">No reports.</string>
-	<string name="report_sync_count">Unsynced Reports:</string>
+	<!-- Fragment: Report Draft -->
+	<string name="report_draft_list_empty">No reports.</string>
+	<string name="report_draft_count">Drafts:</string>
 
 	<!-- Fragment: Report Database -->
 	<string name="report_database_list_empty">No reports.</string>
