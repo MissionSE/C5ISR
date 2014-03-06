@@ -113,7 +113,7 @@ public class MediaPlayerWrapper {
 
 			try {
 				mMediaPlayer.reset();
-				mMediaPlayer.setDataSource(context, (Uri)mCurrentMediaUri);
+				mMediaPlayer.setDataSource(context, (Uri) mCurrentMediaUri);
 				mMediaPlayer.prepare();
 			} catch (Exception exception) {
 				Log.e(TAG, "Unable to prepare media.", exception);
@@ -133,7 +133,7 @@ public class MediaPlayerWrapper {
 
 			try {
 				mMediaPlayer.reset();
-				mMediaPlayer.setDataSource((String)mCurrentMediaUri);
+				mMediaPlayer.setDataSource((String) mCurrentMediaUri);
 				mMediaPlayer.prepare();
 			} catch (Exception exception) {
 				Log.e(TAG, "Unable to prepare media.", exception);

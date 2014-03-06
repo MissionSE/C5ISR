@@ -17,8 +17,7 @@ public final class UnitPrefs {
 
 	/**
 	 * Get the measurement in the preferred unit for temperature.
-	 *
-	 * @param context     the current context
+	 * @param context the current context
 	 * @param temperature the measured temperature in celsius
 	 * @return temperature in the preferred units
 	 */
@@ -35,7 +34,6 @@ public final class UnitPrefs {
 
 	/**
 	 * Gets the preferred unit for temperature.
-	 *
 	 * @param context the current context
 	 * @return the preferred unit for temperature
 	 */
@@ -47,7 +45,6 @@ public final class UnitPrefs {
 
 	/**
 	 * Gets the preferred abbreviated unit for temperature.
-	 *
 	 * @param context the current context
 	 * @return the preferred unit for temperature
 	 */
@@ -64,8 +61,7 @@ public final class UnitPrefs {
 
 	/**
 	 * Get the measure in the preferred unit for pressure.
-	 *
-	 * @param context  the current context
+	 * @param context the current context
 	 * @param pressure the measured pressure
 	 * @return pressure in the preferred units
 	 */
@@ -75,7 +71,6 @@ public final class UnitPrefs {
 
 	/**
 	 * Gets the preferred unit for pressure.
-	 *
 	 * @param context the current context
 	 * @return the preferred unit for pressure
 	 */
@@ -85,7 +80,6 @@ public final class UnitPrefs {
 
 	/**
 	 * Gets the preferred abbreviated unit for pressure.
-	 *
 	 * @param context the current context
 	 * @return the preferred unit for pressure
 	 */
@@ -95,8 +89,7 @@ public final class UnitPrefs {
 
 	/**
 	 * Get the measure in the preferred unit for wind speed.
-	 *
-	 * @param context   the current context
+	 * @param context the current context
 	 * @param windSpeed the measured wind speed
 	 * @return wind speed in the preferred units
 	 */
@@ -106,7 +99,6 @@ public final class UnitPrefs {
 
 	/**
 	 * Gets the preferred unit for wind speed.
-	 *
 	 * @param context the current context
 	 * @return the preferred unit for wind speed
 	 */
@@ -116,7 +108,6 @@ public final class UnitPrefs {
 
 	/**
 	 * Gets the preferred abbreviated unit for wind speed.
-	 *
 	 * @param context the current context
 	 * @return the preferred unit for wind speed
 	 */
@@ -126,8 +117,7 @@ public final class UnitPrefs {
 
 	/**
 	 * Get the measure in the preferred unit for wind direction.
-	 *
-	 * @param context       the current context
+	 * @param context the current context
 	 * @param windDirection the measured wind direction
 	 * @return wind direction in the preferred units
 	 */
@@ -137,7 +127,6 @@ public final class UnitPrefs {
 
 	/**
 	 * Gets the preferred unit for wind direction.
-	 *
 	 * @param context the current context
 	 * @return the preferred unit for wind direction
 	 */
@@ -147,7 +136,6 @@ public final class UnitPrefs {
 
 	/**
 	 * Gets the preferred abbreviated unit for wind direction.
-	 *
 	 * @param context the current context
 	 * @return the preferred unit for wind direction
 	 */

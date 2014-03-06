@@ -28,7 +28,7 @@
 	<style name="ObservationData.Value">
 		<item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
 	</style>
-	
+
 	<style name="ObservationDataIcon">
 		<item name="android:tint">@color/white</item>
 		<item name="android:layout_width">20dp</item>

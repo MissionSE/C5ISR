@@ -34,6 +34,8 @@ public final class ReportBuilder {
 		report.setUserName(databaseAccessor.getUserName());
 		report.setLatitude(latitude);
 		report.setLongitude(longitude);
+		report.setDraft(true);
+		report.setRead(true);
 
 		//TODO: Replace this with something better.
 		report.setTitle(report.getOpenWeather().getDescription());

@@ -158,8 +158,8 @@ public class Supplement extends Entity {
 	@Override
 	public void populate(JsonObject json) {
 		super.populate(json);
-		String remoteUrl = ((json.get("url") == null ? "" : json.get("url").getAsString() ));
-		String filename = ((json.get("filename") == null ? "" : json.get("filename").getAsString() ));
+		String remoteUrl = ((json.get("url") == null ? "" : json.get("url").getAsString()));
+		String filename = ((json.get("filename") == null ? "" : json.get("filename").getAsString()));
 		long size = ((json.get("size") == null ? 0L : json.get("size").getAsLong()));
 		long timeInMilli = parseDate(json.get("date"));
 

@@ -1,9 +1,12 @@
 package com.missionse.kestrelweather.reports;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.database.sync.DatabaseSync;
-import com.missionse.kestrelweather.database.sync.SyncStatusListener;
+import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.reports.auxiliary.AuxiliaryDataFragment;
 import com.missionse.kestrelweather.reports.readings.ReadingsFragment;
 import com.missionse.kestrelweather.reports.weather.WeatherOverviewFragment;
@@ -30,7 +31,7 @@ import org.joda.time.format.DateTimeFormat;
 /**
  * Provides a fragment to show the details of a report.
  */
-public class ReportDetailFragment extends Fragment implements SyncStatusListener {
+public class ReportDetailFragment extends Fragment {
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
 
@@ -98,32 +99,44 @@ public class ReportDetailFragment extends Fragment implements SyncStatusListener
 							reportTimestamp.setText(DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(report.getCreatedAt()));
 						}
 
-						setSyncStatusIcon(report);
+						ImageView reportSyncStatus = (ImageView) mView.findViewById(R.id.report_detail_sync_status_icon);
+						if (reportSyncStatus != null) {
+							if (report.isDirty()) {
+								reportSyncStatus.setImageResource(R.drawable.report_status_not_synced);
+							} else {
+								reportSyncStatus.setImageResource(R.drawable.report_status_synced);
+							}
+						}
 
-						if (report.isDirty()) {
-							View reportSyncButtons = mView.findViewById(R.id.report_detail_sync_buttons);
-							if (reportSyncButtons != null) {
-								reportSyncButtons.setVisibility(View.VISIBLE);
+						if (report.isDraft()) {
+							View reportDraftButtons = mView.findViewById(R.id.report_detail_draft_buttons);
+							if (reportDraftButtons != null) {
+								reportDraftButtons.setVisibility(View.VISIBLE);
 							}
 
-							Button cancelReportButton = (Button) mView.findViewById(R.id.report_detail_cancel_btn);
-							if (cancelReportButton != null) {
-								cancelReportButton.setOnClickListener(new View.OnClickListener() {
+							Button discardReportButton = (Button) mView.findViewById(R.id.report_detail_discard_btn);
+							if (discardReportButton != null) {
+								discardReportButton.setOnClickListener(new View.OnClickListener() {
 									@Override
 									public void onClick(final View view) {
-										cancelReport();
+										handleDiscardReportButton();
 									}
 								});
 							}
 
-							Button saveReportButton = (Button) mView.findViewById(R.id.report_detail_sync_btn);
+							Button saveReportButton = (Button) mView.findViewById(R.id.report_detail_save_btn);
 							if (saveReportButton != null) {
 								saveReportButton.setOnClickListener(new View.OnClickListener() {
 									@Override
 									public void onClick(final View view) {
-										syncReport();
+										handleSaveReportButton();
 									}
 								});
+							}
+
+							PagerTitleStrip pagerTitleStrip = (PagerTitleStrip) mView.findViewById(R.id.report_detail_pager_title_strip);
+							if (pagerTitleStrip != null) {
+								pagerTitleStrip.setBackgroundColor(mActivity.getResources().getColor(R.color.holo_green_light));
 							}
 						}
 					}
@@ -147,16 +160,28 @@ public class ReportDetailFragment extends Fragment implements SyncStatusListener
 		return mView;
 	}
 
-	private void cancelReport() {
+	private void handleDiscardReportButton() {
+		if (mActivity != null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+			builder.setMessage(R.string.discard_message)
+					.setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							discardReport();
+						}
+					})
+					.setNegativeButton(R.string.cancel, null);
+			builder.create().show();
+		}
+	}
+
+	private void discardReport() {
 		KestrelWeatherActivity activity = (KestrelWeatherActivity) mActivity;
 		if (activity != null) {
 			DatabaseAccessor databaseAccessor = activity.getDatabaseAccessor();
 			if (databaseAccessor != null) {
 				Report report = databaseAccessor.getReportById(mReportId);
 				if (report != null) {
-					if (report.getRemoteId() == 0) {
-						ReportRemover.removeReport(databaseAccessor, report.getId());
-					}
+					ReportRemover.removeReport(databaseAccessor, report.getId());
 
 					activity.updateDrawerFooterCountInformation();
 					activity.displayHome();
@@ -165,55 +190,26 @@ public class ReportDetailFragment extends Fragment implements SyncStatusListener
 		}
 	}
 
-	private void syncReport() {
+	private void handleSaveReportButton() {
 		KestrelWeatherActivity activity = (KestrelWeatherActivity) mActivity;
 		if (activity != null) {
-			DatabaseSync databaseSync = new DatabaseSync(activity);
-			databaseSync.setSyncCompleteListener(this);
-			databaseSync.execute(true, true, true);
-		}
-	}
-
-	@Override
-	public void onSyncComplete() {
-		Toast.makeText(mActivity, getString(R.string.sync_ended), Toast.LENGTH_SHORT).show();
-
-		KestrelWeatherActivity activity = (KestrelWeatherActivity) mActivity;
-		if (activity != null) {
-			activity.updateDrawerFooterTimeInformation();
-			activity.updateDrawerFooterCountInformation();
-
 			DatabaseAccessor databaseAccessor = activity.getDatabaseAccessor();
-			if (databaseAccessor != null) {
-				Report report = databaseAccessor.getReportById(mReportId);
-				if (report != null) {
-					setSyncStatusIcon(report);
+			Report report = databaseAccessor.getReportById(mReportId);
+			if (report != null) {
+				report.setDraft(false);
+
+				ReportTable reportTable = databaseAccessor.getReportTable();
+				reportTable.update(report);
+
+				View reportDraftButtons = mView.findViewById(R.id.report_detail_draft_buttons);
+				if (reportDraftButtons != null) {
+					reportDraftButtons.setVisibility(View.GONE);
 				}
-			}
 
-			View reportSyncButtons = mView.findViewById(R.id.report_detail_sync_buttons);
-			if (reportSyncButtons != null) {
-				reportSyncButtons.setVisibility(View.GONE);
-			}
-		}
-	}
-
-	@Override
-	public void onSyncStarted() {
-		Toast.makeText(mActivity, getString(R.string.sync_started), Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
-	public void onSyncedReport(final int reportId) {
-	}
-
-	private void setSyncStatusIcon(final Report report) {
-		ImageView reportSyncStatus = (ImageView) mView.findViewById(R.id.report_detail_sync_status_icon);
-		if (reportSyncStatus != null) {
-			if (report.isDirty()) {
-				reportSyncStatus.setImageResource(R.drawable.report_status_not_synced);
-			} else {
-				reportSyncStatus.setImageResource(R.drawable.report_status_synced);
+				PagerTitleStrip pagerTitleStrip = (PagerTitleStrip) mView.findViewById(R.id.report_detail_pager_title_strip);
+				if (pagerTitleStrip != null) {
+					pagerTitleStrip.setBackgroundColor(activity.getResources().getColor(R.color.holo_blue_light));
+				}
 			}
 		}
 	}

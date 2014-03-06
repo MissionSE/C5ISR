@@ -97,7 +97,7 @@ public final class IonUtil {
 			Ion.with(context, remoteUrl)
 					.setMultipartParameter("id", Integer.toString(reportId))
 					.setMultipartFile(media.getName(),
-					   MediaResolver.getMimeType(media.getAbsolutePath()), media)
+							MediaResolver.getMimeType(media.getAbsolutePath()), media)
 					.asJsonObject()
 					.setCallback(callback)
 					.get();
@@ -115,24 +115,24 @@ public final class IonUtil {
 	public static void uploadMedia(final UploadContainer container) {
 		Resources res = container.getContext().getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
-		   res.getString(R.string.remote_database));
+				res.getString(R.string.remote_database));
 		Log.d(TAG, "Upload Media(\'" + container.getAsFile().getAbsolutePath() + "\') to reportid=" + container.getRemoteId() + " to remote database:" + remoteUrl);
 
 		try {
 			Ion.with(container.getContext(), remoteUrl)
-				.setMultipartParameter("filename", container.getFileName())
-				.setMultipartParameter("size", Long.toString(container.getSize()))
-				.setMultipartParameter("date", Long.toString(container.getDate().getMillis()))
-				.setMultipartParameter("id", Integer.toString(container.getRemoteId()))
-				.setMultipartFile(container.getFileName(), container.getMimeType() , container.getAsFile())
-				.asJsonObject()
-				.setCallback(container.getCallback())
-				.get();
+					.setMultipartParameter("filename", container.getFileName())
+					.setMultipartParameter("size", Long.toString(container.getSize()))
+					.setMultipartParameter("date", Long.toString(container.getDate().getMillis()))
+					.setMultipartParameter("id", Integer.toString(container.getRemoteId()))
+					.setMultipartFile(container.getFileName(), container.getMimeType(), container.getAsFile())
+					.asJsonObject()
+					.setCallback(container.getCallback())
+					.get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

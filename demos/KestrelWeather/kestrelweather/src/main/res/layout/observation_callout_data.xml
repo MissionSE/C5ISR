@@ -196,6 +196,7 @@
 				<ImageView
 					android:id="@+id/observation_data_bottom_center_icon"
 					style="@style/ObservationDataIcon"/>
+
 				<TextView
 					android:id="@+id/observation_data_bottom_center_unit"
 					style="@style/ObservationData.Unit"/>

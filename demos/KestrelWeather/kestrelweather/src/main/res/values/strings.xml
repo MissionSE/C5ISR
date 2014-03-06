@@ -26,6 +26,7 @@
 	<string name="save">Save</string>
 	<string name="send">Send</string>
 	<string name="cancel">Cancel</string>
+	<string name="discard">Discard</string>
 	<string name="confirm">Confirm</string>
 	<string name="cont">Continue</string>
 	<string name="create">Create</string>
@@ -139,6 +140,7 @@
 	<string name="icon_description">The icon for a list item.</string>
 	<string name="sync_status_description">The icon representing the current sync status.</string>
 	<string name="readings_error">Unable to fetch readings.</string>
+	<string name="discard_message">Are you sure you want to discard the report?</string>
 
 	<!-- Fragment: Report Photos -->
 	<string name="action_add">Add</string>

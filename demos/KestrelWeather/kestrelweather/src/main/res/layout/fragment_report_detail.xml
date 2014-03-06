@@ -21,7 +21,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="top"
-			android:background="@color/holo_orange_light"
+			android:background="@color/holo_blue_light"
 			android:paddingBottom="4dp"
 			android:paddingTop="4dp"
 			android:textColor="@color/white">
@@ -29,17 +29,17 @@
 	</android.support.v4.view.ViewPager>
 
 	<LinearLayout
-		android:id="@+id/report_detail_sync_buttons"
+		android:id="@+id/report_detail_draft_buttons"
 		android:orientation="horizontal"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:visibility="gone">
 
 		<Button
-			android:text="@string/cancel"
-			android:id="@+id/report_detail_cancel_btn"
+			android:text="@string/discard"
+			android:id="@+id/report_detail_discard_btn"
 			style="?android:attr/borderlessButtonStyle"
-			android:background="@drawable/fragment_default_yellow_button_selector"
+			android:background="@drawable/fragment_default_green_button_selector"
 			android:textColor="@color/white"
 			android:layout_margin="10dp"
 			android:layout_width="0dip"
@@ -47,10 +47,10 @@
 			android:layout_height="wrap_content"/>
 
 		<Button
-			android:text="@string/sync"
-			android:id="@+id/report_detail_sync_btn"
+			android:text="@string/save"
+			android:id="@+id/report_detail_save_btn"
 			style="?android:attr/borderlessButtonStyle"
-			android:background="@drawable/fragment_default_yellow_button_selector"
+			android:background="@drawable/fragment_default_green_button_selector"
 			android:textColor="@color/white"
 			android:layout_margin="10dp"
 			android:layout_width="0dip"

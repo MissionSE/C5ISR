@@ -229,7 +229,7 @@ public class Report extends Entity implements ClusterItem {
 
 	/**
 	 * Set if this report should be a draft of not.
- 	 * @param draft true if the report is a draft.
+	 * @param draft true if the report is a draft.
 	 */
 	public void setDraft(boolean draft) {
 		mDraft = draft;
