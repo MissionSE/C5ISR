@@ -104,8 +104,8 @@ public class ReportDraftFragment extends Fragment {
 							Fragment reportDetailFragment = ReportDetailFragment.newInstance(mReportAdapter.getItem(position).getId());
 							fragmentManager.beginTransaction()
 									.setCustomAnimations(
-										R.animator.slide_from_right, R.animator.slide_to_left,
-										R.animator.slide_from_left, R.animator.slide_to_right)
+											R.animator.slide_from_right, R.animator.slide_to_left,
+											R.animator.slide_from_left, R.animator.slide_to_right)
 									.replace(R.id.content, reportDetailFragment, "report_detail")
 									.addToBackStack("report_detail")
 									.commit();

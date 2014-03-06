@@ -56,6 +56,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	private TextView mDrawerCountFooter;
 	private TextView mDrawerTimestampFooter;
 	private SharedPreferences mSharedPreferences;
+	private boolean onMap = false;
 
 	/**
 	 * Constructor.
@@ -245,6 +246,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		fragmentManager.beginTransaction()
 				.replace(R.id.content, mapViewerFragment, "map")
 				.commit();
+		onMap = true;
 	}
 
 	private void displayCreateReport() {
@@ -254,12 +256,20 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (kestrelConnectorFragment == null) {
 			kestrelConnectorFragment = new KestrelConnectorFragment();
 		}
-		fragmentManager.beginTransaction()
-				.setCustomAnimations(
-						R.animator.slide_from_left, R.animator.slide_to_right,
-						R.animator.slide_from_left, R.animator.slide_to_right)
-				.replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
-				.commit();
+		if (onMap) {
+			fragmentManager.beginTransaction()
+					.replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
+					.commit();
+		} else {
+			fragmentManager.beginTransaction()
+					.setCustomAnimations(
+							R.animator.slide_from_left, R.animator.slide_to_right,
+							R.animator.slide_from_left, R.animator.slide_to_right)
+					.replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
+					.commit();
+		}
+
+		onMap = false;
 	}
 
 	private void displayReportSync() {
@@ -269,12 +279,20 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (reportDraftFragment == null) {
 			reportDraftFragment = new ReportDraftFragment();
 		}
-		fragmentManager.beginTransaction()
-				.setCustomAnimations(
-						R.animator.slide_from_left, R.animator.slide_to_right,
-						R.animator.slide_from_left, R.animator.slide_to_right)
-				.replace(R.id.content, reportDraftFragment, "report_sync")
-				.commit();
+		if (onMap) {
+			fragmentManager.beginTransaction()
+					.replace(R.id.content, reportDraftFragment, "report_sync")
+					.commit();
+		} else {
+			fragmentManager.beginTransaction()
+					.setCustomAnimations(
+							R.animator.slide_from_left, R.animator.slide_to_right,
+							R.animator.slide_from_left, R.animator.slide_to_right)
+					.replace(R.id.content, reportDraftFragment, "report_sync")
+					.commit();
+		}
+
+		onMap = false;
 	}
 
 	private void displayReportDatabase() {
@@ -284,12 +302,20 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (reportDatabaseFragment == null) {
 			reportDatabaseFragment = new ReportDatabaseFragment();
 		}
-		fragmentManager.beginTransaction()
-				.setCustomAnimations(
-						R.animator.slide_from_left, R.animator.slide_to_right,
-						R.animator.slide_from_left, R.animator.slide_to_right)
-				.replace(R.id.content, reportDatabaseFragment, "report_database")
-				.commit();
+		if (onMap) {
+			fragmentManager.beginTransaction()
+					.replace(R.id.content, reportDatabaseFragment, "report_database")
+					.commit();
+		} else {
+			fragmentManager.beginTransaction()
+					.setCustomAnimations(
+							R.animator.slide_from_left, R.animator.slide_to_right,
+							R.animator.slide_from_left, R.animator.slide_to_right)
+					.replace(R.id.content, reportDatabaseFragment, "report_database")
+					.commit();
+		}
+
+		onMap = false;
 	}
 
 	@Override

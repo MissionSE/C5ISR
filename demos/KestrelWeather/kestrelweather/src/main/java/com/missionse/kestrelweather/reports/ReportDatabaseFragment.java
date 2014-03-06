@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Provides a fragment to show a list of reports.
  */
-public class ReportDatabaseFragment extends Fragment  implements SyncStatusListener {
+public class ReportDatabaseFragment extends Fragment implements SyncStatusListener {
 	private static final String TAG = ReportDatabaseFragment.class.getSimpleName();
 	private Activity mActivity;
 	private ReportAdapter mReportAdapter;
