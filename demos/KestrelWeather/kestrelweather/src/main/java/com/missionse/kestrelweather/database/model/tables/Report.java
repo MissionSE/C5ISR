@@ -132,6 +132,50 @@ public class Report extends Entity implements ClusterItem {
 		return mOpenWeather;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Report report = (Report) o;
+
+		if (mDraft != report.mDraft) return false;
+		if (Double.compare(report.mLatitude, mLatitude) != 0) return false;
+		if (Double.compare(report.mLongitude, mLongitude) != 0) return false;
+		if (mRead != report.mRead) return false;
+		if (mKestrelWeather != null ? !mKestrelWeather.equals(report.mKestrelWeather) : report.mKestrelWeather != null)
+			return false;
+		if (mNotes != null ? !mNotes.equals(report.mNotes) : report.mNotes != null) return false;
+		if (mOpenWeather != null ? !mOpenWeather.equals(report.mOpenWeather) : report.mOpenWeather != null)
+			return false;
+		if (mSupplements != null ? !mSupplements.equals(report.mSupplements) : report.mSupplements != null)
+			return false;
+		if (mTitle != null ? !mTitle.equals(report.mTitle) : report.mTitle != null) return false;
+		if (mUserName != null ? !mUserName.equals(report.mUserName) : report.mUserName != null)
+			return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = mUserName != null ? mUserName.hashCode() : 0;
+		result = 31 * result + (mTitle != null ? mTitle.hashCode() : 0);
+		temp = Double.doubleToLongBits(mLatitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(mLongitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (mDraft ? 1 : 0);
+		result = 31 * result + (mRead ? 1 : 0);
+		result = 31 * result + (mKestrelWeather != null ? mKestrelWeather.hashCode() : 0);
+		result = 31 * result + (mOpenWeather != null ? mOpenWeather.hashCode() : 0);
+		result = 31 * result + (mSupplements != null ? mSupplements.hashCode() : 0);
+		result = 31 * result + (mNotes != null ? mNotes.hashCode() : 0);
+		return result;
+	}
+
 	/**
 	 * Setter.
 	 * @param openWeather associated with this report.

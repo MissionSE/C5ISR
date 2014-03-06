@@ -2,15 +2,19 @@ package com.missionse.kestrelweather.map;
 
 
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
@@ -35,16 +39,45 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 	private static final float CLUSTER_SHAPE_INSET_MULTIPLIER = 10.0F;
 	private static final float CLUSTER_TEXT_INSET_MULTIPLIER = 6.0F;
 	private static final float MARKER_ANCHOR = 0.5F;
+	private ReportRenderer mRenderer;
 
 	/**
 	 * Constructor.
+	 *
 	 * @param context the current context
-	 * @param map the google map object
+	 * @param map     the google map object
 	 */
 	public ObservationCalloutMarkersAdapter(Context context, GoogleMap map) {
 		super(context, map, R.layout.map_observation_callout);
 
 		setFullInfoWindowEnabled(true);
+	}
+
+	@Override
+	public boolean onClusterItemClick(Report report) {
+		Marker marker = ((ReportRenderer) getRenderer()).getMarker(report);
+		centerMap(report.getPosition());
+		marker.showInfoWindow();
+		return true;
+	}
+
+	@Override
+	public boolean onClusterClick(Cluster<Report> cluster) {
+		Marker marker = ((ReportRenderer) getRenderer()).getMarker(cluster);
+		centerMap(cluster.getPosition());
+		marker.showInfoWindow();
+		return true;
+	}
+
+	private void centerMap(LatLng position) {
+		// calculate the new center of the map, taking into account optional
+		// padding
+		Projection proj = getMap().getProjection();
+		Point p = proj.toScreenLocation(position);
+		// apply padding
+		p.y = p.y - 230;
+
+		getMap().animateCamera(CameraUpdateFactory.newLatLng(proj.fromScreenLocation(p)));
 	}
 
 	@Override
@@ -118,10 +151,12 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 
 	@Override
 	public ClusterRenderer<Report> getRenderer() {
-		ReportRenderer renderer = new ReportRenderer();
-		renderer.setClusterItemInfoWindowAdapter(this);
-		renderer.setClusterInfoWindowAdapter(this);
-		return renderer;
+		if (mRenderer == null) {
+			mRenderer = new ReportRenderer();
+			mRenderer.setClusterItemInfoWindowAdapter(this);
+			mRenderer.setClusterInfoWindowAdapter(this);
+		}
+		return mRenderer;
 	}
 
 	private Report getLatestReport(Collection<Report> reports) {
