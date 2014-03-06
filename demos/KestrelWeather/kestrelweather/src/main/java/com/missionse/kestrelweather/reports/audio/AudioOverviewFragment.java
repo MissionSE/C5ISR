@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,7 +54,7 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 	private KestrelWeatherActivity mActivity;
 	private boolean mEditable = true;
 	private int mReportId = INVALID_REPORT_ID;
-	private Uri mPlayingUri;
+	private Supplement mCurrentlySelectedSupplement;
 
 	private View mMediaControls;
 	private ImageButton mPlayButton;
@@ -122,12 +123,22 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 			mAudioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-//					mPlayingUri = mAudioAdapter.getItem(position);
-					mMediaControls.setVisibility(View.VISIBLE);
-					String uriPath = MediaResolver.getPath(mActivity, mPlayingUri);
-					File uriAsFile = new File(uriPath);
-					mMediaWrapper.setMediaSource(mActivity, Uri.fromFile(uriAsFile));
-					onMediaPlayButtonPressed();
+					Supplement selectedSupplement = mAudioAdapter.getItem(position);
+					Pair<String, Boolean> playPair = checkForValidPath(selectedSupplement);
+					if (playPair.first != null) {
+						mCurrentlySelectedSupplement = selectedSupplement;
+						mMediaControls.setVisibility(View.VISIBLE);
+						if (playPair.second) {
+							String uriPath = MediaResolver.getPath(mActivity, Uri.parse(playPair.first));
+							File uriAsFile = new File(uriPath);
+							mMediaWrapper.setMediaSource(mActivity, Uri.fromFile(uriAsFile));
+						} else {
+							mMediaWrapper.setMediaSource(playPair.first);
+						}
+						onMediaPlayButtonPressed();
+					} else {
+						Log.d(TAG, "Unable to play supplement with id=" + mAudioAdapter.getItem(position).getId());
+					}
 				}
 			});
 
@@ -138,11 +149,15 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 				mediaMultiChoiceModeListener.setSupplementRemovedListener(new SupplementRemovedListener() {
 					@Override
 					public void supplementRemoved(final Supplement supplement) {
-//						if (mPlayingUri.equals(uri)) {
-//							mPlayingUri = null;
-//							mMediaControls.setVisibility(View.GONE);
-//							onMediaPauseButtonPressed();
-//						}
+						if (mCurrentlySelectedSupplement != null) {
+							if (mCurrentlySelectedSupplement.getId() == supplement.getId()) {
+								mCurrentlySelectedSupplement = null;
+								mMediaControls.setVisibility(View.GONE);
+								mMediaWrapper.setMediaSource(mActivity, null);
+								onMediaPauseButtonPressed();
+								mMediaWrapper.playMedia();
+							}
+						}
 						if (mActivity != null) {
 							ReportRemover.removeSupplement(mActivity.getDatabaseAccessor(), supplement);
 						}
@@ -162,6 +177,25 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 		}
 
 		return contentView;
+	}
+
+	/*
+	 * Returns a Pair where the first value is the URL to use and the
+	 * second value is a boolean that if it is true then the URL is an android
+	 * uri.
+	 * The first value is null if neither the localUri or remoteUri are valid.
+	 */
+	private Pair<String, Boolean> checkForValidPath(Supplement supplement) {
+		String localUri = supplement.getUri();
+		String remoteUri = supplement.getRemoteUri();
+		if (validString(localUri) && uriExist(localUri)) {
+			return new Pair<String, Boolean>(localUri, true);
+		} else {
+			if (validString(remoteUri)) {
+				return new Pair<String, Boolean>(getString(R.string.remote_database) + remoteUri, false);
+			}
+		}
+		return new Pair<String, Boolean>(null, false);
 	}
 
 	@Override
@@ -248,16 +282,16 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 		}
 	}
 
-//	private boolean uriExist(final String uriString) {
-//		Uri uri = Uri.parse(uriString);
-//		String uriPath = MediaResolver.getPath(mActivity, uri);
-//		File uriAsFile = new File(uriPath);
-//		return uriAsFile.exists();
-//	}
-//
-//	private boolean validString(final String string) {
-//		return string != null && string.length() > 0;
-//	}
+	private boolean uriExist(final String uriString) {
+		Uri uri = Uri.parse(uriString);
+		String uriPath = MediaResolver.getPath(mActivity, uri);
+		File uriAsFile = new File(uriPath);
+		return uriAsFile.exists();
+	}
+
+	private boolean validString(final String string) {
+		return string != null && string.length() > 0;
+	}
 //
 //	private void download(final Supplement supplement) {
 //		FileDownloader.downloadFile(mActivity, supplement.getRemoteUri(), new FileDownloader.OnFileDownloadCompleteListener() {

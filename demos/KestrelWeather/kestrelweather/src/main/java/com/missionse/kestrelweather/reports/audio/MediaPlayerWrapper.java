@@ -22,7 +22,7 @@ public class MediaPlayerWrapper {
 	private TextView mCurrentTextView;
 	private SeekBar mSeekBar;
 	private OnMediaPlayerEventListener mCompleteListener;
-	private Uri mCurrentMediaUri;
+	private Object mCurrentMediaUri;
 	private boolean mNewMediaSelected = false;
 	private int mSeekResumePosition = 0;
 	private Handler mHandler = new Handler();
@@ -113,7 +113,27 @@ public class MediaPlayerWrapper {
 
 			try {
 				mMediaPlayer.reset();
-				mMediaPlayer.setDataSource(context, mCurrentMediaUri);
+				mMediaPlayer.setDataSource(context, (Uri)mCurrentMediaUri);
+				mMediaPlayer.prepare();
+			} catch (Exception exception) {
+				Log.e(TAG, "Unable to prepare media.", exception);
+			}
+		}
+	}
+
+	/**
+	 * Set the media source that will be playing.
+	 * @param context The current context.
+	 * @param uri The URI that represents the media to be played.
+	 */
+	public void setMediaSource(final String uri) {
+		mCurrentMediaUri = uri;
+		if (uri != null) {
+			mNewMediaSelected = true;
+
+			try {
+				mMediaPlayer.reset();
+				mMediaPlayer.setDataSource((String)mCurrentMediaUri);
 				mMediaPlayer.prepare();
 			} catch (Exception exception) {
 				Log.e(TAG, "Unable to prepare media.", exception);
