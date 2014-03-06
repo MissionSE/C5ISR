@@ -20,14 +20,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.missionse.imageviewer.ImageFragmentFactory;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
+import com.missionse.kestrelweather.database.util.MediaResolver;
+import com.missionse.kestrelweather.reports.utils.FileDownloader;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.reports.utils.SupplementRemovedListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.kestrelweather.util.SupplementBuilder;
+
+import java.io.File;
 
 /**
  * A fragment used to manage the photos attached to a report.
@@ -103,15 +108,15 @@ public class PhotoOverviewFragment extends Fragment implements SupplementRemoved
 			photoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-//					FragmentManager fragmentManager = getFragmentManager();
-//					if (fragmentManager != null) {
-//						File image = new File(MediaResolver.getPath(mActivity, mPhotoAdapter.getItem(position)));
-//						Fragment imageFragment = ImageFragmentFactory.createImageFragment(Uri.fromFile(image));
-//						fragmentManager.beginTransaction()
-//								.replace(R.id.content, imageFragment, "image_preview")
-//								.addToBackStack("image_preview")
-//								.commit();
-//					}
+					FragmentManager fragmentManager = getFragmentManager();
+					if (fragmentManager != null) {
+						File image = new File(MediaResolver.getPath(mActivity, Uri.parse(mPhotoAdapter.getItem(position).getUri())));
+						Fragment imageFragment = ImageFragmentFactory.createImageFragment(Uri.fromFile(image));
+						fragmentManager.beginTransaction()
+								.replace(R.id.content, imageFragment, "image_preview")
+								.addToBackStack("image_preview")
+								.commit();
+					}
 				}
 			});
 
@@ -204,35 +209,42 @@ public class PhotoOverviewFragment extends Fragment implements SupplementRemoved
 
 		if (mActivity != null) {
 			for (Supplement supplement : mActivity.getDatabaseAccessor().getPhotoSupplements(mReportId)) {
-				mPhotoAdapter.add(supplement);
+				String supplementLocalUri = supplement.getUri();
+				String supplementRemoteUri = supplement.getRemoteUri();
+				if (supplementLocalUri != null && supplementLocalUri.length() > 0 && uriExist(supplementLocalUri)) {
+					mPhotoAdapter.add(supplement);
+				} else if (supplementRemoteUri != null && supplementRemoteUri.length() > 0) {
+					download(supplement);
+				}
 			}
 		}
 	}
 
-//	private boolean uriExist(final String uriString) {
-//		Uri uri = Uri.parse(uriString);
-//		String uriPath = MediaResolver.getPath(mActivity, uri);
-//		File uriAsFile = new File(uriPath);
-//		return uriAsFile.exists();
-//	}
-//
-//	private void download(final Supplement supplement) {
-//		FileDownloader.downloadFile(mActivity, supplement.getRemoteUri(), new FileDownloader.OnFileDownloadCompleteListener() {
-//			@Override
-//			public void fileDownloadComplete(final Uri uri) {
-//				if (mActivity != null) {
-//					mActivity.runOnUiThread(new Runnable() {
-//						@Override
-//						public void run() {
-//							supplement.setUri(uri.toString());
-//							mActivity.getDatabaseAccessor().getSupplementTable().update(supplement);
-//							mPhotoAdapter.add(uri);
-//						}
-//					});
-//				}
-//			}
-//		});
-//	}
+	private boolean uriExist(final String uriString) {
+		Uri uri = Uri.parse(uriString);
+		String uriPath = MediaResolver.getPath(mActivity, uri);
+		File uriAsFile = new File(uriPath);
+		return uriAsFile.exists();
+	}
+
+	private void download(final Supplement supplement) {
+		String remoteUrl = getString(R.string.remote_database) + supplement.getRemoteUri();
+		FileDownloader.downloadFile(mActivity, remoteUrl, new FileDownloader.OnFileDownloadCompleteListener() {
+			@Override
+			public void fileDownloadComplete(final Uri uri) {
+				if (mActivity != null) {
+					mActivity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							supplement.setUri(uri.toString());
+							mActivity.getDatabaseAccessor().getSupplementTable().update(supplement);
+							mPhotoAdapter.add(supplement);
+						}
+					});
+				}
+			}
+		});
+	}
 
 	@Override
 	public void supplementRemoved(final Supplement supplement) {
