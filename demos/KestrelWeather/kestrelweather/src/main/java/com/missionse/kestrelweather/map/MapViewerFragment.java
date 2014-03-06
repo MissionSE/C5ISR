@@ -45,12 +45,16 @@ public class MapViewerFragment extends MapFragment {
 	}
 
 	private void setUpMap() {
-		mMarkersAdapter = new ObservationCalloutMarkersAdapter(getActivity(), mMap);
+		KestrelWeatherActivity activity = (KestrelWeatherActivity) getActivity();
 
-		DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor();
-		ReportTable reportTable = databaseAccessor.getReportTable();
-		List<Report> reports = reportTable.queryForAll();
-		mMarkersAdapter.setData(reports);
+		if (activity != null) {
+			mMarkersAdapter = new ObservationCalloutMarkersAdapter(activity, mMap);
+
+			DatabaseAccessor databaseAccessor = activity.getDatabaseAccessor();
+			ReportTable reportTable = databaseAccessor.getReportTable();
+			List<Report> reports = reportTable.queryForAll();
+			mMarkersAdapter.setData(reports);
+		}
 
 		if (mMapLoadedListener != null) {
 			mMapLoadedListener.mapLoaded(mMap);

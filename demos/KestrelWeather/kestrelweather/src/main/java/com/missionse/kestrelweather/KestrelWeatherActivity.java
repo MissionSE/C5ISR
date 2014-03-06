@@ -56,7 +56,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	private TextView mDrawerCountFooter;
 	private TextView mDrawerTimestampFooter;
 	private SharedPreferences mSharedPreferences;
-	private boolean onMap = false;
+	private boolean mOnMap = false;
 
 	/**
 	 * Constructor.
@@ -210,8 +210,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	 */
 	public void updateDrawerFooterTimeInformation() {
 		if (mDrawerTimestampFooter != null) {
-			mDrawerTimestampFooter.setText(getResources().getString(R.string.drawer_footer_time) + " " +
-					DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(new DateTime()));
+			mDrawerTimestampFooter.setText(getResources().getString(R.string.drawer_footer_time) + " "
+					+ DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(new DateTime()));
 		}
 	}
 
@@ -246,7 +246,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		fragmentManager.beginTransaction()
 				.replace(R.id.content, mapViewerFragment, "map")
 				.commit();
-		onMap = true;
+		mOnMap = true;
 	}
 
 	private void displayCreateReport() {
@@ -256,7 +256,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (kestrelConnectorFragment == null) {
 			kestrelConnectorFragment = new KestrelConnectorFragment();
 		}
-		if (onMap) {
+		if (mOnMap) {
 			fragmentManager.beginTransaction()
 					.replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
 					.commit();
@@ -269,7 +269,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 					.commit();
 		}
 
-		onMap = false;
+		mOnMap = false;
 	}
 
 	private void displayReportSync() {
@@ -279,7 +279,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (reportDraftFragment == null) {
 			reportDraftFragment = new ReportDraftFragment();
 		}
-		if (onMap) {
+		if (mOnMap) {
 			fragmentManager.beginTransaction()
 					.replace(R.id.content, reportDraftFragment, "report_sync")
 					.commit();
@@ -292,7 +292,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 					.commit();
 		}
 
-		onMap = false;
+		mOnMap = false;
 	}
 
 	private void displayReportDatabase() {
@@ -302,7 +302,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (reportDatabaseFragment == null) {
 			reportDatabaseFragment = new ReportDatabaseFragment();
 		}
-		if (onMap) {
+		if (mOnMap) {
 			fragmentManager.beginTransaction()
 					.replace(R.id.content, reportDatabaseFragment, "report_database")
 					.commit();
@@ -315,7 +315,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 					.commit();
 		}
 
-		onMap = false;
+		mOnMap = false;
 	}
 
 	@Override
