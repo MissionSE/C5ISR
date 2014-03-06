@@ -1,4 +1,4 @@
-package com.missionse.kestrelweather.database.util;
+package com.missionse.kestrelweather.util;
 
 import android.annotation.TargetApi;
 import android.content.Context;
