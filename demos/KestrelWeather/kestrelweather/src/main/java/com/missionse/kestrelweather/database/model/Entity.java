@@ -171,7 +171,7 @@ public class Entity {
 	 * This was needed to support both long dates formatted in milliseconds from epoch
 	 * as well as string gmt format.
 	 */
-	private long parseDate(JsonElement element) {
+	protected long parseDate(JsonElement element) {
 		long retValue = DateTime.now().getMillis();
 		if (element != null) {
 			try {

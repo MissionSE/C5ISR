@@ -151,6 +151,8 @@ public class DatabasePuller implements Runnable {
 		report.setRemoteId(report.getId());
 		report.setId(0);
 		report.setDirty(false);
+		report.setDraft(false);
+		report.setRead(false);
 
 		Log.d(TAG, "parse kestrelweather...");
 		final KestrelWeather kestrelWeather = new KestrelWeather();
@@ -200,12 +202,15 @@ public class DatabasePuller implements Runnable {
 	private void packReportSupplement(Report report, SupplementType type, JsonArray jsonArray) {
 		if (jsonArray != null) {
 			for (JsonElement jElem : jsonArray) {
-				Supplement supplement = new Supplement();
-				supplement.setType(type);
-				supplement.setRemoteUri(mRemoteUrl + jElem.getAsString());
-				supplement.setDirty(false);
-				supplement.setReport(report);
-				mAccessor.getSupplementTable().create(supplement);
+				JsonObject jsonObject = jElem.getAsJsonObject();
+				if (jsonObject != null) {
+					Supplement supplement = new Supplement();
+					supplement.setType(type);
+					supplement.setDirty(false);
+					supplement.setReport(report);
+					supplement.populate(jsonObject);
+					mAccessor.getSupplementTable().create(supplement);
+				}
 			}
 		}
 	}

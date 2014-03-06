@@ -8,6 +8,8 @@ import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeath
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 /**
@@ -82,4 +84,8 @@ public interface DatabaseAccessor {
 	 * @return List of supplements that are of type SupplementType.AUDIO.
 	 */
 	List<Supplement> getAudioSupplements(int reportId);
+
+	DateTime getLastSyncedTime();
+
+	void setLastSyncedTime(DateTime time);
 }

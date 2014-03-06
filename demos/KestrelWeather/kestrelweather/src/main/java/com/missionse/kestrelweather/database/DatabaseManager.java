@@ -16,6 +16,8 @@ import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTab
 import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.UserSettingsTable;
 
+import org.joda.time.DateTime;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -102,6 +104,20 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 		UserSettings settings = createSettingsIfNeeded();
 		if (latestEvent != null && latestEvent.length() > 0) {
 			settings.setLatestEvent(latestEvent);
+			getUserSettingsTable().update(settings);
+		}
+	}
+
+	@Override
+	public DateTime getLastSyncedTime() {
+		return createSettingsIfNeeded().getLastSynced();
+	}
+
+	@Override
+	public void setLastSyncedTime(DateTime time) {
+		UserSettings settings = createSettingsIfNeeded();
+		if (time != null) {
+			settings.setLastSynced(time);
 			getUserSettingsTable().update(settings);
 		}
 	}

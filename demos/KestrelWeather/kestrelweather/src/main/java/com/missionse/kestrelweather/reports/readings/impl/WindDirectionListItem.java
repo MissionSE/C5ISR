@@ -30,7 +30,7 @@ public class WindDirectionListItem implements ReadingsListItem {
 
 	@Override
 	public String getReading() {
-		return Integer.toString(mReport.getKestrelWeather().getWindDirection());
+		return Float.toString(mReport.getKestrelWeather().getWindDirection());
 	}
 
 	@Override

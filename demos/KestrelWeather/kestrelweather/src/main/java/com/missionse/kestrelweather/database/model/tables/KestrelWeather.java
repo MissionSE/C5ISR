@@ -32,7 +32,7 @@ public class KestrelWeather extends Entity {
 	private float mWindSpeed;
 
 	@DatabaseField(columnName = "winddirection")
-	private int mWindDirection;
+	private float mWindDirection;
 
 	@DatabaseField(columnName = "windchill")
 	private float mWindChill;
@@ -57,7 +57,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Getter.
-	 * @return The dew point.
+	 * @return The dew point in degrees Celsius.
 	 */
 	public float getDewPoint() {
 		return mDewPoint;
@@ -65,7 +65,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Setter.
-	 * @param dewPoint The dewPoint.
+	 * @param dewPoint The dewPoint in degrees Celsius.
 	 */
 	public void setDewPoint(float dewPoint) {
 		mDewPoint = dewPoint;
@@ -89,7 +89,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Getter.
-	 * @return The humidity.
+	 * @return The humidity in percent. e.g 100%
 	 */
 	public int getHumidity() {
 		return mHumidity;
@@ -97,7 +97,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Setter.
-	 * @param humidity The humidity.
+	 * @param humidity The humidity in percent. e.g 100%
 	 */
 	public void setHumidity(int humidity) {
 		mHumidity = humidity;
@@ -105,7 +105,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Getter.
-	 * @return The pressure.
+	 * @return The pressure in hPa units.
 	 */
 	public float getPressure() {
 		return mPressure;
@@ -113,7 +113,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Setter.
-	 * @param pressure The pressure.
+	 * @param pressure The pressure in hPa units.
 	 */
 	public void setPressure(float pressure) {
 		mPressure = pressure;
@@ -121,7 +121,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Getter.
-	 * @return The pressure trend.
+	 * @return The pressure trend direction in numerical format.
 	 */
 	public int getPressureTrend() {
 		return mPressureTrend;
@@ -129,7 +129,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Setter.
-	 * @param pressureTrend The pressure trend.
+	 * @param pressureTrend The pressure trend direction in numerical format
 	 */
 	public void setPressureTrend(int pressureTrend) {
 		mPressureTrend = pressureTrend;
@@ -153,7 +153,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Getter.
-	 * @return The wind chill.
+	 * @return The wind chill in degrees celsius.
 	 */
 	public float getWindChill() {
 		return mWindChill;
@@ -161,7 +161,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Setter.
-	 * @param windChill The wind chill.
+	 * @param windChill The wind chill in degrees celsius.
 	 */
 	public void setWindChill(float windChill) {
 		mWindChill = windChill;
@@ -169,15 +169,15 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Getter.
-	 * @return The wind direction.
+	 * @return The wind direction in degrees (meteorological).
 	 */
-	public int getWindDirection() {
+	public float getWindDirection() {
 		return mWindDirection;
 	}
 
 	/**
 	 * Setter.
-	 * @param windDirection The wind direction.
+	 * @param windDirection The wind direction in degrees (meteorological).
 	 */
 	public void setWindDirection(int windDirection) {
 		mWindDirection = windDirection;
@@ -185,7 +185,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Getter.
-	 * @return The wind speed.
+	 * @return The wind speed in mps.
 	 */
 	public float getWindSpeed() {
 		return mWindSpeed;
@@ -193,7 +193,7 @@ public class KestrelWeather extends Entity {
 
 	/**
 	 * Setter.
-	 * @param windSpeed The wind speed.
+	 * @param windSpeed The wind speed in mps.
 	 */
 	public void setWindSpeed(float windSpeed) {
 		mWindSpeed = windSpeed;
@@ -208,7 +208,7 @@ public class KestrelWeather extends Entity {
 		map.put("pressuretrend", Integer.toString(mPressureTrend));
 		map.put("heatindex", Float.toString(mHeatIndex));
 		map.put("windspeed", Float.toString(mWindSpeed));
-		map.put("winddirection", Integer.toString(mWindDirection));
+		map.put("winddirection", Float.toString(mWindDirection));
 		map.put("windchill", Float.toString(mWindChill));
 		map.put("dewpoint", Float.toString(mDewPoint));
 

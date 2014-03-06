@@ -28,6 +28,12 @@ public class Report extends Entity implements ClusterItem {
 	@DatabaseField(columnName = "longitude")
 	private double mLongitude;
 
+	@DatabaseField(columnName = "draft")
+	private boolean mDraft;
+
+	@DatabaseField(columnName = "read")
+	private boolean mRead;
+
 	@DatabaseField(foreign = true, canBeNull = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	private KestrelWeather mKestrelWeather;
 
@@ -45,10 +51,13 @@ public class Report extends Entity implements ClusterItem {
 	 */
 	public Report() {
 		mUserName = "";
+		mTitle = "";
 		mLatitude = 0;
 		mLongitude = 0;
 		mKestrelWeather = null;
 		mNotes = null;
+		mDraft = false;
+		mRead = false;
 	}
 
 	/**
@@ -170,6 +179,7 @@ public class Report extends Entity implements ClusterItem {
 		map.put("userid", mUserName);
 		map.put("latitude", Double.toString(mLatitude));
 		map.put("longitude", Double.toString(mLongitude));
+		map.put("title", mTitle);
 
 		return map;
 	}
@@ -209,4 +219,35 @@ public class Report extends Entity implements ClusterItem {
 		return new LatLng(mLatitude, mLongitude);
 	}
 
+	/**
+	 * Determine if this report is a draft.
+	 * @return true if the report is a draft.
+	 */
+	public boolean isDraft() {
+		return mDraft;
+	}
+
+	/**
+	 * Set if this report should be a draft of not.
+ 	 * @param draft true if the report is a draft.
+	 */
+	public void setDraft(boolean draft) {
+		mDraft = draft;
+	}
+
+	/**
+	 * Determine if this report has been read.
+	 * @return true if the report has been read.
+	 */
+	public boolean hasBeenRead() {
+		return mRead;
+	}
+
+	/**
+	 * Set if this report should read.
+	 * @param read true if the report is has been read.
+	 */
+	public void setRead(boolean read) {
+		mRead = read;
+	}
 }

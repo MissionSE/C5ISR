@@ -111,7 +111,7 @@ public class ObservationCallout extends FrameLayout {
 		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_bottom_left_icon);
 
 		//TODO convert value with respect to unit
-		value.setText(Integer.toString(mReport.getKestrelWeather().getWindDirection()));
+		value.setText(Float.toString(mReport.getKestrelWeather().getWindDirection()));
 		unit.setText("°");
 		icon.setImageResource(R.drawable.ic_wind_direction);
 

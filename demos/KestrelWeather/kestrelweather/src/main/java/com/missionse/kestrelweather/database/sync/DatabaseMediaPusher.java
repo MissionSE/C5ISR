@@ -1,7 +1,6 @@
 package com.missionse.kestrelweather.database.sync;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -11,9 +10,7 @@ import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
 import com.missionse.kestrelweather.database.util.IonUtil;
-import com.missionse.kestrelweather.database.util.MediaResolver;
-
-import java.io.File;
+import com.missionse.kestrelweather.database.util.UploadContainer;
 
 /**
  * Runnable to push media files to the database.
@@ -25,7 +22,7 @@ public class DatabaseMediaPusher implements Runnable {
 
 	/**
 	 * Constructor.
-	 * @param context The application context.
+	 * @param context The current context.
 	 * @param accessor Instance of DatabaseAccessor.
 	 */
 	public DatabaseMediaPusher(Context context, DatabaseAccessor accessor) {
@@ -50,28 +47,20 @@ public class DatabaseMediaPusher implements Runnable {
 		}
 	}
 
-	private void syncSupplement(Supplement supplement, Report report) {
-		Uri mediaUri = Uri.parse(supplement.getUri());
-		String mediaPath = MediaResolver.getPath(mContext, mediaUri);
-		Log.d(TAG, "Push Media path is set too: " + mediaPath);
-		File media = new File(mediaPath);
-		int remoteId = report.getRemoteId();
-		push(media, remoteId, supplement.getId());
-	}
-
-	private void push(final File media, final int remoteId, final int supplementId) {
-		IonUtil.uploadMedia(mContext, remoteId, media,
-				new FutureCallback<JsonObject>() {
-					@Override
-					public void onCompleted(Exception e, JsonObject result) {
-						if (e == null) {
-							Log.d(TAG, "Received new media path: " + result.toString());
-							flipDirtyFlag(supplementId);
-						} else {
-							Log.d(TAG, "Failed to upload media file...", e);
-						}
+	private void syncSupplement(final Supplement supplement, final Report report) {
+		UploadContainer container = new UploadContainer(mContext, supplement, report.getRemoteId(),
+			new FutureCallback<JsonObject>() {
+				@Override
+				public void onCompleted(Exception e, JsonObject result) {
+					if (e == null) {
+						Log.d(TAG, "Received new media path: " + result.toString());
+						flipDirtyFlag(supplement.getId());
+					} else {
+						Log.d(TAG, "Failed to upload media file...", e);
 					}
-				});
+				}
+			});
+		IonUtil.uploadMedia(container);
 	}
 
 	private void flipDirtyFlag(final int id) {

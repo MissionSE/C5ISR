@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather.database.model.tables;
 
+import com.google.gson.JsonObject;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -152,5 +153,18 @@ public class Supplement extends Entity {
 	 */
 	public void setDate(DateTime date) {
 		mDate = date;
+	}
+
+	@Override
+	public void populate(JsonObject json) {
+		super.populate(json);
+
+		String filename = ((json.get("filename") == null ? "" : json.get("filename").getAsString() ));
+		long size = ((json.get("size") == null ? 0L : json.get("size").getAsLong()));
+		long timeInMilli = parseDate(json.get("date"));
+
+		setFileName(filename);
+		setSize(size);
+		setDate(new DateTime(timeInMilli));
 	}
 }
