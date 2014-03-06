@@ -61,8 +61,8 @@ public class SyncService extends Service implements SyncStatusListener {
 		if (notificationsEnabled && mSyncedReportCount > 0) {
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
 					.setSmallIcon(R.drawable.ic_launcher)
-					.setContentTitle("Sync complete.")
-					.setContentText(mSyncedReportCount + " report(s) synced.");
+					.setContentTitle(getString(R.string.notification_title))
+					.setContentText(getResources().getQuantityString(R.plurals.notification_content, mSyncedReportCount));
 			builder.setAutoCancel(true);
 			Intent resultIntent = new Intent(this, KestrelWeatherActivity.class);
 

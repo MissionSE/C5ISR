@@ -47,8 +47,11 @@
 	<string name="drawer_create_report">CREATE</string>
 	<string name="drawer_drafts">DRAFT</string>
 	<string name="drawer_report_database">VIEW</string>
-	<string name="drawer_footer_count_none">No unsynced reports</string>
-	<string name="drawer_footer_count">unsynced report(s)</string>
+	<plurals name="drawer_footer_unsynced_count">
+		<item quantity="zero">No unsynced local reports</item>
+		<item quantity="one">1 unsynced local report</item>
+		<item quantity="other">%d unsynced local reports</item>
+	</plurals>
 	<string name="drawer_footer_no_time">Last synced: Unknown</string>
 	<string name="drawer_footer_time">Last synced:</string>
 
@@ -158,6 +161,13 @@
 	<!-- Fragment: Report Audio -->
 	<string name="default_time">00:00</string>
 	<string name="no_audio">No audio attached.</string>
+
+	<!-- Notification -->
+	<string name="notification_title">Sync complete.</string>
+	<plurals name="notification_content">
+		<item quantity="one">1 report synced.</item>
+		<item quantity="other">%d reports synced.</item>
+	</plurals>
 
 	<!-- Time -->
 	<string name="secAbbr">sec</string>

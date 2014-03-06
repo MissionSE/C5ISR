@@ -217,7 +217,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		}
 
 		if (mDrawerCountFooter != null) {
-			mDrawerCountFooter.setText(unsyncedItemCount + " " + getResources().getString(R.string.drawer_footer_count));
+			mDrawerCountFooter.setText(getResources().getQuantityString(R.plurals.drawer_footer_unsynced_count, unsyncedItemCount));
 			if (unsyncedItemCount > 0) {
 				mDrawerCountFooter.setTextColor(getResources().getColor(R.color.holo_red_light));
 			} else {
@@ -228,7 +228,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 	private void updateDrawerFooterTimeInformation() {
 		if (mDrawerTimestampFooter != null) {
-			mDrawerTimestampFooter.setText(getResources().getString(R.string.drawer_footer_time) + " "
+			mDrawerTimestampFooter.setText(getString(R.string.drawer_footer_time) + " "
 				+ DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(mDatabaseManager.getLastSyncedTime()));
 		}
 	}
