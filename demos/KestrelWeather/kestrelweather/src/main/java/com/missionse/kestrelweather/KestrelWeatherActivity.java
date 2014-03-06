@@ -186,7 +186,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		addDrawerEventListener(new DrawerLayout.DrawerListener() {
 			@Override
 			public void onDrawerSlide(final View drawerView, final float slideOffset) {
-
 			}
 
 			@Override
@@ -197,12 +196,10 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 			@Override
 			public void onDrawerClosed(final View drawerView) {
-
 			}
 
 			@Override
 			public void onDrawerStateChanged(final int newState) {
-
 			}
 		});
 	}
@@ -217,7 +214,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		}
 
 		if (mDrawerCountFooter != null) {
-			mDrawerCountFooter.setText(getResources().getQuantityString(R.plurals.drawer_footer_unsynced_count, unsyncedItemCount));
+			mDrawerCountFooter.setText(getResources().getQuantityString(R.plurals.drawer_footer_unsynced_count, unsyncedItemCount,
+				unsyncedItemCount));
 			if (unsyncedItemCount > 0) {
 				mDrawerCountFooter.setTextColor(getResources().getColor(R.color.holo_red_light));
 			} else {
