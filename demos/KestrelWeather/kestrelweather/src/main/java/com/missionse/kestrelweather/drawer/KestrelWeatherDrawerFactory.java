@@ -9,6 +9,7 @@ import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigura
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer.DrawerType;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleItem;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleNumberedItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class KestrelWeatherDrawerFactory {
 	public static final int MAP_OVERVIEW = 101;
 	public static final int CREATE_REPORT = 102;
 	public static final int REPORT_DRAFT = 103;
-	public static final int REPORT_DATABASE = 104;
+	public static final int REPORT_VIEW = 104;
 
 	private Context mContext;
 
@@ -69,16 +70,16 @@ public class KestrelWeatherDrawerFactory {
 		createItem.setBackgroundDrawable(R.drawable.drawer_create_background_selector, mContext);
 		createItem.setTextColorStateList(R.drawable.drawer_create_text_selector, mContext);
 		menu.add(createItem);
-		DrawerSimpleItem syncItem = DrawerSimpleItem.create(REPORT_DRAFT, mContext.getResources().getString(R.string.drawer_drafts),
-				0, true);
-		syncItem.setBackgroundDrawable(R.drawable.drawer_sync_background_selector, mContext);
-		syncItem.setTextColorStateList(R.drawable.drawer_sync_text_selector, mContext);
-		menu.add(syncItem);
-		DrawerSimpleItem databaseItem = DrawerSimpleItem.create(REPORT_DATABASE, mContext.getResources().
-				getString(R.string.drawer_report_database), 0, true);
-		databaseItem.setBackgroundDrawable(R.drawable.drawer_database_background_selector, mContext);
-		databaseItem.setTextColorStateList(R.drawable.drawer_database_text_selector, mContext);
-		menu.add(databaseItem);
+		DrawerSimpleNumberedItem draftItem = DrawerSimpleNumberedItem.create(REPORT_DRAFT,
+			mContext.getString(R.string.drawer_drafts), "0", 0, true);
+		draftItem.setBackgroundDrawable(R.drawable.drawer_sync_background_selector, mContext);
+		draftItem.setTextColorStateList(R.drawable.drawer_sync_text_selector, mContext);
+		menu.add(draftItem);
+		DrawerSimpleNumberedItem viewItem = DrawerSimpleNumberedItem.create(REPORT_VIEW,
+			mContext.getString(R.string.drawer_report_database), "0", 0, true);
+		viewItem.setBackgroundDrawable(R.drawable.drawer_database_background_selector, mContext);
+		viewItem.setTextColorStateList(R.drawable.drawer_database_text_selector, mContext);
+		menu.add(viewItem);
 
 		for (DrawerItem item : menu) {
 			adapter.add(item);

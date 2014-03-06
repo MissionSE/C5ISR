@@ -34,6 +34,7 @@ import com.missionse.kestrelweather.service.AlarmReceiver;
 import com.missionse.kestrelweather.service.SyncService;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleNumberedItem;
 
 import org.joda.time.format.DateTimeFormat;
 
@@ -48,6 +49,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	private static final boolean LOG_DB = false;
 
 	private static final int MILLIS_PER_MIN = 1000 * 60;
+	private static final int MAX_REPORT_COUNT = 99;
 
 	private KestrelWeatherDrawerFactory mDrawerFactory;
 	private TiledMap mTiledMap;
@@ -134,6 +136,9 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			// do a sync when starting.
 			Intent syncServiceStart = new Intent(this, SyncService.class);
 			startService(syncServiceStart);
+		} else {
+			Intent syncServiceStop = new Intent(this, SyncService.class);
+			stopService(syncServiceStop);
 		}
 	}
 
@@ -190,6 +195,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 			@Override
 			public void onDrawerOpened(final View drawerView) {
+				updateDraftCount();
+				updateReportTotalCount();
 				updateDrawerFooterCountInformation();
 				updateDrawerFooterTimeInformation();
 			}
@@ -202,6 +209,45 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			public void onDrawerStateChanged(final int newState) {
 			}
 		});
+	}
+
+	private void updateDraftCount() {
+		for (int index = 0; index < getLeftDrawerAdapter().getCount(); index++) {
+			if (getLeftDrawerAdapter().getItem(index).getId() == KestrelWeatherDrawerFactory.REPORT_DRAFT) {
+				DrawerSimpleNumberedItem draftItem = (DrawerSimpleNumberedItem) getLeftDrawerAdapter().getItem(index);
+
+				List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
+				int draftReportCount = 0;
+				for (Report report : allReports) {
+					if (report.isDraft()) {
+						draftReportCount++;
+					}
+				}
+
+				draftItem.setNumber(String.valueOf(draftReportCount));
+				getLeftDrawerAdapter().notifyDataSetChanged();
+			}
+		}
+	}
+
+	private void updateReportTotalCount() {
+		for (int index = 0; index < getLeftDrawerAdapter().getCount(); index++) {
+			if (getLeftDrawerAdapter().getItem(index).getId() == KestrelWeatherDrawerFactory.REPORT_VIEW) {
+				DrawerSimpleNumberedItem draftItem = (DrawerSimpleNumberedItem) getLeftDrawerAdapter().getItem(index);
+
+				List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
+
+				String printableCount;
+				if (allReports.size() > MAX_REPORT_COUNT) {
+					printableCount = "99+";
+				} else {
+					printableCount = String.valueOf(allReports.size());
+				}
+
+				draftItem.setNumber(printableCount);
+				getLeftDrawerAdapter().notifyDataSetChanged();
+			}
+		}
 	}
 
 	private void updateDrawerFooterCountInformation() {
@@ -241,7 +287,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			displayCreateReport();
 		} else if (index == KestrelWeatherDrawerFactory.REPORT_DRAFT) {
 			displayReportDrafts();
-		} else if (index == KestrelWeatherDrawerFactory.REPORT_DATABASE) {
+		} else if (index == KestrelWeatherDrawerFactory.REPORT_VIEW) {
 			displayReportDatabase();
 		}
 	}
