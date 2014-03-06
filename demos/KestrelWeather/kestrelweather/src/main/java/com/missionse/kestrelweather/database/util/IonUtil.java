@@ -55,7 +55,13 @@ public final class IonUtil {
 				res.getString(R.string.remote_database));
 		Log.d(TAG, "Pulling latest with latestCode:" + latestId + " from URL:" + remoteUrl);
 
-		Ion.with(context, remoteUrl + latestId).asJsonObject().setCallback(callback);
+		try {
+			Ion.with(context, remoteUrl + latestId).asJsonObject().setCallback(callback).get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

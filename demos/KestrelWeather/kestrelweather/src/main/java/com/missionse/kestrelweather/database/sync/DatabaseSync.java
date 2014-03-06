@@ -3,7 +3,6 @@ package com.missionse.kestrelweather.database.sync;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 
 /**
@@ -24,11 +23,12 @@ public class DatabaseSync extends AsyncTask<Boolean, Void, Void> implements Sync
 
 	/**
 	 * Constructor.
-	 * @param activity Instance of KestrelWeatherActivity.
+	 * @param databaseAccessor construct through which we can access the SQLite database
+	 * @param context the application context
 	 */
-	public DatabaseSync(KestrelWeatherActivity activity) {
-		mAccessor = activity.getDatabaseAccessor();
-		mContext = activity;
+	public DatabaseSync(final DatabaseAccessor databaseAccessor, final Context context) {
+		mAccessor = databaseAccessor;
+		mContext = context;
 	}
 
 	@Override

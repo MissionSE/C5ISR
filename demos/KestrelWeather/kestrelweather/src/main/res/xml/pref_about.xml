@@ -3,7 +3,8 @@
 	<Preference
 		android:title="Build Version"
 		android:key="@string/key_about_version"
-		android:summary=""/>
+		android:summary=""
+		android:defaultValue="0"/>
 	<Preference
 		android:title="Open Source Licenses"
 		android:key="@string/key_about_open_source_licenses"

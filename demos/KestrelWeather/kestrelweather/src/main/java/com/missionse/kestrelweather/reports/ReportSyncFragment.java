@@ -129,9 +129,11 @@ public class ReportSyncFragment extends Fragment implements SyncStatusListener {
 					public void onClick(final View view) {
 						try {
 							KestrelWeatherActivity activity = (KestrelWeatherActivity) getActivity();
-							DatabaseSync sync = new DatabaseSync(activity);
-							sync.setSyncCompleteListener(ReportSyncFragment.this);
-							sync.execute(true, true, true);
+							if (activity != null) {
+								DatabaseSync sync = new DatabaseSync(activity.getDatabaseAccessor(), activity);
+								sync.setSyncCompleteListener(ReportSyncFragment.this);
+								sync.execute(true, true, true);
+							}
 						} catch (ClassCastException e) {
 							Log.e(TAG, "Unable to cast activity.", e);
 						}

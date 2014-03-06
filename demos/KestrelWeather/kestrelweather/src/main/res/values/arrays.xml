@@ -55,28 +55,4 @@
 		<item>@string/cardinal</item>
 		<item>@string/degrees</item>
 	</string-array>
-	<string-array name="widget_update_interval">
-		<item>30 minutes</item>
-		<item>1 hour</item>
-		<item>2 hours</item>
-		<item>3 hours</item>
-		<item>4 hours</item>
-		<item>6 hours</item>
-		<item>12 hours</item>
-		<item>18 hours</item>
-		<item>24 hours</item>
-		<item>Never</item>
-	</string-array>
-	<string-array name="widget_update_interval_values">
-		<item>0.5</item>
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-		<item>4</item>
-		<item>6</item>
-		<item>12</item>
-		<item>18</item>
-		<item>24</item>
-		<item>100000</item>
-	</string-array>
 </resources>

@@ -69,7 +69,7 @@ public class KestrelWeatherDrawerFactory {
 		createItem.setBackgroundDrawable(R.drawable.drawer_create_background_selector, mContext);
 		createItem.setTextColorStateList(R.drawable.drawer_create_text_selector, mContext);
 		menu.add(createItem);
-		DrawerSimpleItem syncItem = DrawerSimpleItem.create(REPORT_SYNC, mContext.getResources().getString(R.string.drawer_sync_reports),
+		DrawerSimpleItem syncItem = DrawerSimpleItem.create(REPORT_SYNC, mContext.getResources().getString(R.string.drawer_drafts),
 				0, true);
 		syncItem.setBackgroundDrawable(R.drawable.drawer_sync_background_selector, mContext);
 		syncItem.setTextColorStateList(R.drawable.drawer_sync_text_selector, mContext);

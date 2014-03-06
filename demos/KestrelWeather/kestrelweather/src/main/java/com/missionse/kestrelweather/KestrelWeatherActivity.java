@@ -1,9 +1,14 @@
 package com.missionse.kestrelweather;
 
+import android.app.AlarmManager;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -23,6 +28,8 @@ import com.missionse.kestrelweather.map.TiledMap;
 import com.missionse.kestrelweather.preferences.SettingsActivity;
 import com.missionse.kestrelweather.reports.ReportDatabaseFragment;
 import com.missionse.kestrelweather.reports.ReportSyncFragment;
+import com.missionse.kestrelweather.service.AlarmReceiver;
+import com.missionse.kestrelweather.service.SyncService;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
 
@@ -34,10 +41,13 @@ import java.util.List;
 /**
  * Main activity for the Kestrel Weather application.
  */
-public class KestrelWeatherActivity extends DrawerActivity {
+public class KestrelWeatherActivity extends DrawerActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	private static final String TAG = KestrelWeatherActivity.class.getSimpleName();
 	private static final boolean LOG_DB = false;
+
+	private static final int MILLIS_PER_MIN = 1000 * 60;
+
 	private KestrelWeatherDrawerFactory mDrawerFactory;
 	private TiledMap mTiledMap;
 	private KestrelSimulator mKestrelSimulator;
@@ -45,6 +55,7 @@ public class KestrelWeatherActivity extends DrawerActivity {
 	private Toast mExitToast;
 	private TextView mDrawerCountFooter;
 	private TextView mDrawerTimestampFooter;
+	private SharedPreferences mSharedPreferences;
 
 	/**
 	 * Constructor.
@@ -84,6 +95,43 @@ public class KestrelWeatherActivity extends DrawerActivity {
 			DatabaseLogger.logReportTable(mDatabaseManager);
 			DatabaseLogger.logNoteTable(mDatabaseManager);
 			DatabaseLogger.logSupplementTable(mDatabaseManager);
+		}
+
+		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+		startSyncService();
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+		if (key.equals(getString(R.string.key_sync_frequency)) ||
+			key.equals(getString(R.string.key_sync_enabled))) {
+			startSyncService();
+		}
+	}
+
+	private void startSyncService() {
+		Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+		final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE,
+			intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.cancel(pendingIntent);
+
+		boolean syncEnabled = mSharedPreferences.getBoolean(getString(R.string.key_sync_enabled), true);
+		if (syncEnabled) {
+			float intervalInMinutes = Float.valueOf(mSharedPreferences.getString(getString(R.string.key_sync_frequency),
+				String.valueOf(getResources().getInteger(R.integer.default_data_sync_interval))));
+			Log.d(TAG, "Starting sync service on an interval of " + intervalInMinutes + " minutes...");
+			int intervalInMillis = (int) (intervalInMinutes * MILLIS_PER_MIN);
+
+			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), intervalInMillis, pendingIntent);
+
+			// Although we specify a "start time" of currentTimeMillis() (which is now) to the AlarmManager,
+			// the actual start time with an inexact repeating can be as long as the interval, so we should automatically
+			// do a sync when starting.
+			Intent syncServiceStart = new Intent(this, SyncService.class);
+			startService(syncServiceStart);
 		}
 	}
 

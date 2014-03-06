@@ -43,10 +43,10 @@
 	<string name="sync">Sync</string>
 
 	<!-- Navigation Drawer -->
-	<string name="drawer_overview">OVERVIEW</string>
+	<string name="drawer_overview">MAP</string>
 	<string name="drawer_create_report">CREATE</string>
-	<string name="drawer_sync_reports">SYNC</string>
-	<string name="drawer_report_database">DATABASE</string>
+	<string name="drawer_drafts">DRAFT</string>
+	<string name="drawer_report_database">VIEW</string>
 	<string name="drawer_footer_count_none">No unsynced reports</string>
 	<string name="drawer_footer_count">unsynced report(s)</string>
 	<string name="drawer_footer_no_time">Last synced: Unknown</string>

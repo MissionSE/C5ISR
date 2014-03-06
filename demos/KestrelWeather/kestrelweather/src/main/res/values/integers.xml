@@ -4,4 +4,7 @@
 	<integer name="max_title_length">20</integer>
 	<integer name="max_note_length">255</integer>
 
+	<!-- Data Sync Preferences -->
+	<integer name="default_data_sync_interval">180</integer>
+
 </resources>

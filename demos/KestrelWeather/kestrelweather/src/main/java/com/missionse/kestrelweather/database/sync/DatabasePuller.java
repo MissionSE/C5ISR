@@ -30,6 +30,7 @@ public class DatabasePuller implements Runnable {
 	private SyncStatusListener mListener;
 	private int mFetchSize = 0;
 	private int mCurrentFetch = 0;
+	private Object lock = new Object();
 
 
 	/**

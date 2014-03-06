@@ -1,6 +1,7 @@
 package com.missionse.kestrelweather.preferences;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -10,9 +11,12 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.missionse.kestrelweather.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -137,6 +141,24 @@ public class SettingsActivity extends PreferenceActivity {
 			// updated to reflect the new value, per the Android Design
 			// guidelines.
 			bindPreferenceSummaryToValue(findPreference(getString(R.string.key_sync_frequency)));
+
+			if (getActivity() != null) {
+				if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.key_developer), false)) {
+					ListPreference syncFrequency = (ListPreference) findPreference(getString(R.string.key_sync_frequency));
+					CharSequence[] normalEntries = syncFrequency.getEntries();
+					CharSequence[] normalEntryValues = syncFrequency.getEntryValues();
+
+					List<CharSequence> developerEntries = new ArrayList<CharSequence>();
+					developerEntries.add("15 seconds");
+					developerEntries.addAll(Arrays.asList(normalEntries));
+					List<CharSequence> developerEntryVaues = new ArrayList<CharSequence>();
+					developerEntryVaues.add("0.25");
+					developerEntryVaues.addAll(Arrays.asList(normalEntryValues));
+
+					syncFrequency.setEntries(developerEntries.toArray(new CharSequence[developerEntries.size()]));
+					syncFrequency.setEntryValues(developerEntryVaues.toArray(new CharSequence[developerEntryVaues.size()]));
+				}
+			}
 		}
 	}
 
@@ -144,6 +166,24 @@ public class SettingsActivity extends PreferenceActivity {
 	 * This fragment shows about preferences only.
 	 */
 	public static class AboutPreferenceFragment extends PreferenceFragment {
+		private int mDeveloperClickCount;
+		private Toast mDeveloperToast;
+		private static final int TAPS_TO_BE_A_DEVELOPER = 7;
+
+		@Override
+		public void onResume() {
+			super.onResume();
+			if (getActivity() != null) {
+				if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.key_developer), false)) {
+					mDeveloperClickCount = TAPS_TO_BE_A_DEVELOPER;
+				} else {
+					mDeveloperClickCount = -1;
+				}
+			}
+
+			mDeveloperToast = null;
+		}
+
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
@@ -157,6 +197,42 @@ public class SettingsActivity extends PreferenceActivity {
 				} catch (PackageManager.NameNotFoundException e) {
 					e.printStackTrace();
 				}
+
+				version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(final Preference preference) {
+						if (mDeveloperClickCount > 0) {
+							mDeveloperClickCount--;
+							if (mDeveloperClickCount == 0) {
+								SharedPreferences.Editor editor =
+									PreferenceManager.getDefaultSharedPreferences(preference.getContext()).edit();
+								editor.putBoolean(
+									getString(R.string.key_developer), true).commit();
+								if (mDeveloperToast != null) {
+									mDeveloperToast.cancel();
+								}
+								mDeveloperToast = Toast.makeText(getActivity(), R.string.developer_mode_enabled, Toast.LENGTH_SHORT);
+								mDeveloperToast.show();
+							} else if (mDeveloperClickCount > 0 && mDeveloperClickCount < (TAPS_TO_BE_A_DEVELOPER - 2)) {
+								if (mDeveloperToast != null) {
+									mDeveloperToast.cancel();
+								}
+								mDeveloperToast = Toast.makeText(getActivity(), getResources().getQuantityString(
+									R.plurals.developer_mode_toast, mDeveloperClickCount, mDeveloperClickCount),
+									Toast.LENGTH_SHORT);
+								mDeveloperToast.show();
+							}
+						} else if (mDeveloperClickCount < 0) {
+							if (mDeveloperToast != null) {
+								mDeveloperToast.cancel();
+							}
+							mDeveloperToast = Toast.makeText(getActivity(), R.string.developer_mode_already,
+								Toast.LENGTH_LONG);
+							mDeveloperToast.show();
+						}
+						return true;
+					}
+				});
 			}
 
 			Preference licenseInfo = findPreference(getString(R.string.key_about_open_source_licenses));
