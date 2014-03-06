@@ -1,7 +1,6 @@
 package com.missionse.kestrelweather.reports.audio;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +8,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
-import com.missionse.kestrelweather.reports.utils.UriAdapter;
+import com.missionse.kestrelweather.database.model.tables.Supplement;
+import com.missionse.kestrelweather.reports.utils.SupplementAdapter;
+
+import org.joda.time.DateTime;
 
 /**
  * An adapter used to display audio files.
  */
-public class AudioAdapter extends UriAdapter {
-
+public class AudioAdapter extends SupplementAdapter {
 	/**
 	 * Constructor.
 	 * @param context The current context.
@@ -33,19 +34,12 @@ public class AudioAdapter extends UriAdapter {
 		}
 
 		if (view != null) {
-			Cursor cursor = getCursor(getItem(position));
-			try {
-				if (cursor != null && cursor.moveToFirst()) {
-					setThumbnail(view);
-					setFileName(view, getFileName(cursor));
-					setFileDateModified(view, getFileDateModified(cursor));
-					setFileSize(view, getFileSize(cursor));
-				}
-			} finally {
-				if (cursor != null) {
-					cursor.close();
-				}
-			}
+			setThumbnail(view);
+
+			Supplement supplement = getItem(position);
+			setFileName(view, supplement.getFileName());
+			setFileSize(view, supplement.getSize());
+			setFileDateModified(view, supplement.getDate());
 		}
 
 		return view;
@@ -73,12 +67,12 @@ public class AudioAdapter extends UriAdapter {
 		}
 	}
 
-	private void setFileDateModified(final View view, final String date) {
+	private void setFileDateModified(final View view, final DateTime date) {
 		if (view != null) {
 			TextView fileDateView = (TextView) view.findViewById(R.id.report_item_file_date);
 			if (fileDateView != null) {
 				if (date != null) {
-					fileDateView.setText(date);
+					fileDateView.setText(getFormattedDate(date));
 				} else {
 					fileDateView.setText(getContext().getString(R.string.unknown));
 				}

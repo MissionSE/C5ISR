@@ -52,12 +52,23 @@ public final class ReportRemover {
 	}
 
 	/**
+	 * Removes a single supplement from the database.
+	 * @param databaseAccessor An accessor to the database.
+	 * @param supplement The supplement to remove from the database.
+	 * @return The number of items removed from the database.
+	 */
+	public static int removeSupplement(final DatabaseAccessor databaseAccessor, final Supplement supplement) {
+		SupplementTable supplementTable = databaseAccessor.getSupplementTable();
+		return supplementTable.delete(supplement);
+	}
+
+	/**
 	 * Removes all supplements for a report.
 	 * @param databaseAccessor An accessor to the database.
 	 * @param reportId The report associated with the supplements.
 	 * @return The number of items removed from the database.
 	 */
-	public static int removeSupplements(DatabaseAccessor databaseAccessor, int reportId) {
+	public static int removeSupplements(final DatabaseAccessor databaseAccessor, final int reportId) {
 		int supplementsRemoved = 0;
 
 		SupplementTable supplementTable = databaseAccessor.getSupplementTable();
@@ -69,28 +80,5 @@ public final class ReportRemover {
 		}
 
 		return supplementsRemoved;
-	}
-
-	/**
-	 * Removes all supplements for a report that match a specific URI.
-	 * @param databaseAccessor An accessor to the database.
-	 * @param uri The local uri of the supplements.
-	 * @param reportId The report associated with the supplements.
-	 * @return The number of items removed from the database.
-	 */
-	public static int removeSupplements(DatabaseAccessor databaseAccessor, String uri, int reportId) {
-		int itemsRemoved = 0;
-
-		SupplementTable supplementTable = databaseAccessor.getSupplementTable();
-		List<Supplement> supplementList = supplementTable.queryForAll();
-		for (Supplement supplement : supplementList) {
-			if (supplement.getReport().getId() == reportId) {
-				if (supplement.getUri().equals(uri)) {
-					itemsRemoved = supplementTable.delete(supplement);
-				}
-			}
-		}
-
-		return itemsRemoved;
 	}
 }

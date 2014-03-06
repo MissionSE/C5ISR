@@ -30,11 +30,10 @@ import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.util.MediaResolver;
-import com.missionse.kestrelweather.reports.utils.FileDownloader;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
-import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
-import com.missionse.kestrelweather.util.ReportBuilder;
+import com.missionse.kestrelweather.reports.utils.SupplementRemovedListener;
 import com.missionse.kestrelweather.util.ReportRemover;
+import com.missionse.kestrelweather.util.SupplementBuilder;
 
 import java.io.File;
 
@@ -123,7 +122,7 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 			mAudioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-					mPlayingUri = mAudioAdapter.getItem(position);
+//					mPlayingUri = mAudioAdapter.getItem(position);
 					mMediaControls.setVisibility(View.VISIBLE);
 					String uriPath = MediaResolver.getPath(mActivity, mPlayingUri);
 					File uriAsFile = new File(uriPath);
@@ -136,16 +135,16 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 				mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 				MediaMultiChoiceModeListener mediaMultiChoiceModeListener = new MediaMultiChoiceModeListener(
 						mActivity, mAudioList, mAudioAdapter);
-				mediaMultiChoiceModeListener.setUriRemovedListener(new UriRemovedListener() {
+				mediaMultiChoiceModeListener.setSupplementRemovedListener(new SupplementRemovedListener() {
 					@Override
-					public void uriRemoved(final Uri uri) {
-						if (mPlayingUri.equals(uri)) {
-							mPlayingUri = null;
-							mMediaControls.setVisibility(View.GONE);
-							onMediaPauseButtonPressed();
-						}
+					public void supplementRemoved(final Supplement supplement) {
+//						if (mPlayingUri.equals(uri)) {
+//							mPlayingUri = null;
+//							mMediaControls.setVisibility(View.GONE);
+//							onMediaPauseButtonPressed();
+//						}
 						if (mActivity != null) {
-							ReportRemover.removeSupplements(mActivity.getDatabaseAccessor(), uri.toString(), mReportId);
+							ReportRemover.removeSupplement(mActivity.getDatabaseAccessor(), supplement);
 						}
 					}
 				});
@@ -217,66 +216,66 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 		}
 	}
 
-	private void addPreventDuplicateEntry(Uri uri) {
+	private void addPreventDuplicateEntry(final Uri uri) {
 		if (!mAudioAdapter.contains(uri)) {
-			mAudioAdapter.add(uri);
-			createNewSupplement(uri.toString());
+			Supplement supplement = createNewSupplement(uri);
+			if (supplement != null) {
+				mAudioAdapter.add(supplement);
+			}
 		} else {
 			Toast.makeText(mActivity, mActivity.getString(R.string.already_exists), Toast.LENGTH_SHORT)
 					.show();
 		}
 	}
 
-	private void createNewSupplement(String uri) {
+	private Supplement createNewSupplement(final Uri uri) {
+		Supplement supplement = null;
 		if (mActivity != null) {
-			ReportBuilder.buildSupplement(mActivity.getDatabaseAccessor(), uri, mReportId, SupplementType.AUDIO);
+			supplement = SupplementBuilder.buildSupplement(mActivity.getDatabaseAccessor(), mActivity.getContentResolver(),
+					uri, mReportId, SupplementType.AUDIO);
 		}
+
+		return supplement;
 	}
 
 	private void populateAdapter() {
 		mAudioAdapter.clear();
 
-		for (Supplement supplement : mActivity.getDatabaseAccessor().getAudioSupplements(mReportId)) {
-			String localUri = supplement.getUri();
-			if (validString(localUri) && uriExist(localUri)) {
-				mAudioAdapter.add(Uri.parse(localUri));
-			} else {
-				String remoteUri = supplement.getRemoteUri();
-				if (validString(remoteUri)) {
-					download(supplement);
-				}
+		if (mActivity != null) {
+			for (Supplement supplement : mActivity.getDatabaseAccessor().getAudioSupplements(mReportId)) {
+				mAudioAdapter.add(supplement);
 			}
 		}
 	}
 
-	private boolean uriExist(final String uriString) {
-		Uri uri = Uri.parse(uriString);
-		String uriPath = MediaResolver.getPath(mActivity, uri);
-		File uriAsFile = new File(uriPath);
-		return uriAsFile.exists();
-	}
-
-	private boolean validString(final String string) {
-		return string != null && string.length() > 0;
-	}
-
-	private void download(final Supplement supplement) {
-		FileDownloader.downloadFile(mActivity, supplement.getRemoteUri(), new FileDownloader.OnFileDownloadCompleteListener() {
-			@Override
-			public void fileDownloadComplete(final Uri uri) {
-				if (mActivity != null) {
-					mActivity.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							supplement.setUri(uri.toString());
-							mActivity.getDatabaseAccessor().getSupplementTable().update(supplement);
-							mAudioAdapter.add(uri);
-						}
-					});
-				}
-			}
-		});
-	}
+//	private boolean uriExist(final String uriString) {
+//		Uri uri = Uri.parse(uriString);
+//		String uriPath = MediaResolver.getPath(mActivity, uri);
+//		File uriAsFile = new File(uriPath);
+//		return uriAsFile.exists();
+//	}
+//
+//	private boolean validString(final String string) {
+//		return string != null && string.length() > 0;
+//	}
+//
+//	private void download(final Supplement supplement) {
+//		FileDownloader.downloadFile(mActivity, supplement.getRemoteUri(), new FileDownloader.OnFileDownloadCompleteListener() {
+//			@Override
+//			public void fileDownloadComplete(final Uri uri) {
+//				if (mActivity != null) {
+//					mActivity.runOnUiThread(new Runnable() {
+//						@Override
+//						public void run() {
+//							supplement.setUri(uri.toString());
+//							mActivity.getDatabaseAccessor().getSupplementTable().update(supplement);
+//							mAudioAdapter.add(uri);
+//						}
+//					});
+//				}
+//			}
+//		});
+//	}
 
 	@Override
 	public void onDestroyView() {

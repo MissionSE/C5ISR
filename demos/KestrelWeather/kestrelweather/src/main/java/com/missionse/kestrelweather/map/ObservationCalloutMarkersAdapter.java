@@ -38,9 +38,8 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 
 	/**
 	 * Constructor.
-	 *
 	 * @param context the current context
-	 * @param map     the google map object
+	 * @param map the google map object
 	 */
 	public ObservationCalloutMarkersAdapter(Context context, GoogleMap map) {
 		super(context, map, R.layout.map_observation_callout);

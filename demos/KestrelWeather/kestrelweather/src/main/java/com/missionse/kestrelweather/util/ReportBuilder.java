@@ -1,11 +1,9 @@
 package com.missionse.kestrelweather.util;
 
 import com.missionse.kestrelweather.database.DatabaseAccessor;
-import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
 import com.missionse.kestrelweather.database.model.tables.OpenWeather;
 import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
@@ -26,7 +24,7 @@ public final class ReportBuilder {
 	 * @param longitude The longitude of the location where the report is being generated.
 	 * @return The id of the report created.
 	 */
-	public static int buildReport(final DatabaseAccessor databaseAccessor,
+	public static Report buildReport(final DatabaseAccessor databaseAccessor,
 			final KestrelWeather kestrelWeather, final OpenWeather openWeather,
 			final double latitude, final double longitude) {
 		ReportTable reportTable = databaseAccessor.getReportTable();
@@ -46,29 +44,8 @@ public final class ReportBuilder {
 		OpenWeatherTable openWeatherTable = databaseAccessor.getOpenWeatherTable();
 		openWeatherTable.create(openWeather);
 
-		//TODO: Creation should happen on affirmation, not before (i.e., when the user presses the Save button).
-		//TODO: When the above is fixed, hunt down where we notify the activity of a new unsynced report.
 		reportTable.create(report);
 
-		return report.getId();
-	}
-
-	/**
-	 * Create a Supplement entry into the database.
-	 * @param databaseAccessor An accessor to the database.
-	 * @param uri The string uri that points to the supplement.
-	 * @param reportId The database report id associated with the supplement.
-	 * @param type The type of supplement.
-	 * @return returns the database ID of the newly created supplement.
-	 */
-	public static int buildSupplement(final DatabaseAccessor databaseAccessor, final String uri,
-			final int reportId, final SupplementType type) {
-		Supplement supplement = new Supplement();
-		supplement.setType(type);
-		supplement.setUri(uri);
-		supplement.setReport(databaseAccessor.getReportById(reportId));
-		databaseAccessor.getSupplementTable().create(supplement);
-
-		return supplement.getId();
+		return report;
 	}
 }

@@ -4,8 +4,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +16,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
-import com.missionse.kestrelweather.reports.utils.UriAdapter;
+import com.missionse.kestrelweather.database.model.tables.Supplement;
+import com.missionse.kestrelweather.reports.utils.SupplementAdapter;
+
+import org.joda.time.DateTime;
 
 /**
  * Provides an adapter for a list of photos.
  */
-public class PhotoAdapter extends UriAdapter {
+public class PhotoAdapter extends SupplementAdapter {
+	private static final String TAG = PhotoAdapter.class.getSimpleName();
+
 	/**
 	 * Constructor.
 	 * @param context The current context.
@@ -36,31 +44,36 @@ public class PhotoAdapter extends UriAdapter {
 		}
 
 		if (view != null) {
-			Cursor cursor = getCursor(getItem(position));
+			Supplement supplement = getItem(position);
+			setFileName(view, supplement.getFileName());
+			setFileSize(view, supplement.getSize());
+			setFileDateModified(view, supplement.getDate());
+			setThumbnail(view, getThumbnail(supplement));
+		}
+		return view;
+	}
+
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	private Bitmap getThumbnail(final Supplement supplement) {
+		Bitmap thumbnail = null;
+
+		String localUri = supplement.getUri();
+		if (localUri != null && localUri.length() > 0) {
+			Cursor cursor = getContext().getContentResolver()
+					.query(Uri.parse(localUri), null, null, null, null, null);
 			try {
 				if (cursor != null && cursor.moveToFirst()) {
-					setThumbnail(view, getThumbnail(cursor));
-					setFileName(view, getFileName(cursor));
-					setFileDateModified(view, getFileDateModified(cursor));
-					setFileSize(view, getFileSize(cursor));
+					long id = getUriId(cursor);
+					if (id != -1) {
+						thumbnail = MediaStore.Images.Thumbnails.getThumbnail(
+								getContext().getContentResolver(), id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+					}
 				}
 			} finally {
 				if (cursor != null) {
 					cursor.close();
 				}
 			}
-		}
-		return view;
-	}
-
-	@TargetApi(Build.VERSION_CODES.KITKAT)
-	private Bitmap getThumbnail(final Cursor cursor) {
-		Bitmap thumbnail = null;
-
-		long id = getUriId(cursor);
-		if (id != -1) {
-			thumbnail = MediaStore.Images.Thumbnails.getThumbnail(
-					getContext().getContentResolver(), id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
 		}
 
 		return thumbnail;
@@ -79,6 +92,29 @@ public class PhotoAdapter extends UriAdapter {
 		}
 	}
 
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	protected long getUriId(final Cursor cursor) {
+		long uriId = -1;
+
+		int idIndex = cursor.getColumnIndex(DocumentsContract.Root.COLUMN_DOCUMENT_ID);
+		if (idIndex == -1) {
+			idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+		}
+		if (idIndex != -1) {
+			String uri = cursor.getString(idIndex);
+			if (uri != null) {
+				String[] uriSegments = uri.split(":");
+				try {
+					uriId = Long.parseLong(uriSegments[uriSegments.length - 1]);
+				} catch (NumberFormatException exception) {
+					Log.v(TAG, "Unable to get ID from URI: " + uri);
+				}
+			}
+		}
+
+		return uriId;
+	}
+
 	private void setFileName(final View view, final String fileName) {
 		if (view != null) {
 			TextView fileNameView = (TextView) view.findViewById(R.id.report_item_file_name);
@@ -92,19 +128,6 @@ public class PhotoAdapter extends UriAdapter {
 		}
 	}
 
-	private void setFileDateModified(final View view, final String date) {
-		if (view != null) {
-			TextView fileDateView = (TextView) view.findViewById(R.id.report_item_file_date);
-			if (fileDateView != null) {
-				if (date != null) {
-					fileDateView.setText(date);
-				} else {
-					fileDateView.setText(getContext().getString(R.string.unknown));
-				}
-			}
-		}
-	}
-
 	private void setFileSize(final View view, final long size) {
 		if (view != null) {
 			TextView fileSizeView = (TextView) view.findViewById(R.id.report_item_file_size);
@@ -113,6 +136,19 @@ public class PhotoAdapter extends UriAdapter {
 					fileSizeView.setText(getHumanReadableByteCount(size));
 				} else {
 					fileSizeView.setText(getContext().getString(R.string.unknown));
+				}
+			}
+		}
+	}
+
+	private void setFileDateModified(final View view, final DateTime date) {
+		if (view != null) {
+			TextView fileDateView = (TextView) view.findViewById(R.id.report_item_file_date);
+			if (fileDateView != null) {
+				if (date != null) {
+					fileDateView.setText(getFormattedDate(date));
+				} else {
+					fileDateView.setText(getContext().getString(R.string.unknown));
 				}
 			}
 		}

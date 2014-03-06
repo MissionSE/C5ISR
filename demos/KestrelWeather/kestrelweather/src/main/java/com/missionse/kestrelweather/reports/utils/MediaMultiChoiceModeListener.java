@@ -1,7 +1,6 @@
 package com.missionse.kestrelweather.reports.utils;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -11,6 +10,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.model.tables.Supplement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +20,9 @@ import java.util.List;
  */
 public class MediaMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 	private ListView mListView;
-	private UriAdapter mAdapter;
+	private SupplementAdapter mAdapter;
 
-	private UriRemovedListener mUriRemovedListener;
+	private SupplementRemovedListener mSupplementRemovedListener;
 	private final String mSelectItemsText;
 	private final String mItemsSelectedText;
 
@@ -32,7 +32,7 @@ public class MediaMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 	 * @param listView The view that contains the items.
 	 * @param adapter The adapter that handles the item views.
 	 */
-	public MediaMultiChoiceModeListener(final Context context, final ListView listView, final UriAdapter adapter) {
+	public MediaMultiChoiceModeListener(final Context context, final ListView listView, final SupplementAdapter adapter) {
 		mListView = listView;
 		mAdapter = adapter;
 
@@ -42,10 +42,10 @@ public class MediaMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 
 	/**
 	 * Sets the UriRemovedLister to be notified when a uri is removed.
-	 * @param uriRemovedListener The listener to be notified.
+	 * @param supplementRemovedListener The listener to be notified.
 	 */
-	public void setUriRemovedListener(final UriRemovedListener uriRemovedListener) {
-		mUriRemovedListener = uriRemovedListener;
+	public void setSupplementRemovedListener(final SupplementRemovedListener supplementRemovedListener) {
+		mSupplementRemovedListener = supplementRemovedListener;
 	}
 
 	@Override
@@ -77,19 +77,19 @@ public class MediaMultiChoiceModeListener implements AbsListView.MultiChoiceMode
 		if (menuItem.getItemId() == R.id.action_delete_selected) {
 			SparseBooleanArray checkedItems = mListView.getCheckedItemPositions();
 			if (checkedItems != null) {
-				List<Uri> selectedUris = new ArrayList<Uri>();
+				List<Supplement> selectedSupplements = new ArrayList<Supplement>();
 				for (int index = checkedItems.size() - 1; index >= 0; index--) {
 					int position = checkedItems.keyAt(index);
 					if (checkedItems.valueAt(position)) {
-						selectedUris.add(mAdapter.getItem(position));
+						selectedSupplements.add(mAdapter.getItem(position));
 						mListView.setItemChecked(position, false);
 					}
 				}
 
-				for (Uri uri : selectedUris) {
-					mAdapter.remove(uri);
-					if (mUriRemovedListener != null) {
-						mUriRemovedListener.uriRemoved(uri);
+				for (Supplement supplement : selectedSupplements) {
+					mAdapter.remove(supplement);
+					if (mSupplementRemovedListener != null) {
+						mSupplementRemovedListener.supplementRemoved(supplement);
 					}
 				}
 

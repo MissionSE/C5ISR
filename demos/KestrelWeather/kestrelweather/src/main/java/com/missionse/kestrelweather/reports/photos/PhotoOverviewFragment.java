@@ -20,24 +20,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.missionse.imageviewer.ImageFragmentFactory;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
-import com.missionse.kestrelweather.database.util.MediaResolver;
-import com.missionse.kestrelweather.reports.utils.FileDownloader;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
-import com.missionse.kestrelweather.reports.utils.UriRemovedListener;
-import com.missionse.kestrelweather.util.ReportBuilder;
+import com.missionse.kestrelweather.reports.utils.SupplementRemovedListener;
 import com.missionse.kestrelweather.util.ReportRemover;
-
-import java.io.File;
+import com.missionse.kestrelweather.util.SupplementBuilder;
 
 /**
  * A fragment used to manage the photos attached to a report.
  */
-public class PhotoOverviewFragment extends Fragment implements UriRemovedListener {
+public class PhotoOverviewFragment extends Fragment implements SupplementRemovedListener {
 	private static final String TAG = PhotoOverviewFragment.class.getSimpleName();
 	private static final int ADD_PHOTO_REQUEST = 10;
 	private static final String REPORT_ID = "report_id";
@@ -108,15 +103,15 @@ public class PhotoOverviewFragment extends Fragment implements UriRemovedListene
 			photoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-					FragmentManager fragmentManager = getFragmentManager();
-					if (fragmentManager != null) {
-						File image = new File(MediaResolver.getPath(mActivity, mPhotoAdapter.getItem(position)));
-						Fragment imageFragment = ImageFragmentFactory.createImageFragment(Uri.fromFile(image));
-						fragmentManager.beginTransaction()
-								.replace(R.id.content, imageFragment, "image_preview")
-								.addToBackStack("image_preview")
-								.commit();
-					}
+//					FragmentManager fragmentManager = getFragmentManager();
+//					if (fragmentManager != null) {
+//						File image = new File(MediaResolver.getPath(mActivity, mPhotoAdapter.getItem(position)));
+//						Fragment imageFragment = ImageFragmentFactory.createImageFragment(Uri.fromFile(image));
+//						fragmentManager.beginTransaction()
+//								.replace(R.id.content, imageFragment, "image_preview")
+//								.addToBackStack("image_preview")
+//								.commit();
+//					}
 				}
 			});
 
@@ -124,7 +119,7 @@ public class PhotoOverviewFragment extends Fragment implements UriRemovedListene
 				photoList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 				MediaMultiChoiceModeListener multiChoiceModeListener =
 						new MediaMultiChoiceModeListener(mActivity, photoList, mPhotoAdapter);
-				multiChoiceModeListener.setUriRemovedListener(this);
+				multiChoiceModeListener.setSupplementRemovedListener(this);
 				photoList.setMultiChoiceModeListener(multiChoiceModeListener);
 			}
 
@@ -182,71 +177,67 @@ public class PhotoOverviewFragment extends Fragment implements UriRemovedListene
 		}
 	}
 
-	private void addPreventDuplicateEntry(Uri uri) {
+	private void addPreventDuplicateEntry(final Uri uri) {
 		if (!mPhotoAdapter.contains(uri)) {
-			mPhotoAdapter.add(uri);
-			createNewSupplement(uri.toString());
+			Supplement supplement = createNewSupplement(uri);
+			if (supplement != null) {
+				mPhotoAdapter.add(supplement);
+			}
 		} else {
 			Toast.makeText(mActivity, mActivity.getString(R.string.already_exists), Toast.LENGTH_SHORT)
 					.show();
 		}
 	}
 
-	private void createNewSupplement(String uri) {
+	private Supplement createNewSupplement(final Uri uri) {
+		Supplement supplement = null;
 		if (mActivity != null) {
-			ReportBuilder.buildSupplement(mActivity.getDatabaseAccessor(), uri, mReportId, SupplementType.PHOTO);
+			supplement = SupplementBuilder.buildSupplement(mActivity.getDatabaseAccessor(), mActivity.getContentResolver(),
+					uri, mReportId, SupplementType.PHOTO);
 		}
+
+		return supplement;
 	}
 
 	private void populateAdapter() {
 		mPhotoAdapter.clear();
 
-		for (Supplement supplement : mActivity.getDatabaseAccessor().getPhotoSupplements(mReportId)) {
-			String localUri = supplement.getUri();
-			if (validString(localUri) && uriExist(localUri)) {
-				mPhotoAdapter.add(Uri.parse(localUri));
-			} else {
-				String remoteUri = supplement.getRemoteUri();
-				if (validString(remoteUri)) {
-					download(supplement);
-				}
+		if (mActivity != null) {
+			for (Supplement supplement : mActivity.getDatabaseAccessor().getPhotoSupplements(mReportId)) {
+				mPhotoAdapter.add(supplement);
 			}
 		}
 	}
 
-	private boolean uriExist(final String uriString) {
-		Uri uri = Uri.parse(uriString);
-		String uriPath = MediaResolver.getPath(mActivity, uri);
-		File uriAsFile = new File(uriPath);
-		return uriAsFile.exists();
-	}
-
-	private boolean validString(final String string) {
-		return string != null && string.length() > 0;
-	}
-
-	private void download(final Supplement supplement) {
-		FileDownloader.downloadFile(mActivity, supplement.getRemoteUri(), new FileDownloader.OnFileDownloadCompleteListener() {
-			@Override
-			public void fileDownloadComplete(final Uri uri) {
-				if (mActivity != null) {
-					mActivity.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							supplement.setUri(uri.toString());
-							mActivity.getDatabaseAccessor().getSupplementTable().update(supplement);
-							mPhotoAdapter.add(uri);
-						}
-					});
-				}
-			}
-		});
-	}
+//	private boolean uriExist(final String uriString) {
+//		Uri uri = Uri.parse(uriString);
+//		String uriPath = MediaResolver.getPath(mActivity, uri);
+//		File uriAsFile = new File(uriPath);
+//		return uriAsFile.exists();
+//	}
+//
+//	private void download(final Supplement supplement) {
+//		FileDownloader.downloadFile(mActivity, supplement.getRemoteUri(), new FileDownloader.OnFileDownloadCompleteListener() {
+//			@Override
+//			public void fileDownloadComplete(final Uri uri) {
+//				if (mActivity != null) {
+//					mActivity.runOnUiThread(new Runnable() {
+//						@Override
+//						public void run() {
+//							supplement.setUri(uri.toString());
+//							mActivity.getDatabaseAccessor().getSupplementTable().update(supplement);
+//							mPhotoAdapter.add(uri);
+//						}
+//					});
+//				}
+//			}
+//		});
+//	}
 
 	@Override
-	public void uriRemoved(Uri uri) {
+	public void supplementRemoved(final Supplement supplement) {
 		if (mActivity != null) {
-			ReportRemover.removeSupplements(mActivity.getDatabaseAccessor(), uri.toString(), mReportId);
+			ReportRemover.removeSupplement(mActivity.getDatabaseAccessor(), supplement);
 		}
 	}
 }

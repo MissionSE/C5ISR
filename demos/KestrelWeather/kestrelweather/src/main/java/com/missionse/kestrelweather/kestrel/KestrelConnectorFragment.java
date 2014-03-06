@@ -32,6 +32,7 @@ import com.missionse.kestrelweather.communication.KestrelMessage;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
 import com.missionse.kestrelweather.database.model.tables.OpenWeather;
+import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.reports.ReportDetailFragment;
 import com.missionse.kestrelweather.util.LocationHandler;
 import com.missionse.kestrelweather.util.OpenWeatherRequester;
@@ -226,7 +227,7 @@ public class KestrelConnectorFragment extends Fragment {
 				Activity activity = getActivity();
 				if (activity != null) {
 					if (mKestrelWeather != null && mOpenWeather != null && mLocation != null) {
-						int id = ReportBuilder.buildReport(getDatabaseAccessor(), mKestrelWeather, mOpenWeather,
+						Report report = ReportBuilder.buildReport(getDatabaseAccessor(), mKestrelWeather, mOpenWeather,
 								mLocation.getLatitude(), mLocation.getLongitude());
 
 						//TODO: This should be moved to wherever we have the Save button on the ReportDetailFragment.
@@ -236,7 +237,7 @@ public class KestrelConnectorFragment extends Fragment {
 								.setCustomAnimations(
 										R.animator.slide_from_right, R.animator.slide_to_left,
 										R.animator.slide_from_left, R.animator.slide_to_right)
-								.replace(R.id.content, ReportDetailFragment.newInstance(id), "report_addon")
+								.replace(R.id.content, ReportDetailFragment.newInstance(report.getId()), "report_addon")
 								.addToBackStack("report_addon")
 								.commit();
 					}

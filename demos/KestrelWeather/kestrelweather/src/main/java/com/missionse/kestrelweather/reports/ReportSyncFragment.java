@@ -66,7 +66,7 @@ public class ReportSyncFragment extends Fragment implements SyncStatusListener {
 
 		if (mActivity != null) {
 			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
-				new ArrayList<Report>());
+					new ArrayList<Report>());
 		}
 	}
 
@@ -108,12 +108,12 @@ public class ReportSyncFragment extends Fragment implements SyncStatusListener {
 						if (fragmentManager != null) {
 							Fragment reportDetailFragment = ReportDetailFragment.newInstance(mReportAdapter.getItem(position).getId());
 							fragmentManager.beginTransaction()
-								.setCustomAnimations(
-									R.animator.slide_from_right, R.animator.slide_to_left,
-									R.animator.slide_from_left, R.animator.slide_to_right)
-								.replace(R.id.content, reportDetailFragment, "report_detail")
-								.addToBackStack("report_detail")
-								.commit();
+									.setCustomAnimations(
+											R.animator.slide_from_right, R.animator.slide_to_left,
+											R.animator.slide_from_left, R.animator.slide_to_right)
+									.replace(R.id.content, reportDetailFragment, "report_detail")
+									.addToBackStack("report_detail")
+									.commit();
 						}
 					}
 				});

@@ -15,7 +15,8 @@ import java.util.List;
 public final class DatabaseLogger {
 	private static final String TAG = DatabaseLogger.class.getSimpleName();
 
-	private DatabaseLogger() { }
+	private DatabaseLogger() {
+	}
 
 	/**
 	 * Log the contents of the report table.
@@ -32,12 +33,12 @@ public final class DatabaseLogger {
 			Log.d(TAG, "Listing Notes:");
 			for (Note note : report.getNotes()) {
 				Log.d(TAG, "  (" + note.getId() + ") Title:" + note.getTitle() + "  Content:"
-					+ note.getContent());
+						+ note.getContent());
 			}
 			Log.d(TAG, "Listing Supplements:");
 			for (Supplement sup : report.getSupplements()) {
 				Log.d(TAG, "  (" + sup.getId() + ") Uri:" + sup.getUri() + "  RemoteUri: " +
-					sup.getRemoteUri() + "  Type:" + sup.getType());
+						sup.getRemoteUri() + "  Type:" + sup.getType());
 			}
 		}
 	}
@@ -52,7 +53,7 @@ public final class DatabaseLogger {
 			StringBuilder builder = new StringBuilder();
 			builder.append("\n");
 			builder.append("ReportId=" + (note.getReport() == null ? "0" : note.getReport().getId())
-				+ "\n");
+					+ "\n");
 			builder.append("Id=" + note.getId() + "\n");
 			builder.append("Title=" + note.getTitle() + " Content=" + note.getContent());
 			Log.d(TAG, builder.toString());
@@ -67,7 +68,7 @@ public final class DatabaseLogger {
 		Log.d(TAG, "Dumping supplement table...");
 		for (Supplement supplement : accessor.getSupplementTable().queryForAll()) {
 			Log.d(TAG, "  (" + supplement.getId() + ") Uri:" + supplement.getUri() + "  RemoteUri: "
-				+ supplement.getRemoteUri() + "  Type:" + supplement.getType());
+					+ supplement.getRemoteUri() + "  Type:" + supplement.getType());
 		}
 	}
 }
