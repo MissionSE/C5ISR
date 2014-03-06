@@ -12,6 +12,7 @@ import com.missionse.uiextensions.R;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerComplexItem;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerHeader;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleItem;
+import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleNumberedItem;
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSpinner;
 
 /**
@@ -71,6 +72,57 @@ public class DrawerEntryFactory {
             convertView.setBackground(
                 basicItem.getContext().getResources().getDrawable(basicItem.getBackgroundDrawable()));
         }
+
+		return convertView;
+	}
+
+	/**
+	 * Creates the view to represent a DrawerSimpleItem.
+	 * @param convertView the view to populate
+	 * @param parentView the parent view
+	 * @param navDrawerItem the item on which to base the created View
+	 * @return a View to be displayed in the NavigationDrawer
+	 */
+	public View getSimpleNumberedItemView(View convertView, final ViewGroup parentView, final DrawerItem navDrawerItem) {
+		DrawerSimpleNumberedItem basicItem = (DrawerSimpleNumberedItem) navDrawerItem;
+		DrawerSimpleNumberedItem.Holder holder = null;
+
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.nav_drawer_basic_numbered, parentView, false);
+			TextView labelView = (TextView) convertView.findViewById(R.id.navmenuitem_label);
+			TextView numberView = (TextView) convertView.findViewById(R.id.navmenuitem_number);
+			ImageView iconView = (ImageView) convertView.findViewById(R.id.navmenuitem_icon);
+
+			holder = new DrawerSimpleNumberedItem.Holder();
+			holder.setTextView(labelView);
+			holder.setNumberView(numberView);
+			holder.setImageView(iconView);
+
+			convertView.setTag(holder);
+		}
+
+		if (holder == null) {
+			holder = (DrawerSimpleNumberedItem.Holder) convertView.getTag();
+		}
+
+		holder.getTextView().setText(basicItem.getLabel());
+		holder.getNumberView().setText(basicItem.getNumber());
+		if (basicItem.getTextColorStateList() != Drawer.USE_DEFAULT) {
+			holder.getTextView().setTextColor(basicItem.getContext().getResources().getColorStateList(
+				basicItem.getTextColorStateList()));
+			holder.getNumberView().setTextColor(basicItem.getContext().getResources().getColorStateList(
+				basicItem.getTextColorStateList()));
+		}
+		if (basicItem.getIcon() != Drawer.NO_ICON) {
+			holder.getImageView().setImageResource(basicItem.getIcon());
+		} else {
+			holder.getImageView().setVisibility(View.GONE);
+		}
+
+		if (basicItem.getBackgroundDrawable() != Drawer.USE_DEFAULT) {
+			convertView.setBackground(
+				basicItem.getContext().getResources().getDrawable(basicItem.getBackgroundDrawable()));
+		}
 
 		return convertView;
 	}

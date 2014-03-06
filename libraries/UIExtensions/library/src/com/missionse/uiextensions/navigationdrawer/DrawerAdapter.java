@@ -1,11 +1,11 @@
 package com.missionse.uiextensions.navigationdrawer;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
 
 /**
  * Adapter that converts DrawerItem constructs to Views to be displayed.
@@ -29,6 +29,8 @@ public class DrawerAdapter extends ArrayAdapter<DrawerItem> {
 		DrawerItem menuItem = getItem(position);
 		if (menuItem.getType() == DrawerItemType.SIMPLE) {
 			view = mEntryFactory.getSimpleItemView(convertView, parent, menuItem);
+		} else if (menuItem.getType() == DrawerItemType.SIMPLENUMBERED) {
+			view = mEntryFactory.getSimpleNumberedItemView(convertView, parent, menuItem);
 		} else if (menuItem.getType() == DrawerItemType.COMPLEX) {
 			view = mEntryFactory.getComplexItemView(convertView, parent, menuItem);
 		} else if (menuItem.getType() == DrawerItemType.HEADER) {
