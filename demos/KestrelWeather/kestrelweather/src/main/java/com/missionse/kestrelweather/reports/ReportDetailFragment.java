@@ -5,12 +5,15 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +37,7 @@ import org.joda.time.format.DateTimeFormat;
 public class ReportDetailFragment extends Fragment {
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
+	private static final int SAVE_TRANSITION_DURATION = 500;
 
 	private Activity mActivity;
 	private View mView;
@@ -201,14 +205,43 @@ public class ReportDetailFragment extends Fragment {
 				ReportTable reportTable = databaseAccessor.getReportTable();
 				reportTable.update(report);
 
-				View reportDraftButtons = mView.findViewById(R.id.report_detail_draft_buttons);
+				final View reportDraftButtons = mView.findViewById(R.id.report_detail_draft_buttons);
 				if (reportDraftButtons != null) {
-					reportDraftButtons.setVisibility(View.GONE);
+					Animation draftButtonAnimation = AnimationUtils.loadAnimation(activity,
+							R.anim.fragment_report_detail_draft_buttons_transition);
+					if (draftButtonAnimation != null) {
+						draftButtonAnimation.setAnimationListener(new Animation.AnimationListener() {
+							@Override
+							public void onAnimationStart(final Animation animation) {
+							}
+
+							@Override
+							public void onAnimationEnd(final Animation animation) {
+								reportDraftButtons.setVisibility(View.GONE);
+							}
+
+							@Override
+							public void onAnimationRepeat(final Animation animation) {
+							}
+						});
+						reportDraftButtons.startAnimation(draftButtonAnimation);
+					}
 				}
 
 				PagerTitleStrip pagerTitleStrip = (PagerTitleStrip) mView.findViewById(R.id.report_detail_pager_title_strip);
 				if (pagerTitleStrip != null) {
-					pagerTitleStrip.setBackgroundColor(activity.getResources().getColor(R.color.holo_blue_light));
+					int paddingLeft = pagerTitleStrip.getPaddingLeft();
+					int paddingTop = pagerTitleStrip.getPaddingTop();
+					int paddingRight = pagerTitleStrip.getPaddingRight();
+					int paddingBottom = pagerTitleStrip.getPaddingBottom();
+
+					pagerTitleStrip.setBackground(activity.getResources().getDrawable(R.drawable.fragment_report_detail_pager_transition));
+					pagerTitleStrip.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+
+					TransitionDrawable pagerTitleStripBackground = (TransitionDrawable) pagerTitleStrip.getBackground();
+					if (pagerTitleStripBackground != null) {
+						pagerTitleStripBackground.startTransition(SAVE_TRANSITION_DURATION);
+					}
 				}
 			}
 		}
