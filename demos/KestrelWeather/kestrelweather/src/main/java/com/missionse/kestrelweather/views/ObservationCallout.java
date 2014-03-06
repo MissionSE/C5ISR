@@ -150,6 +150,7 @@ public class ObservationCallout extends FrameLayout {
 		View view = findViewById(R.id.observation_data_top_center);
 		TextView value = (TextView) view.findViewById(R.id.observation_data_top_center_value);
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_top_center_unit);
+		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_top_center_icon);
 
 		DateTime dataTime = mReport.getUpdateAt();
 		DateTime now = DateTime.now();
@@ -174,13 +175,14 @@ public class ObservationCallout extends FrameLayout {
 			value.setText(Integer.toString(days.getDays()));
 			unit.setText(R.string.days);
 		}
+		icon.setImageResource(R.drawable.ic_action_clock);
 
 		view.setVisibility(VISIBLE);
 	}
 
 	private void setWeatherIcon() {
-		View view = findViewById(R.id.observation_button);
-		if (view.getBackground() != null && mReport.getOpenWeather() != null) {
+		View view = findViewById(R.id.observation_icon);
+		if (view != null && mReport.getOpenWeather() != null) {
 			view.getBackground().setLevel(mReport.getOpenWeather().getConditionCode());
 		}
 	}

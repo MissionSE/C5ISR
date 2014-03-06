@@ -4,10 +4,10 @@
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:drawable="@drawable/bg_weather"/>
 	<item
-		android:bottom="51.0dip"
+		android:bottom="5.0dip"
 		android:drawable="@drawable/weather_icon_type"
-		android:left="51.0dip"
-		android:right="51.0dip"
-		android:top="51.0dip"/>
+		android:left="5.0dip"
+		android:right="5.0dip"
+		android:top="5.0dip"/>
 	<item android:drawable="@drawable/tint"/>
 </layer-list>

@@ -2,31 +2,21 @@
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<Button
-		android:id="@+id/observation_button"
-		android:layout_width="230.0dip"
-		android:layout_height="230.0dip"
+	<View
+		android:id="@+id/observation_icon"
+		android:layout_width="100dp"
+		android:layout_height="100dp"
 		android:layout_marginBottom="10dp"
-		android:background="@drawable/callout_weather_btn"/>
-
-	<com.makeramen.RoundedImageView
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		android:id="@+id/imageView1"
-		android:layout_width="230dp"
-		android:layout_height="230dp"
 		android:layout_gravity="center"
-		android:layout_marginBottom="10dp"
 		android:scaleType="centerCrop"
-		app:is_oval="true"
-		app:round_background="true"
-		android:visibility="gone"/>
+		android:background="@drawable/callout_weather_btn"/>
 
 	<FrameLayout
 		android:layout_width="230dp"
 		android:layout_height="230dp"
 		android:layout_gravity="center"
 		android:layout_marginBottom="10dp"
-		android:background="@drawable/bg_callout_data">
+		android:background="@drawable/callout_data_ring">
 
 		<LinearLayout
 			android:id="@+id/observation_data_top_left"
@@ -47,10 +37,7 @@
 
 				<ImageView
 					android:id="@+id/observation_data_top_left_icon"
-					android:tint="@android:color/white"
-					android:layout_width="20dp"
-					android:layout_height="20dp"
-					android:scaleType="centerCrop"/>
+					style="@style/ObservationDataIcon"/>
 
 				<TextView
 					android:id="@+id/observation_data_top_left_unit"
@@ -68,9 +55,20 @@
 				android:id="@+id/observation_data_top_center_value"
 				style="@style/ObservationData.Value"/>
 
-			<TextView
-				android:id="@+id/observation_data_top_center_unit"
-				style="@style/ObservationData.Unit"/>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/observation_data_top_center_icon"
+					style="@style/ObservationDataIcon"/>
+
+				<TextView
+					android:id="@+id/observation_data_top_center_unit"
+					style="@style/ObservationData.Unit"/>
+			</LinearLayout>
 		</LinearLayout>
 
 		<LinearLayout
@@ -92,10 +90,7 @@
 
 				<ImageView
 					android:id="@+id/observation_data_top_right_icon"
-					android:tint="@android:color/white"
-					android:layout_width="20dp"
-					android:layout_height="20dp"
-					android:scaleType="centerCrop"/>
+					style="@style/ObservationDataIcon"/>
 
 				<TextView
 					android:id="@+id/observation_data_top_right_unit"
@@ -121,10 +116,7 @@
 
 				<ImageView
 					android:id="@+id/observation_data_middle_left_icon"
-					android:tint="@android:color/white"
-					android:layout_width="20dp"
-					android:layout_height="20dp"
-					android:scaleType="centerCrop"/>
+					style="@style/ObservationDataIcon"/>
 
 				<TextView
 					android:id="@+id/observation_data_middle_left_unit"
@@ -150,10 +142,7 @@
 
 				<ImageView
 					android:id="@+id/observation_data_middle_right_icon"
-					android:tint="@android:color/white"
-					android:layout_width="20dp"
-					android:layout_height="20dp"
-					android:scaleType="centerCrop"/>
+					style="@style/ObservationDataIcon"/>
 
 				<TextView
 					android:id="@+id/observation_data_middle_right_unit"
@@ -180,10 +169,7 @@
 
 				<ImageView
 					android:id="@+id/observation_data_bottom_left_icon"
-					android:tint="@android:color/white"
-					android:layout_width="20dp"
-					android:layout_height="20dp"
-					android:scaleType="centerCrop"/>
+					style="@style/ObservationDataIcon"/>
 
 				<TextView
 					android:id="@+id/observation_data_bottom_left_unit"
@@ -209,11 +195,7 @@
 
 				<ImageView
 					android:id="@+id/observation_data_bottom_center_icon"
-					android:tint="@android:color/white"
-					android:layout_width="20dp"
-					android:layout_height="20dp"
-					android:scaleType="centerCrop"/>
-
+					style="@style/ObservationDataIcon"/>
 				<TextView
 					android:id="@+id/observation_data_bottom_center_unit"
 					style="@style/ObservationData.Unit"/>
@@ -239,10 +221,7 @@
 
 				<ImageView
 					android:id="@+id/observation_data_bottom_right_icon"
-					android:tint="@android:color/white"
-					android:layout_width="20dp"
-					android:layout_height="20dp"
-					android:scaleType="centerCrop"/>
+					style="@style/ObservationDataIcon"/>
 
 				<TextView
 					android:id="@+id/observation_data_bottom_right_unit"
