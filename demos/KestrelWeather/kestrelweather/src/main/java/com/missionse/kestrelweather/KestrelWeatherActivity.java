@@ -105,7 +105,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	@Override
 	public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
 		if (key.equals(getString(R.string.key_sync_frequency)) ||
-			key.equals(getString(R.string.key_sync_enabled))) {
+				key.equals(getString(R.string.key_sync_enabled))) {
 			startSyncService();
 		}
 	}
@@ -113,7 +113,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	private void startSyncService() {
 		Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
 		final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE,
-			intent, PendingIntent.FLAG_UPDATE_CURRENT);
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(pendingIntent);
@@ -121,7 +121,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		boolean syncEnabled = mSharedPreferences.getBoolean(getString(R.string.key_sync_enabled), true);
 		if (syncEnabled) {
 			float intervalInMinutes = Float.valueOf(mSharedPreferences.getString(getString(R.string.key_sync_frequency),
-				String.valueOf(getResources().getInteger(R.integer.default_data_sync_interval))));
+					String.valueOf(getResources().getInteger(R.integer.default_data_sync_interval))));
 			Log.d(TAG, "Starting sync service on an interval of " + intervalInMinutes + " minutes...");
 			int intervalInMillis = (int) (intervalInMinutes * MILLIS_PER_MIN);
 
@@ -255,6 +255,9 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			kestrelConnectorFragment = new KestrelConnectorFragment();
 		}
 		fragmentManager.beginTransaction()
+				.setCustomAnimations(
+						R.animator.slide_from_left, R.animator.slide_to_right,
+						R.animator.slide_from_left, R.animator.slide_to_right)
 				.replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
 				.commit();
 	}
@@ -267,6 +270,9 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			reportSyncFragment = new ReportSyncFragment();
 		}
 		fragmentManager.beginTransaction()
+				.setCustomAnimations(
+						R.animator.slide_from_left, R.animator.slide_to_right,
+						R.animator.slide_from_left, R.animator.slide_to_right)
 				.replace(R.id.content, reportSyncFragment, "report_sync")
 				.commit();
 	}
@@ -279,6 +285,9 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			reportDatabaseFragment = new ReportDatabaseFragment();
 		}
 		fragmentManager.beginTransaction()
+				.setCustomAnimations(
+						R.animator.slide_from_left, R.animator.slide_to_right,
+						R.animator.slide_from_left, R.animator.slide_to_right)
 				.replace(R.id.content, reportDatabaseFragment, "report_database")
 				.commit();
 	}

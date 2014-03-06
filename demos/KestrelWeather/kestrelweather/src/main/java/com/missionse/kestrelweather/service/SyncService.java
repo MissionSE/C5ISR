@@ -60,9 +60,9 @@ public class SyncService extends Service implements SyncStatusListener {
 		boolean notificationsEnabled = mSharedPreferences.getBoolean(getString(R.string.key_sync_notification), true);
 		if (notificationsEnabled && mSyncedReportCount > 0) {
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle("Sync complete.")
-				.setContentText(mSyncedReportCount + " report(s) synced.");
+					.setSmallIcon(R.drawable.ic_launcher)
+					.setContentTitle("Sync complete.")
+					.setContentText(mSyncedReportCount + " report(s) synced.");
 			builder.setAutoCancel(true);
 			Intent resultIntent = new Intent(this, KestrelWeatherActivity.class);
 
@@ -78,7 +78,7 @@ public class SyncService extends Service implements SyncStatusListener {
 			builder.setContentIntent(resultPendingIntent);
 
 			NotificationManager notificationManager =
-				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+					(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			// NOTIFICATION_ID allows you to update the notification later on.
 			notificationManager.notify(NOTIFICATION_ID, builder.build());
 		}

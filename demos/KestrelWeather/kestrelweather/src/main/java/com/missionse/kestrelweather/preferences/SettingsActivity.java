@@ -205,9 +205,9 @@ public class SettingsActivity extends PreferenceActivity {
 							mDeveloperClickCount--;
 							if (mDeveloperClickCount == 0) {
 								SharedPreferences.Editor editor =
-									PreferenceManager.getDefaultSharedPreferences(preference.getContext()).edit();
+										PreferenceManager.getDefaultSharedPreferences(preference.getContext()).edit();
 								editor.putBoolean(
-									getString(R.string.key_developer), true).commit();
+										getString(R.string.key_developer), true).commit();
 								if (mDeveloperToast != null) {
 									mDeveloperToast.cancel();
 								}
@@ -218,8 +218,8 @@ public class SettingsActivity extends PreferenceActivity {
 									mDeveloperToast.cancel();
 								}
 								mDeveloperToast = Toast.makeText(getActivity(), getResources().getQuantityString(
-									R.plurals.developer_mode_toast, mDeveloperClickCount, mDeveloperClickCount),
-									Toast.LENGTH_SHORT);
+										R.plurals.developer_mode_toast, mDeveloperClickCount, mDeveloperClickCount),
+										Toast.LENGTH_SHORT);
 								mDeveloperToast.show();
 							}
 						} else if (mDeveloperClickCount < 0) {
@@ -227,7 +227,7 @@ public class SettingsActivity extends PreferenceActivity {
 								mDeveloperToast.cancel();
 							}
 							mDeveloperToast = Toast.makeText(getActivity(), R.string.developer_mode_already,
-								Toast.LENGTH_LONG);
+									Toast.LENGTH_LONG);
 							mDeveloperToast.show();
 						}
 						return true;
