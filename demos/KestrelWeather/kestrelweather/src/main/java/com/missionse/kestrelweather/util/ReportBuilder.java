@@ -37,8 +37,8 @@ public final class ReportBuilder {
 		report.setDraft(true);
 		report.setRead(true);
 
-		//TODO: Replace this with something better.
-		report.setTitle(report.getOpenWeather().getDescription());
+		String title = String.format("%s, %s", openWeather.getName(), openWeather.getCountry());
+		report.setTitle(title);
 
 		KestrelWeatherTable weatherTable = databaseAccessor.getKestrelWeatherTable();
 		weatherTable.create(kestrelWeather);

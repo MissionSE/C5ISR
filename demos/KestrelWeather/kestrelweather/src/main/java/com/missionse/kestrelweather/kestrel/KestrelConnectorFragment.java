@@ -307,16 +307,21 @@ public class KestrelConnectorFragment extends Fragment {
 	private void updateReadingsAdapter() {
 		mReadingsAdapter.clear();
 		if (mKestrelWeather != null) {
-			Map<String, String> kestrelMap = mKestrelWeather.toMap();
-			for (String reading : kestrelMap.keySet()) {
-				String formattedReading = reading + ": " + kestrelMap.get(reading);
-				mReadingsAdapter.add(formattedReading);
+			Map<String, String> kestrelWeatherData = mKestrelWeather.toMap();
+			for (String key : kestrelWeatherData.keySet()) {
+				String formattedKestrelData = String.format("%s: %s",
+						key, kestrelWeatherData.get(key));
+				mReadingsAdapter.add(formattedKestrelData);
 			}
 		}
 
 		if (mOpenWeather != null) {
-			mReadingsAdapter.add("conditioncode: " + mOpenWeather.getConditionCode());
-			mReadingsAdapter.add("description: " + mOpenWeather.getDescription());
+			Map<String, String> openWeatherData = mOpenWeather.toMap();
+			for (String key : openWeatherData.keySet()) {
+				String formattedOpenWeatherData = String.format("%s: %s",
+						key, openWeatherData.get(key));
+				mReadingsAdapter.add(formattedOpenWeatherData);
+			}
 		}
 
 		if (mLocation != null) {

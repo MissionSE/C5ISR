@@ -3,8 +3,8 @@ package com.missionse.kestrelweather.util;
 import android.content.Context;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.missionse.kestrelweather.R;
@@ -40,20 +40,31 @@ public final class OpenWeatherRequester {
 	 * @return An object containing the open weather data.
 	 */
 	public static OpenWeather parseOpenWeatherResponse(final JsonObject openWeatherJson) {
-		OpenWeather openWeather = null;
+		OpenWeather openWeather = new OpenWeather();
+
+		JsonElement name = openWeatherJson.get("name");
+		if (name != null) {
+			openWeather.setName(name.getAsString());
+		}
+
+		JsonObject sysData = openWeatherJson.getAsJsonObject("sys");
+		if (sysData != null) {
+			JsonElement country = sysData.get("country");
+			if (country != null) {
+				openWeather.setCountry(country.getAsString());
+			}
+		}
 
 		JsonArray weatherArray = openWeatherJson.getAsJsonArray("weather");
 		if (weatherArray != null && weatherArray.size() > 0) {
 			JsonObject weatherData = weatherArray.get(0).getAsJsonObject();
 			if (weatherData != null) {
-				openWeather = new OpenWeather();
-
-				JsonPrimitive conditionCode = weatherData.getAsJsonPrimitive("id");
+				JsonElement conditionCode = weatherData.get("id");
 				if (conditionCode != null) {
 					openWeather.setConditionCode(conditionCode.getAsInt());
 				}
 
-				JsonPrimitive description = weatherData.getAsJsonPrimitive("description");
+				JsonElement description = weatherData.get("description");
 				if (description != null) {
 					openWeather.setDescription(description.getAsString());
 				}
