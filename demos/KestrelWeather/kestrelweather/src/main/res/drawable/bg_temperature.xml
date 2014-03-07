@@ -146,24 +146,9 @@
 			<solid android:color="#ffb3191c"/>
 		</shape>
 	</item>
-	<item android:maxLevel="29">
-		<shape android:shape="oval">
-			<solid android:color="#ffa8001c"/>
-		</shape>
-	</item>
-	<item android:maxLevel="30">
-		<shape android:shape="oval">
-			<solid android:color="#ffb30030"/>
-		</shape>
-	</item>
-	<item android:maxLevel="31">
-		<shape android:shape="oval">
-			<solid android:color="#ffc70063"/>
-		</shape>
-	</item>
 	<item android:maxLevel="32">
 		<shape android:shape="oval">
-			<solid android:color="#fffc009b"/>
+			<solid android:color="#ffa8001c"/>
 		</shape>
 	</item>
 </level-list>
