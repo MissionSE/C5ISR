@@ -67,7 +67,7 @@ public class KestrelMessage {
 			kestrelWeather.setPressureTrend(Integer.valueOf(tokenizedMessage[PRESSURE_TREND]));
 			kestrelWeather.setHeatIndex(Float.valueOf(tokenizedMessage[HEAT_INDEX]));
 			kestrelWeather.setWindSpeed(Float.valueOf(tokenizedMessage[WIND_SPEED]));
-			kestrelWeather.setWindDirection(Integer.valueOf(tokenizedMessage[WIND_DIRECTION]));
+			kestrelWeather.setWindDirection(Float.valueOf(tokenizedMessage[WIND_DIRECTION]));
 			kestrelWeather.setWindChill(Float.valueOf(tokenizedMessage[WIND_CHILL]));
 			kestrelWeather.setDewPoint(Float.valueOf(tokenizedMessage[DEW_POINT]));
 			translation.setKestrelWeather(kestrelWeather);

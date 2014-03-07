@@ -179,7 +179,7 @@ public class KestrelWeather extends Entity {
 	 * Setter.
 	 * @param windDirection The wind direction in degrees (meteorological).
 	 */
-	public void setWindDirection(int windDirection) {
+	public void setWindDirection(float windDirection) {
 		mWindDirection = windDirection;
 	}
 
