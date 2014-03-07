@@ -42,6 +42,8 @@ module.exports = function(db) {
 					contentDir = '/images/';
 				} else if (file.type.search('audio') >= 0) {
 					contentDir = '/audio/';
+				} else if (file.type.search('video') >= 0) {
+					contentDir = '/video/';
 				}
 			}
 			file.path = stagingArea + contentDir + path.basename(file.path);
@@ -124,8 +126,6 @@ module.exports = function(db) {
 						}));
 					} else {
 						if (files[0].type) {
-							//debug(postReport, 'public path: ' + files[0].publicPath);
-							//var publicPath = files[0].path.split('public')[2]; //TODO: Fix this nonsense
 							debug(postReport, 'saving ' + files[0].publicPath + ' to ' + data.id);
 							if (files[0].type.search('image') >= 0) {
 								db.Report.update( { _id: data.id },
@@ -158,6 +158,32 @@ module.exports = function(db) {
 									{
 										$push: {
 											audio: {
+												filename: data.filename,
+												url: files[0].publicPath,
+												size: data.size,
+												date: data.date
+											}
+										}
+									}, { upsert: true }, function(err) {
+									if (err) {
+										debug(postReport, "query update failed");
+										res.writeHead(404, {'content-type': 'text/plain'});
+										res.end(JSON.stringify({
+											status: 'nok'
+										}));
+									} else {
+										res.writeHead(200, {'content-type': 'text/plain'});
+										res.end(JSON.stringify({
+											status: 'ok',
+											url: files[0].publicPath
+										}));
+									}
+								});
+							} else if (files[0].type.search('video') >= 0) {
+								db.Report.update( { _id: data.id },
+									{
+										$push: {
+											video: {
 												filename: data.filename,
 												url: files[0].publicPath,
 												size: data.size,

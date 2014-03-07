@@ -47,7 +47,12 @@ var ReportSchema = new Schema({
 		size: Number,
 		date: { type: Date, default: Date.now }
 	}],
-	video: [String]
+	video: [{
+		filename: String,
+		url: String,
+		size: Number,
+		date: { type: Date, default: Date.now }
+	}]
 }, {
 	versionKey: false
 });
