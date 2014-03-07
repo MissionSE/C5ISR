@@ -20,4 +20,7 @@
 	<!-- Hidden keys -->
 	<string name="key_developer">key_developer</string>
 
+	<!-- Simulation Mode keys -->
+	<string name="key_simulation_mode">key_simulation_mode</string>
+
 </resources>
