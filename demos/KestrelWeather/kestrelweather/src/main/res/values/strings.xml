@@ -34,7 +34,7 @@
 	<string name="exit">Exit</string>
 	<string name="exit_prompt">Are you sure you want to exit?</string>
 	<string name="no_description">No description.</string>
-	<string name="image_thumbnail">Thumbnail of the image.</string>
+	<string name="item_thumbnail">Thumbnail of the item.</string>
 	<string name="unknown">Unknown</string>
 	<string name="select_items">Select Items</string>
 	<string name="items_selected">selected</string>

@@ -19,7 +19,8 @@
 			android:text="@string/unknown"
 			android:textSize="24sp"
 			android:textStyle="bold"
-			android:maxLength="@integer/max_title_length"/>
+			android:singleLine="true"
+			android:ellipsize="end"/>
 
 		<TextView
 			android:id="@+id/report_detail_timestamp"

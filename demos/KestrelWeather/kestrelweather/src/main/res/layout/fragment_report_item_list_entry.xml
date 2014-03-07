@@ -11,7 +11,7 @@
 		android:layout_height="75dp"
 		android:layout_width="75dp"
 		android:padding="10dp"
-		android:contentDescription="@string/image_thumbnail"
+		android:contentDescription="@string/item_thumbnail"
 		android:src="@drawable/ic_action_warning">
 	</ImageView>
 
@@ -27,7 +27,8 @@
 			android:layout_width="match_parent"
 			android:text="@string/unknown"
 			android:textSize="18sp"
-			android:maxLength="@integer/max_title_length">
+			android:singleLine="true"
+			android:ellipsize="end">
 		</TextView>
 
 		<LinearLayout
