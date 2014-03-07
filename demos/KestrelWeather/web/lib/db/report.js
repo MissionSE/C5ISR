@@ -26,7 +26,9 @@ var ReportSchema = new Schema({
 
 	weather: {
 		conditioncode: Number,
-		description: String
+		description: String,
+		name: String,
+		country: String
 	},
 
 	notes: [{
@@ -38,18 +40,21 @@ var ReportSchema = new Schema({
 	images: [{
 		filename: String,
 		url: String,
+		thumbnail: String,
 		size: Number,
 		date: { type: Date, default: Date.now }
 	}],
 	audio: [{
 		filename: String,
 		url: String,
+		thumbnail: String,
 		size: Number,
 		date: { type: Date, default: Date.now }
 	}],
 	video: [{
 		filename: String,
 		url: String,
+		thumbnail: String,
 		size: Number,
 		date: { type: Date, default: Date.now }
 	}]

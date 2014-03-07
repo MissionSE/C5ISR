@@ -88,6 +88,8 @@ module.exports = function(db) {
 
 				newReport.weather.conditioncode = data.weather.conditioncode;
 				newReport.weather.description = data.weather.description;
+				newReport.weather.name = data.weather.name;
+				newReport.weather.country = data.weather.country;
 
 				for (var index = 0; index < data.notes.length; index++) {
 					newReport.notes.push(data.notes[index]);
