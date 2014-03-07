@@ -15,8 +15,6 @@ import android.widget.Toast;
 
 import com.missionse.kestrelweather.R;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -141,24 +139,6 @@ public class SettingsActivity extends PreferenceActivity {
 			// updated to reflect the new value, per the Android Design
 			// guidelines.
 			bindPreferenceSummaryToValue(findPreference(getString(R.string.key_sync_frequency)));
-
-			if (getActivity() != null) {
-				if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.key_developer), false)) {
-					ListPreference syncFrequency = (ListPreference) findPreference(getString(R.string.key_sync_frequency));
-					CharSequence[] normalEntries = syncFrequency.getEntries();
-					CharSequence[] normalEntryValues = syncFrequency.getEntryValues();
-
-					List<CharSequence> developerEntries = new ArrayList<CharSequence>();
-					developerEntries.add("15 seconds");
-					developerEntries.addAll(Arrays.asList(normalEntries));
-					List<CharSequence> developerEntryVaues = new ArrayList<CharSequence>();
-					developerEntryVaues.add("0.25");
-					developerEntryVaues.addAll(Arrays.asList(normalEntryValues));
-
-					syncFrequency.setEntries(developerEntries.toArray(new CharSequence[developerEntries.size()]));
-					syncFrequency.setEntryValues(developerEntryVaues.toArray(new CharSequence[developerEntryVaues.size()]));
-				}
-			}
 		}
 	}
 
