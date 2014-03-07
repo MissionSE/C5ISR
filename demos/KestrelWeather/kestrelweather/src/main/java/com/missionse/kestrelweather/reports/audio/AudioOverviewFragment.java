@@ -210,17 +210,9 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 		if (item.getItemId() == R.id.action_add_media) {
 			FragmentManager fragmentManager = getFragmentManager();
 			if (fragmentManager != null) {
-				Intent intent;
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-					intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-					intent.addCategory(Intent.CATEGORY_OPENABLE);
-				} else {
-					intent = new Intent(Intent.ACTION_GET_CONTENT);
-				}
-
-				intent.setType("audio/*");
-				intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-				startActivityForResult(intent, ATTACH_AUDIO_REQUEST);
+				AttachAudioDialogFragment audioDialogFragment = new AttachAudioDialogFragment();
+				audioDialogFragment.setTargetFragment(this, ATTACH_AUDIO_REQUEST);
+				audioDialogFragment.show(fragmentManager, "");
 			}
 			return true;
 		}
@@ -230,17 +222,23 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 	@Override
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent resultData) {
 		super.onActivityResult(requestCode, resultCode, resultData);
-
+		Log.d(TAG, "RequestCode>: " + requestCode + " ResultCode>: " + resultCode);
 		if (requestCode == ATTACH_AUDIO_REQUEST && resultCode == Activity.RESULT_OK) {
+			Log.d(TAG, "Passed inital code checks...");
 			if (resultData != null) {
+				Log.d(TAG, "resultData is not null...");
 				if (resultData.getData() != null) {
+					Log.d(TAG, "resultData.getData() is not null :: adding_entry");
 					addPreventDuplicateEntry(resultData.getData());
 				} else {
+					Log.d(TAG, "resultData.getData() is null");
 					ClipData clipData = resultData.getClipData();
 					if (clipData != null) {
+						Log.d(TAG, "clipdata is not null.");
 						for (int index = 0; index < clipData.getItemCount(); ++index) {
 							ClipData.Item item = clipData.getItemAt(index);
 							if (item != null) {
+								Log.d(TAG, "item is not null :: adding_entry");
 								addPreventDuplicateEntry(item.getUri());
 							}
 						}
@@ -292,24 +290,6 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 	private boolean validString(final String string) {
 		return string != null && string.length() > 0;
 	}
-//
-//	private void download(final Supplement supplement) {
-//		FileDownloader.downloadFile(mActivity, supplement.getRemoteUri(), new FileDownloader.OnFileDownloadCompleteListener() {
-//			@Override
-//			public void fileDownloadComplete(final Uri uri) {
-//				if (mActivity != null) {
-//					mActivity.runOnUiThread(new Runnable() {
-//						@Override
-//						public void run() {
-//							supplement.setUri(uri.toString());
-//							mActivity.getDatabaseAccessor().getSupplementTable().update(supplement);
-//							mAudioAdapter.add(uri);
-//						}
-//					});
-//				}
-//			}
-//		});
-//	}
 
 	@Override
 	public void onDestroyView() {

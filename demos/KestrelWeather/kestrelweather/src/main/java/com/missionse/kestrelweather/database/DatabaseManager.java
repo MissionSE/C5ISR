@@ -142,6 +142,11 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 		return getFilteredSupplements(reportId, SupplementType.AUDIO);
 	}
 
+	@Override
+	public List<Supplement> getVideoSupplements(int reportId) {
+		return getFilteredSupplements(reportId, SupplementType.VIDEO);
+	}
+
 	private List<Supplement> getFilteredSupplements(final int reportId, SupplementType type) {
 		List<Supplement> supplements = getSupplementTable().queryForAll();
 		List<Supplement> retList = new LinkedList<Supplement>();

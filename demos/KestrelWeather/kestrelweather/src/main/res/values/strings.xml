@@ -83,6 +83,7 @@
 	<string name="notes">Notes</string>
 	<string name="photos">Photos</string>
 	<string name="audio_recording">Audio Recording</string>
+	<string name="video_recording">Video Recording</string>
 
 	<!-- Fragment: Kestrel Connector -->
 	<string name="connect_to_device">Connect To Device</string>
@@ -151,11 +152,17 @@
 	<string name="readings_error">Unable to fetch readings.</string>
 	<string name="discard_message">Are you sure you want to discard the report?</string>
 
+	<!-- Fragment: SimpleBaseDialog -->
+	<string name="take_photo">Take Photo</string>
+	<string name="attach_photo">Attach Photo</string>
+	<string name="take_video">Take Video</string>
+	<string name="attach_video">Attach Video</string>
+	<string name="take_audio">Take Audio</string>
+	<string name="attach_audio">Attach Audio</string>
+
 	<!-- Fragment: Report Photos -->
 	<string name="action_add">Add</string>
 	<string name="action_delete">Delete</string>
-	<string name="take_photo">Take Photo</string>
-	<string name="attach_photo">Attach Photo</string>
 	<string name="no_photos">No photos attached.</string>
 
 	<!-- Fragment: Report Notes -->
@@ -174,6 +181,9 @@
 		<item quantity="one">1 report synced.</item>
 		<item quantity="other">%d reports synced.</item>
 	</plurals>
+
+	<!-- Fragment: Report Video -->
+	<string name="no_video">No video attached.</string>
 
 	<!-- Time -->
 	<string name="secAbbr">sec</string>

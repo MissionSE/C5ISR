@@ -5,8 +5,11 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.missionse.kestrelweather.reports.utils.MediaTimeConverter;
 
@@ -139,6 +142,14 @@ public class MediaPlayerWrapper {
 				Log.e(TAG, "Unable to prepare media.", exception);
 			}
 		}
+	}
+
+	/**
+	 * Set the display surface for video file.
+	 * @param holder The SurfaceHolder that contains the display area.
+	 */
+	public void setDisplay(SurfaceHolder holder) {
+		mMediaPlayer.setDisplay(holder);
 	}
 
 	/**

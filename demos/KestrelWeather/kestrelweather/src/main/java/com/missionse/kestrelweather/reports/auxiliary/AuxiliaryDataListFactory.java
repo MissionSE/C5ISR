@@ -4,6 +4,7 @@ import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.reports.auxiliary.impl.AudioListItem;
 import com.missionse.kestrelweather.reports.auxiliary.impl.NotesListItem;
 import com.missionse.kestrelweather.reports.auxiliary.impl.PhotosListItem;
+import com.missionse.kestrelweather.reports.auxiliary.impl.VideoListItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public final class AuxiliaryDataListFactory {
 		auxiliaryDataListItems.add(new NotesListItem(activity, reportId));
 		auxiliaryDataListItems.add(new PhotosListItem(activity, reportId));
 		auxiliaryDataListItems.add(new AudioListItem(activity, reportId));
+		auxiliaryDataListItems.add(new VideoListItem(activity, reportId));
 
 		return auxiliaryDataListItems;
 	}

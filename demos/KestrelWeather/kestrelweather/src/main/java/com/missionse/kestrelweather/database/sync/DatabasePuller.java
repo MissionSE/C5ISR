@@ -197,6 +197,10 @@ public class DatabasePuller implements Runnable {
 		JsonArray imageArray = json.getAsJsonArray("images");
 		packReportSupplement(report, SupplementType.PHOTO, imageArray);
 
+		Log.d(TAG, "parse videos...");
+		JsonArray videoArray = json.getAsJsonArray("video");
+		packReportSupplement(report, SupplementType.VIDEO, videoArray);
+
 		notifyPullComplete(report.getId());
 	}
 

@@ -85,6 +85,13 @@ public interface DatabaseAccessor {
 	 */
 	List<Supplement> getAudioSupplements(int reportId);
 
+	/**
+	 * Getter.
+	 * @param reportId The DB report ID
+	 * @return List of supplements that are of type SupplementType.VIDEO.
+	 */
+	List<Supplement> getVideoSupplements(int reportId);
+
 	DateTime getLastSyncedTime();
 
 	void setLastSyncedTime(DateTime time);
