@@ -33,7 +33,8 @@ public class TiledMap implements MapLoadedListener {
 			TileOverlay tileOverlay = map.addTileOverlay(
 					new TileOverlayOptions()
 							.tileProvider(tileProvider)
-							.visible(false));
+							.visible(false)
+			);
 
 			mTileOverlays.put(overlayName, tileOverlay);
 		}

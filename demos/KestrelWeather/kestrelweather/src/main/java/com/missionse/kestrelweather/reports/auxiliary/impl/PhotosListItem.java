@@ -49,8 +49,8 @@ public class PhotosListItem implements AuxiliaryDataListItem {
 	public void onClick() {
 		mFragmentManager.beginTransaction()
 				.setCustomAnimations(
-						R.animator.slide_from_right, R.animator.slide_to_left,
-						R.animator.slide_from_left, R.animator.slide_to_right)
+						R.animator.fade_in, R.animator.fade_out,
+						R.animator.fade_in, R.animator.fade_out)
 				.replace(R.id.content, PhotoOverviewFragment.newInstance(mReportId), "photo_overview")
 				.addToBackStack("photo_overview")
 				.commit();

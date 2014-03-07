@@ -53,7 +53,8 @@ public class SettingsActivity extends PreferenceActivity {
 				preference.setSummary(
 						index >= 0
 								? listPreference.getEntries()[index]
-								: null);
+								: null
+				);
 			} else {
 				// For all other preferences, set the summary to the value's
 				// simple string representation.
@@ -80,7 +81,8 @@ public class SettingsActivity extends PreferenceActivity {
 		sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
 				PreferenceManager
 						.getDefaultSharedPreferences(preference.getContext())
-						.getString(preference.getKey(), ""));
+						.getString(preference.getKey(), "")
+		);
 	}
 
 	@Override
@@ -244,8 +246,9 @@ public class SettingsActivity extends PreferenceActivity {
 									mDeveloperToast.cancel();
 								}
 								mDeveloperToast = Toast.makeText(getActivity(), getResources().getQuantityString(
-										R.plurals.developer_mode_toast, mDeveloperClickCount, mDeveloperClickCount),
-										Toast.LENGTH_SHORT);
+												R.plurals.developer_mode_toast, mDeveloperClickCount, mDeveloperClickCount),
+										Toast.LENGTH_SHORT
+								);
 								mDeveloperToast.show();
 							}
 						} else if (mDeveloperClickCount < 0) {

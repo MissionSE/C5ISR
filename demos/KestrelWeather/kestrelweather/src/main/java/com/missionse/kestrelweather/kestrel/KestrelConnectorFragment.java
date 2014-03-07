@@ -200,7 +200,7 @@ public class KestrelConnectorFragment extends Fragment {
 				} else {
 					if (getActivity() != null) {
 						SharedPreferences kestrelPreferences = getActivity().getSharedPreferences(
-							KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0);
+								KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0);
 						if (kestrelPreferences.getBoolean(getString(R.string.key_simulation_mode), false)) {
 							SimulationModeAlertDialogFragment simModeAlert = new SimulationModeAlertDialogFragment();
 							simModeAlert.setTargetRunnable(mUseSavedDataRunnable, mConnectNormallyRunnable);
@@ -208,8 +208,7 @@ public class KestrelConnectorFragment extends Fragment {
 						} else {
 							showBluetoothDialog();
 						}
-					}
-					else {
+					} else {
 						showBluetoothDialog();
 					}
 				}
@@ -237,8 +236,8 @@ public class KestrelConnectorFragment extends Fragment {
 
 						activity.getFragmentManager().beginTransaction()
 								.setCustomAnimations(
-										R.animator.slide_from_right, R.animator.slide_to_left,
-										R.animator.slide_from_left, R.animator.slide_to_right)
+										R.animator.fade_in, R.animator.fade_out,
+										R.animator.fade_in, R.animator.fade_out)
 								.replace(R.id.content, ReportDetailFragment.newInstance(report.getId()), "report_addon")
 								.addToBackStack("report_addon")
 								.commit();
@@ -266,27 +265,27 @@ public class KestrelConnectorFragment extends Fragment {
 		public void run() {
 			if (getActivity() != null) {
 				SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(
-					KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0);
+						KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0);
 
 				KestrelWeather kestrelWeather = new KestrelWeather();
 				kestrelWeather.setTemperature(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_TEMPERATURE,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+						KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
 				kestrelWeather.setHumidity(mSharedPreferences.getInt(KestrelSimulationSharedPreferences.KESTREL_HUMIDITY,
-					KestrelSimulationSharedPreferences.NONSENSE_INT));
+						KestrelSimulationSharedPreferences.NONSENSE_INT));
 				kestrelWeather.setPressure(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_PRESSURE,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+						KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
 				kestrelWeather.setPressureTrend(mSharedPreferences.getInt(KestrelSimulationSharedPreferences.KESTREL_PRESSURE_TREND,
-					KestrelSimulationSharedPreferences.NONSENSE_INT));
+						KestrelSimulationSharedPreferences.NONSENSE_INT));
 				kestrelWeather.setHeatIndex(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_HEAT_IDX,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+						KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
 				kestrelWeather.setWindSpeed(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_WIND_SPD,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+						KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
 				kestrelWeather.setWindDirection(mSharedPreferences.getInt(KestrelSimulationSharedPreferences.KESTREL_WIND_DIR,
-					KestrelSimulationSharedPreferences.NONSENSE_INT));
+						KestrelSimulationSharedPreferences.NONSENSE_INT));
 				kestrelWeather.setWindChill(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_WIND_CHILL,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+						KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
 				kestrelWeather.setDewPoint(mSharedPreferences.getFloat(KestrelSimulationSharedPreferences.KESTREL_DEW_PT,
-					KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
+						KestrelSimulationSharedPreferences.NONSENSE_FLOAT));
 
 				mKestrelWeather = kestrelWeather;
 
@@ -368,7 +367,8 @@ public class KestrelConnectorFragment extends Fragment {
 									Log.e(TAG, "Unable to retrieve open weather data.", e);
 								}
 							}
-						});
+						}
+				);
 			}
 		}
 	}

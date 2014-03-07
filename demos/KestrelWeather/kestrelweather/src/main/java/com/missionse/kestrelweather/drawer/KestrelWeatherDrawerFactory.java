@@ -71,12 +71,12 @@ public class KestrelWeatherDrawerFactory {
 		createItem.setTextColorStateList(R.drawable.drawer_create_text_selector, mContext);
 		menu.add(createItem);
 		DrawerSimpleNumberedItem draftItem = DrawerSimpleNumberedItem.create(REPORT_DRAFT,
-			mContext.getString(R.string.drawer_drafts), "0", 0, true);
+				mContext.getString(R.string.drawer_drafts), "0", 0, true);
 		draftItem.setBackgroundDrawable(R.drawable.drawer_sync_background_selector, mContext);
 		draftItem.setTextColorStateList(R.drawable.drawer_sync_text_selector, mContext);
 		menu.add(draftItem);
 		DrawerSimpleNumberedItem viewItem = DrawerSimpleNumberedItem.create(REPORT_VIEW,
-			mContext.getString(R.string.drawer_report_database), "0", 0, true);
+				mContext.getString(R.string.drawer_report_database), "0", 0, true);
 		viewItem.setBackgroundDrawable(R.drawable.drawer_database_background_selector, mContext);
 		viewItem.setTextColorStateList(R.drawable.drawer_database_text_selector, mContext);
 		menu.add(viewItem);

@@ -48,7 +48,8 @@ public final class FileDownloader {
 													Log.v(TAG, "Media Scanner returned null URI.");
 												}
 											}
-										});
+										}
+								);
 							} else {
 								Log.v(TAG, "Downloaded file is null.");
 							}

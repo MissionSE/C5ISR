@@ -50,8 +50,8 @@ public class NotesListItem implements AuxiliaryDataListItem {
 	public void onClick() {
 		mFragmentManager.beginTransaction()
 				.setCustomAnimations(
-						R.animator.slide_from_right, R.animator.slide_to_left,
-						R.animator.slide_from_left, R.animator.slide_to_right)
+						R.animator.fade_in, R.animator.fade_out,
+						R.animator.fade_in, R.animator.fade_out)
 				.replace(R.id.content, NoteOverviewFragment.newInstance(mReportId), "notes_overview")
 				.addToBackStack("notes_overview")
 				.commit();

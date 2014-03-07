@@ -27,8 +27,7 @@ public final class OpenWeatherRequester {
 	 */
 	public static void queryOpenWeather(final Context context, final String latitude, final String longitude,
 			final FutureCallback<JsonObject> callback) {
-		String openWeatherApiUrl = String.format(
-				context.getString(R.string.open_weather_api, latitude, longitude));
+		String openWeatherApiUrl = context.getString(R.string.open_weather_api, latitude, longitude);
 
 		Ion.with(context, openWeatherApiUrl)
 				.asJsonObject()

@@ -60,8 +60,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	private TextView mDrawerCountFooter;
 	private TextView mDrawerTimestampFooter;
 	private SharedPreferences mSharedPreferences;
-	private Menu overflowMenu;
-	private boolean mOnMap = false;
+	private Menu mOverflowMenu;
+	private int mCurrentNavigationIndex = KestrelWeatherDrawerFactory.MAP_OVERVIEW;
 
 	/**
 	 * Constructor.
@@ -74,7 +74,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		PreferenceManager.setDefaultValues(this, R.xml.pref_units, false);
@@ -126,8 +126,9 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 		boolean syncEnabled = mSharedPreferences.getBoolean(getString(R.string.key_sync_enabled), true);
 		if (syncEnabled) {
-			float intervalInMinutes = Float.valueOf(mSharedPreferences.getString(getString(R.string.key_sync_frequency),
-					String.valueOf(getResources().getInteger(R.integer.default_data_sync_interval))));
+			final String syncFrequency = getString(R.string.key_sync_frequency);
+			final String defaultSyncFrequency = String.valueOf(getResources().getInteger(R.integer.default_data_sync_interval));
+			float intervalInMinutes = Float.valueOf(mSharedPreferences.getString(syncFrequency, defaultSyncFrequency));
 			Log.d(TAG, "Starting sync service on an interval of " + intervalInMinutes + " minutes...");
 			int intervalInMillis = (int) (intervalInMinutes * MILLIS_PER_MIN);
 
@@ -159,11 +160,11 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 	private void shutdownKestrelSimulator() {
 		mKestrelSimulator.stopSimulator();
-		MenuItem simulationMode = overflowMenu.findItem(R.id.action_simulate_kestrel);
+		MenuItem simulationMode = mOverflowMenu.findItem(R.id.action_simulate_kestrel);
 		if (simulationMode != null) {
 			simulationMode.setChecked(false);
 			SharedPreferences.Editor kestrelPreferencesEditor = getSharedPreferences(
-				KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0).edit();
+					KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0).edit();
 			kestrelPreferencesEditor.putBoolean(getString(R.string.key_simulation_mode), false);
 			kestrelPreferencesEditor.commit();
 		}
@@ -201,7 +202,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 		updateDrawerFooterCountInformation();
 
-		displayHome();
+		clearBackStack();
+		selectItemById(mCurrentNavigationIndex, getLeftDrawerList());
 
 		addDrawerEventListener(new DrawerLayout.DrawerListener() {
 			@Override
@@ -276,7 +278,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 		if (mDrawerCountFooter != null) {
 			mDrawerCountFooter.setText(getResources().getQuantityString(R.plurals.drawer_footer_unsynced_count, unsyncedItemCount,
-				unsyncedItemCount));
+					unsyncedItemCount));
 			if (unsyncedItemCount > 0) {
 				mDrawerCountFooter.setTextColor(getResources().getColor(R.color.holo_red_light));
 			} else {
@@ -288,7 +290,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	private void updateDrawerFooterTimeInformation() {
 		if (mDrawerTimestampFooter != null) {
 			mDrawerTimestampFooter.setText(getString(R.string.drawer_footer_time) + " "
-				+ DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(mDatabaseManager.getLastSyncedTime()));
+					+ DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]").print(mDatabaseManager.getLastSyncedTime()));
 		}
 	}
 
@@ -321,9 +323,12 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			mapViewerFragment.setMapLoadedListener(mTiledMap);
 		}
 		fragmentManager.beginTransaction()
+				.setCustomAnimations(
+						R.animator.fade_in, R.animator.fade_out,
+						R.animator.fade_in, R.animator.fade_out)
 				.replace(R.id.content, mapViewerFragment, "map")
 				.commit();
-		mOnMap = true;
+		mCurrentNavigationIndex = KestrelWeatherDrawerFactory.MAP_OVERVIEW;
 	}
 
 	private void displayCreateReport() {
@@ -333,20 +338,14 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (kestrelConnectorFragment == null) {
 			kestrelConnectorFragment = new KestrelConnectorFragment();
 		}
-		if (mOnMap) {
-			fragmentManager.beginTransaction()
-					.replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
-					.commit();
-		} else {
-			fragmentManager.beginTransaction()
-					.setCustomAnimations(
-							R.animator.slide_from_left, R.animator.slide_to_right,
-							R.animator.slide_from_left, R.animator.slide_to_right)
-					.replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
-					.commit();
-		}
+		fragmentManager.beginTransaction()
+				.setCustomAnimations(
+						R.animator.fade_in, R.animator.fade_out,
+						R.animator.fade_in, R.animator.fade_out)
+				.replace(R.id.content, kestrelConnectorFragment, "kestrelconnector")
+				.commit();
 
-		mOnMap = false;
+		mCurrentNavigationIndex = KestrelWeatherDrawerFactory.CREATE_REPORT;
 	}
 
 	private void displayReportDrafts() {
@@ -356,20 +355,14 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (reportDraftFragment == null) {
 			reportDraftFragment = new ReportDraftFragment();
 		}
-		if (mOnMap) {
-			fragmentManager.beginTransaction()
-					.replace(R.id.content, reportDraftFragment, "report_sync")
-					.commit();
-		} else {
-			fragmentManager.beginTransaction()
-					.setCustomAnimations(
-							R.animator.slide_from_left, R.animator.slide_to_right,
-							R.animator.slide_from_left, R.animator.slide_to_right)
-					.replace(R.id.content, reportDraftFragment, "report_sync")
-					.commit();
-		}
+		fragmentManager.beginTransaction()
+				.setCustomAnimations(
+						R.animator.fade_in, R.animator.fade_out,
+						R.animator.fade_in, R.animator.fade_out)
+				.replace(R.id.content, reportDraftFragment, "report_sync")
+				.commit();
 
-		mOnMap = false;
+		mCurrentNavigationIndex = KestrelWeatherDrawerFactory.REPORT_DRAFT;
 	}
 
 	private void displayReportDatabase() {
@@ -379,26 +372,20 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (reportDatabaseFragment == null) {
 			reportDatabaseFragment = new ReportDatabaseFragment();
 		}
-		if (mOnMap) {
-			fragmentManager.beginTransaction()
-					.replace(R.id.content, reportDatabaseFragment, "report_database")
-					.commit();
-		} else {
-			fragmentManager.beginTransaction()
-					.setCustomAnimations(
-							R.animator.slide_from_left, R.animator.slide_to_right,
-							R.animator.slide_from_left, R.animator.slide_to_right)
-					.replace(R.id.content, reportDatabaseFragment, "report_database")
-					.commit();
-		}
+		fragmentManager.beginTransaction()
+				.setCustomAnimations(
+						R.animator.fade_in, R.animator.fade_out,
+						R.animator.fade_in, R.animator.fade_out)
+				.replace(R.id.content, reportDatabaseFragment, "report_database")
+				.commit();
 
-		mOnMap = false;
+		mCurrentNavigationIndex = KestrelWeatherDrawerFactory.REPORT_VIEW;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.kestrel_weather, menu);
-		overflowMenu = menu;
+		mOverflowMenu = menu;
 		return true;
 	}
 
@@ -423,7 +410,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		} else if (id == R.id.action_simulate_kestrel) {
 			if (!item.isChecked()) {
 				SharedPreferences.Editor kestrelPreferencesEditor = getSharedPreferences(
-					KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0).edit();
+						KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0).edit();
 				if (mKestrelSimulator.checkBluetoothAvailability()) {
 					mKestrelSimulator.startSimulator();
 					item.setChecked(true);
@@ -484,6 +471,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	 */
 	public void displayHome() {
 		clearBackStack();
-		selectItem(0, getLeftDrawerList());
+		selectItemById(KestrelWeatherDrawerFactory.MAP_OVERVIEW, getLeftDrawerList());
 	}
 }

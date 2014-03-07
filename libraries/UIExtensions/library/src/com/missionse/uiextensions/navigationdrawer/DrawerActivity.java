@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -306,7 +307,7 @@ public abstract class DrawerActivity extends Activity {
 	/**
 	 * Selects an item in a Drawer.
 	 * @param position the position
-	 * @param drawerList the ListView that on which the selected item exists
+	 * @param drawerList the ListView on which the selected item exists
 	 */
 	public void selectItem(final int position, final ListView drawerList) {
 		DrawerItem selectedItem = (DrawerItem) drawerList.getAdapter().getItem(position);
@@ -328,7 +329,27 @@ public abstract class DrawerActivity extends Activity {
 				mDrawerLayout.closeDrawer(mRightDrawer);
 			}
 		}
+	}
 
+	/**
+	 * Selects an item in a Drawer.
+	 * @param id the id of item
+	 * @param drawerList the ListView on which the selected item exists
+	 */
+	public void selectItemById(final int id, final ListView drawerList) {
+		int position = -1;
+		Adapter adapter = drawerList.getAdapter();
+		for (int index = 0; index < adapter.getCount(); index++) {
+			DrawerItem currentItem = (DrawerItem) adapter.getItem(index);
+			if (currentItem.getId() == id) {
+				position = index;
+				break;
+			}
+		}
+
+		if (position != -1) {
+			selectItem(position, drawerList);
+		}
 	}
 
 	@Override

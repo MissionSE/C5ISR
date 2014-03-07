@@ -131,7 +131,8 @@ public class PhotoDialogFragment extends DialogFragment {
 									});
 								}
 							}
-						});
+						}
+				);
 			} else {
 				targetFragment.onActivityResult(targetRequestCode, resultCode, resultData);
 				dismiss();

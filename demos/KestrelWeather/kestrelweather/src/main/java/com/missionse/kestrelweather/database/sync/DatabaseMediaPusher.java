@@ -59,7 +59,8 @@ public class DatabaseMediaPusher implements Runnable {
 							Log.d(TAG, "Failed to upload media file...", e);
 						}
 					}
-				});
+				}
+		);
 		IonUtil.uploadMedia(container);
 	}
 
