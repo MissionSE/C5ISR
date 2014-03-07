@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather.preferences;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.missionse.kestrelweather.R;
 
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -29,6 +31,8 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends PreferenceActivity {
+	private SharedPreferences mDevelopmentPreferences;
+	private SharedPreferences.OnSharedPreferenceChangeListener mDevelopmentPreferencesListener;
 
 	/**
 	 * A preference value change listener that updates the preference's summary
@@ -81,7 +85,10 @@ public class SettingsActivity extends PreferenceActivity {
 
 	@Override
 	public void onBuildHeaders(List<Header> target) {
+		mDevelopmentPreferences = getSharedPreferences(DeveloperPreferenceFragment.PREF_FILE,
+				Context.MODE_PRIVATE);
 		loadHeadersFromResource(R.xml.pref_headers, target);
+		updateHeaderList(target);
 	}
 
 	@Override
@@ -89,6 +96,18 @@ public class SettingsActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		mDevelopmentPreferences = getSharedPreferences(DeveloperPreferenceFragment.PREF_FILE,
+				Context.MODE_PRIVATE);
+
+		mDevelopmentPreferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+			@Override
+			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+				invalidateHeaders();
+			}
+		};
+		mDevelopmentPreferences.registerOnSharedPreferenceChangeListener(
+				mDevelopmentPreferencesListener);
 	}
 
 	/**
@@ -102,6 +121,20 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	protected boolean isValidFragment(String fragmentName) {
 		return true;  //FIXME
+	}
+
+	private void updateHeaderList(List<Header> target) {
+		final boolean showDev = mDevelopmentPreferences.getBoolean(getString(R.string.key_developer), false);
+
+		ListIterator<Header> iterator = target.listIterator();
+		while (iterator.hasNext()) {
+			Header header = iterator.next();
+			int id = (int) header.id;
+
+			if (id == R.id.developer_settings && !showDev) {
+				iterator.remove();
+			}
+		}
 	}
 
 	/**
@@ -143,6 +176,19 @@ public class SettingsActivity extends PreferenceActivity {
 	}
 
 	/**
+	 * This fragment shows developer preferences only.
+	 */
+	public static class DeveloperPreferenceFragment extends PreferenceFragment {
+		public static final String PREF_FILE = "development";
+
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			addPreferencesFromResource(R.xml.pref_developer);
+		}
+	}
+
+	/**
 	 * This fragment shows about preferences only.
 	 */
 	public static class AboutPreferenceFragment extends PreferenceFragment {
@@ -154,10 +200,11 @@ public class SettingsActivity extends PreferenceActivity {
 		public void onResume() {
 			super.onResume();
 			if (getActivity() != null) {
-				if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.key_developer), false)) {
-					mDeveloperClickCount = TAPS_TO_BE_A_DEVELOPER;
-				} else {
+				if (getActivity().getSharedPreferences(DeveloperPreferenceFragment.PREF_FILE, Context.MODE_PRIVATE)
+						.getBoolean(getString(R.string.key_developer), false)) {
 					mDeveloperClickCount = -1;
+				} else {
+					mDeveloperClickCount = TAPS_TO_BE_A_DEVELOPER;
 				}
 			}
 
@@ -184,10 +231,9 @@ public class SettingsActivity extends PreferenceActivity {
 						if (mDeveloperClickCount > 0) {
 							mDeveloperClickCount--;
 							if (mDeveloperClickCount == 0) {
-								SharedPreferences.Editor editor =
-										PreferenceManager.getDefaultSharedPreferences(preference.getContext()).edit();
-								editor.putBoolean(
-										getString(R.string.key_developer), true).commit();
+								getActivity().getSharedPreferences(DeveloperPreferenceFragment.PREF_FILE,
+										Context.MODE_PRIVATE).edit().putBoolean(
+										getString(R.string.key_developer), true).apply();
 								if (mDeveloperToast != null) {
 									mDeveloperToast.cancel();
 								}

@@ -29,6 +29,8 @@
 	</string-array>
 
 	<!-- Developer settings -->
+	<string name="pref_header_developer">Developer Options</string>
+
 	<string name="developer_mode_enabled">You are now a developer!</string>
 	<string name="developer_mode_already">You are already a developer!</string>
 	<plurals name="developer_mode_toast">

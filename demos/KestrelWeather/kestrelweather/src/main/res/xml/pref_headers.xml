@@ -10,6 +10,12 @@
 		android:fragment="com.missionse.kestrelweather.preferences.SettingsActivity$DataSyncPreferenceFragment"
 		android:title="@string/pref_header_data_sync"/>
 
+	<!-- Development -->
+	<header
+		android:id="@+id/developer_settings"
+		android:fragment="com.missionse.kestrelweather.preferences.SettingsActivity$DeveloperPreferenceFragment"
+		android:title="@string/pref_header_developer" />
+
 	<header
 		android:fragment="com.missionse.kestrelweather.preferences.SettingsActivity$AboutPreferenceFragment"
 		android:title="@string/pref_header_about"/>
