@@ -152,6 +152,14 @@ module.exports = function(db) {
 											status: 'ok',
 											url: files[0].publicPath
 										}));
+
+										var newEvent = new db.Event({
+											reportId: data.id,
+											eventType: 'modify'
+										});
+										newEvent.save(function(err, newEvent) {
+											debug(postReport, newEvent.eventType + ' event logged');
+										});
 									}
 								});
 							} else if (files[0].type.search('audio') >= 0) {
@@ -178,6 +186,14 @@ module.exports = function(db) {
 											status: 'ok',
 											url: files[0].publicPath
 										}));
+
+										var newEvent = new db.Event({
+											reportId: data.id,
+											eventType: 'modify'
+										});
+										newEvent.save(function(err, newEvent) {
+											debug(postReport, newEvent.eventType + ' event logged');
+										});
 									}
 								});
 							} else if (files[0].type.search('video') >= 0) {
@@ -204,6 +220,14 @@ module.exports = function(db) {
 											status: 'ok',
 											url: files[0].publicPath
 										}));
+
+										var newEvent = new db.Event({
+											reportId: data.id,
+											eventType: 'modify'
+										});
+										newEvent.save(function(err, newEvent) {
+											debug(postReport, newEvent.eventType + ' event logged');
+										});
 									}
 								});
 							}
