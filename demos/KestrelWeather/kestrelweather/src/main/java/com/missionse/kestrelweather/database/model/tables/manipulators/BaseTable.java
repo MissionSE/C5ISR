@@ -95,4 +95,14 @@ public class BaseTable<T extends Entity> extends BaseDaoImpl<T, Integer> impleme
 			return Collections.emptyList();
 		}
 	}
+
+	@Override
+	public long countOf() {
+		try {
+			return super.countOf();
+		} catch (SQLException e) {
+			Log.e(TAG, "Unable to countOf", e);
+			return 0;
+		}
+	}
 }

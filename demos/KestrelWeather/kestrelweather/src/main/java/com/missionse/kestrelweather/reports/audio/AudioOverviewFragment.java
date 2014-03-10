@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ClipData;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,7 +44,7 @@ import java.io.File;
  * Use the {@link AudioOverviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AudioOverviewFragment extends Fragment implements MediaPlayerWrapper.OnMediaPlayerEventListener {
+public class AudioOverviewFragment extends Fragment implements MediaPlayerListener {
 	private static final String TAG = AudioOverviewFragment.class.getSimpleName();
 	private static final int ATTACH_AUDIO_REQUEST = 20;
 	private static final String REPORT_ID = "report_id";
@@ -66,7 +67,7 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 	 */
 	public AudioOverviewFragment() {
 		mMediaWrapper = new MediaPlayerWrapper();
-		mMediaWrapper.setCompleteListener(this);
+		mMediaWrapper.setMediaPlayerListener(this);
 	}
 
 	/**
@@ -365,7 +366,26 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerWrappe
 	}
 
 	@Override
-	public void onMediaComplete() {
+	public void onBufferingUpdate(MediaPlayer mp, int percent) { }
+
+	@Override
+	public void onPrepared(MediaPlayer mp) { }
+
+	@Override
+	public void onCompletion(MediaPlayer mp) {
 		showPlayButton();
 	}
+
+	@Override
+	public boolean onError(MediaPlayer mp, int what, int extra) {
+		return false;
+	}
+
+	@Override
+	public boolean onInfo(MediaPlayer mp, int what, int extra) {
+		return false;
+	}
+
+	@Override
+	public void onSeekComplete(MediaPlayer mp) { }
 }

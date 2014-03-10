@@ -18,6 +18,7 @@ import com.missionse.kestrelweather.database.model.tables.manipulators.UserSetti
 
 import org.joda.time.DateTime;
 
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -157,6 +158,39 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 			}
 		}
 		return retList;
+	}
+
+	@Override
+	public int getDraftCount() {
+		ReportTable table = mLocalDatabaseHelper.getReportTable();
+		try {
+			return (int) table.countOf(table.queryBuilder().setCountOf(true).where().eq("draft", true).prepare());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	@Override
+	public int getSyncedCount() {
+		ReportTable table = mLocalDatabaseHelper.getReportTable();
+		try {
+			return (int) table.countOf(table.queryBuilder().setCountOf(true).where().eq("dirty", false).prepare());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	@Override
+	public int getUnSynedCount() {
+		ReportTable table = mLocalDatabaseHelper.getReportTable();
+		try {
+			return (int) table.countOf(table.queryBuilder().setCountOf(true).where().eq("dirty", true).and().eq("draft", false).prepare());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 	@Override

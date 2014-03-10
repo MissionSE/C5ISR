@@ -92,7 +92,33 @@ public interface DatabaseAccessor {
 	 */
 	List<Supplement> getVideoSupplements(int reportId);
 
+	/**
+	 * Retrieve the last time the database was synced.
+	 * @return DateTime that represents the last time the database was synced.
+	 */
 	DateTime getLastSyncedTime();
 
+	/**
+	 * Set the time the database has been synced.
+	 * @param time The DateTime the database has been synced.
+	 */
 	void setLastSyncedTime(DateTime time);
+
+	/**
+	 * Retrieve the number of draft reports in the database.
+	 * @return count of reports that are a draft.
+	 */
+	int getDraftCount();
+
+	/**
+	 * Retrieve the number of synced reports.
+	 * @return count of reports that have been synced.
+	 */
+	int getSyncedCount();
+
+	/**
+	 * Retrieve the number of un-synced reports.
+	 * @return count of reports that have not been synced.
+	 */
+	int getUnSynedCount();
 }

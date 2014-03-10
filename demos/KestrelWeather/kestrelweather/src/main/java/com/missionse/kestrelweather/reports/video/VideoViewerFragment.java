@@ -1,8 +1,13 @@
 package com.missionse.kestrelweather.reports.video;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -15,6 +20,7 @@ import android.widget.VideoView;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.util.MediaResolver;
+import com.missionse.kestrelweather.reports.audio.MediaPlayerListener;
 import com.missionse.kestrelweather.reports.audio.MediaPlayerWrapper;
 
 import java.io.File;
@@ -22,13 +28,15 @@ import java.io.File;
 /**
  * Fragment for viewing videos.
  */
-public final class VideoViewerFragment extends Fragment implements MediaPlayerWrapper.OnMediaPlayerEventListener {
+public final class VideoViewerFragment extends Fragment implements MediaPlayerListener {
+	private static final String TAG = VideoViewerFragment.class.getSimpleName();
 	private static final String ARG_VIDEO_LOCAL_URI = "local_video_uri";
 	private static final String ARG_VIDEO_REMOTE_URI = "local_remote_uri";
 	private static final int SKIP_INTERVAL_IN_MILLISECONDS = 5000;
 	private MediaPlayerWrapper mMediaWrapper;
 	private ImageButton mPlayButton;
 	private ImageButton mPauseButton;
+	private ProgressDialog mBufferingProgress;
 
 	private String mLocalUri;
 	private String mRemoteUri;
@@ -36,7 +44,7 @@ public final class VideoViewerFragment extends Fragment implements MediaPlayerWr
 
 	public VideoViewerFragment() {
 		mMediaWrapper = new MediaPlayerWrapper();
-		mMediaWrapper.setCompleteListener(this);
+		mMediaWrapper.setMediaPlayerListener(this);
 	}
 
 	/**
@@ -83,6 +91,9 @@ public final class VideoViewerFragment extends Fragment implements MediaPlayerWr
 			ImageButton rewindButton = (ImageButton) view.findViewById(R.id.audio_control_reverse_button);
 
 			setMediaSource();
+			if (getActivity() != null) {
+				mBufferingProgress = ProgressDialog.show(getActivity(), null, "Loading video...");
+			}
 
 			mPlayButton.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -186,7 +197,63 @@ public final class VideoViewerFragment extends Fragment implements MediaPlayerWr
 	}
 
 	@Override
-	public void onMediaComplete() {
+	public void onDestroy() {
+		super.onDestroy();
+		if (mMediaWrapper != null) {
+			mMediaWrapper.destroy();
+		}
+	}
+
+	@Override
+	public void onBufferingUpdate(MediaPlayer mp, int percent) {
+
+	}
+
+	@Override
+	public void onPrepared(MediaPlayer mp) {
+		if (mBufferingProgress != null) {
+			mBufferingProgress.dismiss();
+		}
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer mp) {
 		showPlayButton();
+	}
+
+	@Override
+	public boolean onError(MediaPlayer mp, int what, int extra) {
+		Log.d(TAG, "error (" + what + ", " + extra + ")");
+		if (mBufferingProgress != null) {
+			mBufferingProgress.dismiss();
+		}
+		showErrorMessage();
+		return false;
+	}
+
+	private void showErrorMessage() {
+		if (getActivity() != null) {
+			new AlertDialog.Builder(getActivity())
+					.setTitle("Error")
+					.setMessage("Unable to load video.")
+					.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+							getActivity().getFragmentManager().beginTransaction().remove(VideoViewerFragment.this).commit();
+						}
+					})
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.show();
+		}
+	}
+
+	@Override
+	public boolean onInfo(MediaPlayer mp, int what, int extra) {
+		return false;
+	}
+
+	@Override
+	public void onSeekComplete(MediaPlayer mp) {
+
 	}
 }

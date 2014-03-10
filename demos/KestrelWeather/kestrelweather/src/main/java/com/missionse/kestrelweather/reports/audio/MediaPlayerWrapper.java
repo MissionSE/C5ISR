@@ -6,17 +6,15 @@ import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.missionse.kestrelweather.reports.utils.MediaTimeConverter;
 
 /**
  * Wrapper around Android's MediaPlayer to help sync TextViews and SeekBars.
  */
-public class MediaPlayerWrapper {
+public class MediaPlayerWrapper implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, MediaPlayer.OnSeekCompleteListener {
 	private static final String TAG = MediaPlayerWrapper.class.getSimpleName();
 	private static final int SEEK_UPDATE_DELAY = 100;
 
@@ -24,7 +22,7 @@ public class MediaPlayerWrapper {
 	private TextView mDurationTextView;
 	private TextView mCurrentTextView;
 	private SeekBar mSeekBar;
-	private OnMediaPlayerEventListener mCompleteListener;
+	private MediaPlayerListener mMediaListener;
 	private Object mCurrentMediaUri;
 	private boolean mNewMediaSelected = false;
 	private int mSeekResumePosition = 0;
@@ -45,20 +43,24 @@ public class MediaPlayerWrapper {
 	 */
 	public MediaPlayerWrapper() {
 		mMediaPlayer = new MediaPlayer();
+		setupMediaListeners();
+	}
+
+	private void setupMediaListeners() {
+		mMediaPlayer.setOnBufferingUpdateListener(this);
+		mMediaPlayer.setOnPreparedListener(this);
+		mMediaPlayer.setOnCompletionListener(this);
+		mMediaPlayer.setOnErrorListener(this);
+		mMediaPlayer.setOnInfoListener(this);
+		mMediaPlayer.setOnSeekCompleteListener(this);
 	}
 
 	/**
 	 * Set listener for media player events.
-	 * @param listener - Instance of OnMediaPlayerEventListener.
+	 * @param listener Instance of MediaPlayerListener.
 	 */
-	public void setCompleteListener(OnMediaPlayerEventListener listener) {
-		mCompleteListener = listener;
-		mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-			@Override
-			public void onCompletion(MediaPlayer mp) {
-				onMediaCompletion();
-			}
-		});
+	public void setMediaPlayerListener(MediaPlayerListener listener) {
+		mMediaListener = listener;
 	}
 
 	/**
@@ -126,7 +128,6 @@ public class MediaPlayerWrapper {
 
 	/**
 	 * Set the media source that will be playing.
-	 * @param context The current context.
 	 * @param uri The URI that represents the media to be played.
 	 */
 	public void setMediaSource(final String uri) {
@@ -137,7 +138,7 @@ public class MediaPlayerWrapper {
 			try {
 				mMediaPlayer.reset();
 				mMediaPlayer.setDataSource((String) mCurrentMediaUri);
-				mMediaPlayer.prepare();
+				mMediaPlayer.prepareAsync();
 			} catch (Exception exception) {
 				Log.e(TAG, "Unable to prepare media.", exception);
 			}
@@ -226,29 +227,54 @@ public class MediaPlayerWrapper {
 		mHandler.removeCallbacks(mUpdateSeekRunnable);
 	}
 
-	private void onMediaCompletion() {
-		if (mCompleteListener != null) {
-			mCompleteListener.onMediaComplete();
-		}
-	}
-
 	/**
 	 * Cleans up all processes.
 	 */
 	public void destroy() {
 		if (mMediaPlayer != null) {
+			if (mMediaPlayer.isPlaying()) {
+				mMediaPlayer.stop();
+			}
 			mMediaPlayer.release();
 		}
 		pauseSeekBar();
 	}
 
-	/**
-	 * Listener for media player.
-	 */
-	public interface OnMediaPlayerEventListener {
-		/**
-		 * Callback function to notify when media playback has completed.
-		 */
-		void onMediaComplete();
+	@Override
+	public void onBufferingUpdate(MediaPlayer mp, int percent) {
+		if (mMediaListener != null) {
+			mMediaListener.onBufferingUpdate(mp, percent);
+		}
+	}
+
+	@Override
+	public void onPrepared(MediaPlayer mp) {
+		if (mMediaListener != null) {
+			mMediaListener.onPrepared(mp);
+		}
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer mp) {
+		if (mMediaPlayer != null) {
+			mMediaListener.onCompletion(mp);
+		}
+	}
+
+	@Override
+	public boolean onError(MediaPlayer mp, int what, int extra) {
+		return mMediaListener != null && mMediaListener.onError(mp, what, extra);
+	}
+
+	@Override
+	public boolean onInfo(MediaPlayer mp, int what, int extra) {
+		return mMediaListener != null && mMediaListener.onInfo(mp, what, extra);
+	}
+
+	@Override
+	public void onSeekComplete(MediaPlayer mp) {
+		if (mMediaListener != null) {
+			mMediaListener.onSeekComplete(mp);
+		}
 	}
 }

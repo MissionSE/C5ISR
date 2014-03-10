@@ -233,13 +233,13 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			if (getLeftDrawerAdapter().getItem(index).getId() == KestrelWeatherDrawerFactory.REPORT_DRAFT) {
 				DrawerSimpleNumberedItem draftItem = (DrawerSimpleNumberedItem) getLeftDrawerAdapter().getItem(index);
 
-				List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
-				int draftReportCount = 0;
-				for (Report report : allReports) {
-					if (report.isDraft()) {
-						draftReportCount++;
-					}
-				}
+				//List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
+				int draftReportCount = mDatabaseManager.getDraftCount();
+//				for (Report report : allReports) {
+//					if (report.isDraft()) {
+//						draftReportCount++;
+//					}
+//				}
 
 				draftItem.setNumber(String.valueOf(draftReportCount));
 				getLeftDrawerAdapter().notifyDataSetChanged();
@@ -252,13 +252,13 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			if (getLeftDrawerAdapter().getItem(index).getId() == KestrelWeatherDrawerFactory.REPORT_VIEW) {
 				DrawerSimpleNumberedItem draftItem = (DrawerSimpleNumberedItem) getLeftDrawerAdapter().getItem(index);
 
-				List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
-
+				//List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
+				int reportSize = (int)mDatabaseManager.getReportTable().countOf();
 				String printableCount;
-				if (allReports.size() > MAX_REPORT_COUNT) {
+				if (reportSize > MAX_REPORT_COUNT) {
 					printableCount = "99+";
 				} else {
-					printableCount = String.valueOf(allReports.size());
+					printableCount = String.valueOf(reportSize);
 				}
 
 				draftItem.setNumber(printableCount);
@@ -268,13 +268,13 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	}
 
 	private void updateDrawerFooterCountInformation() {
-		List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
-		int unsyncedItemCount = 0;
-		for (Report report : allReports) {
-			if (report.isDirty() && !report.isDraft()) {
-				unsyncedItemCount++;
-			}
-		}
+		//List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
+		int unsyncedItemCount = (int) mDatabaseManager.getUnSynedCount();
+//		for (Report report : allReports) {
+//			if (report.isDirty() && !report.isDraft()) {
+//				unsyncedItemCount++;
+//			}
+//		}
 
 		if (mDrawerCountFooter != null) {
 			mDrawerCountFooter.setText(getResources().getQuantityString(R.plurals.drawer_footer_unsynced_count, unsyncedItemCount,
