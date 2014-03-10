@@ -40,20 +40,23 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 	private static final float CLUSTER_TEXT_INSET_MULTIPLIER = 6.0F;
 	private static final float MARKER_ANCHOR = 0.5F;
 	private ReportRenderer mRenderer;
+	private MapViewerFragment mFragment;
 
 	/**
 	 * Constructor.
 	 * @param context the current context
 	 * @param map the google map object
 	 */
-	public ObservationCalloutMarkersAdapter(Context context, GoogleMap map) {
+	public ObservationCalloutMarkersAdapter(Context context, GoogleMap map, MapViewerFragment fragment) {
 		super(context, map, R.layout.map_observation_callout);
+		mFragment = fragment;
 
 		setFullInfoWindowEnabled(true);
 	}
 
 	@Override
 	public boolean onClusterItemClick(Report report) {
+		mFragment.showDetailPane(false);
 		Marker marker = ((ReportRenderer) getRenderer()).getMarker(report);
 		centerMap(report.getPosition());
 		marker.showInfoWindow();
@@ -62,10 +65,22 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 
 	@Override
 	public boolean onClusterClick(Cluster<Report> cluster) {
+		mFragment.showDetailPane(false);
 		Marker marker = ((ReportRenderer) getRenderer()).getMarker(cluster);
 		centerMap(cluster.getPosition());
 		marker.showInfoWindow();
 		return true;
+	}
+
+	@Override
+	public void onClusterItemInfoWindowClick(Report report) {
+		mFragment.showReportDetail(report.getId());
+	}
+
+	@Override
+	public void onClusterInfoWindowClick(Cluster<Report> cluster) {
+		mFragment.showClusterReportList(cluster.getItems());
+
 	}
 
 	private void centerMap(LatLng position) {

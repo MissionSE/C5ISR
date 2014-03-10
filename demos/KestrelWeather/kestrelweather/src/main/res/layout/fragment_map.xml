@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<FrameLayout
+		android:id="@+id/map_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
+
+	<com.slidinglayer.SlidingLayer
+		xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/map_slidingLayer"
+		android:layout_width="match_parent"
+		android:layout_height="200dp"
+		android:minHeight="48dp"
+		android:layout_gravity="bottom"
+		slidingLayer:stickTo="bottom"
+		slidingLayer:closeOnTapEnabled="false">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="#C0FFFFFF"
+			android:orientation="vertical">
+
+			<ImageView
+				android:id="@+id/map_slidingLayer_toggle"
+				android:src="@drawable/ic_collapse"
+				android:layout_gravity="center_horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+			<ListView
+				android:id="@+id/map_cluster_report_list"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:clipToPadding="false"
+				android:scrollbarStyle="outsideOverlay"/>
+		</LinearLayout>
+	</com.slidinglayer.SlidingLayer>
+
+</FrameLayout>

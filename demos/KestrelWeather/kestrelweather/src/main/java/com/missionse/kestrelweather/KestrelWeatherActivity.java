@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -183,6 +184,20 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	protected void onDestroy() {
 		super.onDestroy();
 		mDatabaseManager.onDestroy();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+			case KeyEvent.KEYCODE_BACK:
+				MapViewerFragment mapViewerFragment = (MapViewerFragment) getFragmentManager()
+						.findFragmentByTag("map");
+				if (mapViewerFragment != null && mapViewerFragment.showDetailPane(false)) {
+					return true;
+				}
+			default:
+				return super.onKeyDown(keyCode, event);
+		}
 	}
 
 	@Override
@@ -457,6 +472,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 	/**
 	 * Gets the database accessor.
+	 *
 	 * @return Instance of DatabaseAccessor.
 	 */
 	public DatabaseAccessor getDatabaseAccessor() {

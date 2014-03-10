@@ -21,11 +21,12 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.+'
     compile 'com.google.maps.android:android-maps-utils:0.3'
     compile 'com.makeramen:roundedimageview:1.2.4'
+    compile 'com.github.itsmechlark:android-sliding-layer-lib:1.0.1'
 }
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "19.0.3"
 
     defaultConfig {
         minSdkVersion 17
