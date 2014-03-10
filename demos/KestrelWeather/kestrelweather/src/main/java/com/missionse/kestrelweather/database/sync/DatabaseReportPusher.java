@@ -37,7 +37,7 @@ public class DatabaseReportPusher implements Runnable {
 	public void run() {
 		List<Report> reports = mAccessor.getReportTable().queryForAll();
 		for (Report report : reports) {
-			if (report.isDirty()) {
+			if (report.isDirty() && !report.isDraft()) {
 				uploadReport(report);
 			}
 		}

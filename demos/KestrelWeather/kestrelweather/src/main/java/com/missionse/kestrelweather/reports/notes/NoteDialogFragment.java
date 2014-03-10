@@ -80,6 +80,12 @@ public class NoteDialogFragment extends DialogFragment {
 		if (getArguments() != null) {
 			mNote = getNoteFromId(getArguments().getInt(NOTE_ID));
 			mReport = getReportFromId(getArguments().getInt(REPORT_ID));
+			if (mActivity != null) {
+				Report report = getRealActivity().getDatabaseAccessor().getReportById(mReportId);
+				if (report != null) {
+					mEditableNote = report.isDraft();
+				}
+			}
 		}
 	}
 
@@ -156,8 +162,10 @@ public class NoteDialogFragment extends DialogFragment {
 	private void setupButtons(View root) {
 		Button okButton = (Button) root.findViewById(R.id.ok_button);
 		Button cancelButton = (Button) root.findViewById(R.id.cancel_button);
-
 		if (okButton != null) {
+			if (!mEditableNote) {
+				okButton.setText("Ok");
+			}
 			okButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

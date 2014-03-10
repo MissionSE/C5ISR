@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.SupplementType;
+import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.util.MediaResolver;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
@@ -106,6 +107,12 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerListen
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
 			mReportId = getArguments().getInt(REPORT_ID);
+			if (mActivity != null) {
+				Report report = mActivity.getDatabaseAccessor().getReportById(mReportId);
+				if (report != null) {
+					mEditable = report.isDraft();
+				}
+			}
 		}
 
 		if (mEditable) {

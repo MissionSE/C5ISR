@@ -35,7 +35,7 @@ public class NoteOverviewFragment extends Fragment {
 	private static final int INVALID_REPORT_ID = -1;
 
 	private NoteAdapter mNoteAdapter;
-	private Activity mActivity;
+	private KestrelWeatherActivity mActivity;
 	private boolean mEditable = true;
 	private int mReportId = INVALID_REPORT_ID;
 
@@ -63,7 +63,11 @@ public class NoteOverviewFragment extends Fragment {
 	@Override
 	public void onAttach(final Activity activity) {
 		super.onAttach(activity);
-		mActivity = activity;
+		try {
+			mActivity = (KestrelWeatherActivity) activity;
+		} catch (ClassCastException e) {
+			Log.e(TAG, "Unable to cast activity.", e);
+		}
 	}
 
 	@Override
@@ -77,6 +81,12 @@ public class NoteOverviewFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
 			mReportId = getArguments().getInt(REPORT_ID);
+			if (mActivity != null) {
+				Report report = mActivity.getDatabaseAccessor().getReportById(mReportId);
+				if (report != null) {
+					mEditable = report.isDraft();
+				}
+			}
 		}
 
 		if (mEditable) {
