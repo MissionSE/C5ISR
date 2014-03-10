@@ -2,7 +2,7 @@ var request = require('request');
 var requestify = require('requestify');
 var fs = require('fs');
 var path = require('path');
-var randomstring = require('randomstring');
+var randomstring = require('random-string');
 var debug = require('debug')('kestrel:handler');
 
 var webRoot = path.join(__dirname, '../..');
@@ -13,7 +13,7 @@ module.exports = function(db) {
 
 		if (req.params.type.toLowerCase() == 'json') {
 			requestify.post('http://localhost:3009/upload', {
-				userid: randomstring.generate(8),
+				userid: randomstring({ length: 8, numeric: false }),
 				latitude: (Math.random() * 180 - 90).toFixed(2),
 				longitude: (Math.random() * 360 - 180).toFixed(2),
 

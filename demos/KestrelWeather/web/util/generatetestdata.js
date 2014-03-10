@@ -1,5 +1,5 @@
 var requestify = require('requestify');
-var randomstring = require('randomstring');
+var randomstring = require('random-string');
 var commander = require('commander');
 
 commander
@@ -50,14 +50,14 @@ var endings=['.',', right?','.',', like I said.','.',', just like your momma!'];
 for (var index = 0; index < numberOfReportsToGenerate; index++) {
 	var conditionCodeIndex = (Math.random() * (conditionCodes.length - 1)).toFixed(0);
 	requestify.post('http://' + target + ':3009/upload', {
-		userid: randomstring.generate(8),
+		userid: randomstring({ length: 8, numeric: false }),
 		latitude: (Math.random() * 180 - 90).toFixed(2),
 		longitude: (Math.random() * 360 - 180).toFixed(2),
 
 		createdat: Date.now(),
 		updatedat: Date.now(),
 
-		title: 'Springfield, ' + randomstring.generate(2).toUpperCase(),
+		title: 'Springfield, ' + randomstring({ length: 2, numeric: false }).toUpperCase(),
 
 		kestrel: {
 			temperature: (Math.random() * 150 - 50).toFixed(2),
@@ -74,7 +74,7 @@ for (var index = 0; index < numberOfReportsToGenerate; index++) {
 			conditioncode: conditionCodes[conditionCodeIndex].code,
 			description: conditionCodes[conditionCodeIndex].text,
 			name: 'Springfield',
-			country: randomstring.generate(2).toUpperCase()
+			country: randomstring({ length: 2, numeric: false }).toUpperCase()
 		},
 		notes: [{
 			title: 'Observation #1',
@@ -117,4 +117,3 @@ if (commander.custom) {
 		});
 	}
 }
-

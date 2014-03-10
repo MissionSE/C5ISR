@@ -1,8 +1,8 @@
-var randomstring = require('randomstring');
+var randomstring = require('random-string');
 
 module.exports = [
 	{
-		userid: 'test-' + randomstring.generate(8),
+		userid: 'test-' + randomstring({ length: 8, numeric: false }),
 		latitude: 39.9742894,
 		longitude: -74.9766567,
 
