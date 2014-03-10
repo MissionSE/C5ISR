@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.DatabaseManager;
-import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.util.DatabaseLogger;
 import com.missionse.kestrelweather.drawer.KestrelWeatherDrawerFactory;
 import com.missionse.kestrelweather.kestrel.KestrelConnectorFragment;
@@ -38,8 +37,6 @@ import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigura
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleNumberedItem;
 
 import org.joda.time.format.DateTimeFormat;
-
-import java.util.List;
 
 /**
  * Main activity for the Kestrel Weather application.
@@ -253,7 +250,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 				DrawerSimpleNumberedItem draftItem = (DrawerSimpleNumberedItem) getLeftDrawerAdapter().getItem(index);
 
 				//List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
-				int reportSize = (int)mDatabaseManager.getReportTable().countOf();
+				int reportSize = (int) mDatabaseManager.getReportTable().countOf();
 				String printableCount;
 				if (reportSize > MAX_REPORT_COUNT) {
 					printableCount = "99+";

@@ -8,45 +8,45 @@ import android.media.MediaPlayer;
 public interface MediaPlayerListener {
 
 	/**
-	 * @see android.media.MediaPlayer.OnBufferingUpdateListener#onBufferingUpdate(android.media.MediaPlayer, int).
 	 * @param mp The media player being used.
 	 * @param percent The percent complete.
+	 * @see android.media.MediaPlayer.OnBufferingUpdateListener#onBufferingUpdate(android.media.MediaPlayer, int).
 	 */
 	void onBufferingUpdate(MediaPlayer mp, int percent);
 
 	/**
-	 * @see android.media.MediaPlayer.OnPreparedListener#onPrepared(android.media.MediaPlayer).
 	 * @param mp The media player being used.
+	 * @see android.media.MediaPlayer.OnPreparedListener#onPrepared(android.media.MediaPlayer).
 	 */
 	void onPrepared(MediaPlayer mp);
 
 	/**
-	 * @see android.media.MediaPlayer.OnCompletionListener#onCompletion(android.media.MediaPlayer).
 	 * @param mp The media player being used.
+	 * @see android.media.MediaPlayer.OnCompletionListener#onCompletion(android.media.MediaPlayer).
 	 */
 	void onCompletion(MediaPlayer mp);
 
 	/**
-	 * @see android.media.MediaPlayer.OnErrorListener#onError(android.media.MediaPlayer, int, int).
 	 * @param mp The media player being used.
 	 * @param what The general error code.
 	 * @param extra The specified error code.
 	 * @return true if its a valid error.
+	 * @see android.media.MediaPlayer.OnErrorListener#onError(android.media.MediaPlayer, int, int).
 	 */
 	boolean onError(MediaPlayer mp, int what, int extra);
 
 	/**
-	 * @see android.media.MediaPlayer.OnInfoListener#onInfo(android.media.MediaPlayer, int, int).
 	 * @param mp The media player being used.
 	 * @param what The general info code.
 	 * @param extra The specified info code.
 	 * @return boolean
+	 * @see android.media.MediaPlayer.OnInfoListener#onInfo(android.media.MediaPlayer, int, int).
 	 */
 	boolean onInfo(MediaPlayer mp, int what, int extra);
 
 	/**
-	 * @see android.media.MediaPlayer.OnSeekCompleteListener#onSeekComplete(android.media.MediaPlayer)
 	 * @param mp The media player being used.
+	 * @see android.media.MediaPlayer.OnSeekCompleteListener#onSeekComplete(android.media.MediaPlayer)
 	 */
 	void onSeekComplete(MediaPlayer mp);
 }

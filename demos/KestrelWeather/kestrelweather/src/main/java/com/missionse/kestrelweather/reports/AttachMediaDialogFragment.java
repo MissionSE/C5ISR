@@ -37,7 +37,8 @@ public abstract class AttachMediaDialogFragment extends DialogFragment {
 	/**
 	 * Constructor.
 	 */
-	public AttachMediaDialogFragment() { }
+	public AttachMediaDialogFragment() {
+	}
 
 	@Override
 	public void onAttach(final Activity activity) {
@@ -131,7 +132,7 @@ public abstract class AttachMediaDialogFragment extends DialogFragment {
 	}
 
 	protected void onTakeActionRequestReceived(final Fragment targetFragment,
-				final int targetRequestCode, final int resultCode, final Intent resultData) {
+			final int targetRequestCode, final int resultCode, final Intent resultData) {
 		MediaScannerConnection.scanFile(getKestrelActivity(),
 				new String[]{getMediaFile().toString()}, null,
 				new MediaScannerConnection.OnScanCompletedListener() {
@@ -149,14 +150,21 @@ public abstract class AttachMediaDialogFragment extends DialogFragment {
 							});
 						}
 					}
-				});
+				}
+		);
 	}
 
 	protected abstract int getTakeButtonTextId();
+
 	protected abstract int getAttachButtonTextId();
+
 	protected abstract int getTakeButtonDrawableId();
+
 	protected abstract int getAttachButtonDrawableId();
+
 	protected abstract File getMediaFile();
+
 	protected abstract String getMimeType();
+
 	protected abstract void onTakeButtonPressed();
 }

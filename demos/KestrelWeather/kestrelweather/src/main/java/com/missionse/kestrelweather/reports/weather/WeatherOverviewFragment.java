@@ -98,8 +98,10 @@ public class WeatherOverviewFragment extends Fragment {
 
 							ImageView weatherIconView = (ImageView) contentView.findViewById(R.id.report_detail_weather_icon);
 							if (weatherIconView != null) {
-								weatherIconView.setImageResource(R.drawable.weather_icon_type);
-								weatherIconView.setImageLevel(report.getOpenWeather().getConditionCode());
+								weatherIconView.setImageResource(
+										WeatherIconFactory.getWeatherIcon(
+												report.getOpenWeather().getConditionCode())
+								);
 							}
 						}
 

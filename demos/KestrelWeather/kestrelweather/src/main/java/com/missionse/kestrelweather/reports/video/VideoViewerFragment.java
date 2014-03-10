@@ -130,13 +130,17 @@ public final class VideoViewerFragment extends Fragment implements MediaPlayerLi
 		if (lHolder != null) {
 			lHolder.addCallback(new SurfaceHolder.Callback() {
 				@Override
-				public void surfaceCreated(SurfaceHolder holder) { mMediaWrapper.setDisplay(lHolder); }
+				public void surfaceCreated(SurfaceHolder holder) {
+					mMediaWrapper.setDisplay(lHolder);
+				}
 
 				@Override
-				public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
+				public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+				}
 
 				@Override
-				public void surfaceDestroyed(SurfaceHolder holder) { }
+				public void surfaceDestroyed(SurfaceHolder holder) {
+				}
 			});
 		}
 	}

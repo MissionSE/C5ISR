@@ -3,6 +3,7 @@ package com.missionse.kestrelweather.reports;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -127,9 +128,40 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 					}
 				});
 
-				mReportAdapter.clear();
-				mReportAdapter.addAll(queryReports());
-				mReportAdapter.notifyDataSetChanged();
+				AsyncTask<Void, Void, Void> populateListTask = new AsyncTask<Void, Void, Void>() {
+					List<Report> mReports;
+
+					@Override
+					protected void onPreExecute() {
+						super.onPreExecute();
+					}
+
+					@Override
+					protected Void doInBackground(final Void... parameters) {
+						DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
+						ReportTable reportTable = databaseAccessor.getReportTable();
+						mReports = reportTable.queryForAll();
+
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(final Void parameter) {
+						super.onPostExecute(parameter);
+
+						if (mReports != null) {
+							mReportAdapter.clear();
+							mReportAdapter.addAll(mReports);
+							mReportAdapter.notifyDataSetChanged();
+
+							if (mReportCountView != null) {
+								mReportCountView.setText("Reports: " + mReports.size());
+							}
+						}
+
+					}
+				};
+				populateListTask.execute();
 			}
 		}
 

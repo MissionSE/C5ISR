@@ -48,11 +48,11 @@ public class VideoListItem implements AuxiliaryDataListItem {
 	@Override
 	public void onClick() {
 		mFragmentManager.beginTransaction()
-			.setCustomAnimations(
-					R.animator.fade_in, R.animator.fade_out,
-					R.animator.fade_in, R.animator.fade_out)
-			.replace(R.id.content, VideoOverviewFragment.newInstance(mReportId), "video_overview")
-			.addToBackStack("video_overview")
-			.commit();
+				.setCustomAnimations(
+						R.animator.fade_in, R.animator.fade_out,
+						R.animator.fade_in, R.animator.fade_out)
+				.replace(R.id.content, VideoOverviewFragment.newInstance(mReportId), "video_overview")
+				.addToBackStack("video_overview")
+				.commit();
 	}
 }

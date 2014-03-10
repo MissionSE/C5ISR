@@ -12,7 +12,6 @@
 		android:gravity="center"
 		android:textAppearance="?android:textAppearanceMedium"
 		android:textColor="@color/white"
-		android:layout_margin="10dp"
 		android:background="@color/holo_blue_dark"
 		android:text="@string/report_database_count"
 		android:padding="5dp"/>
@@ -20,13 +19,16 @@
 	<FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="0dip"
-		android:layout_weight="1"
-		android:layout_margin="10dp">
+		android:layout_weight="1">
 
 		<ListView
 			android:id="@+id/fragment_report_database_list"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
+			android:layout_height="wrap_content"
+			android:clipToPadding="false"
+			android:scrollbarStyle="outsideOverlay"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"/>
 
 		<TextView
 			android:id="@+id/fragment_report_database_list_empty"
@@ -46,8 +48,10 @@
 		style="?android:attr/borderlessButtonStyle"
 		android:background="@drawable/fragment_sync_button_selector"
 		android:textColor="@color/white"
-		android:layout_margin="10dp"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:layout_marginBottom="10dp"/>
 
 </LinearLayout>

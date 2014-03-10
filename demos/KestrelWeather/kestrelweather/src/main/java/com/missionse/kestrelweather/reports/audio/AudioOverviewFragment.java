@@ -366,10 +366,12 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerListen
 	}
 
 	@Override
-	public void onBufferingUpdate(MediaPlayer mp, int percent) { }
+	public void onBufferingUpdate(MediaPlayer mp, int percent) {
+	}
 
 	@Override
-	public void onPrepared(MediaPlayer mp) { }
+	public void onPrepared(MediaPlayer mp) {
+	}
 
 	@Override
 	public void onCompletion(MediaPlayer mp) {
@@ -387,5 +389,6 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerListen
 	}
 
 	@Override
-	public void onSeekComplete(MediaPlayer mp) { }
+	public void onSeekComplete(MediaPlayer mp) {
+	}
 }

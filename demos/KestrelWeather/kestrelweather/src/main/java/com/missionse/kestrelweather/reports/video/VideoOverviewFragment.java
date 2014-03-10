@@ -48,7 +48,8 @@ public final class VideoOverviewFragment extends Fragment {
 	/**
 	 * Constructor.
 	 */
-	public VideoOverviewFragment() { }
+	public VideoOverviewFragment() {
+	}
 
 	/**
 	 * A factory method used to create a new instance of the fragment with the provided parameters.
@@ -109,9 +110,9 @@ public final class VideoOverviewFragment extends Fragment {
 					if (fragmentManager != null) {
 						Fragment videoFragment = VideoViewerFragment.newInstance(selectedSupplement);
 						fragmentManager.beginTransaction()
-							.replace(R.id.content, videoFragment, "video_preview")
-							.addToBackStack("video_preview")
-							.commit();
+								.replace(R.id.content, videoFragment, "video_preview")
+								.addToBackStack("video_preview")
+								.commit();
 					}
 				}
 			});
