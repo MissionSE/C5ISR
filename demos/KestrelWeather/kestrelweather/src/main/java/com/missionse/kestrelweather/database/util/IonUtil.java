@@ -31,7 +31,7 @@ public final class IonUtil {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
 				res.getString(R.string.remote_database));
-		Log.d(TAG, "Upload Json(\'" + json.toString() + "\') to remote database:" + remoteUrl);
+		Log.d(TAG, "Upload Json(\'" + json.toString() + "\') to remote database: " + remoteUrl);
 
 		try {
 			Ion.with(context, remoteUrl).setJsonObjectBody(json).asJsonObject().setCallback(callback).get();
@@ -53,7 +53,7 @@ public final class IonUtil {
 		String remoteUrl = String.format(
 				res.getString(R.string.retrieve_latest_url),
 				res.getString(R.string.remote_database));
-		Log.d(TAG, "Pulling latest with latestCode:" + latestId + " from URL:" + remoteUrl);
+		Log.d(TAG, "Pulling latest with latestCode: " + latestId + " from URL: " + remoteUrl);
 
 		try {
 			Ion.with(context, remoteUrl + latestId).asJsonObject().setCallback(callback).get();
@@ -75,7 +75,7 @@ public final class IonUtil {
 		String remoteUrl = String.format(
 				res.getString(R.string.retrieve_report_url),
 				res.getString(R.string.remote_database));
-		Log.d(TAG, "Pulling report with id:" + reportId + " from URL:" + remoteUrl);
+		Log.d(TAG, "Pulling report with id: " + reportId + " from URL: " + remoteUrl);
 
 		try {
 			Ion.with(context, remoteUrl + reportId).asJsonObject().setCallback(callback).get();
@@ -97,7 +97,7 @@ public final class IonUtil {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
 				res.getString(R.string.remote_database));
-		Log.d(TAG, "Upload Media(\'" + media.getAbsolutePath() + "\') to reportid=" + reportId + " to remote database:" + remoteUrl);
+		Log.d(TAG, "Upload Media(\'" + media.getAbsolutePath() + "\') to reportid=" + reportId + " to remote database: " + remoteUrl);
 
 		try {
 			Ion.with(context, remoteUrl)
@@ -122,7 +122,7 @@ public final class IonUtil {
 		Resources res = container.getContext().getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
 				res.getString(R.string.remote_database));
-		Log.d(TAG, "Upload Media(\'" + container.getAsFile().getAbsolutePath() + "\') to reportid=" + container.getRemoteId() + " to remote database:" + remoteUrl);
+		Log.d(TAG, "Upload Media(\'" + container.getAsFile().getAbsolutePath() + "\') to reportid=" + container.getRemoteId() + " to remote database: " + remoteUrl);
 
 		try {
 			Ion.with(container.getContext(), remoteUrl)

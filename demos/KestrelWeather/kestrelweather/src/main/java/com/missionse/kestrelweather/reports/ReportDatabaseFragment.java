@@ -3,7 +3,6 @@ package com.missionse.kestrelweather.reports;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,12 +19,10 @@ import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.database.sync.DatabaseSync;
 import com.missionse.kestrelweather.database.sync.SyncStatusListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Provides a fragment to show a list of reports.
@@ -32,8 +30,10 @@ import java.util.List;
 public class ReportDatabaseFragment extends Fragment implements SyncStatusListener {
 	private static final String TAG = ReportDatabaseFragment.class.getSimpleName();
 	private Activity mActivity;
+	private DatabaseAccessor mDatabaseAccessor;
 	private ReportAdapter mReportAdapter;
 	private TextView mReportCountView;
+	private ProgressBar mProgressBar;
 
 	/**
 	 * Default constructor.
@@ -53,12 +53,14 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	public void onAttach(final Activity activity) {
 		super.onAttach(activity);
 		mActivity = activity;
+		mDatabaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
 		mActivity = null;
+		mDatabaseAccessor = null;
 	}
 
 	@Override
@@ -71,21 +73,13 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		}
 	}
 
-	private List<Report> queryReports() {
-		DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
-		ReportTable reportTable = databaseAccessor.getReportTable();
-		List<Report> allReports = reportTable.queryForAll();
-
-		mReportCountView.setText(getResources().getString(R.string.report_database_count) + " " + allReports.size());
-
-		return allReports;
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View contentView = inflater.inflate(R.layout.fragment_report_database, container, false);
 		if (contentView != null) {
 			mReportCountView = (TextView) contentView.findViewById(R.id.fragment_report_database_count);
+			updateReportCount();
+
 			ListView reportList = (ListView) contentView.findViewById(R.id.fragment_report_database_list);
 			if (reportList != null) {
 				reportList.setAdapter(mReportAdapter);
@@ -111,6 +105,8 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 					reportList.setEmptyView(emptyView);
 				}
 
+				mProgressBar = (ProgressBar) contentView.findViewById(R.id.fragment_report_database_progress_bar);
+
 				Button syncButton = (Button) contentView.findViewById(R.id.sync_btn);
 				syncButton.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -128,51 +124,27 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 					}
 				});
 
-				AsyncTask<Void, Void, Void> populateListTask = new AsyncTask<Void, Void, Void>() {
-					List<Report> mReports;
-
-					@Override
-					protected void onPreExecute() {
-						super.onPreExecute();
-					}
-
-					@Override
-					protected Void doInBackground(final Void... parameters) {
-						DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
-						ReportTable reportTable = databaseAccessor.getReportTable();
-						mReports = reportTable.queryForAll();
-
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(final Void parameter) {
-						super.onPostExecute(parameter);
-
-						if (mReports != null) {
-							mReportAdapter.clear();
-							mReportAdapter.addAll(mReports);
-							mReportAdapter.notifyDataSetChanged();
-
-							if (mReportCountView != null) {
-								mReportCountView.setText("Reports: " + mReports.size());
-							}
-						}
-
-					}
-				};
-				populateListTask.execute();
+				updateReportList();
 			}
 		}
 
 		return contentView;
 	}
 
+	private void updateReportList() {
+		new ReportLoaderTask(mDatabaseAccessor, mReportAdapter, mProgressBar).execute(false);
+	}
+
+	private void updateReportCount() {
+		if (mReportCountView != null && mDatabaseAccessor != null) {
+			int totalReports = mDatabaseAccessor.getSyncedCount() + mDatabaseAccessor.getUnSynedCount();
+			mReportCountView.setText("Reports: " + totalReports);
+		}
+	}
+
 	@Override
 	public void onSyncComplete() {
-		mReportAdapter.clear();
-		mReportAdapter.addAll(queryReports());
-		mReportAdapter.notifyDataSetChanged();
+		updateReportList();
 		Toast.makeText(mActivity, getResources().getString(R.string.sync_ended), Toast.LENGTH_SHORT).show();
 	}
 
@@ -183,6 +155,5 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 
 	@Override
 	public void onSyncedReport(int reportId) {
-
 	}
 }

@@ -57,7 +57,7 @@ module.exports = function(db) {
 			.then(function(response) {
 				res.end(response.getBody());
 			});
-		} else if (req.params.type.toLowerCase() == 'multi') {
+		} else if (req.params.type.toLowerCase() == 'image') {
 			db.Report.nextCount(function(err, count) {
 				if (count - 1 >= 0) {
 					var postable = request.post('http://localhost:3009/upload', function(err, response, body) {
@@ -73,7 +73,55 @@ module.exports = function(db) {
 					form.append('filename', 'afile.jpg');
 					form.append('size', 101);
 					form.append('date', Date.now());
-					form.append('upload', fs.createReadStream(webRoot + '/test/images/droplet.png'));
+					form.append('upload', fs.createReadStream(webRoot + '/test/images/sample.png'));
+				} else {
+					res.writeHead(404, {'content-type': 'text/plain'});
+					res.end(JSON.stringify({
+						status: 'nok'
+					}));
+				}
+			});
+		} else if (req.params.type.toLowerCase() == 'audio') {
+			db.Report.nextCount(function(err, count) {
+				if (count - 1 >= 0) {
+					var postable = request.post('http://localhost:3009/upload', function(err, response, body) {
+						debug('err:' + err);
+						debug('response:' + response);
+						debug('body:' + body);
+						res.end(body);
+					});
+
+					var form = postable.form();
+
+					form.append('id', count - 1);
+					form.append('filename', 'afile.jpg');
+					form.append('size', 101);
+					form.append('date', Date.now());
+					form.append('upload', fs.createReadStream(webRoot + '/test/audio/sample.mp3'));
+				} else {
+					res.writeHead(404, {'content-type': 'text/plain'});
+					res.end(JSON.stringify({
+						status: 'nok'
+					}));
+				}
+			});
+		} else if (req.params.type.toLowerCase() == 'video') {
+			db.Report.nextCount(function(err, count) {
+				if (count - 1 >= 0) {
+					var postable = request.post('http://localhost:3009/upload', function(err, response, body) {
+						debug('err:' + err);
+						debug('response:' + response);
+						debug('body:' + body);
+						res.end(body);
+					});
+
+					var form = postable.form();
+
+					form.append('id', count - 1);
+					form.append('filename', 'afile.jpg');
+					form.append('size', 101);
+					form.append('date', Date.now());
+					form.append('upload', fs.createReadStream(webRoot + '/test/video/sample.mp4'));
 				} else {
 					res.writeHead(404, {'content-type': 'text/plain'});
 					res.end(JSON.stringify({

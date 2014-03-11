@@ -67,7 +67,7 @@ public abstract class AttachMediaDialogFragment extends DialogFragment {
 	@Override
 	@TargetApi(Build.VERSION_CODES.KITKAT)
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_report_photos_dialog, container);
+		View view = inflater.inflate(R.layout.fragment_report_attach_media_dialog, container);
 		if (view != null) {
 			Button takeButton = (Button) view.findViewById(R.id.photo_overview_take_photo_btn);
 			if (takeButton != null) {

@@ -32,7 +32,7 @@ public class VideoListItem implements AuxiliaryDataListItem {
 
 	@Override
 	public int getIcon() {
-		return R.drawable.ic_action_video;
+		return R.drawable.ic_action_movie_black;
 	}
 
 	@Override

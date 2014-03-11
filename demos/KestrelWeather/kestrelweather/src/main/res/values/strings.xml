@@ -56,24 +56,19 @@
 	<string name="drawer_footer_time">Last synced:</string>
 
 	<!-- Map Overlay -->
+	<string name="action_overlay">Overlay</string>
 	<string name="rain_overlay_name">Rain</string>
 	<string name="rain_overlay_url">http://tile.openweathermap.org/map/rain/%1$d/%2$d/%3$d.png</string>
-
 	<string name="cloud_overlay_name">Clouds</string>
 	<string name="cloud_overlay_url">http://tile.openweathermap.org/map/clouds/%1$d/%2$d/%3$d.png</string>
-
 	<string name="snow_overlay_name">Snow</string>
 	<string name="snow_overlay_url">http://tile.openweathermap.org/map/snow/%1$d/%2$d/%3$d.png</string>
-
 	<string name="pressure_overlay_name">Pressure</string>
 	<string name="pressure_overlay_url">http://tile.openweathermap.org/map/pressure/%1$d/%2$d/%3$d.png</string>
-
 	<string name="temp_overlay_name">Temperature</string>
 	<string name="temp_overlay_url">http://tile.openweathermap.org/map/temp/%1$d/%2$d/%3$d.png</string>
-
 	<string name="precipitation_overlay_name">Precipitation</string>
 	<string name="precipitation_overlay_url">http://tile.openweathermap.org/map/precipitation/%1$d/%2$d/%3$d.png</string>
-
 	<string name="wind_overlay_name">Wind</string>
 	<string name="wind_overlay_url">http://tile.openweathermap.org/map/wind/%1$d/%2$d/%3$d.png</string>
 

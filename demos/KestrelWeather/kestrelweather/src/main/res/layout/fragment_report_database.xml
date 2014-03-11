@@ -38,8 +38,15 @@
 			android:text="@string/report_database_list_empty"
 			android:textSize="22sp"
 			android:textColor="@color/gray_medium"
-			android:visibility="gone">
-		</TextView>
+			android:visibility="gone"/>
+
+		<ProgressBar
+			android:id="@+id/fragment_report_database_progress_bar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:indeterminate="true"
+			android:visibility="gone"/>
 	</FrameLayout>
 
 	<Button

@@ -32,7 +32,7 @@ public class AudioListItem implements AuxiliaryDataListItem {
 
 	@Override
 	public int getIcon() {
-		return R.drawable.ic_action_audio;
+		return R.drawable.ic_action_audio_black;
 	}
 
 	@Override

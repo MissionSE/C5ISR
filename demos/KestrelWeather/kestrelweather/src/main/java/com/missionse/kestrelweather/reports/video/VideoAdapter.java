@@ -49,7 +49,7 @@ public class VideoAdapter extends SupplementAdapter {
 		if (view != null) {
 			ImageView thumbnailView = (ImageView) view.findViewById(R.id.report_item_thumbnail);
 			if (thumbnailView != null) {
-				thumbnailView.setImageResource(R.drawable.ic_action_video);
+				thumbnailView.setImageResource(R.drawable.ic_action_movie_black);
 			}
 		}
 	}

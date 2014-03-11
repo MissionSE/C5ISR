@@ -1,4 +1,4 @@
-package com.missionse.kestrelweather.reports.video;
+package com.missionse.kestrelweather.reports.photos;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,31 +14,32 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Provides a dialog fragment to select how to add a video.
+ * Provides a dialog fragment to select how to add a photo.
  */
-public class AttachVideoDialogFragment extends AttachMediaDialogFragment {
-	private static final File PUBLIC_VIDEO_PATH = Environment.getExternalStoragePublicDirectory(
+public class AttachPhotoDialogFragment extends AttachMediaDialogFragment {
+	private static final File PUBLIC_IMAGE_PATH = Environment.getExternalStoragePublicDirectory(
 			Environment.DIRECTORY_PICTURES);
+
 	private File mFile;
 
 	@Override
 	protected int getTakeButtonTextId() {
-		return R.string.take_video;
+		return R.string.take_photo;
 	}
 
 	@Override
 	protected int getAttachButtonTextId() {
-		return R.string.attach_video;
+		return R.string.attach_photo;
 	}
 
 	@Override
 	protected int getTakeButtonDrawableId() {
-		return R.drawable.ic_action_video;
+		return R.drawable.ic_action_camera;
 	}
 
 	@Override
 	protected int getAttachButtonDrawableId() {
-		return R.drawable.ic_action_movie;
+		return R.drawable.ic_action_picture;
 	}
 
 	@Override
@@ -48,22 +49,21 @@ public class AttachVideoDialogFragment extends AttachMediaDialogFragment {
 
 	@Override
 	protected String getMimeType() {
-		return "video/*";
+		return "image/*";
 	}
 
 	@Override
 	protected void onTakeButtonPressed() {
-		Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		PackageManager packageManager = getKestrelActivity().getPackageManager();
 		if (packageManager != null) {
-			if (takeVideoIntent.resolveActivity(packageManager) != null) {
-
+			if (intent.resolveActivity(packageManager) != null) {
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
 				Date now = new Date();
-				mFile = new File(PUBLIC_VIDEO_PATH, "VID_" + formatter.format(now) + ".mp4");
+				mFile = new File(PUBLIC_IMAGE_PATH, "IMG_" + formatter.format(now) + ".jpg");
 
-				takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mFile));
-				startActivityForResult(takeVideoIntent, TAKE_REQUEST);
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mFile));
+				startActivityForResult(intent, TAKE_REQUEST);
 			}
 		}
 	}

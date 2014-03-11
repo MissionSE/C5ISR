@@ -12,6 +12,9 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +42,7 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
 	private GoogleMap mMap;
 	private MapLoadedListener mMapLoadedListener;
+	private OptionsMenuListener mOptionsMenuListener;
 	private ObservationCalloutMarkersAdapter mMarkersAdapter;
 	private SlidingLayer mSlidingLayer;
 	private ImageView mSlidingLayerToggle;
@@ -58,6 +62,22 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 		mActivity = null;
 	}
 
+	/**
+	 * Sets the listener that will receive a callback when the map is loaded.
+	 * @param listener The listener that will receive the callback.
+	 */
+	public void setMapLoadedListener(final MapLoadedListener listener) {
+		mMapLoadedListener = listener;
+	}
+
+	/**
+	 * Sets the listener that will receive callbacks to handle the options menu.
+	 * @param listener The listener that will receive the callbacks.
+	 */
+	public void setOptionsMenuListener(final OptionsMenuListener listener) {
+		mOptionsMenuListener = listener;
+	}
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,6 +86,10 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 		if (mActivity != null) {
 			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
 					new ArrayList<Report>());
+		}
+
+		if (mOptionsMenuListener != null) {
+			setHasOptionsMenu(true);
 		}
 
 		setUpMapIfNeeded();
@@ -134,6 +158,26 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 		setUpMapIfNeeded();
 	}
 
+	@Override
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		if (mOptionsMenuListener != null) {
+			mOptionsMenuListener.onCreateOptionsMenu(menu, inflater);
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		boolean selectionConsumed;
+		if (mOptionsMenuListener != null) {
+			selectionConsumed = mOptionsMenuListener.onOptionsItemSelected(item);
+		} else {
+			selectionConsumed = super.onOptionsItemSelected(item);
+		}
+
+		return selectionConsumed;
+	}
+
 	private void setUpMapIfNeeded() {
 		if (mMap == null) {
 			mMap = getMap();
@@ -174,15 +218,6 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 					.addToBackStack("report_detail")
 					.commit();
 		}
-	}
-
-	/**
-	 * Sets the listener that will receive a callback when the map is loaded.
-	 *
-	 * @param listener The listener that will receive the callback.
-	 */
-	public void setMapLoadedListener(final MapLoadedListener listener) {
-		mMapLoadedListener = listener;
 	}
 
 	private void centerMap(LatLng latLng, boolean reportPaneVisible, GoogleMap.CancelableCallback callback) {

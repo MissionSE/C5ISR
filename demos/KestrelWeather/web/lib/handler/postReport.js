@@ -3,6 +3,7 @@ var util = require('util');
 var path = require('path');
 var fs = require('fs');
 var _ = require('underscore');
+var easyimage = require('easyimage');
 
 var debug = require('debug')('kestrel:handler');
 var postReport = 'postReport';
@@ -129,38 +130,48 @@ module.exports = function(db) {
 						if (files[0].type) {
 							debug(postReport, 'saving ' + files[0].publicPath + ' to ' + data.id);
 							if (files[0].type.search('image') >= 0) {
-								db.Report.update( { _id: data.id },
-									{
-										$push: {
-											images: {
-												filename: data.filename,
-												url: files[0].publicPath,
-												size: data.size,
-												date: data.date
+								var thumbnailPath = '/thumbnails/thumb-' + path.basename(files[0].publicPath);
+								easyimage.thumbnail({
+									src: stagingArea + files[0].publicPath,
+									dst: stagingArea + thumbnailPath,
+									width: 96, height: 96,
+									x: 0, y: 0
+								}, function(err, image) {
+									db.Report.update( { _id: data.id },
+										{
+											$push: {
+												images: {
+													filename: data.filename,
+													url: files[0].publicPath,
+													thumbnail: thumbnailPath,
+													size: data.size,
+													date: data.date
+												}
 											}
-										}
-									}, { upsert: true }, function(err) {
-									if (err) {
-										debug(postReport, "query update failed");
-										res.writeHead(404, {'content-type': 'text/plain'});
-										res.end(JSON.stringify({
-											status: 'nok'
-										}));
-									} else {
-										res.writeHead(200, {'content-type': 'text/plain'});
-										res.end(JSON.stringify({
-											status: 'ok',
-											url: files[0].publicPath
-										}));
+										}, { upsert: true }, function(err) {
+										if (err) {
+											debug(postReport, "query update failed");
+											res.writeHead(404, {'content-type': 'text/plain'});
+											res.end(JSON.stringify({
+												status: 'nok'
+											}));
+										} else {
+											res.writeHead(200, {'content-type': 'text/plain'});
+											res.end(JSON.stringify({
+												status: 'ok',
+												url: files[0].publicPath,
+												thumb: thumbnailPath
+											}));
 
-										var newEvent = new db.Event({
-											reportId: data.id,
-											eventType: 'modify'
-										});
-										newEvent.save(function(err, newEvent) {
-											debug(postReport, newEvent.eventType + ' event logged');
-										});
-									}
+											var newEvent = new db.Event({
+												reportId: data.id,
+												eventType: 'modify'
+											});
+											newEvent.save(function(err, newEvent) {
+												debug(postReport, newEvent.eventType + ' event logged');
+											});
+										}
+									});
 								});
 							} else if (files[0].type.search('audio') >= 0) {
 								db.Report.update( { _id: data.id },

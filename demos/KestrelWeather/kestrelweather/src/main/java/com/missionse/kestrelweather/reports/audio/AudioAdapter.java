@@ -49,7 +49,7 @@ public class AudioAdapter extends SupplementAdapter {
 		if (view != null) {
 			ImageView thumbnailView = (ImageView) view.findViewById(R.id.report_item_thumbnail);
 			if (thumbnailView != null) {
-				thumbnailView.setImageResource(R.drawable.ic_action_audio);
+				thumbnailView.setImageResource(R.drawable.ic_action_audio_black);
 			}
 		}
 	}
