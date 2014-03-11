@@ -25,6 +25,7 @@
 		"implementjs": "0.2.x",
 		"formidable":"1.0.x",
 		"underscore":"1.6.x",
+		"easyimage":"0.1.x",
 		"commander":"2.1.x",
 		"debug":"0.7.x",
 		"requestify":"0.1.x",

@@ -10,6 +10,7 @@ It requires the following to be installed separately:
 
 	node.js (and npm)
 	mongodb
+	imagemagick
 
 Installation
 ------------

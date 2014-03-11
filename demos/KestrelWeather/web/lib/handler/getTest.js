@@ -57,7 +57,7 @@ module.exports = function(db) {
 			.then(function(response) {
 				res.end(response.getBody());
 			});
-		} else if (req.params.type.toLowerCase() == 'multi') {
+		} else if (req.params.type.toLowerCase() == 'image') {
 			db.Report.nextCount(function(err, count) {
 				if (count - 1 >= 0) {
 					var postable = request.post('http://localhost:3009/upload', function(err, response, body) {
