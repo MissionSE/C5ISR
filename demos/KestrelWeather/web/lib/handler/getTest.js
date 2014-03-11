@@ -81,6 +81,30 @@ module.exports = function(db) {
 					}));
 				}
 			});
+		} else if (req.params.type.toLowerCase() == 'audio') {
+			db.Report.nextCount(function(err, count) {
+				if (count - 1 >= 0) {
+					var postable = request.post('http://localhost:3009/upload', function(err, response, body) {
+						debug('err:' + err);
+						debug('response:' + response);
+						debug('body:' + body);
+						res.end(body);
+					});
+
+					var form = postable.form();
+
+					form.append('id', count - 1);
+					form.append('filename', 'afile.jpg');
+					form.append('size', 101);
+					form.append('date', Date.now());
+					form.append('upload', fs.createReadStream(webRoot + '/test/audio/droplet.mp3'));
+				} else {
+					res.writeHead(404, {'content-type': 'text/plain'});
+					res.end(JSON.stringify({
+						status: 'nok'
+					}));
+				}
+			});
 		}
 	}
 };

@@ -22,7 +22,6 @@
 		"mongodb": "1.3.x",
 		"mongoose": "3.8.x",
 		"mongoose-auto-increment":"2.1.x",
-		"implementjs": "0.2.x",
 		"formidable":"1.0.x",
 		"underscore":"1.6.x",
 		"easyimage":"0.1.x",
