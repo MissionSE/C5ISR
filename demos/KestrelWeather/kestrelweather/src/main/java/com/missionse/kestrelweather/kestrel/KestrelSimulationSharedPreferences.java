@@ -21,6 +21,6 @@ public final class KestrelSimulationSharedPreferences {
 	public static final String KESTREL_WIND_CHILL = "KestrelWindChill";
 	public static final String KESTREL_DEW_PT = "KestrelDewPoint";
 
-	public static final float NONSENSE_FLOAT = -9000.0f;
-	public static final int NONSENSE_INT = -9000;
+	public static final float NONSENSE_FLOAT = 0.0f;
+	public static final int NONSENSE_INT = 0;
 }
