@@ -16,5 +16,5 @@
 	<dimen name="map_report_pane_header">48dp</dimen>
 	<dimen name="map_report_pane_size">180dp</dimen>
 	<dimen name="map_slidingLayer_margin">8dp</dimen>
-	<dimen name="map_slidingLayer_list_single_entry_size">150dp</dimen>
+	<dimen name="map_slidingLayer_list_single_entry_size">142dp</dimen>
 </resources>

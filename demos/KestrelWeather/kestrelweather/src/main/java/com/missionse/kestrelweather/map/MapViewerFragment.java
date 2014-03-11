@@ -269,9 +269,6 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 
 	public boolean onClusterItemClick(Marker marker, Report report) {
 		mCurrentMarker = marker;
-		if (mSlidingLayer.isOpened()) {
-			mSlidingLayer.closeLayer(true);
-		}
 		mReportAdapter.clear();
 		mReportAdapter.add(report);
 		mSlidingLayer.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.map_slidingLayer_list_single_entry_size);
@@ -281,9 +278,6 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 
 	public boolean onClusterClick(Marker marker, Cluster<Report> cluster) {
 		mCurrentMarker = marker;
-		if (mSlidingLayer.isOpened()) {
-			mSlidingLayer.closeLayer(true);
-		}
 		mReportAdapter.clear();
 		mReportAdapter.addAll(cluster.getItems());
 		mSlidingLayer.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.map_report_pane_size);
