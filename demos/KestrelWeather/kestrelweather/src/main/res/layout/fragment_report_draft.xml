@@ -12,7 +12,6 @@
 		android:gravity="center"
 		android:textAppearance="?android:textAppearanceMedium"
 		android:textColor="@color/gray_medium"
-		android:layout_margin="10dp"
 		android:background="@color/gray_light"
 		android:text="@string/report_draft_count"
 		android:padding="5dp"/>
@@ -20,13 +19,16 @@
 	<FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="0dip"
-		android:layout_weight="1"
-		android:layout_margin="10dp">
+		android:layout_weight="1">
 
 		<ListView
 			android:id="@+id/fragment_report_draft_list"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
+			android:layout_height="wrap_content"
+			android:clipToPadding="true"
+			android:scrollbarStyle="outsideOverlay"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"/>
 
 		<TextView
 			android:id="@+id/fragment_report_draft_list_empty"
