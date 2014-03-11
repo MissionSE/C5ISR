@@ -7,4 +7,9 @@
 	<!-- Data Sync Preferences -->
 	<integer name="default_data_sync_interval">180</integer>
 
+	<!-- Map paddings -->
+	<integer name="map_padding_report_pane_visible_x">0</integer>
+	<integer name="map_padding_report_pane_visible_y">50</integer>
+	<integer name="map_padding_report_pane_gone_x">0</integer>
+	<integer name="map_padding_report_pane_gone_y">150</integer>
 </resources>

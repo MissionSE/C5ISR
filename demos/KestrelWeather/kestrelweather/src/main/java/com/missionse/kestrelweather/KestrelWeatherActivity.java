@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -187,20 +186,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-			case KeyEvent.KEYCODE_BACK:
-				MapViewerFragment mapViewerFragment = (MapViewerFragment) getFragmentManager()
-						.findFragmentByTag("map");
-				if (mapViewerFragment != null && mapViewerFragment.showDetailPane(false)) {
-					return true;
-				}
-			default:
-				return super.onKeyDown(keyCode, event);
-		}
-	}
-
-	@Override
 	protected DrawerConfigurationContainer getDrawerConfigurations() {
 		return mDrawerFactory.createDrawers();
 	}
@@ -281,13 +266,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 	private void updateDrawerFooterCountInformation() {
 		//List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
-		int unsyncedItemCount = (int) mDatabaseManager.getUnSynedCount();
-//		for (Report report : allReports) {
-//			if (report.isDirty() && !report.isDraft()) {
-//				unsyncedItemCount++;
-//			}
-//		}
-
+		int unsyncedItemCount = mDatabaseManager.getUnSynedCount();
 		if (mDrawerCountFooter != null) {
 			mDrawerCountFooter.setText(getResources().getQuantityString(R.plurals.drawer_footer_unsynced_count, unsyncedItemCount,
 					unsyncedItemCount));
@@ -453,6 +432,13 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 	@Override
 	public void onBackPressed() {
+		// Pass the event to the map fragment to see if it should handle the action first
+		MapViewerFragment mapViewerFragment = (MapViewerFragment) getFragmentManager()
+				.findFragmentByTag("map");
+		if (mapViewerFragment != null && mapViewerFragment.isVisible() && mapViewerFragment.onBackPressed()) {
+			return;
+		}
+
 		int backStackEntries = getFragmentManager().getBackStackEntryCount();
 		if (backStackEntries == 0) {
 			if (getLeftDrawerList().getCheckedItemPosition() == 0) {

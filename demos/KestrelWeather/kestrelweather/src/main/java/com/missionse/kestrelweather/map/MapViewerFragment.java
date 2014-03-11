@@ -3,6 +3,7 @@ package com.missionse.kestrelweather.map;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,10 @@ import android.widget.ListView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.clustering.Cluster;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
@@ -26,13 +30,12 @@ import com.missionse.kestrelweather.reports.ReportDetailFragment;
 import com.slidinglayer.SlidingLayer;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
  * Provides a fragment that displays a google map.
  */
-public class MapViewerFragment extends MapFragment {
+public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapClickListener {
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
 	private GoogleMap mMap;
 	private MapLoadedListener mMapLoadedListener;
@@ -41,6 +44,7 @@ public class MapViewerFragment extends MapFragment {
 	private ImageView mSlidingLayerToggle;
 	private ReportAdapter mReportAdapter;
 	private Activity mActivity;
+	private Marker mCurrentMarker;
 
 	@Override
 	public void onAttach(final Activity activity) {
@@ -74,10 +78,10 @@ public class MapViewerFragment extends MapFragment {
 		View v = inflater.inflate(R.layout.fragment_map, container, false);
 		FrameLayout layout = (FrameLayout) v.findViewById(R.id.map_container);
 
-		ListView clusterReportList = (ListView) v.findViewById(R.id.map_cluster_report_list);
-		if (clusterReportList != null) {
-			clusterReportList.setAdapter(mReportAdapter);
-			clusterReportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		ListView reportList = (ListView) v.findViewById(R.id.map_report_list);
+		if (reportList != null) {
+			reportList.setAdapter(mReportAdapter);
+			reportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
 					showReportDetail(mReportAdapter.getItem(position).getId());
@@ -90,14 +94,18 @@ public class MapViewerFragment extends MapFragment {
 		mSlidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
 			@Override
 			public void onOpen() {
-				updateMapPadding(true);
 				mSlidingLayerToggle.setImageResource(R.drawable.ic_expand);
+				if (mCurrentMarker != null) {
+					centerMap(mCurrentMarker.getPosition(), true, null);
+				}
 			}
 
 			@Override
 			public void onClose() {
-				updateMapPadding(false);
 				mSlidingLayerToggle.setImageResource(R.drawable.ic_collapse);
+				if (mCurrentMarker != null) {
+					centerMap(mCurrentMarker.getPosition(), false, null);
+				}
 			}
 
 			@Override
@@ -110,7 +118,6 @@ public class MapViewerFragment extends MapFragment {
 
 			}
 		});
-
 		mSlidingLayerToggle = (ImageView) v.findViewById(R.id.map_slidingLayer_toggle);
 
 		layout.addView(mapView, 0);
@@ -138,13 +145,8 @@ public class MapViewerFragment extends MapFragment {
 
 	private void setUpMap() {
 		KestrelWeatherActivity activity = (KestrelWeatherActivity) getActivity();
-		mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-			@Override
-			public void onMapClick(LatLng latLng) {
-				mSlidingLayer.setOffsetWidth(0);
-				showDetailPane(false);
-			}
-		});
+		mMap.setOnMapClickListener(this);
+		mMap.getUiSettings().setZoomControlsEnabled(false);
 
 		if (activity != null) {
 			mMarkersAdapter = new ObservationCalloutMarkersAdapter(activity, mMap, this);
@@ -160,14 +162,7 @@ public class MapViewerFragment extends MapFragment {
 		}
 	}
 
-	public void showClusterReportList(Collection<Report> reports) {
-		showDetailPane(true);
-		mReportAdapter.clear();
-		mReportAdapter.addAll(reports);
-	}
-
 	public void showReportDetail(int reportId) {
-		showDetailPane(false);
 		FragmentManager fragmentManager = getFragmentManager();
 		if (fragmentManager != null) {
 			Fragment reportDetailFragment = ReportDetailFragment.newInstance(reportId);
@@ -190,26 +185,79 @@ public class MapViewerFragment extends MapFragment {
 		mMapLoadedListener = listener;
 	}
 
-	public boolean showDetailPane(boolean show) {
-		if (mSlidingLayer.isOpened() && !show) {
-			mSlidingLayer.closeLayer(true);
-		} else if (!mSlidingLayer.isOpened() && show) {
-			mSlidingLayer.openLayer(true);
+	private void centerMap(LatLng latLng, boolean reportPaneVisible, GoogleMap.CancelableCallback callback) {
+		int xPadding;
+		int yPadding;
+		if (reportPaneVisible) {
+			xPadding = getResources().getInteger(R.integer.map_padding_report_pane_visible_x);
+			yPadding = getResources().getInteger(R.integer.map_padding_report_pane_visible_y);
 		} else {
-			return false;
+			xPadding = getResources().getInteger(R.integer.map_padding_report_pane_gone_x);
+			yPadding = getResources().getInteger(R.integer.map_padding_report_pane_gone_y);
 		}
-		updateMapPadding(show);
+
+		// calculate the new center of the map, taking into account optional
+		// padding
+		Projection projection = getMap().getProjection();
+		Point point = projection.toScreenLocation(latLng);
+		float density = getResources().getDisplayMetrics().density;
+		point.x = point.x - (int) (xPadding * density);
+		point.y = point.y - (int) (yPadding * density);
+
+		mMap.animateCamera(CameraUpdateFactory.newLatLng(projection.fromScreenLocation(point)), callback);
+	}
+
+	/**
+	 * Called when the activity has detected the user's press of the back key. The default implementation
+	 * simply finishes the current activity, but if the map wants to trace backwards in user actions, do
+	 * so instead.
+	 *
+	 * @return Return false to allow normal back pressed processing to proceed, true to consume it here.
+	 */
+	public boolean onBackPressed() {
+		if (mCurrentMarker != null && mCurrentMarker.isInfoWindowShown()) {
+			mCurrentMarker.hideInfoWindow();
+			mSlidingLayer.closeLayer(true);
+			mCurrentMarker = null;
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onMapClick(LatLng latLng) {
+		mCurrentMarker = null;
+		if (mSlidingLayer.isOpened()) {
+			mSlidingLayer.closeLayer(true);
+		}
+	}
+
+	public boolean onClusterItemClick(Marker marker, Report report) {
+		mCurrentMarker = marker;
+		if (mSlidingLayer.isOpened()) {
+			mSlidingLayer.closeLayer(true);
+		}
+		mReportAdapter.clear();
+		mReportAdapter.add(report);
+		mSlidingLayer.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.map_slidingLayer_list_single_entry_size);
+		onMarkerClick(marker);
 		return true;
 	}
 
-	private void updateMapPadding(boolean detailPaneShown) {
-		float yPixels;
-		if (detailPaneShown) {
-			yPixels = 150;
-		} else {
-			yPixels = -150;
+	public boolean onClusterClick(Marker marker, Cluster<Report> cluster) {
+		mCurrentMarker = marker;
+		if (mSlidingLayer.isOpened()) {
+			mSlidingLayer.closeLayer(true);
 		}
+		mReportAdapter.clear();
+		mReportAdapter.addAll(cluster.getItems());
+		mSlidingLayer.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.map_report_pane_size);
+		onMarkerClick(marker);
+		return true;
+	}
 
-		mMap.animateCamera(CameraUpdateFactory.scrollBy(0, yPixels));
+	private void onMarkerClick(Marker marker) {
+		marker.showInfoWindow();
+		mSlidingLayer.openLayer(true);
 	}
 }

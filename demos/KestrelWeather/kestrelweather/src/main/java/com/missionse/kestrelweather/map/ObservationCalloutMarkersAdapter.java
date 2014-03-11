@@ -2,19 +2,15 @@ package com.missionse.kestrelweather.map;
 
 
 import android.content.Context;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.view.View;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
@@ -56,20 +52,14 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 
 	@Override
 	public boolean onClusterItemClick(Report report) {
-		mFragment.showDetailPane(false);
 		Marker marker = ((ReportRenderer) getRenderer()).getMarker(report);
-		centerMap(report.getPosition());
-		marker.showInfoWindow();
-		return true;
+		return mFragment.onClusterItemClick(marker, report);
 	}
 
 	@Override
 	public boolean onClusterClick(Cluster<Report> cluster) {
-		mFragment.showDetailPane(false);
 		Marker marker = ((ReportRenderer) getRenderer()).getMarker(cluster);
-		centerMap(cluster.getPosition());
-		marker.showInfoWindow();
-		return true;
+		return mFragment.onClusterClick(marker, cluster);
 	}
 
 	@Override
@@ -79,19 +69,7 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 
 	@Override
 	public void onClusterInfoWindowClick(Cluster<Report> cluster) {
-		mFragment.showClusterReportList(cluster.getItems());
-
-	}
-
-	private void centerMap(LatLng position) {
-		// calculate the new center of the map, taking into account optional
-		// padding
-		Projection proj = getMap().getProjection();
-		Point p = proj.toScreenLocation(position);
-		// apply padding
-		p.y = p.y - 230;
-
-		getMap().animateCamera(CameraUpdateFactory.newLatLng(proj.fromScreenLocation(p)));
+		mFragment.showReportDetail(getLatestReport(cluster.getItems()).getId());
 	}
 
 	@Override
