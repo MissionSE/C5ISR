@@ -157,9 +157,9 @@ public class PhotoOverviewFragment extends Fragment implements SupplementRemoved
 		if (item.getItemId() == R.id.action_add_photo) {
 			FragmentManager fragmentManager = getFragmentManager();
 			if (fragmentManager != null) {
-				PhotoDialogFragment photoDialogFragment = new PhotoDialogFragment();
-				photoDialogFragment.setTargetFragment(this, ADD_PHOTO_REQUEST);
-				photoDialogFragment.show(fragmentManager, "");
+				AttachPhotoDialogFragment attachPhotoDialogFragment = new AttachPhotoDialogFragment();
+				attachPhotoDialogFragment.setTargetFragment(this, ADD_PHOTO_REQUEST);
+				attachPhotoDialogFragment.show(fragmentManager, "attach_photo");
 			}
 			return true;
 		}

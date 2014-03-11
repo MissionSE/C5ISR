@@ -2,7 +2,6 @@ package com.missionse.kestrelweather.util;
 
 import android.content.ContentResolver;
 import android.net.Uri;
-import android.util.Log;
 
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.SupplementType;
@@ -35,10 +34,6 @@ public final class SupplementBuilder {
 		supplement.setReport(databaseAccessor.getReportById(reportId));
 
 		UriMetadataProvider uriMetadataProvider = new UriMetadataProvider(contentResolver, uri);
-		for (String column : uriMetadataProvider.getMetadataAvailable()) {
-			Log.d("Builder", "Column: " + column);
-		}
-
 		supplement.setFileName(uriMetadataProvider.getName());
 		supplement.setSize(uriMetadataProvider.getSize());
 		supplement.setDate(new DateTime(uriMetadataProvider.getDateModified()));
