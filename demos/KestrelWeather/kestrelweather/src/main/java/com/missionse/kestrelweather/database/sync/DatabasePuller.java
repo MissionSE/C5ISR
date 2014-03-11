@@ -71,8 +71,6 @@ public class DatabasePuller implements Runnable {
 					Log.d(TAG, "Setting new latest event too:" + newLatestId);
 					if (!newLatestId.equals(mAccessor.getLatestEvent())) {
 						mAccessor.setLatestEvent(newLatestId);
-					} else {
-						Log.d(TAG, "New event ID and Lastest event ID are the same... Issue?");
 					}
 
 					if (mFetchSize == 0 && removeListSize == 0) {
@@ -92,7 +90,6 @@ public class DatabasePuller implements Runnable {
 		if (mListener != null) {
 			mListener.onSyncedReport(reportId);
 			if (mCurrentFetch == mFetchSize) {
-				Log.d(TAG, "Notify listener that pull is complete...");
 				mListener.onSyncComplete();
 			}
 		}
@@ -123,14 +120,14 @@ public class DatabasePuller implements Runnable {
 								Log.d(TAG, "Parsing Report: " + result.toString());
 								createReportFromJson(result);
 							} else {
-								Log.d(TAG, "Bad status returned..." + status);
+								Log.d(TAG, "Bad status returned: " + status);
 							}
 						} else {
 							Log.d(TAG, "Parsing Report: " + result.toString());
 							createReportFromJson(result);
 						}
 					} else {
-						Log.e(TAG, "Unable to pull a single report with id:" + reportId, e);
+						Log.e(TAG, "Unable to pull a single report with id: " + reportId, e);
 					}
 				}
 			});

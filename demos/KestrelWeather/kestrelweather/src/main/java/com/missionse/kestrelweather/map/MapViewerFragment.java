@@ -1,6 +1,9 @@
 package com.missionse.kestrelweather.map;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -18,12 +21,33 @@ public class MapViewerFragment extends MapFragment {
 
 	private GoogleMap mMap;
 	private MapLoadedListener mMapLoadedListener;
+	private OptionsMenuListener mOptionsMenuListener;
 	private ObservationCalloutMarkersAdapter mMarkersAdapter;
+
+	/**
+	 * Sets the listener that will receive a callback when the map is loaded.
+	 * @param listener The listener that will receive the callback.
+	 */
+	public void setMapLoadedListener(final MapLoadedListener listener) {
+		mMapLoadedListener = listener;
+	}
+
+	/**
+	 * Sets the listener that will receive callbacks to handle the options menu.
+	 * @param listener The listener that will receive the callbacks.
+	 */
+	public void setOptionsMenuListener(final OptionsMenuListener listener) {
+		mOptionsMenuListener = listener;
+	}
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
+
+		if (mOptionsMenuListener != null) {
+			setHasOptionsMenu(true);
+		}
 
 		setUpMapIfNeeded();
 	}
@@ -33,6 +57,26 @@ public class MapViewerFragment extends MapFragment {
 		super.onResume();
 
 		setUpMapIfNeeded();
+	}
+
+	@Override
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		if (mOptionsMenuListener != null) {
+			mOptionsMenuListener.onCreateOptionsMenu(menu, inflater);
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		boolean selectionConsumed;
+		if (mOptionsMenuListener != null) {
+			selectionConsumed = mOptionsMenuListener.onOptionsItemSelected(item);
+		} else {
+			selectionConsumed = super.onOptionsItemSelected(item);
+		}
+
+		return selectionConsumed;
 	}
 
 	private void setUpMapIfNeeded() {
@@ -59,13 +103,5 @@ public class MapViewerFragment extends MapFragment {
 		if (mMapLoadedListener != null) {
 			mMapLoadedListener.mapLoaded(mMap);
 		}
-	}
-
-	/**
-	 * Sets the listener that will receive a callback when the map is loaded.
-	 * @param listener The listener that will receive the callback.
-	 */
-	public void setMapLoadedListener(final MapLoadedListener listener) {
-		mMapLoadedListener = listener;
 	}
 }

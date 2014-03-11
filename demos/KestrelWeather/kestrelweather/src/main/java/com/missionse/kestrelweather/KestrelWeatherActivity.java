@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.TileProvider;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.DatabaseManager;
 import com.missionse.kestrelweather.database.util.DatabaseLogger;
@@ -25,7 +26,8 @@ import com.missionse.kestrelweather.kestrel.KestrelSimulationSettingsFragment;
 import com.missionse.kestrelweather.kestrel.KestrelSimulationSharedPreferences;
 import com.missionse.kestrelweather.kestrel.KestrelSimulator;
 import com.missionse.kestrelweather.map.MapViewerFragment;
-import com.missionse.kestrelweather.map.TileProviderFactory;
+import com.missionse.kestrelweather.map.OpenWeatherOverlayFactory;
+import com.missionse.kestrelweather.map.OpenWeatherOverlayOptionsMenu;
 import com.missionse.kestrelweather.map.TiledMap;
 import com.missionse.kestrelweather.preferences.SettingsActivity;
 import com.missionse.kestrelweather.reports.ReportDatabaseFragment;
@@ -37,6 +39,8 @@ import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigura
 import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleNumberedItem;
 
 import org.joda.time.format.DateTimeFormat;
+
+import java.util.Map;
 
 /**
  * Main activity for the Kestrel Weather application.
@@ -77,20 +81,10 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		PreferenceManager.setDefaultValues(this, R.xml.pref_units, false);
 		PreferenceManager.setDefaultValues(this, R.xml.pref_data_sync, false);
 
-		mTiledMap.addTileProvider(getString(R.string.rain_overlay_name),
-				TileProviderFactory.createUrlTileProvider(getString(R.string.rain_overlay_url)));
-		mTiledMap.addTileProvider(getString(R.string.cloud_overlay_name),
-				TileProviderFactory.createUrlTileProvider(getString(R.string.cloud_overlay_url)));
-		mTiledMap.addTileProvider(getString(R.string.snow_overlay_name),
-				TileProviderFactory.createUrlTileProvider(getString(R.string.snow_overlay_url)));
-		mTiledMap.addTileProvider(getString(R.string.pressure_overlay_name),
-				TileProviderFactory.createUrlTileProvider(getString(R.string.pressure_overlay_url)));
-		mTiledMap.addTileProvider(getString(R.string.temp_overlay_name),
-				TileProviderFactory.createUrlTileProvider(getString(R.string.temp_overlay_url)));
-		mTiledMap.addTileProvider(getString(R.string.precipitation_overlay_name),
-				TileProviderFactory.createUrlTileProvider(getString(R.string.precipitation_overlay_url)));
-		mTiledMap.addTileProvider(getString(R.string.wind_overlay_name),
-				TileProviderFactory.createUrlTileProvider(getString(R.string.wind_overlay_url)));
+		Map<String, TileProvider> tileProviders = OpenWeatherOverlayFactory.getOpenWeatherTileProviders(this);
+		for (String tileProvider : tileProviders.keySet()) {
+			mTiledMap.addTileProvider(tileProvider, tileProviders.get(tileProvider));
+		}
 
 		mKestrelSimulator.onCreate();
 
@@ -302,6 +296,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (mapViewerFragment == null) {
 			mapViewerFragment = new MapViewerFragment();
 			mapViewerFragment.setMapLoadedListener(mTiledMap);
+			mapViewerFragment.setOptionsMenuListener(new OpenWeatherOverlayOptionsMenu(mTiledMap));
 		}
 		fragmentManager.beginTransaction()
 				.setCustomAnimations(
@@ -376,17 +371,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (id == R.id.action_settings) {
 			Intent i = new Intent(this, SettingsActivity.class);
 			startActivity(i);
-			return true;
-		} else if (id == R.id.action_rain
-				|| id == R.id.action_cloud
-				|| id == R.id.action_snow
-				|| id == R.id.action_pressure
-				|| id == R.id.action_temp
-				|| id == R.id.action_precipitation
-				|| id == R.id.action_wind) {
-			String overlayName = item.getTitle().toString();
-			mTiledMap.setOverlayVisibility(overlayName, !item.isChecked());
-			item.setChecked(mTiledMap.isOverlayVisible(overlayName));
 			return true;
 		} else if (id == R.id.action_simulate_kestrel) {
 			if (!item.isChecked()) {
