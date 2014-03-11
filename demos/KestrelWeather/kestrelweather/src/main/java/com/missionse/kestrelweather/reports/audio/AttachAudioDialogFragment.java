@@ -27,7 +27,7 @@ public class AttachAudioDialogFragment extends AttachMediaDialogFragment {
 
 	@Override
 	protected int getTakeButtonDrawableId() {
-		return R.drawable.ic_action_audio;
+		return R.drawable.ic_action_mic;
 	}
 
 	@Override

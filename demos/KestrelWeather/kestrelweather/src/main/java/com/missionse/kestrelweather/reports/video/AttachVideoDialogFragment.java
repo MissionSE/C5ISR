@@ -38,7 +38,7 @@ public class AttachVideoDialogFragment extends AttachMediaDialogFragment {
 
 	@Override
 	protected int getAttachButtonDrawableId() {
-		return R.drawable.ic_action_video;
+		return R.drawable.ic_action_movie;
 	}
 
 	@Override
