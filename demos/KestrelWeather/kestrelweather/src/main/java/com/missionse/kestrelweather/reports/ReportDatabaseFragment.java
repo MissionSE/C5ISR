@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +30,10 @@ import java.util.ArrayList;
 public class ReportDatabaseFragment extends Fragment implements SyncStatusListener {
 	private static final String TAG = ReportDatabaseFragment.class.getSimpleName();
 	private Activity mActivity;
+	private DatabaseAccessor mDatabaseAccessor;
 	private ReportAdapter mReportAdapter;
 	private TextView mReportCountView;
-	private DatabaseAccessor mDatabaseAccessor;
+	private ProgressBar mProgressBar;
 
 	/**
 	 * Default constructor.
@@ -103,6 +105,8 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 					reportList.setEmptyView(emptyView);
 				}
 
+				mProgressBar = (ProgressBar) contentView.findViewById(R.id.fragment_report_database_progress_bar);
+
 				Button syncButton = (Button) contentView.findViewById(R.id.sync_btn);
 				syncButton.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -120,11 +124,15 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 					}
 				});
 
-				new ReportLoaderTask(mDatabaseAccessor, mReportAdapter).execute(false);
+				updateReportList();
 			}
 		}
 
 		return contentView;
+	}
+
+	private void updateReportList() {
+		new ReportLoaderTask(mDatabaseAccessor, mReportAdapter, mProgressBar).execute(false);
 	}
 
 	private void updateReportCount() {
@@ -136,7 +144,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 
 	@Override
 	public void onSyncComplete() {
-		new ReportLoaderTask(mDatabaseAccessor, mReportAdapter).execute(false);
+		updateReportList();
 		Toast.makeText(mActivity, getResources().getString(R.string.sync_ended), Toast.LENGTH_SHORT).show();
 	}
 

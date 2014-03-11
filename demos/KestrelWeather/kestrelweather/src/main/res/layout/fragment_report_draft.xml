@@ -36,7 +36,14 @@
 			android:text="@string/report_draft_list_empty"
 			android:textSize="22sp"
 			android:textColor="@color/gray_medium"
-			android:visibility="gone">
-		</TextView>
+			android:visibility="gone"/>
+
+		<ProgressBar
+			android:id="@+id/fragment_report_draft_progress_bar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:indeterminate="true"
+			android:visibility="gone"/>
 	</FrameLayout>
 </LinearLayout>

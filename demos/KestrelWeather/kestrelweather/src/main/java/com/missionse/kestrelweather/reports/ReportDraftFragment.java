@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
@@ -112,7 +113,8 @@ public class ReportDraftFragment extends Fragment {
 					reportList.setEmptyView(emptyView);
 				}
 
-				new ReportLoaderTask(mDatabaseAccessor, mReportAdapter).execute(true);
+				ProgressBar progressBar = (ProgressBar) contentView.findViewById(R.id.fragment_report_draft_progress_bar);
+				new ReportLoaderTask(mDatabaseAccessor, mReportAdapter, progressBar).execute(true);
 			}
 		}
 
