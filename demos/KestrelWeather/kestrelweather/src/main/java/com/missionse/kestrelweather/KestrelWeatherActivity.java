@@ -230,14 +230,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			if (getLeftDrawerAdapter().getItem(index).getId() == KestrelWeatherDrawerFactory.REPORT_DRAFT) {
 				DrawerSimpleNumberedItem draftItem = (DrawerSimpleNumberedItem) getLeftDrawerAdapter().getItem(index);
 
-				//List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
 				int draftReportCount = mDatabaseManager.getDraftCount();
-//				for (Report report : allReports) {
-//					if (report.isDraft()) {
-//						draftReportCount++;
-//					}
-//				}
-
 				draftItem.setNumber(String.valueOf(draftReportCount));
 				getLeftDrawerAdapter().notifyDataSetChanged();
 			}
@@ -249,13 +242,10 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			if (getLeftDrawerAdapter().getItem(index).getId() == KestrelWeatherDrawerFactory.REPORT_VIEW) {
 				DrawerSimpleNumberedItem draftItem = (DrawerSimpleNumberedItem) getLeftDrawerAdapter().getItem(index);
 
-				//List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
-				int reportSize = (int) mDatabaseManager.getReportTable().countOf();
-				String printableCount;
+				int reportSize = mDatabaseManager.getSyncedCount() + mDatabaseManager.getUnSynedCount();
+				String printableCount = String.valueOf(reportSize);
 				if (reportSize > MAX_REPORT_COUNT) {
 					printableCount = "99+";
-				} else {
-					printableCount = String.valueOf(reportSize);
 				}
 
 				draftItem.setNumber(printableCount);
@@ -265,13 +255,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	}
 
 	private void updateDrawerFooterCountInformation() {
-		//List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
-		int unsyncedItemCount = (int) mDatabaseManager.getUnSynedCount();
-//		for (Report report : allReports) {
-//			if (report.isDirty() && !report.isDraft()) {
-//				unsyncedItemCount++;
-//			}
-//		}
+		int unsyncedItemCount = mDatabaseManager.getUnSynedCount();
 
 		if (mDrawerCountFooter != null) {
 			mDrawerCountFooter.setText(getResources().getQuantityString(R.plurals.drawer_footer_unsynced_count, unsyncedItemCount,

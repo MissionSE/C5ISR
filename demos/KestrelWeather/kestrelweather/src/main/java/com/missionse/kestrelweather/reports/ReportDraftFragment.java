@@ -15,10 +15,8 @@ import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Provides a fragment to show a list of reports.
@@ -26,6 +24,7 @@ import java.util.List;
 public class ReportDraftFragment extends Fragment {
 	private static final String TAG = ReportDraftFragment.class.getSimpleName();
 	private Activity mActivity;
+	private DatabaseAccessor mDatabaseAccessor;
 	private ReportAdapter mReportAdapter;
 	private TextView mDraftCountView;
 
@@ -47,12 +46,14 @@ public class ReportDraftFragment extends Fragment {
 	public void onAttach(final Activity activity) {
 		super.onAttach(activity);
 		mActivity = activity;
+		mDatabaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
 		mActivity = null;
+		mDatabaseAccessor = null;
 	}
 
 	@Override
@@ -65,27 +66,18 @@ public class ReportDraftFragment extends Fragment {
 		}
 	}
 
-	private List<Report> queryReports() {
-		DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
-		ReportTable reportTable = databaseAccessor.getReportTable();
-		List<Report> allReports = reportTable.queryForAll();
-		List<Report> drafts = new ArrayList<Report>();
-
-		for (Report report : allReports) {
-			if (report.isDraft()) {
-				drafts.add(report);
+	private void updateDraftView() {
+		if (mDraftCountView != null && mDatabaseAccessor != null) {
+			int draftCount = mDatabaseAccessor.getDraftCount();
+			mDraftCountView.setText(getResources().getString(R.string.report_draft_count) + " " + draftCount);
+			if (draftCount == 0) {
+				mDraftCountView.setTextColor(getResources().getColor(R.color.gray_medium));
+				mDraftCountView.setBackgroundColor(getResources().getColor(R.color.gray_light));
+			} else {
+				mDraftCountView.setTextColor(getResources().getColor(R.color.white));
+				mDraftCountView.setBackgroundColor(getResources().getColor(R.color.holo_green_dark));
 			}
 		}
-
-		mDraftCountView.setText(getResources().getString(R.string.report_draft_count) + " " + drafts.size());
-		if (drafts.isEmpty()) {
-			mDraftCountView.setTextColor(getResources().getColor(R.color.gray_medium));
-			mDraftCountView.setBackgroundColor(getResources().getColor(R.color.gray_light));
-		} else {
-			mDraftCountView.setTextColor(getResources().getColor(R.color.white));
-			mDraftCountView.setBackgroundColor(getResources().getColor(R.color.holo_green_dark));
-		}
-		return drafts;
 	}
 
 	@Override
@@ -93,6 +85,8 @@ public class ReportDraftFragment extends Fragment {
 		View contentView = inflater.inflate(R.layout.fragment_report_draft, container, false);
 		if (contentView != null) {
 			mDraftCountView = (TextView) contentView.findViewById(R.id.fragment_report_draft_count);
+			updateDraftView();
+
 			ListView reportList = (ListView) contentView.findViewById(R.id.fragment_report_draft_list);
 			if (reportList != null) {
 				reportList.setAdapter(mReportAdapter);
@@ -118,9 +112,7 @@ public class ReportDraftFragment extends Fragment {
 					reportList.setEmptyView(emptyView);
 				}
 
-				mReportAdapter.clear();
-				mReportAdapter.addAll(queryReports());
-				mReportAdapter.notifyDataSetChanged();
+				new ReportLoaderTask(mDatabaseAccessor, mReportAdapter).execute(true);
 			}
 		}
 
