@@ -26,16 +26,18 @@
 			android:layout_height="match_parent"
 			android:orientation="vertical">
 
-			<ImageView
+			<com.makeramen.RoundedImageView
+				xmlns:app="http://schemas.android.com/apk/res-auto"
 				android:id="@+id/map_slidingLayer_toggle"
 				android:src="@drawable/ic_collapse"
 				android:layout_gravity="center_horizontal"
-				android:layout_width="match_parent"
+				android:layout_width="@dimen/map_report_pane_header"
 				android:layout_height="@dimen/map_report_pane_header"
-				android:background="#C0FFFFFF"
+				android:background="#E0FFFFFF"
 				android:layout_marginBottom="@dimen/map_slidingLayer_margin"
 				android:layout_marginLeft="@dimen/map_slidingLayer_margin"
-				android:layout_marginRight="@dimen/map_slidingLayer_margin"/>
+				android:layout_marginRight="@dimen/map_slidingLayer_margin"
+				app:is_oval="true"/>
 
 			<ListView
 				android:id="@+id/map_report_list"
@@ -43,7 +45,7 @@
 				android:layout_height="match_parent"
 				android:clipToPadding="false"
 				android:scrollbarStyle="outsideOverlay"
-				android:background="#C0FFFFFF"
+				android:background="#E0FFFFFF"
 				android:layout_marginBottom="@dimen/map_slidingLayer_margin"
 				android:layout_marginLeft="@dimen/map_slidingLayer_margin"
 				android:layout_marginRight="@dimen/map_slidingLayer_margin"/>
