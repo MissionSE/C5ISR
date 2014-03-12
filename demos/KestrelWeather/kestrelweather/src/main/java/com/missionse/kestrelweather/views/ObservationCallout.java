@@ -83,8 +83,9 @@ public class ObservationCallout extends FrameLayout {
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_middle_right_unit);
 		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_middle_right_icon);
 
-		value.setText(Integer.toString((int) mReport.getKestrelWeather().getPressure()));
-		unit.setText("hPa");
+		float pressure = UnitPrefs.getPreferredPressure(getContext(), mReport.getKestrelWeather().getPressure());
+		value.setText(Integer.toString((int) pressure));
+		unit.setText(UnitPrefs.getPreferredPressureUnitAbbr(getContext()));
 		icon.setImageResource(R.drawable.ic_pressure);
 
 		view.setVisibility(VISIBLE);
@@ -96,9 +97,9 @@ public class ObservationCallout extends FrameLayout {
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_middle_left_unit);
 		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_middle_left_icon);
 
-		//TODO convert value with respect to unit
-		value.setText(Integer.toString((int) mReport.getKestrelWeather().getWindSpeed()));
-		unit.setText("mps");
+		float windSpeed = UnitPrefs.getPreferredWindSpeed(getContext(), mReport.getKestrelWeather().getWindSpeed());
+		value.setText(Integer.toString((int) windSpeed));
+		unit.setText(UnitPrefs.getPreferredWindSpeedUnitAbbr(getContext()));
 		icon.setImageResource(R.drawable.ic_wind_speed);
 
 		view.setVisibility(VISIBLE);
@@ -110,9 +111,9 @@ public class ObservationCallout extends FrameLayout {
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_left_unit);
 		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_bottom_left_icon);
 
-		//TODO convert value with respect to unit
-		value.setText(Float.toString(mReport.getKestrelWeather().getWindDirection()));
-		unit.setText("°");
+		String windDirection = UnitPrefs.getPreferredWindDirection(getContext(), mReport.getKestrelWeather().getWindDirection());
+		value.setText(windDirection);
+		unit.setText(UnitPrefs.getPreferredWindDirectionUnitAbbr(getContext()));
 		icon.setImageResource(R.drawable.ic_wind_direction);
 
 		view.setVisibility(VISIBLE);

@@ -228,11 +228,16 @@
 	<string name="inches_of_mercuryAbbr">in</string>
 
 	<string name="meters_per_second">Meters per second (m/s)</string>
+	<string name="meters_per_secondAbbr">m/s</string>
 	<string name="kilometers_per_hour">Kilometers per hour (km/h)</string>
+	<string name="kilometers_per_hourAbbr">km/h</string>
 	<string name="miles_per_hour">Miles per hour (mph)</string>
+	<string name="miles_per_hourAbbr">mph</string>
 	<string name="knots">Knots (kn)</string>
+	<string name="knotsAbbr">kn</string>
 
 	<string name="cardinal">Cardinal</string>
 	<string name="degrees">Degrees</string>
+	<string name="degreesAbbr">°</string>
 
 </resources>

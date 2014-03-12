@@ -62,11 +62,20 @@ public final class UnitPrefs {
 	/**
 	 * Get the measure in the preferred unit for pressure.
 	 * @param context the current context
-	 * @param pressure the measured pressure
+	 * @param kilopascal the measured pressure
 	 * @return pressure in the preferred units
 	 */
-	public static float getPreferredPressure(Context context, float pressure) {
-		return pressure;
+	public static float getPreferredPressure(Context context, float kilopascal) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String key = context.getString(R.string.key_units_pressure);
+		String value = prefs.getString(key, context.getString(R.string.kilopascal));
+		if (value.equals(context.getString(R.string.milibars))) {
+			return UnitConverter.kilopascalToMilibar(kilopascal);
+		} else if (value.equals(context.getString(R.string.inches_of_mercury))) {
+			return UnitConverter.kilopascalToInchesOfMercury(kilopascal);
+		} else {
+			return kilopascal;
+		}
 	}
 
 	/**
@@ -75,7 +84,9 @@ public final class UnitPrefs {
 	 * @return the preferred unit for pressure
 	 */
 	public static String getPreferredPressureUnit(Context context) {
-		return "Milibars (mb)";
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String key = context.getString(R.string.key_units_pressure);
+		return prefs.getString(key, context.getString(R.string.kilopascal));
 	}
 
 	/**
@@ -84,17 +95,37 @@ public final class UnitPrefs {
 	 * @return the preferred unit for pressure
 	 */
 	public static String getPreferredPressureUnitAbbr(Context context) {
-		return "mb";
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String key = context.getString(R.string.key_units_pressure);
+		String value = prefs.getString(key, context.getString(R.string.kilopascal));
+		if (value.equals(context.getString(R.string.milibars))) {
+			return context.getString(R.string.milibarsAbbr);
+		} else if (value.equals(context.getString(R.string.inches_of_mercury))) {
+			return context.getString(R.string.inches_of_mercuryAbbr);
+		} else {
+			return context.getString(R.string.kilopascalAbbr);
+		}
 	}
 
 	/**
 	 * Get the measure in the preferred unit for wind speed.
 	 * @param context the current context
-	 * @param windSpeed the measured wind speed
+	 * @param mps the measured wind speed
 	 * @return wind speed in the preferred units
 	 */
-	public static float getPreferredWindSpeed(Context context, float windSpeed) {
-		return windSpeed;
+	public static float getPreferredWindSpeed(Context context, float mps) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String key = context.getString(R.string.key_units_wind_speed);
+		String value = prefs.getString(key, context.getString(R.string.meters_per_second));
+		if (value.equals(context.getString(R.string.kilometers_per_hour))) {
+			return UnitConverter.mpsToKmph(mps);
+		} else if (value.equals(context.getString(R.string.miles_per_hour))) {
+			return UnitConverter.mpsToMph(mps);
+		} else if (value.equals(context.getString(R.string.knots))) {
+			return UnitConverter.mpsToKnots(mps);
+		} else {
+			return mps;
+		}
 	}
 
 	/**
@@ -103,7 +134,9 @@ public final class UnitPrefs {
 	 * @return the preferred unit for wind speed
 	 */
 	public static String getPreferredWindSpeedUnit(Context context) {
-		return "Meters per second (mps)";
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String key = context.getString(R.string.key_units_wind_speed);
+		return prefs.getString(key, context.getString(R.string.meters_per_second));
 	}
 
 	/**
@@ -112,17 +145,35 @@ public final class UnitPrefs {
 	 * @return the preferred unit for wind speed
 	 */
 	public static String getPreferredWindSpeedUnitAbbr(Context context) {
-		return "m/s";
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String key = context.getString(R.string.key_units_wind_speed);
+		String value = prefs.getString(key, context.getString(R.string.meters_per_second));
+		if (value.equals(context.getString(R.string.kilometers_per_hour))) {
+			return context.getString(R.string.kilometers_per_hourAbbr);
+		} else if (value.equals(context.getString(R.string.miles_per_hour))) {
+			return context.getString(R.string.miles_per_hourAbbr);
+		} else if (value.equals(context.getString(R.string.knots))) {
+			return context.getString(R.string.knotsAbbr);
+		} else {
+			return context.getString(R.string.meters_per_secondAbbr);
+		}
 	}
 
 	/**
 	 * Get the measure in the preferred unit for wind direction.
 	 * @param context the current context
-	 * @param windDirection the measured wind direction
+	 * @param cardinal the measured wind direction
 	 * @return wind direction in the preferred units
 	 */
-	public static float getPreferredWindDirection(Context context, float windDirection) {
-		return windDirection;
+	public static String getPreferredWindDirection(Context context, float cardinal) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String key = context.getString(R.string.key_units_wind_direction);
+		String value = prefs.getString(key, context.getString(R.string.degrees));
+		if (value.equals(context.getString(R.string.cardinal))) {
+			return UnitConverter.degreeToCardinal(context, cardinal);
+		} else {
+			return Float.toString(cardinal);
+		}
 	}
 
 	/**
@@ -131,7 +182,9 @@ public final class UnitPrefs {
 	 * @return the preferred unit for wind direction
 	 */
 	public static String getPreferredWindDirectionUnit(Context context) {
-		return "Degrees";
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String key = context.getString(R.string.key_units_wind_direction);
+		return prefs.getString(key, context.getString(R.string.degrees));
 	}
 
 	/**
@@ -140,7 +193,14 @@ public final class UnitPrefs {
 	 * @return the preferred unit for wind direction
 	 */
 	public static String getPreferredWindDirectionUnitAbbr(Context context) {
-		return "°";
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String key = context.getString(R.string.key_units_wind_direction);
+		String value = prefs.getString(key, context.getString(R.string.degrees));
+		if (value.equals(context.getString(R.string.cardinal))) {
+			return "";
+		} else {
+			return context.getString(R.string.degreesAbbr);
+		}
 	}
 
 }

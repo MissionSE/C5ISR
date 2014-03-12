@@ -16,6 +16,14 @@ public final class UnitConverter {
 		return 32.0F + 9.0F * celsius / 5.0F;
 	}
 
+	public static float kilopascalToMilibar(float kilopascal) {
+		return kilopascal * 10.0f;
+	}
+
+	public static float kilopascalToInchesOfMercury(float kilopascal) {
+		return kilopascal * 0.295299830714f;
+	}
+
 	public static float cmToInches(float cm) {
 		return 0.393701F * cm;
 	}
@@ -54,6 +62,10 @@ public final class UnitConverter {
 
 	public static float mpsToMph(float mps) {
 		return 3.6F * mps / 1.609344F;
+	}
+
+	public static float mpsToKnots(float mps) {
+		return 1.9438444924406f * mps;
 	}
 
 	public static String degreeToCardinal(Context context, float degrees) {
