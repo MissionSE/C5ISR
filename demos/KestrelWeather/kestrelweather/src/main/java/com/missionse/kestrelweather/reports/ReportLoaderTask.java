@@ -9,6 +9,7 @@ import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,6 +61,8 @@ public class ReportLoaderTask extends AsyncTask<Boolean, Void, Void> {
 					mReportList.add(report);
 				}
 			}
+
+			Collections.sort(mReportList);
 		}
 		return null;
 	}

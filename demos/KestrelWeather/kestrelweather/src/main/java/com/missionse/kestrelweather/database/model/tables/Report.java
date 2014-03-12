@@ -15,7 +15,7 @@ import java.util.Map;
  * Report object.
  */
 @DatabaseTable(daoClass = com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable.class)
-public class Report extends Entity implements ClusterItem {
+public class Report extends Entity implements ClusterItem, Comparable<Object> {
 	@DatabaseField(columnName = "devicename")
 	private String mUserName;
 
@@ -293,5 +293,18 @@ public class Report extends Entity implements ClusterItem {
 	 */
 	public void setRead(boolean read) {
 		mRead = read;
+	}
+
+	@Override
+	public int compareTo(final Object another) {
+		if (another != null) {
+			if (getClass() == another.getClass()) {
+				return getTitle().toLowerCase().compareTo(((Report) another).getTitle().toLowerCase());
+			} else {
+				return 1;
+			}
+		} else {
+			return 1;
+		}
 	}
 }

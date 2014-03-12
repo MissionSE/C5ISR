@@ -24,10 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+
 /**
  * Provides an adapter for a list of photos.
  */
-public class ReportAdapter extends ArrayAdapter<Report> {
+public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHeadersAdapter {
 	private int mResource;
 	private DateTimeFormatter mDateFormatter;
 
@@ -156,5 +158,26 @@ public class ReportAdapter extends ArrayAdapter<Report> {
 			allReports.add(getItem(index));
 		}
 		return allReports;
+	}
+
+	@Override
+	public View getHeaderView(final int position, View convertView, final ViewGroup viewGroup) {
+		View headerView;
+		LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		headerView = layoutInflater.inflate(R.layout.fragment_report_database_header_view, null);
+
+		if (headerView != null) {
+			TextView headerText = (TextView) headerView.findViewById(R.id.fragment_report_database_header);
+			if (headerText != null) {
+				headerText.setText("" + getItem(position).getTitle().toUpperCase().charAt(0));
+			}
+		}
+
+		return headerView;
+	}
+
+	@Override
+	public long getHeaderId(final int position) {
+		return getItem(position).getTitle().toUpperCase().charAt(0);
 	}
 }

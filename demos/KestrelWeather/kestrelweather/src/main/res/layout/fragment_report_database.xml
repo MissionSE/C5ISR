@@ -42,14 +42,12 @@
 		android:layout_height="0dip"
 		android:layout_weight="1">
 
-		<ListView
+		<se.emilsjolander.stickylistheaders.StickyListHeadersListView
 			android:id="@+id/fragment_report_database_list"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:clipToPadding="false"
-			android:scrollbarStyle="outsideOverlay"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"/>
+			android:scrollbarStyle="outsideOverlay"/>
 
 		<TextView
 			android:id="@+id/fragment_report_database_list_empty"

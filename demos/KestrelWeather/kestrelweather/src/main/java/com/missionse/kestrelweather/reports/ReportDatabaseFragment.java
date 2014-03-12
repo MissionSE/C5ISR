@@ -20,7 +20,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +32,8 @@ import com.missionse.kestrelweather.database.sync.DatabaseSync;
 import com.missionse.kestrelweather.database.sync.SyncStatusListener;
 
 import java.util.ArrayList;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Provides a fragment to show a list of reports.
@@ -154,7 +155,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 				}
 			});
 
-			ListView reportList = (ListView) contentView.findViewById(R.id.fragment_report_database_list);
+			StickyListHeadersListView reportList = (StickyListHeadersListView) contentView.findViewById(R.id.fragment_report_database_list);
 			if (reportList != null) {
 				reportList.setAdapter(mReportAdapter);
 				reportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

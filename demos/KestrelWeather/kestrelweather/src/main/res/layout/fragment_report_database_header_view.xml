@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/fragment_report_database_header"
+	android:layout_width="wrap_content"
+	android:layout_height="?android:listPreferredItemHeightSmall"
+	android:gravity="center"
+	android:textAppearance="?android:textAppearanceSmall"
+	android:textColor="@color/white"
+	android:background="@color/gray_medium"
+	android:paddingRight="10dp"/>
