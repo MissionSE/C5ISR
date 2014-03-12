@@ -107,7 +107,7 @@ public class PhotoAdapter extends SupplementAdapter {
 				try {
 					uriId = Long.parseLong(uriSegments[uriSegments.length - 1]);
 				} catch (NumberFormatException exception) {
-					Log.v(TAG, "Unable to get ID from URI: " + uri);
+					Log.d(TAG, "Unable to get ID from URI: " + uri);
 				}
 			}
 		}

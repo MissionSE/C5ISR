@@ -230,23 +230,16 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerListen
 	@Override
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent resultData) {
 		super.onActivityResult(requestCode, resultCode, resultData);
-		Log.d(TAG, "RequestCode>: " + requestCode + " ResultCode>: " + resultCode);
 		if (requestCode == ATTACH_AUDIO_REQUEST && resultCode == Activity.RESULT_OK) {
-			Log.d(TAG, "Passed inital code checks...");
 			if (resultData != null) {
-				Log.d(TAG, "resultData is not null...");
 				if (resultData.getData() != null) {
-					Log.d(TAG, "resultData.getData() is not null :: adding_entry");
 					addPreventDuplicateEntry(resultData.getData());
 				} else {
-					Log.d(TAG, "resultData.getData() is null");
 					ClipData clipData = resultData.getClipData();
 					if (clipData != null) {
-						Log.d(TAG, "clipdata is not null.");
 						for (int index = 0; index < clipData.getItemCount(); ++index) {
 							ClipData.Item item = clipData.getItemAt(index);
 							if (item != null) {
-								Log.d(TAG, "item is not null :: adding_entry");
 								addPreventDuplicateEntry(item.getUri());
 							}
 						}

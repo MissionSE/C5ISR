@@ -49,13 +49,12 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
 		try {
-			Log.i(TAG, "onCreate");
 			for (Class clazz : getSupportedClasses()) {
 				TableUtils.createTable(connectionSource, clazz);
 			}
-		} catch (SQLException exp) {
-			Log.e(TAG, "Cannot create database.", exp);
-			throw new RuntimeException(exp);
+		} catch (SQLException e) {
+			Log.e(TAG, "Cannot create database.", e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -63,14 +62,13 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
 			int oldVersion, int newVersion) {
 		try {
-			Log.i(TAG, "onUpgrade");
 			for (Class clazz : getSupportedClasses()) {
 				TableUtils.dropTable(connectionSource, clazz, true);
 			}
 			onCreate(db, connectionSource);
-		} catch (SQLException exp) {
-			Log.e(TAG, "Cannot drop database.", exp);
-			throw new RuntimeException(exp);
+		} catch (SQLException e) {
+			Log.e(TAG, "Cannot drop database.", e);
+			throw new RuntimeException(e);
 		}
 	}
 

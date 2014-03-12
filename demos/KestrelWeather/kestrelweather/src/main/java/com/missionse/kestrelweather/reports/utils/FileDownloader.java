@@ -45,16 +45,16 @@ public final class FileDownloader {
 														fileDownloadCompleteListener.fileDownloadComplete(uri);
 													}
 												} else {
-													Log.v(TAG, "Media Scanner returned null URI.");
+													Log.d(TAG, "Media Scanner returned null URI.");
 												}
 											}
 										}
 								);
 							} else {
-								Log.v(TAG, "Downloaded file is null.");
+								Log.d(TAG, "Downloaded file is null.");
 							}
 						} else {
-							Log.v(TAG, "Caught exception while downloading file: " + e.toString());
+							Log.d(TAG, "Caught exception while downloading file: " + e.toString());
 						}
 					}
 				});

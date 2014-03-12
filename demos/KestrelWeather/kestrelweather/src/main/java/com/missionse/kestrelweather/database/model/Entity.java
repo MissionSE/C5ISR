@@ -17,6 +17,8 @@ import java.util.Map;
  * Base class for database tables.
  */
 public class Entity {
+	private static final String TAG = Entity.class.getSimpleName();
+
 	@Expose(serialize = true, deserialize = true)
 	@SerializedName("_id")
 	@DatabaseField(columnName = "_id", generatedId = true)
@@ -161,7 +163,7 @@ public class Entity {
 			try {
 				retValue = element.getAsInt();
 			} catch (NumberFormatException e) {
-				Log.d("Entity", "Unable to read db id... defaulting to 0");
+				Log.d(TAG, "Unable to parse id.");
 			}
 		}
 		return retValue;
@@ -177,8 +179,7 @@ public class Entity {
 			try {
 				retValue = element.getAsLong();
 			} catch (NumberFormatException e) {
-				Log.d("Entity", "Unable to parse as long:" + element.toString());
-				Log.d("Entity", "parse as string..");
+				Log.d(TAG, "Unable to parse date");
 				retValue = DateTime.parse(element.getAsString()).getMillis();
 			}
 		}
