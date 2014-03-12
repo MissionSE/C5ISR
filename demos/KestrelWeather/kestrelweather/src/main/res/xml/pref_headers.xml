@@ -3,21 +3,21 @@
 	<!-- These settings headers are only used on tablets. -->
 
 	<header
-		android:fragment="com.missionse.kestrelweather.preferences.SettingsActivity$UnitsPreferenceFragment"
+		android:fragment="com.missionse.kestrelweather.preferences.UnitsPreferenceFragment"
 		android:title="@string/pref_header_units"/>
 
 	<header
-		android:fragment="com.missionse.kestrelweather.preferences.SettingsActivity$DataSyncPreferenceFragment"
+		android:fragment="com.missionse.kestrelweather.preferences.DataSyncPreferenceFragment"
 		android:title="@string/pref_header_data_sync"/>
 
 	<!-- Development -->
 	<header
 		android:id="@+id/developer_settings"
-		android:fragment="com.missionse.kestrelweather.preferences.SettingsActivity$DeveloperPreferenceFragment"
+		android:fragment="com.missionse.kestrelweather.preferences.DeveloperPreferenceFragment"
 		android:title="@string/pref_header_developer"/>
 
 	<header
-		android:fragment="com.missionse.kestrelweather.preferences.SettingsActivity$AboutPreferenceFragment"
+		android:fragment="com.missionse.kestrelweather.preferences.AboutPreferenceFragment"
 		android:title="@string/pref_header_about"/>
 
 </preference-headers>

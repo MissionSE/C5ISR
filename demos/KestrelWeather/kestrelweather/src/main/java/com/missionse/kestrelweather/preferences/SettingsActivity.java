@@ -1,18 +1,12 @@
 package com.missionse.kestrelweather.preferences;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.missionse.kestrelweather.R;
 
@@ -72,7 +66,7 @@ public class SettingsActivity extends PreferenceActivity {
 	 * dependent on the type of preference.
 	 * @see #sBindPreferenceSummaryToValueListener
 	 */
-	private static void bindPreferenceSummaryToValue(Preference preference) {
+	static void bindPreferenceSummaryToValue(Preference preference) {
 		// Set the listener to watch for value changes.
 		preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -139,154 +133,4 @@ public class SettingsActivity extends PreferenceActivity {
 		}
 	}
 
-	/**
-	 * This fragment shows units preferences only.
-	 */
-	public static class UnitsPreferenceFragment extends PreferenceFragment {
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.pref_units);
-
-			// Bind the summaries of EditText/List/Dialog/Ringtone preferences
-			// to their values. When their values change, their summaries are
-			// updated to reflect the new value, per the Android Design
-			// guidelines.
-			bindPreferenceSummaryToValue(findPreference(getString(R.string.key_units_temperature)));
-			bindPreferenceSummaryToValue(findPreference(getString(R.string.key_units_pressure)));
-			bindPreferenceSummaryToValue(findPreference(getString(R.string.key_units_wind_speed)));
-			bindPreferenceSummaryToValue(findPreference(getString(R.string.key_units_wind_direction)));
-		}
-	}
-
-	/**
-	 * This fragment shows data and sync preferences only. It is used when the
-	 * activity is showing a two-pane settings UI.
-	 */
-	public static class DataSyncPreferenceFragment extends PreferenceFragment {
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.pref_data_sync);
-
-			// Bind the summaries of EditText/List/Dialog/Ringtone preferences
-			// to their values. When their values change, their summaries are
-			// updated to reflect the new value, per the Android Design
-			// guidelines.
-			bindPreferenceSummaryToValue(findPreference(getString(R.string.key_sync_frequency)));
-		}
-	}
-
-	/**
-	 * This fragment shows developer preferences only.
-	 */
-	public static class DeveloperPreferenceFragment extends PreferenceFragment {
-		public static final String PREF_FILE = "development";
-
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.pref_developer);
-		}
-	}
-
-	/**
-	 * This fragment shows about preferences only.
-	 */
-	public static class AboutPreferenceFragment extends PreferenceFragment {
-		private int mDeveloperClickCount;
-		private Toast mDeveloperToast;
-		private static final int TAPS_TO_BE_A_DEVELOPER = 7;
-
-		@Override
-		public void onResume() {
-			super.onResume();
-			if (getActivity() != null) {
-				if (getActivity().getSharedPreferences(DeveloperPreferenceFragment.PREF_FILE, Context.MODE_PRIVATE)
-						.getBoolean(getString(R.string.key_developer), false)) {
-					mDeveloperClickCount = -1;
-				} else {
-					mDeveloperClickCount = TAPS_TO_BE_A_DEVELOPER;
-				}
-			}
-
-			mDeveloperToast = null;
-		}
-
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.pref_about);
-
-			Preference version = findPreference(getString(R.string.key_about_version));
-			if (version != null) {
-				try {
-					PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-					version.setSummary(packageInfo.versionName + " (" + packageInfo.versionCode + ")");
-				} catch (PackageManager.NameNotFoundException e) {
-					e.printStackTrace();
-				}
-
-				version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(final Preference preference) {
-						if (mDeveloperClickCount > 0) {
-							mDeveloperClickCount--;
-							if (mDeveloperClickCount == 0) {
-								getActivity().getSharedPreferences(DeveloperPreferenceFragment.PREF_FILE,
-										Context.MODE_PRIVATE).edit().putBoolean(
-										getString(R.string.key_developer), true).apply();
-								if (mDeveloperToast != null) {
-									mDeveloperToast.cancel();
-								}
-								mDeveloperToast = Toast.makeText(getActivity(), R.string.developer_mode_enabled, Toast.LENGTH_SHORT);
-								mDeveloperToast.show();
-							} else if (mDeveloperClickCount > 0 && mDeveloperClickCount < (TAPS_TO_BE_A_DEVELOPER - 2)) {
-								if (mDeveloperToast != null) {
-									mDeveloperToast.cancel();
-								}
-								mDeveloperToast = Toast.makeText(getActivity(), getResources().getQuantityString(
-												R.plurals.developer_mode_toast, mDeveloperClickCount, mDeveloperClickCount),
-										Toast.LENGTH_SHORT
-								);
-								mDeveloperToast.show();
-							}
-						} else if (mDeveloperClickCount < 0) {
-							if (mDeveloperToast != null) {
-								mDeveloperToast.cancel();
-							}
-							mDeveloperToast = Toast.makeText(getActivity(), R.string.developer_mode_already,
-									Toast.LENGTH_LONG);
-							mDeveloperToast.show();
-						}
-						return true;
-					}
-				});
-			}
-
-			Preference licenseInfo = findPreference(getString(R.string.key_about_open_source_licenses));
-			if (licenseInfo != null) {
-				licenseInfo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						getActivity().startActivity(new Intent(getActivity(), OpenSourceLicenseInfoActivity.class));
-						return true;
-					}
-				});
-			}
-
-			Preference company = findPreference(getString(R.string.key_about_company_name));
-			if (company != null) {
-				company.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://asrcfederal.com/mse"));
-						startActivity(browserIntent);
-						return true;
-					}
-				});
-			}
-
-		}
-	}
 }
