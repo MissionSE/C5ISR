@@ -30,7 +30,18 @@ public class PressureTrendListItem implements ReadingsListItem {
 
 	@Override
 	public String getReading() {
-		return Integer.toString(mReport.getKestrelWeather().getPressureTrend());
+		String pressureTrend;
+		switch (mReport.getKestrelWeather().getPressureTrend()) {
+			case 0:
+				pressureTrend = "Up";
+				break;
+			case 1:
+				pressureTrend = "Down";
+				break;
+			default:
+				pressureTrend = "Unknown";
+		}
+		return pressureTrend;
 	}
 
 	@Override
@@ -40,6 +51,6 @@ public class PressureTrendListItem implements ReadingsListItem {
 
 	@Override
 	public String getUnits() {
-		return "N/A";
+		return "";
 	}
 }

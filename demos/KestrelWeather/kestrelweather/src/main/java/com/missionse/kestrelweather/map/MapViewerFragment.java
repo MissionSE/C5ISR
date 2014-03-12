@@ -6,15 +6,15 @@ import android.app.FragmentManager;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -246,7 +246,6 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 	 * Called when the activity has detected the user's press of the back key. The default implementation
 	 * simply finishes the current activity, but if the map wants to trace backwards in user actions, do
 	 * so instead.
-	 *
 	 * @return Return false to allow normal back pressed processing to proceed, true to consume it here.
 	 */
 	public boolean onBackPressed() {

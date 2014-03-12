@@ -13,6 +13,7 @@ import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.preferences.UnitPrefs;
 
 import java.util.Formatter;
 
@@ -79,14 +80,15 @@ public class WeatherOverviewFragment extends Fragment {
 						if (report.getKestrelWeather() != null) {
 							TextView temperatureView = (TextView) contentView.findViewById(R.id.report_detail_temperature);
 							if (temperatureView != null) {
+								float temperature = UnitPrefs.getPreferredTemperature(mActivity,
+										report.getKestrelWeather().getTemperature());
 								Formatter formatter = new Formatter();
-								String temperature = formatter.format("%.1f", report.getKestrelWeather().getTemperature()).toString();
-								temperatureView.setText(temperature);
+								temperatureView.setText(formatter.format("%.1f", temperature).toString());
 							}
 
 							TextView temperatureUnitsView = (TextView) contentView.findViewById(R.id.report_detail_temperature_units);
 							if (temperatureUnitsView != null) {
-								temperatureUnitsView.setText(getString(R.string.celsius_word));
+								temperatureUnitsView.setText(UnitPrefs.getPreferredTemperatureUnit(mActivity));
 							}
 						}
 

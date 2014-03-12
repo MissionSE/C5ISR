@@ -37,7 +37,7 @@ public final class UnitPrefs {
 	 * @param context the current context
 	 * @return the preferred unit for temperature
 	 */
-	public static String getPreferrredTemperatureUnit(Context context) {
+	public static String getPreferredTemperatureUnit(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		String key = context.getString(R.string.key_units_temperature);
 		return prefs.getString(key, context.getString(R.string.celsius));
@@ -112,7 +112,7 @@ public final class UnitPrefs {
 	 * @return the preferred unit for wind speed
 	 */
 	public static String getPreferredWindSpeedUnitAbbr(Context context) {
-		return "mps";
+		return "m/s";
 	}
 
 	/**

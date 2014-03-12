@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.preferences.UnitPrefs;
 import com.missionse.kestrelweather.reports.readings.ReadingsListItem;
 
 /**
@@ -30,7 +31,9 @@ public class PressureListItem implements ReadingsListItem {
 
 	@Override
 	public String getReading() {
-		return Float.toString(mReport.getKestrelWeather().getPressure());
+		float pressure = UnitPrefs.getPreferredPressure(mContext,
+				mReport.getKestrelWeather().getPressure());
+		return Float.toString(pressure);
 	}
 
 	@Override
@@ -40,6 +43,6 @@ public class PressureListItem implements ReadingsListItem {
 
 	@Override
 	public String getUnits() {
-		return "Hg";
+		return UnitPrefs.getPreferredPressureUnitAbbr(mContext);
 	}
 }

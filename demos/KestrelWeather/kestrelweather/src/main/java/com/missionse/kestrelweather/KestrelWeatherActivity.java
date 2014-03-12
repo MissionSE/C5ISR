@@ -432,7 +432,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 	/**
 	 * Gets the database accessor.
-	 *
 	 * @return Instance of DatabaseAccessor.
 	 */
 	public DatabaseAccessor getDatabaseAccessor() {

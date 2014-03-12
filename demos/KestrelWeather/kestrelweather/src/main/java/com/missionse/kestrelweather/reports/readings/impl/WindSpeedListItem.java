@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.preferences.UnitPrefs;
 import com.missionse.kestrelweather.reports.readings.ReadingsListItem;
 
 /**
@@ -30,7 +31,9 @@ public class WindSpeedListItem implements ReadingsListItem {
 
 	@Override
 	public String getReading() {
-		return Float.toString(mReport.getKestrelWeather().getWindSpeed());
+		float windSpeed = UnitPrefs.getPreferredWindSpeed(mContext,
+				mReport.getKestrelWeather().getWindSpeed());
+		return Float.toString(windSpeed);
 	}
 
 	@Override
@@ -40,6 +43,6 @@ public class WindSpeedListItem implements ReadingsListItem {
 
 	@Override
 	public String getUnits() {
-		return "mph";
+		return UnitPrefs.getPreferredWindSpeedUnitAbbr(mContext);
 	}
 }
