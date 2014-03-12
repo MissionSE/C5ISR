@@ -144,16 +144,32 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 
 	@Override
 	public void onSyncComplete() {
-		updateReportList();
-		Toast.makeText(mActivity, getResources().getString(R.string.sync_ended), Toast.LENGTH_SHORT).show();
+		runOnUi(new Runnable() {
+			@Override
+			public void run() {
+				updateReportList();
+				Toast.makeText(mActivity, getResources().getString(R.string.sync_ended), Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	@Override
 	public void onSyncStarted() {
-		Toast.makeText(mActivity, getResources().getString(R.string.sync_started), Toast.LENGTH_SHORT).show();
+		runOnUi(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(mActivity, getResources().getString(R.string.sync_started), Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	@Override
 	public void onSyncedReport(int reportId) {
+	}
+
+	private void runOnUi(Runnable runnable) {
+		if (mActivity != null) {
+			mActivity.runOnUiThread(runnable);
+		}
 	}
 }

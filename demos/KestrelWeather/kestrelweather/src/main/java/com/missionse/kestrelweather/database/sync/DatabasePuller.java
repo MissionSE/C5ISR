@@ -6,7 +6,6 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
@@ -31,7 +30,8 @@ public class DatabasePuller implements Runnable {
 
 	/**
 	 * Constructor.
-	 * @param context The application context.
+	 *
+	 * @param context  The application context.
 	 * @param accessor Instance of DatabaseAccessor.
 	 */
 	public DatabasePuller(Context context, DatabaseAccessor accessor) {
@@ -42,41 +42,35 @@ public class DatabasePuller implements Runnable {
 	@Override
 	public void run() {
 		String latestId = mAccessor.getLatestEvent();
-		IonUtil.pullLatestEvent(mContext, latestId, new FutureCallback<JsonObject>() {
-			@Override
-			public void onCompleted(Exception e, JsonObject result) {
-				if (e == null) {
-					JsonArray fetchList = result.getAsJsonArray("toFetch");
-					JsonArray removeList = result.getAsJsonArray("toRemove");
+		JsonObject result = IonUtil.pullLatestEvent(mContext, latestId);
+		if (result != null) {
+			JsonArray fetchList = result.getAsJsonArray("toFetch");
+			JsonArray removeList = result.getAsJsonArray("toRemove");
 
-					mFetchSize = fetchList.size();
-					for (JsonElement element : fetchList) {
-						pullReport(element.getAsString());
-					}
+			mFetchSize = fetchList.size();
+			for (JsonElement element : fetchList) {
+				pullReport(element.getAsString());
+			}
 
-					int removeListSize = removeList.size();
-					for (JsonElement element : removeList) {
-						removeReport(element.getAsString());
-					}
+			int removeListSize = removeList.size();
+			for (JsonElement element : removeList) {
+				removeReport(element.getAsString());
+			}
 
-					String newLatestId = result.get("latestEvent").getAsString();
-					if (!newLatestId.equals(mAccessor.getLatestEvent())) {
-						mAccessor.setLatestEvent(newLatestId);
-					}
+			String newLatestId = result.get("latestEvent").getAsString();
+			if (!newLatestId.equals(mAccessor.getLatestEvent())) {
+				mAccessor.setLatestEvent(newLatestId);
+			}
 
-					if (mFetchSize == 0 && removeListSize == 0) {
-						if (mListener != null) {
-							mListener.onSyncComplete();
-						}
-					}
-				} else {
-					Log.e(TAG, "Unable to pull from remote database.", e);
+			if (mFetchSize == 0 && removeListSize == 0) {
+				if (mListener != null) {
+					mListener.onSyncComplete();
 				}
 			}
-		});
+		}
 	}
 
-	private void notifyPullComplete(int reportId) {
+	private synchronized void notifyPullComplete(int reportId) {
 		mCurrentFetch += 1;
 		if (mListener != null) {
 			mListener.onSyncedReport(reportId);
@@ -88,6 +82,7 @@ public class DatabasePuller implements Runnable {
 
 	/**
 	 * Set the sync status listener for this object.
+	 *
 	 * @param listener Instance of SyncStatusListener.
 	 */
 	public void setSyncStatusListener(SyncStatusListener listener) {
@@ -100,28 +95,24 @@ public class DatabasePuller implements Runnable {
 	 */
 	private void pullReport(final String reportId) {
 		if (!remoteReportExists(Integer.valueOf(reportId))) {
-			IonUtil.pullReport(mContext, reportId, new FutureCallback<JsonObject>() {
-				@Override
-				public void onCompleted(Exception e, JsonObject result) {
-					if (e == null) {
-						JsonElement statusElem = result.get("status");
-						if (statusElem != null) {
-							String status = statusElem.getAsString();
-							if (status.equals("ok")) {
-								Log.d(TAG, "Parsing Report: " + result.toString());
-								createReportFromJson(result);
-							} else {
-								Log.d(TAG, "Bad status returned: " + status);
-							}
-						} else {
-							Log.d(TAG, "Parsing Report: " + result.toString());
-							createReportFromJson(result);
-						}
+			JsonObject result = IonUtil.pullReport(mContext, reportId);
+			if (result != null) {
+				JsonElement statusElem = result.get("status");
+				if (statusElem != null) {
+					String status = statusElem.getAsString();
+					if (status.equals("ok")) {
+						Log.d(TAG, "Parsing Report: " + result.toString());
+						createReportFromJson(result);
 					} else {
-						Log.e(TAG, "Unable to pull a single report with id: " + reportId, e);
+						Log.d(TAG, "Bad status returned: " + status);
 					}
+				} else {
+					Log.d(TAG, "Parsing Report: " + result.toString());
+					createReportFromJson(result);
 				}
-			});
+			} else {
+				Log.e(TAG, "Unable to pull a single report with id: " + reportId);
+			}
 		} else {
 			Log.d(TAG, "Remote report already exists: " + reportId);
 			notifyPullComplete(Integer.valueOf(reportId));

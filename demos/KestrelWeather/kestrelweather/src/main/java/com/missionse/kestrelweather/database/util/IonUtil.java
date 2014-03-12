@@ -55,13 +55,36 @@ public final class IonUtil {
 				res.getString(R.string.remote_database));
 		Log.d(TAG, "Pulling latest with latestCode: " + latestId + " from URL: " + remoteUrl);
 
+		//try {
+			Ion.with(context, remoteUrl + latestId).asJsonObject().setCallback(callback);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		} catch (ExecutionException e) {
+//			e.printStackTrace();
+//		}
+	}
+
+	/**
+	 * Pull latest event via ION.
+	 * @param context The current context.
+	 * @param latestId The latest id pulled.
+	 * @return JsonObject that represents the response.
+	 */
+	public static JsonObject pullLatestEvent(final Context context, final String latestId) {
+		Resources res = context.getResources();
+		String remoteUrl = String.format(
+				res.getString(R.string.retrieve_latest_url),
+				res.getString(R.string.remote_database));
+		Log.d(TAG, "Pulling latest with latestCode: " + latestId + " from URL: " + remoteUrl);
+
 		try {
-			Ion.with(context, remoteUrl + latestId).asJsonObject().setCallback(callback).get();
+			return Ion.with(context, remoteUrl + latestId).asJsonObject().get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	/**
@@ -77,13 +100,36 @@ public final class IonUtil {
 				res.getString(R.string.remote_database));
 		Log.d(TAG, "Pulling report with id: " + reportId + " from URL: " + remoteUrl);
 
+		//try {
+			Ion.with(context, remoteUrl + reportId).asJsonObject().setCallback(callback);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		} catch (ExecutionException e) {
+//			e.printStackTrace();
+//		}
+	}
+
+	/**
+	 * Pull report via ION.
+	 * @param context The current context.
+	 * @param reportId The report to pull.
+	 * @return  JsonObject that represents the response.
+	 */
+	public static JsonObject pullReport(final Context context, final String reportId) {
+		Resources res = context.getResources();
+		String remoteUrl = String.format(
+				res.getString(R.string.retrieve_report_url),
+				res.getString(R.string.remote_database));
+		Log.d(TAG, "Pulling report with id: " + reportId + " from URL: " + remoteUrl);
+
 		try {
-			Ion.with(context, remoteUrl + reportId).asJsonObject().setCallback(callback).get();
+			return Ion.with(context, remoteUrl + reportId).asJsonObject().get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	/**
