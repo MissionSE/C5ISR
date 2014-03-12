@@ -1,0 +1,4 @@
+<resources>
+	<!-- Map layout dimensions -->
+	<dimen name="map_report_pane_size">350dp</dimen>
+</resources>

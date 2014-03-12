@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<FrameLayout
+		android:id="@+id/map_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
+
+	<com.slidinglayer.SlidingLayer
+		xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/map_slidingLayer"
+		android:layout_width="@dimen/map_report_pane_size"
+		android:layout_height="wrap_content"
+		android:layout_gravity="right|bottom"
+		slidingLayer:stickTo="right"
+		slidingLayer:closeOnTapEnabled="false"
+		slidingLayer:offsetWidth="@dimen/map_slidingLayer_offset">
+
+		<LinearLayout
+			android:id="@+id/map_slidingLayer_content"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom"
+			android:orientation="horizontal">
+
+			<ImageView
+				android:id="@+id/map_slidingLayer_toggle"
+				android:src="@drawable/ic_collapse"
+				android:layout_gravity="center_vertical"
+				android:layout_width="@dimen/map_report_pane_header"
+				android:layout_height="match_parent"
+				android:background="#E0FFFFFF"
+				android:layout_marginTop="@dimen/map_slidingLayer_margin_outter"
+				android:layout_marginRight="@dimen/map_slidingLayer_margin_inner"
+				android:layout_marginBottom="@dimen/map_slidingLayer_margin_outter"
+				android:layout_marginLeft="@dimen/map_slidingLayer_margin_inner"/>
+
+			<ListView
+				android:id="@+id/map_report_list"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:clipToPadding="false"
+				android:scrollbarStyle="outsideOverlay"
+				android:background="#E0FFFFFF"
+				android:layout_marginTop="@dimen/map_slidingLayer_margin_outter"
+				android:layout_marginRight="@dimen/map_slidingLayer_margin_outter"
+				android:layout_marginBottom="@dimen/map_slidingLayer_margin_outter"
+				android:layout_marginLeft="@dimen/map_slidingLayer_margin_inner"/>
+		</LinearLayout>
+	</com.slidinglayer.SlidingLayer>
+
+</FrameLayout>

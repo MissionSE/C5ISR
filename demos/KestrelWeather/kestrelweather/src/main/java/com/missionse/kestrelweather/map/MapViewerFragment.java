@@ -273,7 +273,7 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 		mCurrentMarker = marker;
 		mReportAdapter.clear();
 		mReportAdapter.add(report);
-		mSlidingLayer.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.map_slidingLayer_list_single_entry_size);
+//		mSlidingLayer.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.map_slidingLayer_list_single_entry_size);
 		onMarkerClick(marker);
 		return true;
 	}
@@ -285,7 +285,9 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 		mCurrentMarker = marker;
 		mReportAdapter.clear();
 		mReportAdapter.addAll(cluster.getItems());
-		mSlidingLayer.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.map_report_pane_size);
+		int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
+//		if (rotation == 90 )
+//		mSlidingLayer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;getResources().getDimensionPixelSize(R.dimen.map_report_pane_size);
 		onMarkerClick(marker);
 		return true;
 	}

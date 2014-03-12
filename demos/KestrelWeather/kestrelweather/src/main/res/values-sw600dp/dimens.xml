@@ -5,5 +5,5 @@
 	<!--<dimen name="map_slidingLayer_margin">12dp</dimen>-->
 	<!--<dimen name="map_report_pane_header">64dp</dimen>-->
 	<dimen name="map_report_pane_size">350dp</dimen>
-	<!--<dimen name="map_slidingLayer_list_single_entry_size">165dp</dimen>-->
+	<dimen name="map_slidingLayer_list_single_entry_size">94dp</dimen>
 </resources>
