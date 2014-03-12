@@ -26,18 +26,17 @@
 			android:layout_height="match_parent"
 			android:orientation="vertical">
 
-			<com.makeramen.RoundedImageView
-				xmlns:app="http://schemas.android.com/apk/res-auto"
+			<ImageView
 				android:id="@+id/map_slidingLayer_toggle"
 				android:src="@drawable/ic_collapse"
 				android:layout_gravity="center_horizontal"
-				android:layout_width="@dimen/map_report_pane_header"
+				android:layout_width="match_parent"
 				android:layout_height="@dimen/map_report_pane_header"
 				android:background="#E0FFFFFF"
-				android:layout_marginBottom="@dimen/map_slidingLayer_margin"
-				android:layout_marginLeft="@dimen/map_slidingLayer_margin"
-				android:layout_marginRight="@dimen/map_slidingLayer_margin"
-				app:is_oval="true"/>
+				android:layout_marginTop="@dimen/map_slidingLayer_margin_inner"
+				android:layout_marginRight="@dimen/map_slidingLayer_margin_outter"
+				android:layout_marginBottom="@dimen/map_slidingLayer_margin_inner"
+				android:layout_marginLeft="@dimen/map_slidingLayer_margin_outter"/>
 
 			<ListView
 				android:id="@+id/map_report_list"
@@ -46,9 +45,10 @@
 				android:clipToPadding="false"
 				android:scrollbarStyle="outsideOverlay"
 				android:background="#E0FFFFFF"
-				android:layout_marginBottom="@dimen/map_slidingLayer_margin"
-				android:layout_marginLeft="@dimen/map_slidingLayer_margin"
-				android:layout_marginRight="@dimen/map_slidingLayer_margin"/>
+				android:layout_marginTop="@dimen/map_slidingLayer_margin_inner"
+				android:layout_marginRight="@dimen/map_slidingLayer_margin_outter"
+				android:layout_marginBottom="@dimen/map_slidingLayer_margin_outter"
+				android:layout_marginLeft="@dimen/map_slidingLayer_margin_outter"/>
 		</LinearLayout>
 	</com.slidinglayer.SlidingLayer>
 

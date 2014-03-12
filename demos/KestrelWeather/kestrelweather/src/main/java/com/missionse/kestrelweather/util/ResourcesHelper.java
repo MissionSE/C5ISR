@@ -18,6 +18,6 @@ public class ResourcesHelper {
 	}
 
 	public static int getTemperatureIndex(double temperature) {
-		return Math.min(32, Math.max((int) Math.floor((temperature + 43) / 3), 0));
+		return Math.min(24, Math.max((int) Math.floor((temperature + 20) / 2.4), 0));
 	}
 }
