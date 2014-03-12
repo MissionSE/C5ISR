@@ -7,8 +7,11 @@ module.exports = function(db) {
 
 		var lastClientEventId = req.params.id,
 			fetchableReportIds = [],
-			removableReportIds = [],
-			latestEventId = req.params.id;
+			removableReportIds = [];
+		var latestEventId = 0;
+		db.Event.nextCount(function(err, count) {
+			latestEventId = count - 1;
+		});
 		db.Event.find( { _id: { $gt: lastClientEventId } }).exec(function(err, events) {
 			if (events) {
 				for (var index = 0; index < events.length; index++) {
