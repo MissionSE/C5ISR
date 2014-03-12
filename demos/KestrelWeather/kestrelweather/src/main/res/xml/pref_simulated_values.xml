@@ -1,0 +1,75 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<EditTextPreference
+		android:title="@string/kestrel_simulation_temperature"
+		android:key="@string/key_simulated_temperature"
+		android:defaultValue="@integer/default_simulated_value"
+		android:dialogTitle="@string/kestrel_simulation_temperature"
+		android:dialogMessage="@string/kestrel_simulation_temperature_message"
+		android:inputType="numberDecimal"/>
+
+	<EditTextPreference
+		android:title="@string/kestrel_simulation_humidity"
+		android:key="@string/key_simulated_humidity"
+		android:defaultValue="@integer/default_simulated_value"
+		android:dialogTitle="@string/kestrel_simulation_humidity"
+		android:dialogMessage="@string/kestrel_simulation_humidity_message"
+		android:inputType="numberDecimal"/>
+
+	<EditTextPreference
+		android:title="@string/kestrel_simulation_pressure"
+		android:key="@string/key_simulated_pressure"
+		android:defaultValue="@integer/default_simulated_value"
+		android:dialogTitle="@string/kestrel_simulation_pressure"
+		android:dialogMessage="@string/kestrel_simulation_pressure_message"
+		android:inputType="numberDecimal"/>
+
+	<ListPreference
+		android:title="@string/kestrel_simulation_pressure_trend"
+		android:key="@string/key_simulated_pressure_trend"
+		android:dialogTitle="@string/kestrel_simulation_pressure_trend"
+		android:entries="@array/kestrel_simulation_pressure_trend_entries"
+		android:entryValues="@array/kestrel_simulation_pressure_trend_values"
+		android:defaultValue="@string/pressure_trend_up_value"
+		android:negativeButtonText="@null"/>
+
+	<EditTextPreference
+		android:title="@string/kestrel_simulation_heat_index"
+		android:key="@string/key_simulated_heat_index"
+		android:defaultValue="@integer/default_simulated_value"
+		android:dialogTitle="@string/kestrel_simulation_heat_index"
+		android:dialogMessage="@string/kestrel_simulation_heat_index_message"
+		android:inputType="numberDecimal"/>
+
+	<EditTextPreference
+		android:title="@string/kestrel_simulation_wind_speed"
+		android:key="@string/key_simulated_wind_speed"
+		android:defaultValue="@integer/default_simulated_value"
+		android:dialogTitle="@string/kestrel_simulation_wind_speed"
+		android:dialogMessage="@string/kestrel_simulation_wind_speed_message"
+		android:inputType="numberDecimal"/>
+
+	<EditTextPreference
+		android:title="@string/kestrel_simulation_wind_dir"
+		android:key="@string/key_simulated_wind_dir"
+		android:defaultValue="@integer/default_simulated_value"
+		android:dialogTitle="@string/kestrel_simulation_wind_dir"
+		android:dialogMessage="@string/kestrel_simulation_wind_dir_message"
+		android:inputType="numberDecimal"/>
+
+	<EditTextPreference
+		android:title="@string/kestrel_simulation_wind_chill"
+		android:key="@string/key_simulated_wind_chill"
+		android:defaultValue="@integer/default_simulated_value"
+		android:dialogTitle="@string/kestrel_simulation_wind_chill"
+		android:dialogMessage="@string/kestrel_simulation_wind_chill_message"
+		android:inputType="numberDecimal"/>
+
+	<EditTextPreference
+		android:title="@string/kestrel_simulation_dew_pt"
+		android:key="@string/key_simulated_dew_pt"
+		android:defaultValue="@integer/default_simulated_value"
+		android:dialogTitle="@string/kestrel_simulation_dew_pt"
+		android:dialogMessage="@string/kestrel_simulation_dew_pt_message"
+		android:inputType="numberDecimal"/>
+</PreferenceScreen>

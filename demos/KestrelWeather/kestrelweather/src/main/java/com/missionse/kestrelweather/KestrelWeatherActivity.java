@@ -22,8 +22,6 @@ import com.missionse.kestrelweather.database.DatabaseManager;
 import com.missionse.kestrelweather.database.util.DatabaseLogger;
 import com.missionse.kestrelweather.drawer.KestrelWeatherDrawerFactory;
 import com.missionse.kestrelweather.kestrel.KestrelConnectorFragment;
-import com.missionse.kestrelweather.kestrel.KestrelSimulationSettingsFragment;
-import com.missionse.kestrelweather.kestrel.KestrelSimulationSharedPreferences;
 import com.missionse.kestrelweather.kestrel.KestrelSimulator;
 import com.missionse.kestrelweather.map.MapViewerFragment;
 import com.missionse.kestrelweather.map.OpenWeatherOverlayFactory;
@@ -60,7 +58,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	private TextView mDrawerCountFooter;
 	private TextView mDrawerTimestampFooter;
 	private SharedPreferences mSharedPreferences;
-	private Menu mOverflowMenu;
 	private int mCurrentNavigationIndex = KestrelWeatherDrawerFactory.MAP_OVERVIEW;
 
 	/**
@@ -149,14 +146,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 	private void shutdownKestrelSimulator() {
 		mKestrelSimulator.stopSimulator();
-		MenuItem simulationMode = mOverflowMenu.findItem(R.id.action_simulate_kestrel);
-		if (simulationMode != null) {
-			simulationMode.setChecked(false);
-			SharedPreferences.Editor kestrelPreferencesEditor = getSharedPreferences(
-					KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0).edit();
-			kestrelPreferencesEditor.putBoolean(getString(R.string.key_simulation_mode), false);
-			kestrelPreferencesEditor.commit();
-		}
 	}
 
 	@Override
@@ -359,7 +348,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.kestrel_weather, menu);
-		mOverflowMenu = menu;
 		return true;
 	}
 
@@ -369,34 +357,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (id == R.id.action_settings) {
 			Intent i = new Intent(this, SettingsActivity.class);
 			startActivity(i);
-			return true;
-		} else if (id == R.id.action_simulate_kestrel) {
-			if (!item.isChecked()) {
-				SharedPreferences.Editor kestrelPreferencesEditor = getSharedPreferences(
-						KestrelSimulationSharedPreferences.SIMULATION_PREFERENCES, 0).edit();
-				if (mKestrelSimulator.checkBluetoothAvailability()) {
-					mKestrelSimulator.startSimulator();
-					item.setChecked(true);
-					kestrelPreferencesEditor.putBoolean(getString(R.string.key_simulation_mode), true);
-				} else {
-					item.setChecked(false);
-					kestrelPreferencesEditor.putBoolean(getString(R.string.key_simulation_mode), false);
-				}
-				kestrelPreferencesEditor.commit();
-			} else {
-				mKestrelSimulator.stopSimulator();
-				item.setChecked(false);
-			}
-			return true;
-		} else if (id == R.id.action_kestrel_simulation_settings) {
-			FragmentManager fragmentManager = getFragmentManager();
-			KestrelSimulationSettingsFragment kestrelSimulationSettingsFragment = (KestrelSimulationSettingsFragment) fragmentManager
-					.findFragmentByTag("kestrelsimulationsettings");
-			if (kestrelSimulationSettingsFragment == null) {
-				kestrelSimulationSettingsFragment = new KestrelSimulationSettingsFragment();
-			}
-			fragmentManager.beginTransaction().replace(R.id.content, kestrelSimulationSettingsFragment, "kestrelsimulationsettings")
-					.addToBackStack("kestrelsimulationsettings").commit();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

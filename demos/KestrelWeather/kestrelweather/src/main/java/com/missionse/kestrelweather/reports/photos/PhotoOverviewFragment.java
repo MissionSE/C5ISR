@@ -28,8 +28,8 @@ import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.util.MediaResolver;
 import com.missionse.kestrelweather.reports.utils.FileDownloader;
-import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
+import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.kestrelweather.util.SupplementBuilder;
 
@@ -235,7 +235,7 @@ public class PhotoOverviewFragment extends Fragment implements ItemRemovedListen
 	}
 
 	private void download(final Supplement supplement) {
-		String remoteUrl = getString(R.string.remote_database) + supplement.getRemoteUri();
+		String remoteUrl = getString(R.string.remote_server_development) + supplement.getRemoteUri();
 		FileDownloader.downloadFile(mActivity, remoteUrl, new FileDownloader.OnFileDownloadCompleteListener() {
 			@Override
 			public void fileDownloadComplete(final Uri uri) {

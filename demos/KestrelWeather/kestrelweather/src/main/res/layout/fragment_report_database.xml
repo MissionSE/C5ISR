@@ -24,6 +24,7 @@
 			android:paddingRight="10dp"
 			android:selectAllOnFocus="true"
 			android:imeOptions="actionDone|flagNoExtractUi|flagNoFullscreen"/>
+
 		<TextView
 			android:id="@+id/fragment_report_database_count"
 			android:layout_width="wrap_content"

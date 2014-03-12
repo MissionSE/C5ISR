@@ -15,5 +15,7 @@ public class DeveloperPreferenceFragment extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.pref_developer);
+
+		SettingsActivity.bindPreferenceSummaryToValue(findPreference(getString(R.string.key_server)));
 	}
 }

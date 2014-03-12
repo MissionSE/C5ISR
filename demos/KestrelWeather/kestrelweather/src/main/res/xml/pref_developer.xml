@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android">
 
-<PreferenceScreen>
+	<ListPreference
+		android:title="@string/pref_title_server"
+		android:key="@string/key_server"
+		android:dialogTitle="@string/pref_title_server"
+		android:entries="@array/remote_server_names"
+		android:entryValues="@array/remote_server_values"
+		android:defaultValue="@string/remote_server_development"
+		android:negativeButtonText="@null"/>
+
+	<CheckBoxPreference
+		android:title="@string/pref_title_simulation_mode"
+		android:summary="@string/pref_summary_simulation_mode"
+		android:key="@string/key_simulation_mode"
+		android:defaultValue="false"/>
+
+	<PreferenceScreen
+		android:title="@string/pref_header_simulated_values"
+		android:fragment="com.missionse.kestrelweather.preferences.SimulatedValuesPreferenceFragment"/>
 
 </PreferenceScreen>

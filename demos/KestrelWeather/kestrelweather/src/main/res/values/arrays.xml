@@ -1,31 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<array name="temperature_colors">
-		<item>#ff130066</item><!-- 0 -->
-		<item>#ff2300bf</item><!-- 1 -->
-		<item>#ff2e00fc</item><!-- 2 -->
-		<item>#ff0032fc</item><!-- 3 -->
-		<item>#ff0065fc</item><!-- 4 -->
-		<item>#ff0097fc</item><!-- 5 -->
-		<item>#ff00cafc</item><!-- 6 -->
-		<item>#ff00e8f0</item><!-- 7 -->
-		<item>#ff00d79d</item><!-- 8 -->
-		<item>#ff00e650</item><!-- 9 -->
-		<item>#ff00f028</item><!-- 10 -->
-		<item>#ff78fa00</item><!-- 11 -->
-		<item>#ffc8fa00</item><!-- 12 -->
-		<item>#fffcfc00</item><!-- 13 -->
-		<item>#fffcdf00</item><!-- 14 -->
-		<item>#fffcc600</item><!-- 15 -->
-		<item>#fffcad00</item><!-- 16 -->
-		<item>#fffc9300</item><!-- 17 -->
-		<item>#ffe67a00</item><!-- 18 -->
-		<item>#ffe66300</item><!-- 19 -->
-		<item>#ffdb4b1f</item><!-- 20 -->
-		<item>#ffc7321e</item><!-- 21 -->
-		<item>#ffb3191c</item><!-- 22 -->
-		<item>#ffa8001c</item><!-- 23 -->
-		<item>#ff850016</item><!-- 24 -->
+		<item>#ff130066</item>
+		<!-- 0 -->
+		<item>#ff2300bf</item>
+		<!-- 1 -->
+		<item>#ff2e00fc</item>
+		<!-- 2 -->
+		<item>#ff0032fc</item>
+		<!-- 3 -->
+		<item>#ff0065fc</item>
+		<!-- 4 -->
+		<item>#ff0097fc</item>
+		<!-- 5 -->
+		<item>#ff00cafc</item>
+		<!-- 6 -->
+		<item>#ff00e8f0</item>
+		<!-- 7 -->
+		<item>#ff00d79d</item>
+		<!-- 8 -->
+		<item>#ff00e650</item>
+		<!-- 9 -->
+		<item>#ff00f028</item>
+		<!-- 10 -->
+		<item>#ff78fa00</item>
+		<!-- 11 -->
+		<item>#ffc8fa00</item>
+		<!-- 12 -->
+		<item>#fffcfc00</item>
+		<!-- 13 -->
+		<item>#fffcdf00</item>
+		<!-- 14 -->
+		<item>#fffcc600</item>
+		<!-- 15 -->
+		<item>#fffcad00</item>
+		<!-- 16 -->
+		<item>#fffc9300</item>
+		<!-- 17 -->
+		<item>#ffe67a00</item>
+		<!-- 18 -->
+		<item>#ffe66300</item>
+		<!-- 19 -->
+		<item>#ffdb4b1f</item>
+		<!-- 20 -->
+		<item>#ffc7321e</item>
+		<!-- 21 -->
+		<item>#ffb3191c</item>
+		<!-- 22 -->
+		<item>#ffa8001c</item>
+		<!-- 23 -->
+		<item>#ff850016</item>
+		<!-- 24 -->
 	</array>
 
 	<string-array name="pref_temp_units">
@@ -46,5 +71,22 @@
 	<string-array name="pref_wind_direction_units">
 		<item>@string/cardinal</item>
 		<item>@string/degrees</item>
+	</string-array>
+	<string-array name="kestrel_simulation_pressure_trend_entries">
+		<item>@string/pressure_trend_up</item>
+		<item>@string/pressure_trend_down</item>
+	</string-array>
+
+	<string-array name="kestrel_simulation_pressure_trend_values">
+		<item>@string/pressure_trend_up_value</item>
+		<item>@string/pressure_trend_down_value</item>
+	</string-array>
+	<string-array name="remote_server_values">
+		<item>@string/remote_server_development</item>
+		<item>@string/remote_server_production</item>
+	</string-array>
+	<string-array name="remote_server_names">
+		<item>@string/remote_server_development_name</item>
+		<item>@string/remote_server_production_name</item>
 	</string-array>
 </resources>

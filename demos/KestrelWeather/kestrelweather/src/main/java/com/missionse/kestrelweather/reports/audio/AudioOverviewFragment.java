@@ -33,8 +33,8 @@ import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.util.MediaResolver;
-import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
+import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.kestrelweather.util.SupplementBuilder;
 
@@ -200,7 +200,7 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerListen
 			return new Pair<String, Boolean>(localUri, true);
 		} else {
 			if (validString(remoteUri)) {
-				return new Pair<String, Boolean>(getString(R.string.remote_database) + remoteUri, false);
+				return new Pair<String, Boolean>(getString(R.string.remote_server_development) + remoteUri, false);
 			}
 		}
 		return new Pair<String, Boolean>(null, false);

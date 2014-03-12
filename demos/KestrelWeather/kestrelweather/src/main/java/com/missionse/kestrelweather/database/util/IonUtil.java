@@ -30,7 +30,7 @@ public final class IonUtil {
 	public static void upload(final Context context, final JsonObject json, final FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
-				res.getString(R.string.remote_database));
+				res.getString(R.string.remote_server_development));
 		Log.d(TAG, "Upload Json(\'" + json.toString() + "\') to remote database: " + remoteUrl);
 
 		try {
@@ -52,11 +52,11 @@ public final class IonUtil {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(
 				res.getString(R.string.retrieve_latest_url),
-				res.getString(R.string.remote_database));
+				res.getString(R.string.remote_server_development));
 		Log.d(TAG, "Pulling latest with latestCode: " + latestId + " from URL: " + remoteUrl);
 
 		//try {
-			Ion.with(context, remoteUrl + latestId).asJsonObject().setCallback(callback);
+		Ion.with(context, remoteUrl + latestId).asJsonObject().setCallback(callback);
 //		} catch (InterruptedException e) {
 //			e.printStackTrace();
 //		} catch (ExecutionException e) {
@@ -74,7 +74,7 @@ public final class IonUtil {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(
 				res.getString(R.string.retrieve_latest_url),
-				res.getString(R.string.remote_database));
+				res.getString(R.string.remote_server_development));
 		Log.d(TAG, "Pulling latest with latestCode: " + latestId + " from URL: " + remoteUrl);
 
 		try {
@@ -97,11 +97,11 @@ public final class IonUtil {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(
 				res.getString(R.string.retrieve_report_url),
-				res.getString(R.string.remote_database));
+				res.getString(R.string.remote_server_development));
 		Log.d(TAG, "Pulling report with id: " + reportId + " from URL: " + remoteUrl);
 
 		//try {
-			Ion.with(context, remoteUrl + reportId).asJsonObject().setCallback(callback);
+		Ion.with(context, remoteUrl + reportId).asJsonObject().setCallback(callback);
 //		} catch (InterruptedException e) {
 //			e.printStackTrace();
 //		} catch (ExecutionException e) {
@@ -113,13 +113,13 @@ public final class IonUtil {
 	 * Pull report via ION.
 	 * @param context The current context.
 	 * @param reportId The report to pull.
-	 * @return  JsonObject that represents the response.
+	 * @return JsonObject that represents the response.
 	 */
 	public static JsonObject pullReport(final Context context, final String reportId) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(
 				res.getString(R.string.retrieve_report_url),
-				res.getString(R.string.remote_database));
+				res.getString(R.string.remote_server_development));
 		Log.d(TAG, "Pulling report with id: " + reportId + " from URL: " + remoteUrl);
 
 		try {
@@ -142,7 +142,7 @@ public final class IonUtil {
 	public static void uploadMedia(final Context context, final int reportId, final File media, final FutureCallback<JsonObject> callback) {
 		Resources res = context.getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
-				res.getString(R.string.remote_database));
+				res.getString(R.string.remote_server_development));
 		Log.d(TAG, "Upload Media(\'" + media.getAbsolutePath() + "\') to reportid=" + reportId + " to remote database: " + remoteUrl);
 
 		try {
@@ -167,7 +167,7 @@ public final class IonUtil {
 	public static void uploadMedia(final UploadContainer container) {
 		Resources res = container.getContext().getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
-				res.getString(R.string.remote_database));
+				res.getString(R.string.remote_server_development));
 		Log.d(TAG, "Upload Media(\'" + container.getAsFile().getAbsolutePath() + "\') to reportid=" + container.getRemoteId() + " to remote database: " + remoteUrl);
 
 		try {

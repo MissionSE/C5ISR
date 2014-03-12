@@ -1,11 +1,10 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
-
-	<!-- These settings headers are only used on tablets. -->
-
+	<!-- Units -->
 	<header
 		android:fragment="com.missionse.kestrelweather.preferences.UnitsPreferenceFragment"
 		android:title="@string/pref_header_units"/>
 
+	<!-- Data Sync -->
 	<header
 		android:fragment="com.missionse.kestrelweather.preferences.DataSyncPreferenceFragment"
 		android:title="@string/pref_header_data_sync"/>
@@ -16,6 +15,7 @@
 		android:fragment="com.missionse.kestrelweather.preferences.DeveloperPreferenceFragment"
 		android:title="@string/pref_header_developer"/>
 
+	<!-- About -->
 	<header
 		android:fragment="com.missionse.kestrelweather.preferences.AboutPreferenceFragment"
 		android:title="@string/pref_header_about"/>

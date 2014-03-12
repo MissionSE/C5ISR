@@ -154,7 +154,7 @@ public final class VideoViewerFragment extends Fragment implements MediaPlayerLi
 			mMediaWrapper.setMediaSource(getActivity(), Uri.fromFile(uriAsFile));
 		} else {
 			if (validString(remoteUri)) {
-				mMediaWrapper.setMediaSource(getString(R.string.remote_database) + remoteUri);
+				mMediaWrapper.setMediaSource(getString(R.string.remote_server_development) + remoteUri);
 			}
 		}
 	}

@@ -40,7 +40,7 @@ public class LocalDatabaseHelper extends SqlLiteOpenHelper {
 		return ret;
 	}
 
-	 @Override
+	@Override
 	public List<Class> getForceDropTables() {
 		List<Class> ret = new LinkedList<Class>();
 		ret.add(Note.class);

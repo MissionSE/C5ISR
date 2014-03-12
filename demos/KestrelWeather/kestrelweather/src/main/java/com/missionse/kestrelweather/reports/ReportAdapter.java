@@ -73,13 +73,13 @@ public class ReportAdapter extends ArrayAdapter<Report> {
 				if (isReporTitleBeingFiltered()) {
 					if (reportTitleInLowerCase.contains(mReportListFilter.getReportTitleConstraint())) {
 						int startOfFoundConstraint = reportTitleInLowerCase
-							.indexOf(mReportListFilter.getReportTitleConstraint().toString());
+								.indexOf(mReportListFilter.getReportTitleConstraint().toString());
 						int endOfFoundConstraint = startOfFoundConstraint + mReportListFilter.getReportTitleConstraint().length();
 						spannableReportTitle.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), startOfFoundConstraint,
-							endOfFoundConstraint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+								endOfFoundConstraint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 						spannableReportTitle.setSpan(
-							new ForegroundColorSpan(getContext().getResources().getColor(R.color.holo_blue_dark)),
-							startOfFoundConstraint, endOfFoundConstraint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+								new ForegroundColorSpan(getContext().getResources().getColor(R.color.holo_blue_dark)),
+								startOfFoundConstraint, endOfFoundConstraint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 					}
 				}
 				reportTitle.setText(spannableReportTitle);

@@ -8,8 +8,12 @@
 	<string name="sync_started">Synchronization started.</string>
 	<string name="sync_ended">Synchronization completed.</string>
 
-	<!-- Remote Database -->
-	<string name="remote_database">http://198.74.57.149:3009</string>
+	<!-- Remote Server -->
+	<string name="pref_title_server">Server</string>
+	<string name="remote_server_development">http://198.74.57.149:3009</string>
+	<string name="remote_server_development_name">Development</string>
+	<string name="remote_server_production">http://192.168.195.170:3009</string>
+	<string name="remote_server_production_name">Production</string>
 	<string name="upload_report_url">%1$s/upload/</string>
 	<string name="retrieve_latest_url">%1$s/event/since/</string>
 	<string name="retrieve_report_url">%1$s/report/</string>
@@ -19,8 +23,6 @@
 
 	<!-- Option Menu -->
 	<string name="action_settings">Settings</string>
-	<string name="action_simulate_kestrel">Simulation Mode</string>
-	<string name="action_kestrel_simulation_settings">Simulation Settings</string>
 
 	<!-- Filter Menu on Database Fragment -->
 	<string name="action_database_filter">Filter</string>
@@ -97,12 +99,6 @@
 	<string name="error_bluetooth_not_enabled">Error: Bluetooth is not enabled.</string>
 	<string name="error_unable_to_request">Error: Unable to send request.</string>
 
-	<!-- Fragment: Kestrel Simulation UserSettings -->
-	<string-array name="kestrel_simulation_pressure_trend_entries">
-		<item>Up</item>
-		<item>Down</item>
-	</string-array>
-
 	<!-- Fragment: Kestrel Simulation New Request Alert -->
 	<string name="new_request_alert_title">Request Received!</string>
 	<string name="new_request_alert_content">Would you like to send the saved simulation data or use random values?</string>
@@ -134,6 +130,10 @@
 	<string name="kestrel_simulation_wind_dir">Wind Direction</string>
 	<string name="kestrel_simulation_wind_chill">Wind Chill</string>
 	<string name="kestrel_simulation_dew_pt">Dew Point</string>
+	<string name="pressure_trend_up">Up</string>
+	<string name="pressure_trend_down">Down</string>
+	<string name="pressure_trend_up_value">0</string>
+	<string name="pressure_trend_down_value">1</string>
 
 	<!-- Fragment: Report Draft -->
 	<string name="report_draft_list_empty">No reports.</string>
@@ -201,6 +201,16 @@
 	<string name="title_wind_speed_units">Wind Speed Units</string>
 	<string name="title_wind_direction">Wind Direction</string>
 	<string name="title_wind_direction_units">Wind Direction Units</string>
+
+	<!-- Simulated Value Messages -->
+	<string name="kestrel_simulation_temperature_message">Enter the temperature in degrees Celsius (ºC)</string>
+	<string name="kestrel_simulation_humidity_message">Enter the humidity in percent (%)</string>
+	<string name="kestrel_simulation_pressure_message">Enter the pressure in kilopascals (kPa)</string>
+	<string name="kestrel_simulation_heat_index_message">Enter the heat index in degrees Celsius (ºC)</string>
+	<string name="kestrel_simulation_wind_speed_message">Enter the wind speed in meters per second (m/s)</string>
+	<string name="kestrel_simulation_wind_dir_message">Enter the wind direction in degrees (º)</string>
+	<string name="kestrel_simulation_wind_chill_message">Enter the wind chill in degrees Celsius (ºC)</string>
+	<string name="kestrel_simulation_dew_pt_message">Enter the dew point in degrees Celsius (ºC)</string>
 
 	<!-- Cardinal Wind Directions -->
 	<string name="N">N</string>

@@ -5,18 +5,7 @@
 	<item
 		android:id="@+id/action_settings"
 		android:title="@string/action_settings"
+		android:icon="@drawable/ic_action_gear"
 		android:orderInCategory="100"
-		android:showAsAction="never"/>
-	<item
-		android:id="@+id/action_simulate_kestrel"
-		android:title="@string/action_simulate_kestrel"
-		android:orderInCategory="108"
-		android:showAsAction="never"
-		android:checkable="true"
-		android:checked="false"/>
-	<item
-		android:id="@+id/action_kestrel_simulation_settings"
-		android:title="@string/action_kestrel_simulation_settings"
-		android:orderInCategory="109"
-		android:showAsAction="never"/>
+		android:showAsAction="ifRoom"/>
 </menu>

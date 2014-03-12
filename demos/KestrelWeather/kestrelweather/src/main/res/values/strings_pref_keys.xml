@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<!-- Server keys -->
+	<string name="key_server">key_server</string>
 
 	<!-- Unit keys -->
 	<string name="key_units_temperature">key_units_temperature</string>
@@ -22,5 +24,16 @@
 
 	<!-- Simulation Mode keys -->
 	<string name="key_simulation_mode">key_simulation_mode</string>
+
+	<!-- Simulated Values keys -->
+	<string name="key_simulated_temperature">key_simulated_temperature</string>
+	<string name="key_simulated_humidity">key_simulated_humidity</string>
+	<string name="key_simulated_pressure">key_simulated_pressure</string>
+	<string name="key_simulated_pressure_trend">key_simulated_pressure_trend</string>
+	<string name="key_simulated_heat_index">key_simulated_heat_index</string>
+	<string name="key_simulated_wind_speed">key_simulated_wind_speed</string>
+	<string name="key_simulated_wind_dir">key_simulated_wind_dir</string>
+	<string name="key_simulated_wind_chill">key_simulated_wind_chill</string>
+	<string name="key_simulated_dew_pt">key_simulated_dew_pt</string>
 
 </resources>

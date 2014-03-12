@@ -130,7 +130,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 				public boolean onEditorAction(final TextView v, final int actionId, final KeyEvent event) {
 					if (actionId == EditorInfo.IME_ACTION_DONE) {
 						InputMethodManager inputMethodManager = (InputMethodManager) mActivity.getSystemService(
-							Context.INPUT_METHOD_SERVICE);
+								Context.INPUT_METHOD_SERVICE);
 						inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 						return true;
 					}
@@ -140,9 +140,12 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 
 			searchField.addTextChangedListener(new TextWatcher() {
 				@Override
-				public void afterTextChanged(final Editable s) { }
+				public void afterTextChanged(final Editable s) {
+				}
+
 				@Override
-				public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) { }
+				public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+				}
 
 				@Override
 				public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
