@@ -74,10 +74,6 @@
 				android:value="com.missionse.kestrelweather.preferences.SettingsActivity" />
 		</activity>
 
-		<receiver
-			android:name=".service.AlarmReceiver"
-			android:process=":remote" />
-
 		<service
 			android:name=".service.SyncService"
 			android:exported="false" />

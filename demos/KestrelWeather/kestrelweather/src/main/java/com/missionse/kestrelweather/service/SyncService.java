@@ -7,6 +7,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -22,6 +23,8 @@ import com.missionse.kestrelweather.database.sync.SyncStatusListener;
  * Syncs the client-side database with the remote database when invoked.
  */
 public class SyncService extends Service implements SyncStatusListener {
+	public static final int REQUEST_CODE = 1;
+
 	private DatabaseAccessor mDatabaseAccessor;
 	private SharedPreferences mSharedPreferences;
 	private int mSyncedReportCount;
@@ -48,11 +51,12 @@ public class SyncService extends Service implements SyncStatusListener {
 
 	@Override
 	public int onStartCommand(final Intent intent, final int flags, final int startId) {
-		DatabaseSync databaseSync = new DatabaseSync(mDatabaseAccessor, this);
-		databaseSync.setSyncCompleteListener(this);
-		databaseSync.execute(true, true, true);
+		DatabaseSync databaseSync = new DatabaseSync(mDatabaseAccessor, SyncService.this);
+		databaseSync.setSyncCompleteListener(SyncService.this);
+		databaseSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true, true, true);
+		databaseSync.execute(true, false, false);
 
-		return super.onStartCommand(intent, flags, startId);
+		return START_NOT_STICKY;
 	}
 
 	@Override

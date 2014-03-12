@@ -32,7 +32,6 @@ import com.missionse.kestrelweather.map.TiledMap;
 import com.missionse.kestrelweather.preferences.SettingsActivity;
 import com.missionse.kestrelweather.reports.ReportDatabaseFragment;
 import com.missionse.kestrelweather.reports.ReportDraftFragment;
-import com.missionse.kestrelweather.service.AlarmReceiver;
 import com.missionse.kestrelweather.service.SyncService;
 import com.missionse.uiextensions.navigationdrawer.DrawerActivity;
 import com.missionse.uiextensions.navigationdrawer.configuration.DrawerConfigurationContainer;
@@ -108,9 +107,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	}
 
 	private void startSyncService() {
-		Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
-		final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE,
-				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		Intent intent = new Intent(getApplicationContext(), SyncService.class);
+		final PendingIntent pendingIntent = PendingIntent.getService(this, SyncService.REQUEST_CODE, intent, 0);
 
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(pendingIntent);
@@ -123,7 +121,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 			Log.d(TAG, "Starting sync service on an interval of " + intervalInMinutes + " minutes...");
 			int intervalInMillis = (int) (intervalInMinutes * MILLIS_PER_MIN);
 
-			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), intervalInMillis, pendingIntent);
+			alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), intervalInMillis, pendingIntent);
 
 			// Although we specify a "start time" of currentTimeMillis() (which is now) to the AlarmManager,
 			// the actual start time with an inexact repeating can be as long as the interval, so we should automatically

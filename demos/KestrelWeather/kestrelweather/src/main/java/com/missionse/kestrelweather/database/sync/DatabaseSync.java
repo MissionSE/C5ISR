@@ -2,6 +2,7 @@ package com.missionse.kestrelweather.database.sync;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Process;
 
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 
@@ -62,8 +63,14 @@ public class DatabaseSync extends AsyncTask<Boolean, Void, Void> implements Sync
 		return null;
 	}
 
-	private void startAndWait(Runnable runnable) {
-		Thread thread = new Thread(runnable);
+	private void startAndWait(final Runnable runnable) {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Process.setThreadPriority(Process.myTid(), Process.THREAD_PRIORITY_BACKGROUND);
+				runnable.run();
+			}
+		});
 		thread.start();
 		try {
 			thread.join();
