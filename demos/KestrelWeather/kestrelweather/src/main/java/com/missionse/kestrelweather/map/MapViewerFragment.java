@@ -267,6 +267,9 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 	}
 
 	public boolean onClusterItemClick(Marker marker, Report report) {
+		if (mCurrentMarker != null) {
+			centerMap(marker.getPosition(), true, null);
+		}
 		mCurrentMarker = marker;
 		mReportAdapter.clear();
 		mReportAdapter.add(report);
@@ -276,6 +279,9 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 	}
 
 	public boolean onClusterClick(Marker marker, Cluster<Report> cluster) {
+		if (mCurrentMarker != null) {
+			centerMap(marker.getPosition(), true, null);
+		}
 		mCurrentMarker = marker;
 		mReportAdapter.clear();
 		mReportAdapter.addAll(cluster.getItems());

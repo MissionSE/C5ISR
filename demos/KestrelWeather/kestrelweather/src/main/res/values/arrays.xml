@@ -1,39 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<array name="temperature_colors">
-		<item>#ff300030</item>
-		<item>#ff630063</item>
-		<item>#ff940094</item>
-		<item>#ffc700c7</item>
-		<item>#fff800fc</item>
-		<item>#ffc600fc</item>
-		<item>#ff9300fc</item>
-		<item>#ff6100fc</item>
-		<item>#ff2e00fc</item>
-		<item>#ff0032fc</item>
-		<item>#ff0065fc</item>
-		<item>#ff0097fc</item>
-		<item>#ff00cafc</item>
-		<item>#ff00e8f0</item>
-		<item>#ff00d79d</item>
-		<item>#ff00e650</item>
-		<item>#ff00f028</item>
-		<item>#ff78fa00</item>
-		<item>#ffc8fa00</item>
-		<item>#fffcfc00</item>
-		<item>#fffcdf00</item>
-		<item>#fffcc600</item>
-		<item>#fffcad00</item>
-		<item>#fffc9300</item>
-		<item>#ffe67a00</item>
-		<item>#ffe66300</item>
-		<item>#ffdb4b1f</item>
-		<item>#ffc7321e</item>
-		<item>#ffb3191c</item>
-		<item>#ffa8001c</item>
-		<item>#ffb30030</item>
-		<item>#ffc70063</item>
-		<item>#fffc009b</item>
+		<item>#ff130066</item><!-- 0 -->
+		<item>#ff2300bf</item><!-- 1 -->
+		<item>#ff2e00fc</item><!-- 2 -->
+		<item>#ff0032fc</item><!-- 3 -->
+		<item>#ff0065fc</item><!-- 4 -->
+		<item>#ff0097fc</item><!-- 5 -->
+		<item>#ff00cafc</item><!-- 6 -->
+		<item>#ff00e8f0</item><!-- 7 -->
+		<item>#ff00d79d</item><!-- 8 -->
+		<item>#ff00e650</item><!-- 9 -->
+		<item>#ff00f028</item><!-- 10 -->
+		<item>#ff78fa00</item><!-- 11 -->
+		<item>#ffc8fa00</item><!-- 12 -->
+		<item>#fffcfc00</item><!-- 13 -->
+		<item>#fffcdf00</item><!-- 14 -->
+		<item>#fffcc600</item><!-- 15 -->
+		<item>#fffcad00</item><!-- 16 -->
+		<item>#fffc9300</item><!-- 17 -->
+		<item>#ffe67a00</item><!-- 18 -->
+		<item>#ffe66300</item><!-- 19 -->
+		<item>#ffdb4b1f</item><!-- 20 -->
+		<item>#ffc7321e</item><!-- 21 -->
+		<item>#ffb3191c</item><!-- 22 -->
+		<item>#ffa8001c</item><!-- 23 -->
+		<item>#ff850016</item><!-- 24 -->
 	</array>
 
 	<string-array name="pref_temp_units">
