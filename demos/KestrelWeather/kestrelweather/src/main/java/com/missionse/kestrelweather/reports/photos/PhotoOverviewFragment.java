@@ -29,7 +29,7 @@ import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.util.MediaResolver;
 import com.missionse.kestrelweather.reports.utils.FileDownloader;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
-import com.missionse.kestrelweather.reports.utils.SupplementRemovedListener;
+import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.kestrelweather.util.SupplementBuilder;
 
@@ -38,7 +38,7 @@ import java.io.File;
 /**
  * A fragment used to manage the photos attached to a report.
  */
-public class PhotoOverviewFragment extends Fragment implements SupplementRemovedListener {
+public class PhotoOverviewFragment extends Fragment implements ItemRemovedListener<Supplement> {
 	private static final String TAG = PhotoOverviewFragment.class.getSimpleName();
 	private static final int ADD_PHOTO_REQUEST = 10;
 	private static final String REPORT_ID = "report_id";
@@ -130,7 +130,7 @@ public class PhotoOverviewFragment extends Fragment implements SupplementRemoved
 			if (mEditable) {
 				photoList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 				MediaMultiChoiceModeListener multiChoiceModeListener =
-						new MediaMultiChoiceModeListener(mActivity, photoList, mPhotoAdapter);
+						new MediaMultiChoiceModeListener<PhotoAdapter, Supplement>(mActivity, photoList, mPhotoAdapter);
 				multiChoiceModeListener.setSupplementRemovedListener(this);
 				photoList.setMultiChoiceModeListener(multiChoiceModeListener);
 			}
@@ -254,7 +254,7 @@ public class PhotoOverviewFragment extends Fragment implements SupplementRemoved
 	}
 
 	@Override
-	public void supplementRemoved(final Supplement supplement) {
+	public void itemRemoved(final Supplement supplement) {
 		if (mActivity != null) {
 			ReportRemover.removeSupplement(mActivity.getDatabaseAccessor(), supplement);
 		}

@@ -2,10 +2,12 @@ package com.missionse.kestrelweather.util;
 
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
+import com.missionse.kestrelweather.database.model.tables.Note;
 import com.missionse.kestrelweather.database.model.tables.OpenWeather;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.model.tables.manipulators.KestrelWeatherTable;
+import com.missionse.kestrelweather.database.model.tables.manipulators.NoteTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.OpenWeatherTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.database.model.tables.manipulators.SupplementTable;
@@ -80,5 +82,16 @@ public final class ReportRemover {
 		}
 
 		return supplementsRemoved;
+	}
+
+	/**
+	 * Removes a single note from the database.
+	 * @param databaseAccessor An accessor to the database.
+	 * @param note The note to remove from the database.
+	 * @return The number of items removed from the database.
+	 */
+	public static int removeNote(final DatabaseAccessor databaseAccessor, final Note note) {
+		NoteTable noteTable = databaseAccessor.getNoteTable();
+		return noteTable.delete(note);
 	}
 }

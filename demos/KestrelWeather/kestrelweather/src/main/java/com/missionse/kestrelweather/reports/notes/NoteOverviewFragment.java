@@ -24,6 +24,9 @@ import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Note;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
+import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
+import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
+import com.missionse.kestrelweather.util.ReportRemover;
 
 /**
  * A fragment used to manage the notes attached to a report.
@@ -112,6 +115,17 @@ public class NoteOverviewFragment extends Fragment {
 
 			if (mEditable) {
 				mNoteList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+				MediaMultiChoiceModeListener mediaMultiChoiceModeListener =
+						new MediaMultiChoiceModeListener<NoteAdapter, Note>(mActivity, mNoteList, mNoteAdapter);
+				mediaMultiChoiceModeListener.setSupplementRemovedListener(new ItemRemovedListener<Note>() {
+					@Override
+					public void itemRemoved(final Note note) {
+						if (mActivity != null) {
+							ReportRemover.removeNote(mActivity.getDatabaseAccessor(), note);
+						}
+					}
+				});
+				mNoteList.setMultiChoiceModeListener(mediaMultiChoiceModeListener);
 			}
 
 			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_notes_empty);
@@ -125,18 +139,20 @@ public class NoteOverviewFragment extends Fragment {
 	}
 
 	private void populateAdapter() {
-		ReportTable reportTable = ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor().getReportTable();
-		Report report = reportTable.queryForId(mReportId);
-		if (report != null) {
-			if (mNoteAdapter.isEmpty()) {
-				mNoteAdapter.addAll(report.getNotes());
+		if (getActivity() != null) {
+			ReportTable reportTable = ((KestrelWeatherActivity) getActivity()).getDatabaseAccessor().getReportTable();
+			Report report = reportTable.queryForId(mReportId);
+			if (report != null) {
+				if (mNoteAdapter.isEmpty()) {
+					mNoteAdapter.addAll(report.getNotes());
+				} else {
+					mNoteAdapter.clear();
+					mNoteAdapter.addAll(report.getNotes());
+				}
+				mNoteAdapter.notifyDataSetChanged();
 			} else {
-				mNoteAdapter.clear();
-				mNoteAdapter.addAll(report.getNotes());
+				Log.e(TAG, "Unable to populate adapter report for id=" + mReportId + " is null.");
 			}
-			mNoteAdapter.notifyDataSetChanged();
-		} else {
-			Log.e(TAG, "Unable to populate adapter report for id=" + mReportId + " is null.");
 		}
 	}
 

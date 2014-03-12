@@ -26,7 +26,7 @@ import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
-import com.missionse.kestrelweather.reports.utils.SupplementRemovedListener;
+import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.kestrelweather.util.SupplementBuilder;
 
@@ -127,10 +127,10 @@ public final class VideoOverviewFragment extends Fragment {
 			if (mEditable) {
 				mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 				MediaMultiChoiceModeListener mediaMultiChoiceModeListener =
-						new MediaMultiChoiceModeListener(mActivity, mAudioList, mVideoAdapter);
-				mediaMultiChoiceModeListener.setSupplementRemovedListener(new SupplementRemovedListener() {
+						new MediaMultiChoiceModeListener<VideoAdapter, Supplement>(mActivity, mAudioList, mVideoAdapter);
+				mediaMultiChoiceModeListener.setSupplementRemovedListener(new ItemRemovedListener<Supplement>() {
 					@Override
-					public void supplementRemoved(final Supplement supplement) {
+					public void itemRemoved(final Supplement supplement) {
 						if (mActivity != null) {
 							ReportRemover.removeSupplement(mActivity.getDatabaseAccessor(), supplement);
 						}

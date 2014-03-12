@@ -34,7 +34,7 @@ import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.util.MediaResolver;
 import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
-import com.missionse.kestrelweather.reports.utils.SupplementRemovedListener;
+import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.kestrelweather.util.SupplementBuilder;
 
@@ -152,11 +152,11 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerListen
 
 			if (mEditable) {
 				mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-				MediaMultiChoiceModeListener mediaMultiChoiceModeListener = new MediaMultiChoiceModeListener(
+				MediaMultiChoiceModeListener mediaMultiChoiceModeListener = new MediaMultiChoiceModeListener<AudioAdapter, Supplement>(
 						mActivity, mAudioList, mAudioAdapter);
-				mediaMultiChoiceModeListener.setSupplementRemovedListener(new SupplementRemovedListener() {
+				mediaMultiChoiceModeListener.setSupplementRemovedListener(new ItemRemovedListener<Supplement>() {
 					@Override
-					public void supplementRemoved(final Supplement supplement) {
+					public void itemRemoved(final Supplement supplement) {
 						if (mCurrentlySelectedSupplement != null) {
 							if (mCurrentlySelectedSupplement.getId() == supplement.getId()) {
 								mCurrentlySelectedSupplement = null;
