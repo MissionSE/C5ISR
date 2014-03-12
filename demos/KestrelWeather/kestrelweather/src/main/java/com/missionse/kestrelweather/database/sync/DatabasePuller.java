@@ -44,6 +44,18 @@ public class DatabasePuller implements Runnable {
 		String latestId = mAccessor.getLatestEvent();
 		JsonObject result = IonUtil.pullLatestEvent(mContext, latestId);
 		if (result != null) {
+			String newLatestId = result.get("latestEvent").getAsString();
+			
+			if (!validNewEventField(latestId, newLatestId)) {
+				mAccessor.clearDataTables();
+				mAccessor.setLatestEvent("0");
+				result = IonUtil.pullLatestEvent(mContext, "0");
+				if (result == null) {
+					Log.d(TAG, "Unable to pull latest after table reset.");
+					return;
+				}
+			}
+
 			JsonArray fetchList = result.getAsJsonArray("toFetch");
 			JsonArray removeList = result.getAsJsonArray("toRemove");
 
@@ -57,7 +69,6 @@ public class DatabasePuller implements Runnable {
 				removeReport(element.getAsString());
 			}
 
-			String newLatestId = result.get("latestEvent").getAsString();
 			if (!newLatestId.equals(mAccessor.getLatestEvent())) {
 				mAccessor.setLatestEvent(newLatestId);
 			}
@@ -68,6 +79,21 @@ public class DatabasePuller implements Runnable {
 				}
 			}
 		}
+	}
+
+	private boolean validNewEventField(String latestId, String newLatestId) {
+		boolean retValue = false;
+		try {
+			int currentId = Integer.valueOf(latestId);
+			int newId = Integer.valueOf(newLatestId);
+
+			 if (newId > currentId || newId == currentId) {
+				 retValue = true;
+			 }
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+		return retValue;
 	}
 
 	private synchronized void notifyPullComplete(int reportId) {

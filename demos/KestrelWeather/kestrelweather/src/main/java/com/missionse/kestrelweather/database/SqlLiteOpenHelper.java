@@ -45,6 +45,11 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public abstract List<Class> getSupportedClasses();
 
+	/**
+	 * Retrieve a list of classes/tables that can be forced dropped.
+	 * @return List<Class> that can be forced dropped.
+	 */
+	public abstract List<Class> getForceDropTables();
 
 	@Override
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
@@ -87,6 +92,19 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 		}
 
 		return objectDao;
+	}
+
+	/**
+	 * Force clear some database tables.
+	 */
+	public void forceClearTables() {
+		for (Class clazz : getForceDropTables()) {
+			try {
+				TableUtils.createTable(getConnectionSource(), clazz);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**

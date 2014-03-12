@@ -39,4 +39,15 @@ public class LocalDatabaseHelper extends SqlLiteOpenHelper {
 		ret.add(UserSettings.class);
 		return ret;
 	}
+
+	 @Override
+	public List<Class> getForceDropTables() {
+		List<Class> ret = new LinkedList<Class>();
+		ret.add(Note.class);
+		ret.add(OpenWeather.class);
+		ret.add(KestrelWeather.class);
+		ret.add(Supplement.class);
+		ret.add(Report.class);
+		return ret;
+	}
 }

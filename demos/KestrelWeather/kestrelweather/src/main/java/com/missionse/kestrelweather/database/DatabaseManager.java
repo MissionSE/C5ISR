@@ -194,6 +194,11 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 	}
 
 	@Override
+	public void clearDataTables() {
+		mLocalDatabaseHelper.forceClearTables();
+	}
+
+	@Override
 	public void onDestroy() {
 		mLocalDatabaseHelper = null;
 	}

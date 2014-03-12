@@ -121,4 +121,9 @@ public interface DatabaseAccessor {
 	 * @return count of reports that have not been synced.
 	 */
 	int getUnSynedCount();
+
+	/**
+	 * Force drop all tables from the database.
+	 */
+	void clearDataTables();
 }
