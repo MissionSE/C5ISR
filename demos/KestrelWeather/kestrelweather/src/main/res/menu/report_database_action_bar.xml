@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context="com.missionse.kestrelweather.KestrelWeatherActivity">
+
+	<item
+		android:id="@+id/action_database_filter"
+		android:title="@string/action_database_filter"
+		android:icon="@drawable/ic_action_filter"
+		android:showAsAction="always">
+		<menu>
+			<item
+				android:id="@+id/action_filter_synced"
+				android:title="@string/action_filter_synced"
+				android:showAsAction="never"
+				android:orderInCategory="100"
+				android:checkable="true"
+				android:checked="true"/>
+			<item
+				android:id="@+id/action_filter_unsynced"
+				android:title="@string/action_filter_unsynced"
+				android:orderInCategory="108"
+				android:showAsAction="never"
+				android:checkable="true"
+				android:checked="true"/>
+		</menu>
+	</item>
+</menu>

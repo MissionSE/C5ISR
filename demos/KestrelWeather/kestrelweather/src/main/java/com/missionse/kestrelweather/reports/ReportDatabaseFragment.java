@@ -3,13 +3,23 @@ package com.missionse.kestrelweather.reports;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,6 +44,8 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	private ReportAdapter mReportAdapter;
 	private TextView mReportCountView;
 	private ProgressBar mProgressBar;
+	private MenuItem mShowSynced;
+	private MenuItem mShowUnsynced;
 
 	/**
 	 * Default constructor.
@@ -70,15 +82,74 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		if (mActivity != null) {
 			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
 					new ArrayList<Report>());
+			mReportAdapter.addOnFilterRunnable(new Runnable() {
+				@Override
+				public void run() {
+					updateReportCount();
+				}
+			});
 		}
+
+		setHasOptionsMenu(true);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.report_database_action_bar, menu);
+		mShowSynced = menu.findItem(R.id.action_filter_synced);
+		mShowUnsynced = menu.findItem(R.id.action_filter_unsynced);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		item.setChecked(!item.isChecked());
+		String constraint = "";
+		if (mShowSynced.isChecked()) {
+			constraint += "synced ";
+		}
+		if (mShowUnsynced.isChecked()) {
+			constraint += "unsynced";
+		}
+		constraint = constraint.replace(" ", ",");
+		mReportAdapter.setSyncStatusConstraint(constraint);
+		mReportAdapter.filter();
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View contentView = inflater.inflate(R.layout.fragment_report_database, container, false);
 		if (contentView != null) {
 			mReportCountView = (TextView) contentView.findViewById(R.id.fragment_report_database_count);
 			updateReportCount();
+
+			EditText searchField = (EditText) contentView.findViewById(R.id.fragment_report_database_search);
+			searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+				@Override
+				public boolean onEditorAction(final TextView v, final int actionId, final KeyEvent event) {
+					if (actionId == EditorInfo.IME_ACTION_DONE) {
+						InputMethodManager inputMethodManager = (InputMethodManager) mActivity.getSystemService(
+							Context.INPUT_METHOD_SERVICE);
+						inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+						return true;
+					}
+					return false;
+				}
+			});
+
+			searchField.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void afterTextChanged(final Editable s) { }
+				@Override
+				public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) { }
+
+				@Override
+				public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+					mReportAdapter.setReportTitleConstraint(s);
+					mReportAdapter.filter();
+				}
+			});
 
 			ListView reportList = (ListView) contentView.findViewById(R.id.fragment_report_database_list);
 			if (reportList != null) {
@@ -90,12 +161,10 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 						if (fragmentManager != null) {
 							Fragment reportDetailFragment = ReportDetailFragment.newInstance(mReportAdapter.getItem(position).getId());
 							fragmentManager.beginTransaction()
-									.setCustomAnimations(
-											R.animator.fade_in, R.animator.fade_out,
+									.setCustomAnimations(R.animator.fade_in, R.animator.fade_out,
 											R.animator.fade_in, R.animator.fade_out)
 									.replace(R.id.content, reportDetailFragment, "report_detail")
-									.addToBackStack("report_detail")
-									.commit();
+									.addToBackStack("report_detail").commit();
 						}
 					}
 				});
@@ -138,7 +207,11 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	private void updateReportCount() {
 		if (mReportCountView != null && mDatabaseAccessor != null) {
 			int totalReports = mDatabaseAccessor.getSyncedCount() + mDatabaseAccessor.getUnSynedCount();
-			mReportCountView.setText("Reports: " + totalReports);
+			if (mReportAdapter.isReporTitleBeingFiltered() || mReportAdapter.isSyncStatusBeingFiltered()) {
+				mReportCountView.setText(mReportAdapter.getCount() + "/" + totalReports);
+			} else {
+				mReportCountView.setText("" + totalReports);
+			}
 		}
 	}
 

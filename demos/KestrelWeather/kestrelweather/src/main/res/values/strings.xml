@@ -22,6 +22,11 @@
 	<string name="action_simulate_kestrel">Simulation Mode</string>
 	<string name="action_kestrel_simulation_settings">Simulation Settings</string>
 
+	<!-- Filter Menu on Database Fragment -->
+	<string name="action_database_filter">Filter</string>
+	<string name="action_filter_synced">Show Synced</string>
+	<string name="action_filter_unsynced">Show Unsynced</string>
+
 	<!-- General -->
 	<string name="save">Save</string>
 	<string name="send">Send</string>
@@ -41,6 +46,7 @@
 	<string name="feels_like">Feels</string>
 	<string name="celsius_word">Celsius</string>
 	<string name="sync">Sync</string>
+	<string name="search">Search</string>
 
 	<!-- Navigation Drawer -->
 	<string name="drawer_overview">MAP</string>
