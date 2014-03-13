@@ -66,7 +66,7 @@ public class KestrelSimulator {
 
 	/**
 	 * Checks the availability of the bluetooth feature. Will display a Toast if it isn't.
-	 * @return whehter or not Bluetooth is available
+	 * @return whether or not Bluetooth is available
 	 */
 	public boolean checkBluetoothAvailability() {
 		if (BluetoothAdapter.getDefaultAdapter() == null) {

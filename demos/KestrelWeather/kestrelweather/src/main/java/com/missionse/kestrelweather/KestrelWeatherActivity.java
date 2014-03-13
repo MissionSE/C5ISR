@@ -101,6 +101,16 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 				key.equals(getString(R.string.key_sync_enabled))) {
 			startSyncService();
 		}
+
+
+		String simulationModeKey = getString(R.string.key_simulation_mode);
+		if (key.equals(simulationModeKey)) {
+			if (mSharedPreferences.getBoolean(simulationModeKey, false)) {
+				mKestrelSimulator.startSimulator();
+			} else {
+				mKestrelSimulator.stopSimulator();
+			}
+		}
 	}
 
 	private void startSyncService() {
@@ -112,9 +122,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 		boolean syncEnabled = mSharedPreferences.getBoolean(getString(R.string.key_sync_enabled), true);
 		if (syncEnabled) {
-			final String syncFrequency = getString(R.string.key_sync_frequency);
 			final String defaultSyncFrequency = String.valueOf(getResources().getInteger(R.integer.default_data_sync_interval));
-			float intervalInMinutes = Float.valueOf(mSharedPreferences.getString(syncFrequency, defaultSyncFrequency));
+			float intervalInMinutes = Float.valueOf(getPreference(R.string.key_sync_frequency, defaultSyncFrequency));
 			Log.d(TAG, "Starting sync service on an interval of " + intervalInMinutes + " minutes...");
 			int intervalInMillis = (int) (intervalInMinutes * MILLIS_PER_MIN);
 
@@ -131,10 +140,18 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		}
 	}
 
+	private String getPreference(final int key, final String defaultValue) {
+		return mSharedPreferences.getString(getString(key), defaultValue);
+	}
+
 	@Override
 	protected void onStart() {
 		super.onStart();
 		mKestrelSimulator.onStart();
+
+		if (mSharedPreferences.getBoolean(getString(R.string.key_simulation_mode), false)) {
+			mKestrelSimulator.startSimulator();
+		}
 	}
 
 	@Override
@@ -236,7 +253,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	}
 
 	private void updateDrawerFooterCountInformation() {
-		//List<Report> allReports = mDatabaseManager.getReportTable().queryForAll();
 		int unsyncedItemCount = mDatabaseManager.getUnSynedCount();
 		if (mDrawerCountFooter != null) {
 			mDrawerCountFooter.setText(getResources().getQuantityString(R.plurals.drawer_footer_unsynced_count, unsyncedItemCount,
