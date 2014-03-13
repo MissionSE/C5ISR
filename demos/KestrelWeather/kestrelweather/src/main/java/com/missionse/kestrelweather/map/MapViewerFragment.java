@@ -196,11 +196,6 @@ public class MapViewerFragment extends MapFragment implements
 
 		if (mActivity != null) {
 			mMarkersAdapter = new ObservationCalloutMarkersAdapter(mActivity, mMap, this);
-
-			DatabaseAccessor databaseAccessor = mActivity.getDatabaseAccessor();
-			ReportTable reportTable = databaseAccessor.getReportTable();
-			List<Report> reports = reportTable.queryForAll();
-			mMarkersAdapter.setData(reports);
 		}
 	}
 
@@ -309,6 +304,13 @@ public class MapViewerFragment extends MapFragment implements
 		mSlidingLayer.openLayer(true);
 	}
 
+	private void loadReports() {
+		DatabaseAccessor databaseAccessor = mActivity.getDatabaseAccessor();
+		ReportTable reportTable = databaseAccessor.getReportTable();
+		List<Report> reports = reportTable.queryForAll();
+		mMarkersAdapter.setData(reports);
+	}
+
 	@Override
 	public void onMapLoaded() {
 		if (mMapLoadedListener != null) {
@@ -318,6 +320,7 @@ public class MapViewerFragment extends MapFragment implements
 		if (location != null) {
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 5.0f));
 		}
+		loadReports();
 	}
 
 }
