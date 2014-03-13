@@ -26,7 +26,7 @@
 		<TextView
 			android:id="@+id/report_detail_timestamp"
 			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:text="@string/unknown"
 			android:textSize="18sp"
 			android:textColor="@color/gray_medium"/>
