@@ -95,9 +95,9 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 			ImageView reportSyncStatus = (ImageView) view.findViewById(R.id.report_detail_sync_status_icon);
 			if (reportSyncStatus != null) {
 				if (report.isDirty()) {
-					reportSyncStatus.setImageResource(R.drawable.report_status_not_synced);
+					reportSyncStatus.setVisibility(View.VISIBLE);
 				} else {
-					reportSyncStatus.setImageResource(R.drawable.report_status_synced);
+					reportSyncStatus.setVisibility(View.GONE);
 				}
 			}
 		}

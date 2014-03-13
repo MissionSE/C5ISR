@@ -1,6 +1,5 @@
 package com.missionse.kestrelweather;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -61,11 +60,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 
 	private static final int MILLIS_PER_MIN = 1000 * 60;
 	private static final int MAX_REPORT_COUNT = 99;
-
-	/*
-	 * Define a request code to send to Google Play services
-	 * This code is returned in Activity.onActivityResult
-	 */
 	private static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
 	private KestrelWeatherDrawerFactory mDrawerFactory;
@@ -78,6 +72,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 	private SharedPreferences mSharedPreferences;
 	private int mCurrentNavigationIndex = KestrelWeatherDrawerFactory.MAP_OVERVIEW;
 	private LocationClient mLocationClient;
+	private String mServerAddress;
 
 	/**
 	 * Constructor.
@@ -113,6 +108,12 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 		startSyncService();
 
+		mServerAddress = getPreference(R.string.key_server, "");
+		if (mServerAddress.equals("")) {
+			mServerAddress = getString(R.string.remote_server_development);
+			mSharedPreferences.edit().putString(getString(R.string.key_server), mServerAddress);
+		}
+
 		mLocationClient = new LocationClient(this, this, this);
 	}
 
@@ -135,10 +136,15 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 
 		String serverKey = getString(R.string.key_server);
 		if (key.equals(serverKey)) {
-			if (mDatabaseManager != null) {
-				stopSyncService();
-				mDatabaseManager.clearDataTables();
-				startSyncService();
+			String newServerAddress = getPreference(R.string.key_server, getString(R.string.remote_server_development));
+			if (!newServerAddress.equals(mServerAddress)) {
+				mServerAddress = newServerAddress;
+
+				if (mDatabaseManager != null) {
+					stopSyncService();
+					mDatabaseManager.clearDataTables();
+					startSyncService();
+				}
 			}
 		}
 	}
@@ -197,7 +203,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 			mKestrelSimulator.startSimulator();
 		}
 
-		// Connect the location client.
 		if (isGooglePlayServicesAvailable()) {
 			mLocationClient.connect();
 		}
@@ -208,8 +213,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 		super.onStop();
 		mKestrelSimulator.onStop();
 		shutdownKestrelSimulator();
-
-		// Disconnecting the client invalidates it.
 		mLocationClient.disconnect();
 	}
 
@@ -485,79 +488,46 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// Decide what to do based on the original request code
-		switch (requestCode) {
-
-			case CONNECTION_FAILURE_RESOLUTION_REQUEST:
-			/*
-			 * If the result code is Activity.RESULT_OK, try
-			 * to connect again
-			 */
-				switch (resultCode) {
-					case Activity.RESULT_OK:
-						mLocationClient.connect();
-						break;
-				}
+		if (requestCode == CONNECTION_FAILURE_RESOLUTION_REQUEST
+				&& resultCode == RESULT_OK) {
+			mLocationClient.connect();
 		}
 	}
 
 	@Override
 	public void onConnected(Bundle bundle) {
-		// Display the connection status
-		Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onDisconnected() {
-		// Display the connection status
-		Toast.makeText(this, "Disconnected. Please re-connect.",
-				Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
-		/*
-		 * Google Play services can resolve some errors it detects.
-		 * If the error has a resolution, try sending an Intent to
-		 * start a Google Play services activity that can resolve
-		 * error.
-		 */
 		if (connectionResult.hasResolution()) {
 			try {
-				// Start an Activity that tries to resolve the error
 				connectionResult.startResolutionForResult(
 						this,
 						CONNECTION_FAILURE_RESOLUTION_REQUEST);
-			/*
-			* Thrown if Google Play services canceled the original
-			* PendingIntent
-			*/
 			} catch (IntentSender.SendIntentException e) {
-				// Log the error
 				e.printStackTrace();
 			}
 		} else {
-			Toast.makeText(getApplicationContext(), "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
 		}
 	}
 
 	private boolean isGooglePlayServicesAvailable() {
-		// Check that Google Play services is available
 		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		// If Google Play services is available
 		if (ConnectionResult.SUCCESS == resultCode) {
-			// In debug mode, log the status
-			Log.d("Location Updates", "Google Play services is available.");
+			Log.d(TAG, "Google Play services is available.");
 			return true;
 		} else {
-			// Get the error dialog from Google Play services
 			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode,
 					this,
 					CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
-			// If Google Play services can provide an error dialog
 			if (errorDialog != null) {
-				// Create a new DialogFragment for the error dialog
 				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
 				errorFragment.setDialog(errorDialog);
 				errorFragment.show(getFragmentManager(), "Location Updates");
