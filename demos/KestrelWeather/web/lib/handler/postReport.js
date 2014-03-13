@@ -30,6 +30,7 @@ module.exports = function(db) {
 		form.keepExtensions = true;
 
 		form.on('field', function(field, value) {
+			debug(postReport, 'field: ' + field);
 			fields.push([field, value]);
 		})
 		.on('fileBegin', function(name, file) {
@@ -55,7 +56,11 @@ module.exports = function(db) {
 		.on('aborted', function(name, file) {
 			debug(postReport, '-> post aborted');
 		})
+		.on('error', function(err) {
+			debug(postReport, '-> post error: ' + err);
+		})
 		.on('file', function(name, file) {
+			debug(postReport, 'file: ' + name);
 			files.push(file);
 		})
 		.on('end', function() {
@@ -67,57 +72,68 @@ module.exports = function(db) {
 
 			// if json, then create a new report
 			if (contentType == 'application/json') {
-				//save a new report and add an event log entry
-				var newReport = new db.Report({
-					userid: data.userid,
-					latitude: data.latitude,
-					longitude: data.longitude,
-					createdat: data.createdat,
-					updatedat: data.updatedat,
-					title: data.title
-				});
-				newReport.kestrel.temperature = data.kestrel.temperature;
-				newReport.kestrel.humidity = data.kestrel.humidity;
-				newReport.kestrel.pressure = data.kestrel.pressure;
-				newReport.kestrel.pressuretrend = data.kestrel.pressuretrend;
-				newReport.kestrel.heatindex = data.kestrel.heatindex;
-				newReport.kestrel.windspeed = data.kestrel.windspeed;
-				newReport.kestrel.winddirection = data.kestrel.winddirection;
-				newReport.kestrel.windchill = data.kestrel.windchill;
-				newReport.kestrel.dewpoint = data.kestrel.dewpoint;
+				if (data && data.userid && data.latitude && data.longitude &&
+					data.createdat && data.updatedat && data.title && data.kestrel && data.weather) {
+					//save a new report and add an event log entry
+					var newReport = new db.Report({
+						userid: data.userid,
+						latitude: data.latitude,
+						longitude: data.longitude,
+						createdat: data.createdat,
+						updatedat: data.updatedat,
+						title: data.title
+					});
 
-				newReport.weather.conditioncode = data.weather.conditioncode;
-				newReport.weather.description = data.weather.description;
-				newReport.weather.name = data.weather.name;
-				newReport.weather.country = data.weather.country;
+					newReport.kestrel.temperature = data.kestrel.temperature;
+					newReport.kestrel.humidity = data.kestrel.humidity;
+					newReport.kestrel.pressure = data.kestrel.pressure;
+					newReport.kestrel.pressuretrend = data.kestrel.pressuretrend;
+					newReport.kestrel.heatindex = data.kestrel.heatindex;
+					newReport.kestrel.windspeed = data.kestrel.windspeed;
+					newReport.kestrel.winddirection = data.kestrel.winddirection;
+					newReport.kestrel.windchill = data.kestrel.windchill;
+					newReport.kestrel.dewpoint = data.kestrel.dewpoint;
 
-				for (var index = 0; index < data.notes.length; index++) {
-					newReport.notes.push(data.notes[index]);
-				}
+					newReport.weather.conditioncode = data.weather.conditioncode;
+					newReport.weather.description = data.weather.description;
+					newReport.weather.name = data.weather.name;
+					newReport.weather.country = data.weather.country;
 
-				newReport.save(function(err, newReport) {
-					if (!err) {
-						res.writeHead(200, {'content-type': 'text/plain'});
-						debug(postReport, JSON.stringify(newReport));
-						res.end(JSON.stringify({
-							status: 'ok',
-							id : newReport._id
-						}));
-
-						var newEvent = new db.Event({
-							reportId: newReport._id,
-							eventType: 'create'
-						});
-						newEvent.save(function(err, newEvent) {
-							debug(postReport, newEvent.eventType + ' event logged');
-						});
-					} else {
-						res.writeHead(404, {'content-type': 'text/plain'});
-						res.end(JSON.stringify({
-							status: 'nok'
-						}));
+					for (var index = 0; index < data.notes.length; index++) {
+						newReport.notes.push(data.notes[index]);
 					}
-				});
+
+					newReport.save(function(err, newReport) {
+						if (!err) {
+							res.writeHead(200, {'content-type': 'text/plain'});
+							debug(postReport, JSON.stringify(newReport));
+							res.end(JSON.stringify({
+								status: 'ok',
+								id : newReport._id
+							}));
+
+							var newEvent = new db.Event({
+								reportId: newReport._id,
+								eventType: 'create'
+							});
+							newEvent.save(function(err, newEvent) {
+								debug(postReport, newEvent.eventType + ' event logged');
+							});
+						} else {
+							res.writeHead(404, {'content-type': 'text/plain'});
+							res.end(JSON.stringify({
+								status: 'nok'
+							}));
+						}
+					});
+				} else {
+					debug(postReport, 'malformed report post');
+					req.resume();
+					res.writeHead(404, {'content-type': 'text/plain'});
+					res.end(JSON.stringify({
+						status: 'nok'
+					}));
+				}
 			} else {
 				db.Report.findById(data.id).exec(function(err, reports) {
 					if (err || !reports) {

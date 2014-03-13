@@ -2,7 +2,6 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
-var mongo = require('mongodb');
 var debug = require('debug')('kestrel:core');
 var commander = require('commander');
 
