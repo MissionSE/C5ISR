@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather.preferences;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,7 +27,6 @@ import java.util.ListIterator;
  */
 public class SettingsActivity extends PreferenceActivity {
 	private SharedPreferences mDevelopmentPreferences;
-	private SharedPreferences.OnSharedPreferenceChangeListener mDevelopmentPreferencesListener;
 
 	/**
 	 * A preference value change listener that updates the preference's summary
@@ -39,17 +39,16 @@ public class SettingsActivity extends PreferenceActivity {
 			String stringValue = value.toString();
 
 			if (preference instanceof ListPreference) {
-				// For list preferences, look up the correct display value in
-				// the preference's 'entries' list.
 				ListPreference listPreference = (ListPreference) preference;
-				int index = listPreference.findIndexOfValue(stringValue);
-
-				// Set the summary to reflect the new value.
-				preference.setSummary(
-						index >= 0
-								? listPreference.getEntries()[index]
-								: null
-				);
+				CharSequence[] listEntries = listPreference.getEntries();
+				if (listEntries != null) {
+					int index = listPreference.findIndexOfValue(stringValue);
+					if (index >= 0 && index < listEntries.length) {
+						preference.setSummary(listEntries[index]);
+					} else {
+						preference.setSummary(null);
+					}
+				}
 			} else {
 				// For all other preferences, set the summary to the value's
 				// simple string representation.
@@ -92,19 +91,23 @@ public class SettingsActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar actionBar = getActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 
 		mDevelopmentPreferences = getSharedPreferences(DeveloperPreferenceFragment.PREF_FILE,
 				Context.MODE_PRIVATE);
 
-		mDevelopmentPreferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+		SharedPreferences.OnSharedPreferenceChangeListener developmentPreferencesListener =
+				new SharedPreferences.OnSharedPreferenceChangeListener() {
 			@Override
 			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 				invalidateHeaders();
 			}
 		};
 		mDevelopmentPreferences.registerOnSharedPreferenceChangeListener(
-				mDevelopmentPreferencesListener);
+				developmentPreferencesListener);
 	}
 
 	/**
