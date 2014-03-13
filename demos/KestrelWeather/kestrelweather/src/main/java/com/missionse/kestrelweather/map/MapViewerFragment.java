@@ -332,8 +332,8 @@ public class MapViewerFragment extends MapFragment implements
 		}
 		mPreviousCameraPosition = mMap.getCameraPosition();
 
-		mCurrentMarker = null;
-		if (mSlidingLayer.isOpened()) {
+		if (mCurrentMarker != null && !mCurrentMarker.isInfoWindowShown() && mSlidingLayer.isOpened()) {
+			mCurrentMarker = null;
 			mSlidingLayer.closeLayer(true);
 		}
 	}
