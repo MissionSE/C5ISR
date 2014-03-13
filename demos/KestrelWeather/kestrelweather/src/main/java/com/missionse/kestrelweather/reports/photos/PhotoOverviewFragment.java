@@ -26,7 +26,7 @@ import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
-import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
+import com.missionse.kestrelweather.reports.utils.SupplementMultiChoiceModeListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.kestrelweather.util.SupplementBuilder;
 
@@ -129,13 +129,11 @@ public class PhotoOverviewFragment extends Fragment implements ItemRemovedListen
 				}
 			});
 
-			if (mEditable) {
-				photoList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-				MediaMultiChoiceModeListener multiChoiceModeListener =
-						new MediaMultiChoiceModeListener<PhotoAdapter, Supplement>(mActivity, photoList, mPhotoAdapter);
-				multiChoiceModeListener.setSupplementRemovedListener(this);
-				photoList.setMultiChoiceModeListener(multiChoiceModeListener);
-			}
+			photoList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+			SupplementMultiChoiceModeListener multiChoiceModeListener =
+					new SupplementMultiChoiceModeListener(mActivity, photoList, mPhotoAdapter, mEditable);
+			multiChoiceModeListener.setItemRemovedListener(this);
+			photoList.setMultiChoiceModeListener(multiChoiceModeListener);
 
 			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_photos_empty);
 			if (emptyView != null) {
@@ -222,32 +220,6 @@ public class PhotoOverviewFragment extends Fragment implements ItemRemovedListen
 			}
 		}
 	}
-
-//	private boolean uriExist(final String uriString) {
-//		Uri uri = Uri.parse(uriString);
-//		String uriPath = MediaResolver.getPath(mActivity, uri);
-//		File uriAsFile = new File(uriPath);
-//		return uriAsFile.exists();
-//	}
-//
-//	private void download(final Supplement supplement) {
-//		String remoteUrl = getString(R.string.remote_server_development) + supplement.getRemoteUri();
-//		FileDownloader.downloadFile(mActivity, remoteUrl, new FileDownloader.OnFileDownloadCompleteListener() {
-//			@Override
-//			public void fileDownloadComplete(final Uri uri) {
-//				if (mActivity != null) {
-//					mActivity.runOnUiThread(new Runnable() {
-//						@Override
-//						public void run() {
-//							supplement.setUri(uri.toString());
-//							mActivity.getDatabaseAccessor().getSupplementTable().update(supplement);
-//							mPhotoAdapter.add(supplement);
-//						}
-//					});
-//				}
-//			}
-//		});
-//	}
 
 	@Override
 	public void itemRemoved(final Supplement supplement) {

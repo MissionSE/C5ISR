@@ -152,8 +152,12 @@
 	<string name="sync_status_description">The icon representing the current sync status.</string>
 	<string name="readings_error">Unable to fetch readings.</string>
 	<string name="discard_message">Are you sure you want to discard the report?</string>
+	<string name="action_add">Add</string>
+	<string name="action_delete">Delete</string>
+	<string name="action_download">Download</string>
+	<string name="download_toast">Downloading %1$d items.</string>
 
-	<!-- Fragment: SimpleBaseDialog -->
+	<!-- Fragment: Attach Media -->
 	<string name="take_photo">Take Photo</string>
 	<string name="attach_photo">Attach Photo</string>
 	<string name="take_video">Take Video</string>
@@ -162,8 +166,6 @@
 	<string name="attach_audio">Attach Audio</string>
 
 	<!-- Fragment: Report Photos -->
-	<string name="action_add">Add</string>
-	<string name="action_delete">Delete</string>
 	<string name="no_photos">No photos attached.</string>
 
 	<!-- Fragment: Report Notes -->

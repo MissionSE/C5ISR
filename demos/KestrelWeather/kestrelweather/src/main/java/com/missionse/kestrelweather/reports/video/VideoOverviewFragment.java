@@ -26,7 +26,7 @@ import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
-import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
+import com.missionse.kestrelweather.reports.utils.SupplementMultiChoiceModeListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.kestrelweather.util.SupplementBuilder;
 
@@ -124,20 +124,18 @@ public final class VideoOverviewFragment extends Fragment {
 				}
 			});
 
-			if (mEditable) {
-				mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-				MediaMultiChoiceModeListener mediaMultiChoiceModeListener =
-						new MediaMultiChoiceModeListener<VideoAdapter, Supplement>(mActivity, mAudioList, mVideoAdapter);
-				mediaMultiChoiceModeListener.setSupplementRemovedListener(new ItemRemovedListener<Supplement>() {
-					@Override
-					public void itemRemoved(final Supplement supplement) {
-						if (mActivity != null) {
-							ReportRemover.removeSupplement(mActivity.getDatabaseAccessor(), supplement);
-						}
+			mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+			SupplementMultiChoiceModeListener auxiliaryDataMultiChoiceModeListener =
+					new SupplementMultiChoiceModeListener(mActivity, mAudioList, mVideoAdapter, mEditable);
+			auxiliaryDataMultiChoiceModeListener.setItemRemovedListener(new ItemRemovedListener<Supplement>() {
+				@Override
+				public void itemRemoved(final Supplement supplement) {
+					if (mActivity != null) {
+						ReportRemover.removeSupplement(mActivity.getDatabaseAccessor(), supplement);
 					}
-				});
-				mAudioList.setMultiChoiceModeListener(mediaMultiChoiceModeListener);
-			}
+				}
+			});
+			mAudioList.setMultiChoiceModeListener(auxiliaryDataMultiChoiceModeListener);
 
 			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_video_empty);
 			if (emptyView != null) {

@@ -34,7 +34,7 @@ import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
 import com.missionse.kestrelweather.database.util.MediaResolver;
 import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
-import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
+import com.missionse.kestrelweather.reports.utils.SupplementMultiChoiceModeListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.kestrelweather.util.SupplementBuilder;
 
@@ -150,29 +150,27 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerListen
 				}
 			});
 
-			if (mEditable) {
-				mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-				MediaMultiChoiceModeListener mediaMultiChoiceModeListener = new MediaMultiChoiceModeListener<AudioAdapter, Supplement>(
-						mActivity, mAudioList, mAudioAdapter);
-				mediaMultiChoiceModeListener.setSupplementRemovedListener(new ItemRemovedListener<Supplement>() {
-					@Override
-					public void itemRemoved(final Supplement supplement) {
-						if (mCurrentlySelectedSupplement != null) {
-							if (mCurrentlySelectedSupplement.getId() == supplement.getId()) {
-								mCurrentlySelectedSupplement = null;
-								mMediaControls.setVisibility(View.GONE);
-								mMediaWrapper.setMediaSource(mActivity, null);
-								onMediaPauseButtonPressed();
-								mMediaWrapper.playMedia();
-							}
-						}
-						if (mActivity != null) {
-							ReportRemover.removeSupplement(mActivity.getDatabaseAccessor(), supplement);
+			mAudioList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+			SupplementMultiChoiceModeListener auxiliaryDataMultiChoiceModeListener =
+					new SupplementMultiChoiceModeListener(mActivity, mAudioList, mAudioAdapter, mEditable);
+			auxiliaryDataMultiChoiceModeListener.setItemRemovedListener(new ItemRemovedListener<Supplement>() {
+				@Override
+				public void itemRemoved(final Supplement supplement) {
+					if (mCurrentlySelectedSupplement != null) {
+						if (mCurrentlySelectedSupplement.getId() == supplement.getId()) {
+							mCurrentlySelectedSupplement = null;
+							mMediaControls.setVisibility(View.GONE);
+							mMediaWrapper.setMediaSource(mActivity, null);
+							onMediaPauseButtonPressed();
+							mMediaWrapper.playMedia();
 						}
 					}
-				});
-				mAudioList.setMultiChoiceModeListener(mediaMultiChoiceModeListener);
-			}
+					if (mActivity != null) {
+						ReportRemover.removeSupplement(mActivity.getDatabaseAccessor(), supplement);
+					}
+				}
+			});
+			mAudioList.setMultiChoiceModeListener(auxiliaryDataMultiChoiceModeListener);
 
 			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_audio_empty);
 			if (emptyView != null) {

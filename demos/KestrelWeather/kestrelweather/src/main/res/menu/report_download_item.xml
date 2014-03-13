@@ -3,9 +3,9 @@
 	tools:context="com.missionse.kestrelweather.KestrelWeatherActivity">
 
 	<item
-		android:id="@+id/action_delete_selected"
-		android:icon="@drawable/ic_action_discard"
-		android:title="@string/action_delete"
+		android:id="@+id/action_download_selected"
+		android:icon="@drawable/ic_action_download"
+		android:title="@string/action_download"
 		android:orderInCategory="100"
 		android:showAsAction="ifRoom|withText"/>
 </menu>

@@ -24,8 +24,8 @@ import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Note;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
+import com.missionse.kestrelweather.reports.utils.AuxiliaryDataMultiChoiceModeListener;
 import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
-import com.missionse.kestrelweather.reports.utils.MediaMultiChoiceModeListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 
 /**
@@ -115,9 +115,10 @@ public class NoteOverviewFragment extends Fragment {
 
 			if (mEditable) {
 				mNoteList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-				MediaMultiChoiceModeListener mediaMultiChoiceModeListener =
-						new MediaMultiChoiceModeListener<NoteAdapter, Note>(mActivity, mNoteList, mNoteAdapter);
-				mediaMultiChoiceModeListener.setSupplementRemovedListener(new ItemRemovedListener<Note>() {
+				AuxiliaryDataMultiChoiceModeListener<NoteAdapter, Note> auxiliaryDataMultiChoiceModeListener =
+						new AuxiliaryDataMultiChoiceModeListener<NoteAdapter, Note>(
+								mActivity, mNoteList, mNoteAdapter, mEditable);
+				auxiliaryDataMultiChoiceModeListener.setItemRemovedListener(new ItemRemovedListener<Note>() {
 					@Override
 					public void itemRemoved(final Note note) {
 						if (mActivity != null) {
@@ -125,7 +126,7 @@ public class NoteOverviewFragment extends Fragment {
 						}
 					}
 				});
-				mNoteList.setMultiChoiceModeListener(mediaMultiChoiceModeListener);
+				mNoteList.setMultiChoiceModeListener(auxiliaryDataMultiChoiceModeListener);
 			}
 
 			TextView emptyView = (TextView) contentView.findViewById(R.id.fragment_report_notes_empty);
