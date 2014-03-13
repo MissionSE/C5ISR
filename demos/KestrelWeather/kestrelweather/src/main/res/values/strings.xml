@@ -48,7 +48,7 @@
 	<string name="feels_like">Feels</string>
 	<string name="celsius_word">Celsius</string>
 	<string name="sync">Sync</string>
-	<string name="search">Search</string>
+	<string name="search"><i>Search</i></string>
 
 	<!-- Navigation Drawer -->
 	<string name="drawer_overview">MAP</string>

@@ -30,6 +30,7 @@ import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.sync.DatabaseSync;
 import com.missionse.kestrelweather.database.sync.SyncStatusListener;
+import com.missionse.kestrelweather.reports.filter.SyncStatusFilter;
 
 import java.util.ArrayList;
 
@@ -45,6 +46,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	private ReportAdapter mReportAdapter;
 	private TextView mReportCountView;
 	private ProgressBar mProgressBar;
+	private EditText mSearchField;
 	private MenuItem mShowSynced;
 	private MenuItem mShowUnsynced;
 
@@ -112,6 +114,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		if (mShowUnsynced.isChecked()) {
 			constraint += "unsynced";
 		}
+		constraint = constraint.trim();
 		constraint = constraint.replace(" ", ",");
 		mReportAdapter.setSyncStatusConstraint(constraint);
 		mReportAdapter.filter();
@@ -125,8 +128,8 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 			mReportCountView = (TextView) contentView.findViewById(R.id.fragment_report_database_count);
 			updateReportCount();
 
-			EditText searchField = (EditText) contentView.findViewById(R.id.fragment_report_database_search);
-			searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			mSearchField = (EditText) contentView.findViewById(R.id.fragment_report_database_search);
+			mSearchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 				@Override
 				public boolean onEditorAction(final TextView v, final int actionId, final KeyEvent event) {
 					if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -139,7 +142,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 				}
 			});
 
-			searchField.addTextChangedListener(new TextWatcher() {
+			mSearchField.addTextChangedListener(new TextWatcher() {
 				@Override
 				public void afterTextChanged(final Editable s) {
 				}
@@ -179,7 +182,6 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 				}
 
 				mProgressBar = (ProgressBar) contentView.findViewById(R.id.fragment_report_database_progress_bar);
-
 				Button syncButton = (Button) contentView.findViewById(R.id.sync_btn);
 				syncButton.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -196,11 +198,9 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 						}
 					}
 				});
-
 				updateReportList();
 			}
 		}
-
 		return contentView;
 	}
 
@@ -211,7 +211,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	private void updateReportCount() {
 		if (mReportCountView != null && mDatabaseAccessor != null) {
 			int totalReports = mDatabaseAccessor.getSyncedCount() + mDatabaseAccessor.getUnSynedCount();
-			if (mReportAdapter.isReporTitleBeingFiltered() || mReportAdapter.isSyncStatusBeingFiltered()) {
+			if (mReportAdapter.isReportTitleBeingFiltered() || mReportAdapter.isSyncStatusBeingFiltered()) {
 				mReportCountView.setText(mReportAdapter.getCount() + "/" + totalReports);
 			} else {
 				mReportCountView.setText("" + totalReports);
@@ -221,18 +221,33 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 
 	@Override
 	public void onSyncComplete() {
-		runOnUi(new Runnable() {
+		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				updateReportList();
 				Toast.makeText(mActivity, getResources().getString(R.string.sync_ended), Toast.LENGTH_SHORT).show();
 			}
 		});
+		clearFilters();
+	}
+
+	private void clearFilters() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				mSearchField.setText("");
+				mReportAdapter.setReportTitleConstraint("");
+				mShowSynced.setChecked(true);
+				mShowUnsynced.setChecked(true);
+				mReportAdapter.setSyncStatusConstraint(SyncStatusFilter.DEFAULT);
+				mReportAdapter.filter();
+			}
+		});
 	}
 
 	@Override
 	public void onSyncStarted() {
-		runOnUi(new Runnable() {
+		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				Toast.makeText(mActivity, getResources().getString(R.string.sync_started), Toast.LENGTH_SHORT).show();
@@ -244,7 +259,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	public void onSyncedReport(int reportId) {
 	}
 
-	private void runOnUi(Runnable runnable) {
+	private void runOnUiThread(final Runnable runnable) {
 		if (mActivity != null) {
 			mActivity.runOnUiThread(runnable);
 		}

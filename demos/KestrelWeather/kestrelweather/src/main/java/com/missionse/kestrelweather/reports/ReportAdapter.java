@@ -72,7 +72,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 
 				String reportTitleInLowerCase = report.getTitle().toLowerCase(Locale.getDefault());
 				SpannableString spannableReportTitle = new SpannableString(report.getTitle());
-				if (isReporTitleBeingFiltered()) {
+				if (isReportTitleBeingFiltered()) {
 					if (reportTitleInLowerCase.contains(mReportListFilter.getReportTitleConstraint())) {
 						int startOfFoundConstraint = reportTitleInLowerCase
 								.indexOf(mReportListFilter.getReportTitleConstraint().toString());
@@ -136,7 +136,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	 * Returns whether the report adapter's underlying structure is currently being filtered on report title.
 	 * @return whether or not the adapter is currently being filtered
 	 */
-	public boolean isReporTitleBeingFiltered() {
+	public boolean isReportTitleBeingFiltered() {
 		return (mReportListFilter.getReportTitleConstraint() != null && mReportListFilter.getReportTitleConstraint().length() > 0);
 	}
 

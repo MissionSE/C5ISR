@@ -16,7 +16,6 @@ public final class SyncStatusFilter {
 	public static final String DEFAULT = SYNCED + "," + UNSYNCED;
 
 	private SyncStatusFilter() {
-
 	}
 
 	/**
@@ -25,9 +24,9 @@ public final class SyncStatusFilter {
 	 * @param constraint the constraint by which to filter
 	 * @return a new list of filtered reports
 	 */
-	public static List<Report> performFiltering(List<Report> originals, CharSequence constraint) {
+	public static List<Report> performFiltering(final List<Report> originals, CharSequence constraint) {
 		ArrayList<Report> filteredReports = new ArrayList<Report>();
-		if (constraint != null && constraint.toString().length() > 0) {
+		if (constraint != null) {
 			constraint = constraint.toString().toLowerCase(Locale.getDefault());
 
 			boolean showSyncedReports = false;
@@ -42,7 +41,7 @@ public final class SyncStatusFilter {
 				}
 			}
 
-			for (Report report : originals) {
+			for (final Report report : originals) {
 				if (report.isDirty() && showUnsyncedReports) {
 					filteredReports.add(report);
 				} else if (!report.isDirty() && showSyncedReports) {

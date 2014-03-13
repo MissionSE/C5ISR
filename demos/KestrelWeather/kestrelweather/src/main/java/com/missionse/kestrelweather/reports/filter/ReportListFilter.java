@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class ReportListFilter extends Filter {
 
-	private ArrayList<Report> mOriginalReports;
 	private List<Runnable> mOnFilterRunnables;
 	private ReportAdapter mReportAdapter;
 
@@ -85,11 +84,15 @@ public class ReportListFilter extends Filter {
 	protected FilterResults performFiltering(final CharSequence constraint) {
 		FilterResults results = new FilterResults();
 
-		if (mOriginalReports == null) {
-			mOriginalReports = mReportAdapter.getAllReports();
+		ArrayList<Report> originalReports = new ArrayList<Report>();
+		ArrayList<Report> allReports = mReportAdapter.getAllReports();
+		for (final Report report : allReports) {
+			if (!report.isDraft()) {
+				originalReports.add(report);
+			}
 		}
 
-		List<Report> filteredReports = ReportTitleFilter.performFiltering(mOriginalReports, mReportTitleConstraint);
+		List<Report> filteredReports = ReportTitleFilter.performFiltering(originalReports, mReportTitleConstraint);
 		filteredReports = SyncStatusFilter.performFiltering(filteredReports, mSyncStatusConstraint);
 
 		results.count = filteredReports.size();
@@ -103,10 +106,12 @@ public class ReportListFilter extends Filter {
 		ArrayList<Report> filteredReports = (ArrayList<Report>) filterResults.values;
 		mReportAdapter.notifyDataSetChanged();
 		mReportAdapter.clear();
-		for (Report report : filteredReports) {
-			mReportAdapter.add(report);
+		if (filteredReports != null) {
+			for (final Report report : filteredReports) {
+				mReportAdapter.add(report);
+			}
+			mReportAdapter.notifyDataSetInvalidated();
 		}
-		mReportAdapter.notifyDataSetInvalidated();
 
 		for (final Runnable runnable : mOnFilterRunnables) {
 			runnable.run();

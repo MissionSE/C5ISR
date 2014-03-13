@@ -12,7 +12,6 @@ import java.util.Locale;
 public final class ReportTitleFilter {
 
 	private ReportTitleFilter() {
-
 	}
 
 	/**
@@ -21,7 +20,7 @@ public final class ReportTitleFilter {
 	 * @param constraint the constraint by which to filter
 	 * @return a new list of filtered reports
 	 */
-	public static List<Report> performFiltering(List<Report> originals, CharSequence constraint) {
+	public static List<Report> performFiltering(final List<Report> originals, CharSequence constraint) {
 		ArrayList<Report> filteredReports = new ArrayList<Report>();
 		if (constraint != null && constraint.toString().length() > 0) {
 			constraint = constraint.toString().toLowerCase(Locale.getDefault());

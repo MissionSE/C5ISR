@@ -57,7 +57,7 @@ public class ReportLoaderTask extends AsyncTask<Boolean, Void, Void> {
 			for (Report report : reportTable.queryForAll()) {
 				if (draftsOnly && report.isDraft()) {
 					mReportList.add(report);
-				} else if (!draftsOnly) {
+				} else if (!draftsOnly && !report.isDraft()) {
 					mReportList.add(report);
 				}
 			}
