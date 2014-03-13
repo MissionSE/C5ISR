@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.Cluster;
@@ -40,7 +41,8 @@ import java.util.List;
  */
 public class MapViewerFragment extends MapFragment implements
 		GoogleMap.OnMapClickListener,
-		GoogleMap.OnMapLoadedCallback {
+		GoogleMap.OnMapLoadedCallback,
+		GoogleMap.OnCameraChangeListener {
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
 	private GoogleMap mMap;
 	private MapLoadedListener mMapLoadedListener;
@@ -50,6 +52,7 @@ public class MapViewerFragment extends MapFragment implements
 	private ReportAdapter mReportAdapter;
 	private KestrelWeatherActivity mActivity;
 	private Marker mCurrentMarker;
+	private CameraPosition mPreviousCameraPosition;
 
 	@Override
 	public void onAttach(final Activity activity) {
@@ -246,8 +249,8 @@ public class MapViewerFragment extends MapFragment implements
 	public boolean onBackPressed() {
 		if (mCurrentMarker != null && mCurrentMarker.isInfoWindowShown()) {
 			mCurrentMarker.hideInfoWindow();
-			mSlidingLayer.closeLayer(true);
 			mCurrentMarker = null;
+			mSlidingLayer.closeLayer(true);
 			return true;
 		}
 		return false;
@@ -320,4 +323,18 @@ public class MapViewerFragment extends MapFragment implements
 		loadReports();
 	}
 
+	@Override
+	public void onCameraChange(CameraPosition cameraPosition) {
+		// Don't close sliding layer if the map has just been panned/tilted/rotated.
+		CameraPosition position = mMap.getCameraPosition();
+		if (mPreviousCameraPosition != null && mPreviousCameraPosition.zoom == position.zoom) {
+			return;
+		}
+		mPreviousCameraPosition = mMap.getCameraPosition();
+
+		mCurrentMarker = null;
+		if (mSlidingLayer.isOpened()) {
+			mSlidingLayer.closeLayer(true);
+		}
+	}
 }

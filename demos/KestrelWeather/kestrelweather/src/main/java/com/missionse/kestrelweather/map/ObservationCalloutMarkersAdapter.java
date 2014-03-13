@@ -11,6 +11,7 @@ import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
@@ -165,7 +166,7 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 	/**
 	 * Renderer for marker icons.
 	 */
-	private class ReportRenderer extends DefaultClusterRenderer<Report> {
+	private class ReportRenderer extends DefaultClusterRenderer<Report> implements GoogleMap.OnCameraChangeListener {
 
 		public ReportRenderer() {
 			super(getContext(), getMap(), getClusterManager());
@@ -184,6 +185,11 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 		@Override
 		protected void onBeforeClusterRendered(Cluster<Report> cluster, MarkerOptions markerOptions) {
 			markerOptions.icon(getClusterIcon(cluster)).draggable(false).anchor(MARKER_ANCHOR, MARKER_ANCHOR);
+		}
+
+		@Override
+		public void onCameraChange(CameraPosition cameraPosition) {
+			mFragment.onCameraChange(cameraPosition);
 		}
 	}
 
