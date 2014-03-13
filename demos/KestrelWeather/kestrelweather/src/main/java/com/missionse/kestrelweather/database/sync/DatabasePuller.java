@@ -77,6 +77,11 @@ public class DatabasePuller implements Runnable {
 					mListener.onSyncComplete();
 				}
 			}
+		} else {
+			Log.e(TAG, "Unable to sync database.  Possible connection issue.");
+			if (mListener != null) {
+				mListener.onSyncComplete();
+			}
 		}
 	}
 
@@ -125,13 +130,13 @@ public class DatabasePuller implements Runnable {
 				if (statusElem != null) {
 					String status = statusElem.getAsString();
 					if (status.equals("ok")) {
-						Log.d(TAG, "Parsing Report: " + result.toString());
+						//Log.d(TAG, "Parsing Report: " + result.toString());
 						createReportFromJson(result);
 					} else {
 						Log.d(TAG, "Bad status returned: " + status);
 					}
 				} else {
-					Log.d(TAG, "Parsing Report: " + result.toString());
+					//Log.d(TAG, "Parsing Report: " + result.toString());
 					createReportFromJson(result);
 				}
 			} else {

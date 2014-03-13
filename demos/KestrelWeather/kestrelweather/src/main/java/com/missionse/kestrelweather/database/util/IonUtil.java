@@ -1,7 +1,8 @@
 package com.missionse.kestrelweather.database.util;
 
 import android.content.Context;
-import android.content.res.Resources;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -9,7 +10,6 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.missionse.kestrelweather.R;
 
-import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -28,9 +28,8 @@ public final class IonUtil {
 	 * @param callback The callback class.
 	 */
 	public static void upload(final Context context, final JsonObject json, final FutureCallback<JsonObject> callback) {
-		Resources res = context.getResources();
-		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
-				res.getString(R.string.remote_server_development));
+		String remoteUrl = String.format(context.getString(R.string.upload_report_url),
+				getRemoteUrl(context));
 		Log.d(TAG, "Upload Json(\'" + json.toString() + "\') to remote database: " + remoteUrl);
 
 		try {
@@ -46,35 +45,12 @@ public final class IonUtil {
 	 * Pull latest event via ION.
 	 * @param context The current context.
 	 * @param latestId The latest id pulled.
-	 * @param callback The callback class.
-	 */
-	public static void pullLatestEvent(final Context context, final String latestId, final FutureCallback<JsonObject> callback) {
-		Resources res = context.getResources();
-		String remoteUrl = String.format(
-				res.getString(R.string.retrieve_latest_url),
-				res.getString(R.string.remote_server_development));
-		Log.d(TAG, "Pulling latest with latestCode: " + latestId + " from URL: " + remoteUrl);
-
-		//try {
-		Ion.with(context, remoteUrl + latestId).asJsonObject().setCallback(callback);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		} catch (ExecutionException e) {
-//			e.printStackTrace();
-//		}
-	}
-
-	/**
-	 * Pull latest event via ION.
-	 * @param context The current context.
-	 * @param latestId The latest id pulled.
 	 * @return JsonObject that represents the response.
 	 */
 	public static JsonObject pullLatestEvent(final Context context, final String latestId) {
-		Resources res = context.getResources();
 		String remoteUrl = String.format(
-				res.getString(R.string.retrieve_latest_url),
-				res.getString(R.string.remote_server_development));
+				context.getString(R.string.retrieve_latest_url),
+				getRemoteUrl(context));
 		Log.d(TAG, "Pulling latest with latestCode: " + latestId + " from URL: " + remoteUrl);
 
 		try {
@@ -91,35 +67,12 @@ public final class IonUtil {
 	 * Pull report via ION.
 	 * @param context The current context.
 	 * @param reportId The report to pull.
-	 * @param callback The callback class.
-	 */
-	public static void pullReport(final Context context, final String reportId, final FutureCallback<JsonObject> callback) {
-		Resources res = context.getResources();
-		String remoteUrl = String.format(
-				res.getString(R.string.retrieve_report_url),
-				res.getString(R.string.remote_server_development));
-		Log.d(TAG, "Pulling report with id: " + reportId + " from URL: " + remoteUrl);
-
-		//try {
-		Ion.with(context, remoteUrl + reportId).asJsonObject().setCallback(callback);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		} catch (ExecutionException e) {
-//			e.printStackTrace();
-//		}
-	}
-
-	/**
-	 * Pull report via ION.
-	 * @param context The current context.
-	 * @param reportId The report to pull.
 	 * @return JsonObject that represents the response.
 	 */
 	public static JsonObject pullReport(final Context context, final String reportId) {
-		Resources res = context.getResources();
 		String remoteUrl = String.format(
-				res.getString(R.string.retrieve_report_url),
-				res.getString(R.string.remote_server_development));
+				context.getString(R.string.retrieve_report_url),
+				getRemoteUrl(context));
 		Log.d(TAG, "Pulling report with id: " + reportId + " from URL: " + remoteUrl);
 
 		try {
@@ -134,40 +87,12 @@ public final class IonUtil {
 
 	/**
 	 * Upload a single media file to the database.
-	 * @param context The current context.
-	 * @param reportId The remote database report id to upload.
-	 * @param media Instance of File that points to the media to be uploaded.
-	 * @param callback Instance of FutureCallback<JsonObject>.
-	 */
-	public static void uploadMedia(final Context context, final int reportId, final File media, final FutureCallback<JsonObject> callback) {
-		Resources res = context.getResources();
-		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
-				res.getString(R.string.remote_server_development));
-		Log.d(TAG, "Upload Media(\'" + media.getAbsolutePath() + "\') to reportid=" + reportId + " to remote database: " + remoteUrl);
-
-		try {
-			Ion.with(context, remoteUrl)
-					.setMultipartParameter("id", Integer.toString(reportId))
-					.setMultipartFile(media.getName(),
-							MediaResolver.getMimeType(media.getAbsolutePath()), media)
-					.asJsonObject()
-					.setCallback(callback)
-					.get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Upload a single media file to the database.
 	 * @param container Instance of UploadContainer.
 	 */
 	public static void uploadMedia(final UploadContainer container) {
-		Resources res = container.getContext().getResources();
-		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
-				res.getString(R.string.remote_server_development));
+		String remoteUrl = String.format(
+				container.getContext().getString(R.string.upload_report_url),
+				getRemoteUrl(container.getContext()));
 		Log.d(TAG, "Upload Media(\'" + container.getAsFile().getAbsolutePath()
 				+ "\') to reportid=" + container.getRemoteId()
 				+ " to remote database: " + remoteUrl);
@@ -187,6 +112,13 @@ public final class IonUtil {
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private static String getRemoteUrl(Context context) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		return prefs.getString(
+				context.getString(R.string.key_server),
+				context.getString(R.string.remote_server_development));
 	}
 
 }

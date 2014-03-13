@@ -100,7 +100,7 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	public void forceClearTables() {
 		for (Class clazz : getForceDropTables()) {
 			try {
-				TableUtils.createTable(getConnectionSource(), clazz);
+				TableUtils.clearTable(getConnectionSource(), clazz);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

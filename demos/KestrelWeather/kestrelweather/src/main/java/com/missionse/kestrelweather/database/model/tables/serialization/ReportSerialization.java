@@ -62,6 +62,10 @@ public class ReportSerialization implements JsonSerializer<Report>, JsonDeserial
 		return jsonObject;
 	}
 
+	/*
+	 * This is not used. The reports are manually
+	 * deserializer in the DatabasePuller.
+	 */
 	@Override
 	public Report deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
 		Report report = mAccessor.getReportTable().newReport();

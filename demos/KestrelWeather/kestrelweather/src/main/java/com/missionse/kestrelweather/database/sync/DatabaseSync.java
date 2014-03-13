@@ -96,6 +96,9 @@ public class DatabaseSync extends AsyncTask<Boolean, Void, Void> implements Sync
 
 	@Override
 	public void onSyncStarted() {
+		if (mListener != null) {
+			mListener.onSyncStarted();
+		}
 	}
 
 	@Override

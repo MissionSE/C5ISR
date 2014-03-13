@@ -132,6 +132,29 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 				mKestrelSimulator.stopSimulator();
 			}
 		}
+
+		String serverKey = getString(R.string.key_server);
+		if (key.equals(serverKey)) {
+			if (mDatabaseManager != null) {
+				stopSyncService();
+				mDatabaseManager.clearDataTables();
+				startSyncService();
+			}
+		}
+	}
+
+	private void stopSyncService() {
+		Intent syncIntent = new Intent(this, SyncService.class);
+		boolean sync = PreferenceManager.getDefaultSharedPreferences(this)
+				.getBoolean(getString(R.string.key_sync_enabled), false);
+		if (sync) {
+			Bundle extra = new Bundle();
+			extra.putString(SyncService.STOP_REQUEST, SyncService.STOP_REQUEST);
+			syncIntent.putExtras(extra);
+			startService(syncIntent);
+		} else {
+			stopService(syncIntent);
+		}
 	}
 
 	private void startSyncService() {
