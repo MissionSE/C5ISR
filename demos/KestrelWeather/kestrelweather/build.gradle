@@ -10,7 +10,7 @@ apply plugin: 'android'
 
 dependencies {
     compile 'com.android.support:support-v13:19.0.1'
-    compile 'com.google.android.gms:play-services:4.1.+'
+    compile 'com.google.android.gms:play-services:4.2.42'
     compile 'com.missionse:ui-extensions:1.5.0-SNAPSHOT@aar'
 	compile 'com.missionse:bluetooth-connector:1.4.0-SNAPSHOT@aar'
 	compile 'com.missionse:image-viewer:1.1.0-SNAPSHOT@aar'
