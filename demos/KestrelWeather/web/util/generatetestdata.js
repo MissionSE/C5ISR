@@ -55,7 +55,8 @@ async.whilst(
 						var data = response.getBody();
 						if (data.status != "ZERO_RESULTS") {
 							generatedAddress = data.results[0].formatted_address;
-							console.log('found: ' + generatedAddress);
+							console.log('generating report ' + (index + 1) + '...');
+							console.log('found: ' + generatedAddress + '...');
 							validLatLong = true;
 						}
 						next();
@@ -95,81 +96,88 @@ async.whilst(
 					.then(function(response) {
 						var data = response.getBody();
 
-						var calculatedConditionCode = data.weather[0].id;
-						var calculatedWeatherDescription = data.weather[0].description;
-						var calculatedTemp = data.main.temp - 272.15;
-						var calculatedHumidity = data.main.humidity;
-						var calculatedPressure = data.main.pressure * 0.1;
-
-						var calculatedWindSpeed = data.wind.speed;
-						var calculatedWindDir = data.wind.deg;
-
-						var windSpeedInKpH = calculatedWindSpeed * 1000 / 3600;
-						var calculatedWindChill = 13.12 + (0.6215 * calculatedTemp) -
-							(11.37 * Math.pow(windSpeedInKpH, 0.16)) +
-							(0.3965 * calculatedTemp * Math.pow(windSpeedInKpH, 0.16));
-
-						console.log('uploading data to the target...');
-						requestify.post('http://' + target + ':3009/upload', {
-							userid: randomstring({ length: 8, numeric: false }),
-							latitude: generatedLat,
-							longitude: generatedLong,
-
-							createdat: calculatedCreatedAtTime,
-							updatedat: calculatedUpdatedAtTime,
-
-							title: generatedAddress,
-
-							kestrel: {
-								temperature: calculatedTemp,
-								humidity: calculatedHumidity,
-								pressure: calculatedPressure,
-								pressuretrend: (Math.random()).toFixed(0),
-								heatindex: calculatedTemp + (Math.random() * 10),
-								windspeed: calculatedWindSpeed,
-								winddirection: calculatedWindDir,
-								windchill: calculatedWindChill,
-								dewpoint: (Math.random() * 50 + 50).toFixed(2)
-							},
-							weather: {
-								conditioncode: calculatedConditionCode,
-								description: calculatedWeatherDescription,
-								name: calculatedCity,
-								country: calculatedCountry
-							},
-							notes: [{
-								title: 'Observation #1',
-								content: subjects[Math.round(Math.random()*(subjects.length-1))] + ' ' +
-										verbs[Math.round(Math.random()*(verbs.length-1))] + ' ' +
-										objects[Math.round(Math.random()*(objects.length-1))] +
-										endings[Math.round(Math.random()*(endings.length-1))],
-								size: '23',
-								createdat: Date.now()
-							}, {
-								title: 'Observation #2',
-								content: subjects[Math.round(Math.random()*(subjects.length-1))] + ' ' +
-										verbs[Math.round(Math.random()*(verbs.length-1))] + ' ' +
-										objects[Math.round(Math.random()*(objects.length-1))] +
-										endings[Math.round(Math.random()*(endings.length-1))],
-								size: '55',
-								createdat: Date.now()
-							}, {
-								title: 'Observation #3',
-								content: subjects[Math.round(Math.random()*(subjects.length-1))] + ' ' +
-										verbs[Math.round(Math.random()*(verbs.length-1))] + ' ' +
-										objects[Math.round(Math.random()*(objects.length-1))] +
-										endings[Math.round(Math.random()*(endings.length-1))],
-								size: '9',
-								createdat: Date.now()
-							}]
-						})
-						.then(function(response) {
-							console.log('created report ' + (index + 1));
-							console.log('response: ' + response.getBody());
+						if (data.cod === "404") {
+							console.log('no open weather data acquired, continuing...');
 							sleep.sleep(2);
-							index++;
 							next();
-						});
+						} else {
+							var calculatedConditionCode = data.weather[0].id;
+							var calculatedWeatherDescription = data.weather[0].description;
+							var calculatedTemp = data.main.temp - 272.15;
+							var calculatedHumidity = data.main.humidity;
+							var calculatedPressure = data.main.pressure * 0.1;
+
+							var calculatedWindSpeed = data.wind.speed;
+							var calculatedWindDir = data.wind.deg;
+
+							var windSpeedInKpH = calculatedWindSpeed * 1000 / 3600;
+							var calculatedWindChill = 13.12 + (0.6215 * calculatedTemp) -
+								(11.37 * Math.pow(windSpeedInKpH, 0.16)) +
+								(0.3965 * calculatedTemp * Math.pow(windSpeedInKpH, 0.16));
+
+							console.log('uploading data to the target...');
+							requestify.post('http://' + target + ':3009/upload', {
+								userid: randomstring({ length: 8, numeric: false }),
+								latitude: generatedLat,
+								longitude: generatedLong,
+
+								createdat: calculatedCreatedAtTime,
+								updatedat: calculatedUpdatedAtTime,
+
+								title: generatedAddress,
+
+								kestrel: {
+									temperature: calculatedTemp,
+									humidity: calculatedHumidity,
+									pressure: calculatedPressure,
+									pressuretrend: (Math.random()).toFixed(0),
+									heatindex: calculatedTemp + (Math.random() * 10),
+									windspeed: calculatedWindSpeed,
+									winddirection: calculatedWindDir,
+									windchill: calculatedWindChill,
+									dewpoint: (Math.random() * 50 + 50).toFixed(2)
+								},
+								weather: {
+									conditioncode: calculatedConditionCode,
+									description: calculatedWeatherDescription,
+									name: calculatedCity,
+									country: calculatedCountry
+								},
+								notes: [{
+									title: 'Observation #1',
+									content: subjects[Math.round(Math.random()*(subjects.length-1))] + ' ' +
+											verbs[Math.round(Math.random()*(verbs.length-1))] + ' ' +
+											objects[Math.round(Math.random()*(objects.length-1))] +
+											endings[Math.round(Math.random()*(endings.length-1))],
+									size: '23',
+									createdat: Date.now()
+								}, {
+									title: 'Observation #2',
+									content: subjects[Math.round(Math.random()*(subjects.length-1))] + ' ' +
+											verbs[Math.round(Math.random()*(verbs.length-1))] + ' ' +
+											objects[Math.round(Math.random()*(objects.length-1))] +
+											endings[Math.round(Math.random()*(endings.length-1))],
+									size: '55',
+									createdat: Date.now()
+								}, {
+									title: 'Observation #3',
+									content: subjects[Math.round(Math.random()*(subjects.length-1))] + ' ' +
+											verbs[Math.round(Math.random()*(verbs.length-1))] + ' ' +
+											objects[Math.round(Math.random()*(objects.length-1))] +
+											endings[Math.round(Math.random()*(endings.length-1))],
+									size: '9',
+									createdat: Date.now()
+								}]
+							})
+							.then(function(response) {
+								console.log('created report ' + (index + 1) + '...');
+								console.log('response: ' + response.getBody());
+								console.log('----------------------');
+								sleep.sleep(2);
+								index++;
+								next();
+							});
+						}
 					});
 			}
 		);
