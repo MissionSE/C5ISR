@@ -2,7 +2,8 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<ListPreference
+	<com.missionse.kestrelweather.preferences.ServerChangePreference
+		android:id="@+id/server_list_preference"
 		android:title="@string/pref_title_server"
 		android:key="@string/key_server"
 		android:dialogTitle="@string/pref_title_server"
