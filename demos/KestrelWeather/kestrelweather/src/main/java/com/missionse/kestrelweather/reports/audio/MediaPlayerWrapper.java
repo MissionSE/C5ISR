@@ -40,7 +40,7 @@ public class MediaPlayerWrapper implements
 				mSeekBar.setProgress(mMediaPlayer.getCurrentPosition());
 				updateCurrentTime(mMediaPlayer.getCurrentPosition());
 			}
-			mHandler.postDelayed(this, 100);
+			mHandler.postDelayed(this, SEEK_UPDATE_DELAY);
 		}
 	};
 

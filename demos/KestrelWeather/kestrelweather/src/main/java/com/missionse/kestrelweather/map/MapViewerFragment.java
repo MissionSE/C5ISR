@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,8 @@ import com.missionse.kestrelweather.reports.ReportAdapter;
 import com.missionse.kestrelweather.reports.ReportDetailFragment;
 import com.slidinglayer.SlidingLayer;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +47,7 @@ public class MapViewerFragment extends MapFragment implements
 		GoogleMap.OnMapLoadedCallback,
 		GoogleMap.OnCameraChangeListener {
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
+	private static final int REFRESH_DELAY = 5000;
 	private GoogleMap mMap;
 	private MapLoadedListener mMapLoadedListener;
 	private OptionsMenuListener mOptionsMenuListener;
@@ -53,6 +57,8 @@ public class MapViewerFragment extends MapFragment implements
 	private KestrelWeatherActivity mActivity;
 	private Marker mCurrentMarker;
 	private CameraPosition mPreviousCameraPosition;
+	private Handler mHandler = new Handler();
+	private DateTime mLastSynced = DateTime.now();
 
 	@Override
 	public void onAttach(final Activity activity) {
@@ -64,6 +70,7 @@ public class MapViewerFragment extends MapFragment implements
 	public void onDetach() {
 		super.onDetach();
 		mActivity = null;
+		mHandler.removeCallbacks(mRefreshMapTask);
 	}
 
 	/**
@@ -155,7 +162,7 @@ public class MapViewerFragment extends MapFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		mHandler.post(mRefreshMapTask);
 		setUpMapIfNeeded();
 	}
 
@@ -337,4 +344,16 @@ public class MapViewerFragment extends MapFragment implements
 			mSlidingLayer.closeLayer(true);
 		}
 	}
+
+	private Runnable mRefreshMapTask = new Runnable() {
+		@Override
+		public void run() {
+			DateTime dbLastSynced = mActivity.getDatabaseAccessor().getLastSyncedTime();
+			if (mLastSynced.isBefore(dbLastSynced)) {
+				mLastSynced = dbLastSynced;
+				loadReports();
+			}
+			mHandler.postDelayed(this, REFRESH_DELAY);
+		}
+	};
 }
