@@ -65,7 +65,6 @@ public class MapViewerFragment extends MapFragment implements
 
 	/**
 	 * Sets the listener that will receive a callback when the map is loaded.
-	 *
 	 * @param listener The listener that will receive the callback.
 	 */
 	public void setMapLoadedListener(final MapLoadedListener listener) {
@@ -74,7 +73,6 @@ public class MapViewerFragment extends MapFragment implements
 
 	/**
 	 * Sets the listener that will receive callbacks to handle the options menu.
-	 *
 	 * @param listener The listener that will receive the callbacks.
 	 */
 	public void setOptionsMenuListener(final OptionsMenuListener listener) {
@@ -243,7 +241,6 @@ public class MapViewerFragment extends MapFragment implements
 	 * Called when the activity has detected the user's press of the back key. The default implementation
 	 * simply finishes the current activity, but if the map wants to trace backwards in user actions, do
 	 * so instead.
-	 *
 	 * @return Return false to allow normal back pressed processing to proceed, true to consume it here.
 	 */
 	public boolean onBackPressed() {

@@ -25,6 +25,7 @@ public final class BitmapHelper {
 	private static final int ROTATE_90 = 90;
 	private static final int ROTATE_180 = 180;
 	private static final int ROTATE_270 = 270;
+
 	private BitmapHelper() {
 	}
 

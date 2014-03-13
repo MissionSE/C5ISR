@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather.database.model.tables;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -18,6 +19,8 @@ public class Supplement extends Entity {
 	private String mUri;
 	@DatabaseField(columnName = "remote_url")
 	private String mRemoteUri;
+	@DatabaseField(columnName = "thumbnail")
+	private String mThumbnailUri;
 	@DatabaseField(columnName = "filename")
 	private String mFileName;
 	@DatabaseField(columnName = "size")
@@ -36,6 +39,7 @@ public class Supplement extends Entity {
 	public Supplement() {
 		mUri = "";
 		mRemoteUri = "";
+		mThumbnailUri = "";
 		mFileName = "";
 		mSize = 0L;
 		mDate = DateTime.now();
@@ -43,64 +47,80 @@ public class Supplement extends Entity {
 	}
 
 	/**
-	 * Getter.
-	 * @return The string URI associated with this supplement.
+	 * Gets the Uri representing the local location of the supplement.
+	 * @return The string Uri associated with this supplement.
 	 */
 	public String getUri() {
 		return mUri;
 	}
 
 	/**
-	 * Setter.
-	 * @param uri The uri to associate this supplement with.
+	 * Sets the Uri representing the local location of the supplement.
+	 * @param uri The Uri to associate this supplement with.
 	 */
-	public void setUri(String uri) {
+	public void setUri(final String uri) {
 		mUri = uri;
 	}
 
 	/**
-	 * Getter.
-	 * @return The string uri associated with this supplement.
+	 * Gets the Uri representing the remote location of the supplement.
+	 * @return The string remote Uri associated with this supplement.
 	 */
 	public String getRemoteUri() {
 		return mRemoteUri;
 	}
 
 	/**
-	 * Setter.
-	 * @param uri The url to associate this supplement with.
+	 * Sets the Uri representing the remote location of the supplement.
+	 * @param uri The remote Uri to associate this supplement with.
 	 */
-	public void setRemoteUri(String uri) {
+	public void setRemoteUri(final String uri) {
 		mRemoteUri = uri;
 	}
 
 	/**
-	 * Getter.
-	 * @return The SupplementType.
+	 * Gets the location of the thumbnail.
+	 * @return The uri that represents the location of the thumbnail.
+	 */
+	public String getThumbnailUri() {
+		return mThumbnailUri;
+	}
+
+	/**
+	 * Sets the location of the thumbnail.
+	 * @param thumbnailUri The location of the thumbnail.
+	 */
+	public void setThumbnailUri(final String thumbnailUri) {
+		mThumbnailUri = thumbnailUri;
+	}
+
+	/**
+	 * Gets the type of the supplement.
+	 * @return The type of the supplement.
 	 */
 	public SupplementType getType() {
 		return mType;
 	}
 
 	/**
-	 * Setter.
-	 * @param type The SupplementType of this object.
+	 * Sets the type of the supplement.
+	 * @param type The type of the supplement.
 	 */
-	public void setType(SupplementType type) {
+	public void setType(final SupplementType type) {
 		mType = type;
 	}
 
 	/**
-	 * Getter.
-	 * @return Instance of Report associated with this report.
+	 * Gets the report associated with the supplement.
+	 * @return The report associated with this supplement.
 	 */
 	public Report getReport() {
 		return mReport;
 	}
 
 	/**
-	 * Setter.
-	 * @param report The Report to associate with.
+	 * Sets the report associated with the supplement.
+	 * @param report The report associated with the supplement.
 	 */
 	public void setReport(Report report) {
 		mReport = report;
@@ -108,7 +128,7 @@ public class Supplement extends Entity {
 
 	/**
 	 * Retrieve the size of the supplement.
-	 * @return The size of the supplement in long.
+	 * @return The size of the supplement in bytes.
 	 */
 	public long getSize() {
 		return mSize;
@@ -116,7 +136,7 @@ public class Supplement extends Entity {
 
 	/**
 	 * Set the size of the supplement.
-	 * @param size The size of the supplement.
+	 * @param size The size of the supplement in bytes.
 	 */
 	public void setSize(long size) {
 		mSize = size;
@@ -158,14 +178,27 @@ public class Supplement extends Entity {
 	@Override
 	public void populate(JsonObject json) {
 		super.populate(json);
-		String remoteUrl = ((json.get("url") == null ? "" : json.get("url").getAsString()));
-		String filename = ((json.get("filename") == null ? "" : json.get("filename").getAsString()));
-		long size = ((json.get("size") == null ? 0L : json.get("size").getAsLong()));
-		long timeInMilli = parseDate(json.get("date"));
 
-		setFileName(filename);
-		setSize(size);
-		setDate(new DateTime(timeInMilli));
-		setRemoteUri(remoteUrl);
+		JsonElement remoteUri = json.get("url");
+		if (remoteUri != null) {
+			setRemoteUri(remoteUri.getAsString());
+		}
+
+		JsonElement filename = json.get("filename");
+		if (filename != null) {
+			setFileName(filename.getAsString());
+		}
+
+		JsonElement size = json.get("size");
+		if (size != null) {
+			setSize(size.getAsLong());
+		}
+
+		JsonElement thumbnailUri = json.get("thumbnail");
+		if (thumbnailUri != null) {
+			setThumbnailUri(thumbnailUri.getAsString());
+		}
+
+		setDate(new DateTime(parseDate(json.get("date"))));
 	}
 }

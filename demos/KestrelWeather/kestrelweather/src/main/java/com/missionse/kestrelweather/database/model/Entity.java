@@ -179,7 +179,6 @@ public class Entity {
 			try {
 				retValue = element.getAsLong();
 			} catch (NumberFormatException e) {
-				Log.d(TAG, "Unable to parse date");
 				retValue = DateTime.parse(element.getAsString()).getMillis();
 			}
 		}

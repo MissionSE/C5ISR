@@ -101,11 +101,11 @@ public class SettingsActivity extends PreferenceActivity {
 
 		SharedPreferences.OnSharedPreferenceChangeListener developmentPreferencesListener =
 				new SharedPreferences.OnSharedPreferenceChangeListener() {
-			@Override
-			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-				invalidateHeaders();
-			}
-		};
+					@Override
+					public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+						invalidateHeaders();
+					}
+				};
 		mDevelopmentPreferences.registerOnSharedPreferenceChangeListener(
 				developmentPreferencesListener);
 	}

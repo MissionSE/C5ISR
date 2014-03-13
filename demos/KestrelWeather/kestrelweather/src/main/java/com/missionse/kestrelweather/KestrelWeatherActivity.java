@@ -435,7 +435,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 
 	/**
 	 * Gets the database accessor.
-	 *
 	 * @return Instance of DatabaseAccessor.
 	 */
 	public DatabaseAccessor getDatabaseAccessor() {
@@ -452,7 +451,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 
 	/**
 	 * Get the last location from the location client.
-	 *
 	 * @return the last location if the
 	 */
 	public Location getLastLocation() {
@@ -563,7 +561,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 
 		/**
 		 * Set the dialog to display.
-		 *
 		 * @param dialog the dialog
 		 */
 		public void setDialog(Dialog dialog) {

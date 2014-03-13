@@ -20,7 +20,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 
 	/**
 	 * Constructor.
- 	 * @param context The current context.
+	 * @param context The current context.
 	 */
 	public NoteAdapter(final Context context) {
 		super(context, RESOURCE_LAYOUT_ID);
