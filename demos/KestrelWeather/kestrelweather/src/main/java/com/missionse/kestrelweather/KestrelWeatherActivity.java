@@ -66,7 +66,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 	 * Define a request code to send to Google Play services
 	 * This code is returned in Activity.onActivityResult
 	 */
-	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+	private static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
 	private KestrelWeatherDrawerFactory mDrawerFactory;
 	private TiledMap mTiledMap;
@@ -78,7 +78,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 	private SharedPreferences mSharedPreferences;
 	private int mCurrentNavigationIndex = KestrelWeatherDrawerFactory.MAP_OVERVIEW;
 	private LocationClient mLocationClient;
-	private boolean mLocationClientConnected;
 
 	/**
 	 * Constructor.
@@ -464,8 +463,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 	}
 
 	@Override
-	protected void onActivityResult(
-			int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// Decide what to do based on the original request code
 		switch (requestCode) {
 
@@ -479,7 +477,6 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 						mLocationClient.connect();
 						break;
 				}
-
 		}
 	}
 
