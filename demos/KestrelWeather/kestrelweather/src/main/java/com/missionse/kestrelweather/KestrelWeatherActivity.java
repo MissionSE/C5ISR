@@ -1,11 +1,15 @@
 package com.missionse.kestrelweather;
 
 import android.app.AlarmManager;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
@@ -16,6 +20,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.model.TileProvider;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.DatabaseManager;
@@ -42,13 +50,22 @@ import java.util.Map;
 /**
  * Main activity for the Kestrel Weather application.
  */
-public class KestrelWeatherActivity extends DrawerActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class KestrelWeatherActivity extends DrawerActivity implements
+		SharedPreferences.OnSharedPreferenceChangeListener,
+		GooglePlayServicesClient.ConnectionCallbacks,
+		GooglePlayServicesClient.OnConnectionFailedListener {
 
 	private static final String TAG = KestrelWeatherActivity.class.getSimpleName();
 	private static final boolean LOG_DB = false;
 
 	private static final int MILLIS_PER_MIN = 1000 * 60;
 	private static final int MAX_REPORT_COUNT = 99;
+
+	/*
+	 * Define a request code to send to Google Play services
+	 * This code is returned in Activity.onActivityResult
+	 */
+	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
 	private KestrelWeatherDrawerFactory mDrawerFactory;
 	private TiledMap mTiledMap;
@@ -59,6 +76,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	private TextView mDrawerTimestampFooter;
 	private SharedPreferences mSharedPreferences;
 	private int mCurrentNavigationIndex = KestrelWeatherDrawerFactory.MAP_OVERVIEW;
+	private LocationClient mLocationClient;
+	private boolean mLocationClientConnected;
 
 	/**
 	 * Constructor.
@@ -93,6 +112,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 		startSyncService();
+
+		mLocationClient = new LocationClient(this, this, this);
 	}
 
 	@Override
@@ -152,6 +173,11 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		if (mSharedPreferences.getBoolean(getString(R.string.key_simulation_mode), false)) {
 			mKestrelSimulator.startSimulator();
 		}
+
+		// Connect the location client.
+		if (isGooglePlayServicesAvailable()) {
+			mLocationClient.connect();
+		}
 	}
 
 	@Override
@@ -159,6 +185,9 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 		super.onStop();
 		mKestrelSimulator.onStop();
 		shutdownKestrelSimulator();
+
+		// Disconnecting the client invalidates it.
+		mLocationClient.disconnect();
 	}
 
 	private void shutdownKestrelSimulator() {
@@ -406,6 +435,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 
 	/**
 	 * Gets the database accessor.
+	 *
 	 * @return Instance of DatabaseAccessor.
 	 */
 	public DatabaseAccessor getDatabaseAccessor() {
@@ -418,5 +448,114 @@ public class KestrelWeatherActivity extends DrawerActivity implements SharedPref
 	public void displayHome() {
 		clearBackStack();
 		selectItemById(KestrelWeatherDrawerFactory.MAP_OVERVIEW, getLeftDrawerList());
+	}
+
+	/**
+	 * Get the last location from the location client.
+	 *
+	 * @return the last location if the
+	 */
+	public Location getLastLocation() {
+		if (mLocationClient.isConnected()) {
+			return mLocationClient.getLastLocation();
+		}
+		return null;
+	}
+
+	@Override
+	public void onConnected(Bundle bundle) {
+		// Display the connection status
+		Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+		Location location = mLocationClient.getLastLocation();
+	}
+
+	@Override
+	public void onDisconnected() {
+		// Display the connection status
+		Toast.makeText(this, "Disconnected. Please re-connect.",
+				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+		/*
+		 * Google Play services can resolve some errors it detects.
+		 * If the error has a resolution, try sending an Intent to
+		 * start a Google Play services activity that can resolve
+		 * error.
+		 */
+		if (connectionResult.hasResolution()) {
+			try {
+				// Start an Activity that tries to resolve the error
+				connectionResult.startResolutionForResult(
+						this,
+						CONNECTION_FAILURE_RESOLUTION_REQUEST);
+			/*
+			* Thrown if Google Play services canceled the original
+			* PendingIntent
+			*/
+			} catch (IntentSender.SendIntentException e) {
+				// Log the error
+				e.printStackTrace();
+			}
+		} else {
+			Toast.makeText(getApplicationContext(), "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private boolean isGooglePlayServicesAvailable() {
+		// Check that Google Play services is available
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		// If Google Play services is available
+		if (ConnectionResult.SUCCESS == resultCode) {
+			// In debug mode, log the status
+			Log.d("Location Updates", "Google Play services is available.");
+			return true;
+		} else {
+			// Get the error dialog from Google Play services
+			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode,
+					this,
+					CONNECTION_FAILURE_RESOLUTION_REQUEST);
+
+			// If Google Play services can provide an error dialog
+			if (errorDialog != null) {
+				// Create a new DialogFragment for the error dialog
+				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+				errorFragment.setDialog(errorDialog);
+				errorFragment.show(getFragmentManager(), "Location Updates");
+			}
+
+			return false;
+		}
+	}
+
+	/**
+	 * Define a DialogFragment that displays the error dialog.
+	 */
+	public static class ErrorDialogFragment extends DialogFragment {
+
+		private Dialog mDialog;
+
+		/**
+		 * Default constructor. Sets the dialog field to null.
+		 */
+		public ErrorDialogFragment() {
+			super();
+			mDialog = null;
+		}
+
+		/**
+		 * Set the dialog to display.
+		 *
+		 * @param dialog the dialog
+		 */
+		public void setDialog(Dialog dialog) {
+			mDialog = dialog;
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			return mDialog;
+		}
 	}
 }

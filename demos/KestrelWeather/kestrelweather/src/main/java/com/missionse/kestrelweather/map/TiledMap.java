@@ -25,9 +25,6 @@ public class TiledMap implements MapLoadedListener {
 
 	@Override
 	public void mapLoaded(final GoogleMap map) {
-		map.setMyLocationEnabled(true);
-		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
 		for (String overlayName : mTileProviders.keySet()) {
 			TileProvider tileProvider = mTileProviders.get(overlayName);
 			TileOverlay tileOverlay = map.addTileOverlay(

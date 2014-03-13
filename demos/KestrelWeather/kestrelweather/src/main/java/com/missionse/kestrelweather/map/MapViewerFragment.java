@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.graphics.Point;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,7 +38,9 @@ import java.util.List;
 /**
  * Provides a fragment that displays a google map.
  */
-public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapClickListener {
+public class MapViewerFragment extends MapFragment implements
+		GoogleMap.OnMapClickListener,
+		GoogleMap.OnMapLoadedCallback {
 	private static final String TAG = MapViewerFragment.class.getSimpleName();
 	private GoogleMap mMap;
 	private MapLoadedListener mMapLoadedListener;
@@ -45,13 +48,13 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 	private ObservationCalloutMarkersAdapter mMarkersAdapter;
 	private SlidingLayer mSlidingLayer;
 	private ReportAdapter mReportAdapter;
-	private Activity mActivity;
+	private KestrelWeatherActivity mActivity;
 	private Marker mCurrentMarker;
 
 	@Override
 	public void onAttach(final Activity activity) {
 		super.onAttach(activity);
-		mActivity = activity;
+		mActivity = (KestrelWeatherActivity) activity;
 	}
 
 	@Override
@@ -62,6 +65,7 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 
 	/**
 	 * Sets the listener that will receive a callback when the map is loaded.
+	 *
 	 * @param listener The listener that will receive the callback.
 	 */
 	public void setMapLoadedListener(final MapLoadedListener listener) {
@@ -70,6 +74,7 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 
 	/**
 	 * Sets the listener that will receive callbacks to handle the options menu.
+	 *
 	 * @param listener The listener that will receive the callbacks.
 	 */
 	public void setOptionsMenuListener(final OptionsMenuListener listener) {
@@ -183,21 +188,19 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 	}
 
 	private void setUpMap() {
-		KestrelWeatherActivity activity = (KestrelWeatherActivity) getActivity();
+		mMap.setMyLocationEnabled(true);
+		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+		mMap.setOnMapLoadedCallback(this);
 		mMap.setOnMapClickListener(this);
 		mMap.getUiSettings().setZoomControlsEnabled(false);
 
-		if (activity != null) {
-			mMarkersAdapter = new ObservationCalloutMarkersAdapter(activity, mMap, this);
+		if (mActivity != null) {
+			mMarkersAdapter = new ObservationCalloutMarkersAdapter(mActivity, mMap, this);
 
-			DatabaseAccessor databaseAccessor = activity.getDatabaseAccessor();
+			DatabaseAccessor databaseAccessor = mActivity.getDatabaseAccessor();
 			ReportTable reportTable = databaseAccessor.getReportTable();
 			List<Report> reports = reportTable.queryForAll();
 			mMarkersAdapter.setData(reports);
-		}
-
-		if (mMapLoadedListener != null) {
-			mMapLoadedListener.mapLoaded(mMap);
 		}
 	}
 
@@ -245,6 +248,7 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 	 * Called when the activity has detected the user's press of the back key. The default implementation
 	 * simply finishes the current activity, but if the map wants to trace backwards in user actions, do
 	 * so instead.
+	 *
 	 * @return Return false to allow normal back pressed processing to proceed, true to consume it here.
 	 */
 	public boolean onBackPressed() {
@@ -282,13 +286,14 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 		return true;
 	}
 
+
 	/**
 	 * Handles the clicking of a cluster.
 	 * @param marker The marker clicked.
 	 * @param cluster The cluster of reports associated with the marker.
 	 * @return Whether the click was processed.
 	 */
-	public boolean onClusterClick(Marker marker, Cluster<Report> cluster) {
+	public boolean onClusterClick(final Marker marker, final Cluster<Report> cluster) {
 		if (mCurrentMarker != null) {
 			centerMap(marker.getPosition(), true, null);
 		}
@@ -303,4 +308,16 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 		marker.showInfoWindow();
 		mSlidingLayer.openLayer(true);
 	}
+
+	@Override
+	public void onMapLoaded() {
+		if (mMapLoadedListener != null) {
+			mMapLoadedListener.mapLoaded(mMap);
+		}
+		Location location = mActivity.getLastLocation();
+		if (location != null) {
+			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 5.0f));
+		}
+	}
+
 }
