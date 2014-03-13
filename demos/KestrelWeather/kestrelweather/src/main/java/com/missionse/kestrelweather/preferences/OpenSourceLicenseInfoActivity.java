@@ -18,6 +18,15 @@ public class OpenSourceLicenseInfoActivity extends Activity {
 
 		setContentView(R.layout.activity_open_source_license_info);
 
-		((TextView) findViewById(R.id.legal_info)).setText(GooglePlayServicesUtil.getOpenSourceSoftwareLicenseInfo(this));
+		TextView openSourceTextView = (TextView) findViewById(R.id.legal_info);
+		if (openSourceTextView != null) {
+			openSourceTextView.setText(GooglePlayServicesUtil.getOpenSourceSoftwareLicenseInfo(this));
+		}
+	}
+
+	@Override
+	public void finish() {
+		super.finish();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 }

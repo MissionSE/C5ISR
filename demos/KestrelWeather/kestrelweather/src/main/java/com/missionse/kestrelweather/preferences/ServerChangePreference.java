@@ -14,6 +14,7 @@ import com.missionse.kestrelweather.R;
  */
 public class ServerChangePreference extends ListPreference {
 	private Context mContext;
+
 	/**
 	 * Constructor.
 	 * @param context The current context.

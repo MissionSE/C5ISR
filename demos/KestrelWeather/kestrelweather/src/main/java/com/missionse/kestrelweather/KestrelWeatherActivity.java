@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather;
 
+import android.app.ActivityOptions;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -426,8 +427,10 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			Intent i = new Intent(this, SettingsActivity.class);
-			startActivity(i);
+			Intent intent = new Intent(this, SettingsActivity.class);
+			Bundle activityOptions = ActivityOptions.makeCustomAnimation(
+					this, R.anim.fade_in, R.anim.fade_out).toBundle();
+			startActivity(intent, activityOptions);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -1,5 +1,7 @@
 package com.missionse.kestrelweather.preferences;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -91,7 +93,11 @@ public class AboutPreferenceFragment extends PreferenceFragment {
 			licenseInfo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
-					getActivity().startActivity(new Intent(getActivity(), OpenSourceLicenseInfoActivity.class));
+					Activity activity = getActivity();
+					Intent intent = new Intent(activity, OpenSourceLicenseInfoActivity.class);
+					Bundle activityOptions = ActivityOptions.makeCustomAnimation(
+							activity, R.anim.fade_in, R.anim.fade_out).toBundle();
+					activity.startActivity(intent, activityOptions);
 					return true;
 				}
 			});
