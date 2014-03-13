@@ -5,7 +5,7 @@
 	android:layout_height="?android:listPreferredItemHeightSmall"
 	android:gravity="center"
 	android:textAppearance="?android:textAppearanceSmall"
-	android:textColor="@color/gray_dark"
+	android:textColor="@color/gray_light"
 	android:textStyle="bold"
-	android:background="@color/gray_light"
+	android:background="@color/gray_dark"
 	android:paddingRight="10dp"/>
