@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -463,10 +464,29 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 	}
 
 	@Override
+	protected void onActivityResult(
+			int requestCode, int resultCode, Intent data) {
+		// Decide what to do based on the original request code
+		switch (requestCode) {
+
+			case CONNECTION_FAILURE_RESOLUTION_REQUEST:
+			/*
+			 * If the result code is Activity.RESULT_OK, try
+			 * to connect again
+			 */
+				switch (resultCode) {
+					case Activity.RESULT_OK:
+						mLocationClient.connect();
+						break;
+				}
+
+		}
+	}
+
+	@Override
 	public void onConnected(Bundle bundle) {
 		// Display the connection status
 		Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
-		Location location = mLocationClient.getLastLocation();
 	}
 
 	@Override
