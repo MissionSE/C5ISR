@@ -42,6 +42,7 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 	 * Constructor.
 	 * @param context the current context
 	 * @param map the google map object
+	 * @param fragment The map viewer fragment.
 	 */
 	public ObservationCalloutMarkersAdapter(Context context, GoogleMap map, MapViewerFragment fragment) {
 		super(context, map, R.layout.map_observation_callout);

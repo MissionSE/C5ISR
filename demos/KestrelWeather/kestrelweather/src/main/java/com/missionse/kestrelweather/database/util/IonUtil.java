@@ -168,7 +168,9 @@ public final class IonUtil {
 		Resources res = container.getContext().getResources();
 		String remoteUrl = String.format(res.getString(R.string.upload_report_url),
 				res.getString(R.string.remote_server_development));
-		Log.d(TAG, "Upload Media(\'" + container.getAsFile().getAbsolutePath() + "\') to reportid=" + container.getRemoteId() + " to remote database: " + remoteUrl);
+		Log.d(TAG, "Upload Media(\'" + container.getAsFile().getAbsolutePath()
+				+ "\') to reportid=" + container.getRemoteId()
+				+ " to remote database: " + remoteUrl);
 
 		try {
 			Ion.with(container.getContext(), remoteUrl)

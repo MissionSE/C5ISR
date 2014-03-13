@@ -7,7 +7,9 @@ import android.widget.TextView;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.missionse.kestrelweather.R;
 
-
+/**
+ * Provides an activity that displays the open source licenses of the project.
+ */
 public class OpenSourceLicenseInfoActivity extends Activity {
 
 	@Override

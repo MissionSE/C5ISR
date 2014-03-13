@@ -41,7 +41,9 @@ public final class VideoViewerFragment extends Fragment implements MediaPlayerLi
 	private String mLocalUri;
 	private String mRemoteUri;
 
-
+	/**
+	 * Constructor.
+	 */
 	public VideoViewerFragment() {
 		mMediaWrapper = new MediaPlayerWrapper();
 		mMediaWrapper.setMediaPlayerListener(this);

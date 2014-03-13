@@ -158,7 +158,10 @@ public class BluetoothDeviceListFragment extends DialogFragment {
 		}, 1000);
 	}
 
-	private class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
+	/**
+	 * Provides an adapter for bluetooth devices.
+	 */
+	private final class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
 
 		private int mResource;
 

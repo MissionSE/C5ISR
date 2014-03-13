@@ -14,7 +14,13 @@ import com.missionse.kestrelweather.reports.utils.MediaTimeConverter;
 /**
  * Wrapper around Android's MediaPlayer to help sync TextViews and SeekBars.
  */
-public class MediaPlayerWrapper implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, MediaPlayer.OnSeekCompleteListener {
+public class MediaPlayerWrapper implements
+		MediaPlayer.OnBufferingUpdateListener,
+		MediaPlayer.OnPreparedListener,
+		MediaPlayer.OnCompletionListener,
+		MediaPlayer.OnErrorListener,
+		MediaPlayer.OnInfoListener,
+		MediaPlayer.OnSeekCompleteListener {
 	private static final String TAG = MediaPlayerWrapper.class.getSimpleName();
 	private static final int SEEK_UPDATE_DELAY = 100;
 

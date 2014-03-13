@@ -24,6 +24,7 @@ public final class UploadContainer {
 	 * Constructor.
 	 * @param context The current context.
 	 * @param supplement Instance of Supplement.
+	 * @param reportId The id of the report.
 	 * @param callback Instance of FutureCallback<JsonObject>.
 	 */
 	public UploadContainer(Context context, Supplement supplement, int reportId, FutureCallback<JsonObject> callback) {

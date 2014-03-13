@@ -18,8 +18,11 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 	private static final int BYTES_IN_KILOBYTE = 1024;
 	private static int RESOURCE_LAYOUT_ID = R.layout.fragment_report_item_list_entry;
 
-
-	public NoteAdapter(Context context) {
+	/**
+	 * Constructor.
+ 	 * @param context The current context.
+	 */
+	public NoteAdapter(final Context context) {
 		super(context, RESOURCE_LAYOUT_ID);
 	}
 

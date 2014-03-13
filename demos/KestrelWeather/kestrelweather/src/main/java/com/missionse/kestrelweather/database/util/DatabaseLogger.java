@@ -50,13 +50,16 @@ public final class DatabaseLogger {
 	public static void logNoteTable(DatabaseAccessor accessor) {
 		Log.d(TAG, "Dumping notes table...");
 		for (Note note : accessor.getNoteTable().queryForAll()) {
-			StringBuilder builder = new StringBuilder();
-			builder.append("\n");
-			builder.append("ReportId=" + (note.getReport() == null ? "0" : note.getReport().getId())
-					+ "\n");
-			builder.append("Id=" + note.getId() + "\n");
-			builder.append("Title=" + note.getTitle() + " Content=" + note.getContent());
-			Log.d(TAG, builder.toString());
+			String noteLog = "\n";
+			noteLog += "ReportId = ";
+			if (note.getReport() != null) {
+				noteLog += note.getReport().getId();
+			} else {
+				noteLog += "-1";
+			}
+			noteLog += "Id = " + note.getId() + "\n";
+			noteLog += "Title = " + note.getTitle() + ", Content = " + note.getContent();
+			Log.d(TAG, noteLog);
 		}
 	}
 

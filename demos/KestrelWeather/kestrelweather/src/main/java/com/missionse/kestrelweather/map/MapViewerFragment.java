@@ -201,7 +201,11 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 		}
 	}
 
-	public void showReportDetail(int reportId) {
+	/**
+	 * Show the report detail fragment.
+	 * @param reportId The id of the report to display.
+	 */
+	public void showReportDetail(final int reportId) {
 		FragmentManager fragmentManager = getFragmentManager();
 		if (fragmentManager != null) {
 			Fragment reportDetailFragment = ReportDetailFragment.newInstance(reportId);
@@ -261,7 +265,13 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 		}
 	}
 
-	public boolean onClusterItemClick(Marker marker, Report report) {
+	/**
+	 * Handles the clicking of a cluster item.
+	 * @param marker The marker clicked.
+	 * @param report The report associated with the cluster item.
+	 * @return Whether the click was processed.
+	 */
+	public boolean onClusterItemClick(final Marker marker, final Report report) {
 		if (mCurrentMarker != null) {
 			centerMap(marker.getPosition(), true, null);
 		}
@@ -272,6 +282,12 @@ public class MapViewerFragment extends MapFragment implements GoogleMap.OnMapCli
 		return true;
 	}
 
+	/**
+	 * Handles the clicking of a cluster.
+	 * @param marker The marker clicked.
+	 * @param cluster The cluster of reports associated with the marker.
+	 * @return Whether the click was processed.
+	 */
 	public boolean onClusterClick(Marker marker, Cluster<Report> cluster) {
 		if (mCurrentMarker != null) {
 			centerMap(marker.getPosition(), true, null);

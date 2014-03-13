@@ -17,9 +17,23 @@ import android.provider.MediaStore;
 
 import java.io.IOException;
 
-public class BitmapHelper {
+/**
+ * Provides utility functions for loading bitmaps.
+ */
+public final class BitmapHelper {
+	private static final int ROTATE_0 = 0;
+	private static final int ROTATE_90 = 90;
+	private static final int ROTATE_180 = 180;
+	private static final int ROTATE_270 = 270;
+	private BitmapHelper() {
+	}
 
-	public static Bitmap getDrawableBitmap(Drawable drawable) {
+	/**
+	 * Creates a bitmap out of a drawable.
+	 * @param drawable The drawable.
+	 * @return A bitmap representation out of a drawable.
+	 */
+	public static Bitmap getDrawableBitmap(final Drawable drawable) {
 		Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -37,7 +51,14 @@ public class BitmapHelper {
 		return output;
 	}
 
-	public static Bitmap getScaledBitmapFillCrop(Bitmap source, int width, int height) {
+	/**
+	 * Scales a bitmap to a requested size.
+	 * @param source The source bitmap to scale.
+	 * @param width The width of the scaled bitmap in pixels.
+	 * @param height The height of the scaled bitmap in pixels.
+	 * @return A bitmap that has been scaled to the requested size.
+	 */
+	public static Bitmap getScaledBitmapFillCrop(final Bitmap source, final int width, final int height) {
 		if (source.getWidth() < width && source.getHeight() < height) {
 			return source;
 		}
@@ -53,11 +74,28 @@ public class BitmapHelper {
 		return getScaledBitmap(source, src, width, height);
 	}
 
-	public static Bitmap getScaledBitmapFillCrop(Context context, Uri source, int width, int height) throws IOException {
+	/**
+	 * Gets a scaled bitmap from a Uri.
+	 * @param context The current context.
+	 * @param source The source from which a bitmap is created.
+	 * @param width The width of the scaled bitmap in pixels.
+	 * @param height The height of the scaled bitmap in pixels.
+	 * @return A bitmap that has been scaled to the requested size.
+	 * @throws IOException When the Uri is not found.
+	 */
+	public static Bitmap getScaledBitmapFillCrop(final Context context, final Uri source,
+			final int width, final int height) throws IOException {
 		return getScaledBitmapFillCrop(getResampledBitmap(context, source, width, height), width, height);
 	}
 
-	public static Bitmap getScaledBitmapFill(Bitmap source, int minWidth, int minHeight) {
+	/**
+	 * Gets a filled scaled bitmap out of another bitmap.
+	 * @param source The source bitmap to scale and fill.
+	 * @param minWidth The minimum width of the bitmap in pixels.
+	 * @param minHeight The minimum height of the bitmap in pixels.
+	 * @return A filled and scaled bitmap.
+	 */
+	public static Bitmap getScaledBitmapFill(final Bitmap source, final int minWidth, final int minHeight) {
 		if (source.getWidth() < minWidth && source.getHeight() < minHeight) {
 			return source;
 		}
@@ -67,13 +105,31 @@ public class BitmapHelper {
 		return getScaledBitmap(source, new Rect(0, 0, srcWidth, srcHeight), (int) (srcWidth * scale), (int) (srcHeight * scale));
 	}
 
-	public static Bitmap getScaledBitmapFill(Context context, Uri source, int width, int height) throws IOException {
+	/**
+	 * Gets a filled scaled bitmap out of a Uri.
+	 * @param context The current context.
+	 * @param source The source from which a bitmap is created.
+	 * @param width The width of the scaled bitmap in pixels.
+	 * @param height The height of the scaled bitmap in pixels.
+	 * @return A filled and scaled bitmap.
+	 * @throws IOException When the Uri is not found.
+	 */
+	public static Bitmap getScaledBitmapFill(final Context context, final Uri source,
+			final int width, final int height) throws IOException {
 		return getScaledBitmapFill(getResampledBitmap(context, source, width, height), width, height);
 	}
 
-	public static int getOrientation(Context context, Uri file) throws IOException {
+	/**
+	 * Gets the orientation of a file using the exif data.
+	 * @param context The current context.
+	 * @param file The file from which orientation is determined.
+	 * @return The orientation of the file.
+	 * @throws IOException When the Uri is not found.
+	 */
+	public static int getOrientation(final Context context, final Uri file) throws IOException {
 		if ("content".equals(file.getScheme())) {
-			Cursor cursor = context.getContentResolver().query(file, new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
+			Cursor cursor = context.getContentResolver().query(
+					file, new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
 			if (cursor != null && cursor.getCount() > 0) {
 				cursor.moveToFirst();
 				return cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
@@ -82,18 +138,28 @@ public class BitmapHelper {
 		ExifInterface exif = new ExifInterface(file.getPath());
 		switch (exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
 			case ExifInterface.ORIENTATION_ROTATE_270:
-				return 270;
+				return ROTATE_270;
 			case ExifInterface.ORIENTATION_ROTATE_180:
-				return 180;
+				return ROTATE_180;
 			case ExifInterface.ORIENTATION_ROTATE_90:
-				return 90;
+				return ROTATE_90;
 			default:
-				return 0;
+				return ROTATE_0;
 		}
 	}
 
+	/**
+	 * Gets a re-sampled bitmap from a Uri.
+	 * @param context The current context.
+	 * @param source The source from which a bitmap is created.
+	 * @param minWidth The minimum width of the bitmap in pixels.
+	 * @param minHeight The minimum height of the bitmap in pixels.
+	 * @return A bitmap that has been re-sampled from the Uri.
+	 * @throws IOException When the Uri is not found.
+	 */
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
-	public static Bitmap getResampledBitmap(Context context, Uri source, int minWidth, int minHeight) throws IOException {
+	public static Bitmap getResampledBitmap(final Context context, final Uri source,
+			final int minWidth, final int minHeight) throws IOException {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeStream(context.getContentResolver().openInputStream(source), null, options);
@@ -101,7 +167,7 @@ public class BitmapHelper {
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = scaleFactor;
 		options.inPurgeable = true;
-		if (android.os.Build.VERSION.SDK_INT >= 10) {
+		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
 			options.inPreferQualityOverSpeed = true;
 		}
 		Bitmap bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(source), null, options);

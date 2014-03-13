@@ -20,8 +20,7 @@ public class NotesListItem implements AuxiliaryDataListItem {
 
 	/**
 	 * Constructor.
-	 * @param context The current Context.
-	 * @param fragmentManager The fragment manager.
+	 * @param activity The current Context.
 	 * @param reportId The id of the report.
 	 */
 	public NotesListItem(final KestrelWeatherActivity activity, final int reportId) {
