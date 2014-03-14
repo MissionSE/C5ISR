@@ -44,7 +44,6 @@ public class DatabasePuller implements Runnable {
 		JsonObject result = IonUtil.pullLatestEvent(mContext, latestId);
 		if (result != null) {
 			String newLatestId = result.get("latestEvent").getAsString();
-
 			if (!validNewEventField(latestId, newLatestId)) {
 				mAccessor.clearDataTables();
 				mAccessor.setLatestEvent("0");
@@ -90,8 +89,7 @@ public class DatabasePuller implements Runnable {
 		try {
 			int currentId = Integer.valueOf(latestId);
 			int newId = Integer.valueOf(newLatestId);
-
-			if (newId > currentId || newId == currentId) {
+			if (newId >= currentId) {
 				retValue = true;
 			}
 		} catch (NumberFormatException e) {

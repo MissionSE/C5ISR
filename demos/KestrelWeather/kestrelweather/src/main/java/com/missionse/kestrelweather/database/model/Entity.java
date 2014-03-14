@@ -163,7 +163,7 @@ public class Entity {
 			try {
 				retValue = element.getAsInt();
 			} catch (NumberFormatException e) {
-				Log.d(TAG, "Unable to parse id.");
+				Log.d(TAG, "Id is not valid integer: " + element.toString());
 			}
 		}
 		return retValue;
