@@ -57,6 +57,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 		GooglePlayServicesClient.OnConnectionFailedListener {
 
 	private static final String TAG = KestrelWeatherActivity.class.getSimpleName();
+	private static final String SAVED_NAVIGATION_STATE = "saved_navigation_state";
 	private static final boolean LOG_DB = false;
 
 	private static final int MILLIS_PER_MIN = 1000 * 60;
@@ -460,6 +461,19 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 		} else {
 			super.onBackPressed();
 		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(final Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(SAVED_NAVIGATION_STATE, mCurrentNavigationIndex);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		mCurrentNavigationIndex = savedInstanceState.getInt(SAVED_NAVIGATION_STATE);
+		selectItemById(mCurrentNavigationIndex, getLeftDrawerList());
 	}
 
 	/**

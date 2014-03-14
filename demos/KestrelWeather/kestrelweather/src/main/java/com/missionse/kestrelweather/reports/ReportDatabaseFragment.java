@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -49,6 +50,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	private EditText mSearchField;
 	private MenuItem mShowSynced;
 	private MenuItem mShowUnsynced;
+	private ReportLoaderTask mReportLoaderTask;
 
 	/**
 	 * Default constructor.
@@ -204,8 +206,17 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		return contentView;
 	}
 
+	@Override
+	public void onConfigurationChanged(final Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		if (mReportLoaderTask != null) {
+			mReportLoaderTask.cancel(true);
+		}
+	}
+
 	private void updateReportList() {
-		new ReportLoaderTask(mDatabaseAccessor, mReportAdapter, mProgressBar).execute(false);
+		mReportLoaderTask = new ReportLoaderTask(mDatabaseAccessor, mReportAdapter, mProgressBar);
+		mReportLoaderTask.execute(false);
 	}
 
 	private void updateReportCount() {

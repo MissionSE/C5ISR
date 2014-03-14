@@ -45,6 +45,7 @@ public class DatabasePuller implements Runnable {
 		if (result != null) {
 			String newLatestId = result.get("latestEvent").getAsString();
 			if (!validNewEventField(latestId, newLatestId)) {
+				Log.d(TAG, "Invalid Event id (" + newLatestId + ", " + latestId + ")! Clearing database!");
 				mAccessor.clearDataTables();
 				mAccessor.setLatestEvent("0");
 				result = IonUtil.pullLatestEvent(mContext, "0");

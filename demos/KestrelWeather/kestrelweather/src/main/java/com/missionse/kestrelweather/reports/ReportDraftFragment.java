@@ -3,6 +3,7 @@ package com.missionse.kestrelweather.reports;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,8 @@ public class ReportDraftFragment extends Fragment {
 	private DatabaseAccessor mDatabaseAccessor;
 	private ReportAdapter mReportAdapter;
 	private TextView mDraftCountView;
+	private ProgressBar mProgressBar;
+	private ReportLoaderTask mReportLoaderTask;
 
 	/**
 	 * Default constructor.
@@ -113,11 +116,24 @@ public class ReportDraftFragment extends Fragment {
 					reportList.setEmptyView(emptyView);
 				}
 
-				ProgressBar progressBar = (ProgressBar) contentView.findViewById(R.id.fragment_report_draft_progress_bar);
-				new ReportLoaderTask(mDatabaseAccessor, mReportAdapter, progressBar).execute(true);
+				mProgressBar = (ProgressBar) contentView.findViewById(R.id.fragment_report_draft_progress_bar);
+				updateReportList();
 			}
 		}
 
 		return contentView;
+	}
+
+	@Override
+	public void onConfigurationChanged(final Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		if (mReportLoaderTask != null) {
+			mReportLoaderTask.cancel(true);
+		}
+	}
+
+	private void updateReportList() {
+		mReportLoaderTask = new ReportLoaderTask(mDatabaseAccessor, mReportAdapter, mProgressBar);
+		mReportLoaderTask.execute(true);
 	}
 }

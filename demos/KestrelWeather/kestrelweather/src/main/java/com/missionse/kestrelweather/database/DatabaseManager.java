@@ -43,7 +43,11 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 
 	@Override
 	public ReportTable getReportTable() {
-		return mLocalDatabaseHelper.getReportTable();
+		ReportTable reportTable = null;
+		if (mLocalDatabaseHelper != null) {
+			reportTable = mLocalDatabaseHelper.getReportTable();
+		}
+		return reportTable;
 	}
 
 	@Override

@@ -54,15 +54,17 @@ public class ReportLoaderTask extends AsyncTask<Boolean, Void, Void> {
 			final boolean draftsOnly = parameters[0];
 
 			ReportTable reportTable = mDatabaseAccessor.getReportTable();
-			for (Report report : reportTable.queryForAll()) {
-				if (draftsOnly && report.isDraft()) {
-					mReportList.add(report);
-				} else if (!draftsOnly && !report.isDraft()) {
-					mReportList.add(report);
+			if (reportTable != null) {
+				for (Report report : reportTable.queryForAll()) {
+					if (draftsOnly && report.isDraft()) {
+						mReportList.add(report);
+					} else if (!draftsOnly && !report.isDraft()) {
+						mReportList.add(report);
+					}
 				}
-			}
 
-			Collections.sort(mReportList);
+				Collections.sort(mReportList);
+			}
 		}
 		return null;
 	}
