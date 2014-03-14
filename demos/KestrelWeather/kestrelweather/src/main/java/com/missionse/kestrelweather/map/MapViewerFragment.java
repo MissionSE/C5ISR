@@ -355,6 +355,10 @@ public class MapViewerFragment extends MapFragment implements
 				mLastSynced = dbLastSynced;
 				loadReports();
 			}
+
+			if (mCurrentMarker == null || !mCurrentMarker.isInfoWindowShown()) {
+				mSlidingLayer.closeLayer(true);
+			}
 			mHandler.postDelayed(this, REFRESH_DELAY);
 		}
 	};
