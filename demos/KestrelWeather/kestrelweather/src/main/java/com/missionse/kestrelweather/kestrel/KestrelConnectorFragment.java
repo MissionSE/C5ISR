@@ -1,10 +1,12 @@
 package com.missionse.kestrelweather.kestrel;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -326,7 +328,7 @@ public class KestrelConnectorFragment extends Fragment {
 	}
 
 	private void getOpenWeatherData() {
-		Activity activity = getActivity();
+		final Activity activity = getActivity();
 		if (activity != null) {
 			if (mLocation != null) {
 				OpenWeatherRequester.queryOpenWeather(
@@ -343,16 +345,44 @@ public class KestrelConnectorFragment extends Fragment {
 
 										if (mKestrelWeather != null) {
 											mContinueButton.setEnabled(true);
+										} else {
+											showAlertDialog(activity);
 										}
+									} else {
+										showAlertDialog(activity);
 									}
 								} else {
 									Log.e(TAG, "Unable to retrieve open weather data.", e);
+									showAlertDialog(activity);
 								}
 							}
 						}
 				);
 			}
 		}
+	}
+
+	private void showAlertDialog(final Activity activity) {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+		alertDialogBuilder.setTitle("Warning");
+		alertDialogBuilder.setIcon(R.drawable.ic_action_warning);
+		alertDialogBuilder
+				.setMessage("Unable to open weather data.  Try again?")
+				.setCancelable(false)
+				.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.dismiss();
+						getOpenWeatherData();
+					}
+				})
+				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						activity.onBackPressed();
+					}
+				});
+		alertDialogBuilder.create().show();
 	}
 
 	private final Handler mBluetoothServiceMessageHandler = new Handler() {
