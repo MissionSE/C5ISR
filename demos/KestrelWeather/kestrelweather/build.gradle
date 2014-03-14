@@ -1,53 +1,69 @@
 repositories {
-    mavenCentral()
-    mavenLocal()
-    maven {
-        url "http://mad/mvn-repo"
-    }
+	mavenCentral()
+	mavenLocal()
+	maven {
+		url "http://mad/mvn-repo"
+	}
 }
 
 apply plugin: 'android'
 
 dependencies {
-    compile 'com.android.support:support-v13:19.0.1'
-    compile 'com.google.android.gms:play-services:4.2.42'
-    compile 'com.missionse:ui-extensions:1.5.0-SNAPSHOT@aar'
+	compile 'com.android.support:support-v13:19.0.1'
+	compile 'com.google.android.gms:play-services:4.2.42'
+	compile 'com.missionse:ui-extensions:1.5.0-SNAPSHOT@aar'
 	compile 'com.missionse:bluetooth-connector:1.4.0-SNAPSHOT@aar'
 	compile 'com.missionse:image-viewer:1.1.0-SNAPSHOT@aar'
-    compile 'com.missionse:map-viewer:0.1.2-SNAPSHOT@aar'
-    compile 'com.j256.ormlite:ormlite-android:4.+'
-    compile 'joda-time:joda-time:2.+'
-    compile 'com.koushikdutta.ion:ion:1.2.+'
-    compile 'com.google.code.gson:gson:2.2.+'
-    compile 'com.google.maps.android:android-maps-utils:0.3'
-    compile 'com.makeramen:roundedimageview:1.2.4'
-    compile 'com.github.itsmechlark:android-sliding-layer-lib:1.0.1'
-    compile 'se.emilsjolander:stickylistheaders:2.1.+'
+	compile 'com.missionse:map-viewer:0.1.2-SNAPSHOT@aar'
+	compile 'com.j256.ormlite:ormlite-android:4.+'
+	compile 'joda-time:joda-time:2.+'
+	compile 'com.koushikdutta.ion:ion:1.2.+'
+	compile 'com.google.code.gson:gson:2.2.+'
+	compile 'com.google.maps.android:android-maps-utils:0.3'
+	compile 'com.makeramen:roundedimageview:1.2.4'
+	compile 'com.github.itsmechlark:android-sliding-layer-lib:1.0.1'
+	compile 'se.emilsjolander:stickylistheaders:2.1.+'
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+	compileSdkVersion 19
+	buildToolsVersion "19.0.3"
 
-    defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 19
-        versionCode 1
-        versionName "1.0"
-    }
+	defaultConfig {
+		minSdkVersion 17
+		targetSdkVersion 19
+		versionCode 1
+		versionName "1.0"
+	}
 
-    signingConfigs {
-        release
-    }
+	applicationVariants.all { variant ->
+		// This is an annoying hack to get around the fact that the Gradle plugin does not support
+		// having libraries with different minSdkVersions. Play Services has a min version of 9 (Gingerbread)
+		// but Android Maps Utils supports 8 (Froyo) still
+		variant.processManifest.doFirst {
+			File manifestFile = file("${buildDir}/exploded-aar/com.google.maps.android/android-maps-utils/0.3/AndroidManifest.xml")
+			if (manifestFile.exists()) {
+				println("Replacing minSdkVersion in Android Maps Utils")
+				String content = manifestFile.getText('UTF-8')
+				content = content.replaceAll(/minSdkVersion="8"/, 'minSdkVersion=\"9\"')
+				manifestFile.write(content, 'UTF-8')
+				println(content)
+			}
+		}
+	}
 
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-        }
-        debug {
-            packageNameSuffix ".debug"
-        }
-    }
+	signingConfigs {
+		release
+	}
+
+	buildTypes {
+		release {
+			signingConfig signingConfigs.release
+		}
+		debug {
+			packageNameSuffix ".debug"
+		}
+	}
 }
 
 apply from: '../../../staticanalysis/checkstyle.gradle'
