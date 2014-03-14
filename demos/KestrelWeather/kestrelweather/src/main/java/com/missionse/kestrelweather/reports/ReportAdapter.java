@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
@@ -22,7 +23,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,7 +31,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 /**
  * Provides an adapter for a list of photos.
  */
-public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHeadersAdapter {
+public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHeadersAdapter, SectionIndexer {
 	private int mResource;
 	private DateTimeFormatter mDateFormatter;
 	private List<Report> mOrigReportList;
@@ -49,7 +49,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 		mResource = resource;
 
 		mReportListFilter = new ReportListFilter(this);
-		mOrigReportList = new LinkedList<Report>();
+		mOrigReportList = new ArrayList<Report>();
 	}
 
 	/**
@@ -186,5 +186,35 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	public void addAll(Collection<? extends Report> collection) {
 		super.addAll(collection);
 		mOrigReportList.addAll(collection);
+	}
+
+	@Override
+	public Object[] getSections() {
+		return new Object[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
+			"R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+	}
+
+	@Override
+	public int getPositionForSection(final int i) {
+		String firstLetter = (String) getSections()[i];
+
+		for (int index = 0; index < mOrigReportList.size(); index++) {
+			if (mOrigReportList.get(index).getTitle().toUpperCase().substring(0, 1).equals(firstLetter)) {
+				return index;
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public int getSectionForPosition(final int i) {
+		String firstLetter = mOrigReportList.get(i).getTitle().toUpperCase().substring(0, 1);
+		for (int index = 0; index < getSections().length; index++) {
+			String sectionString = (String) getSections()[index];
+			if (sectionString.equals(firstLetter)) {
+				return index;
+			}
+		}
+		return 0;
 	}
 }
