@@ -66,3 +66,18 @@ This script assumed you are not running it from the same machine on which the se
 For more information, you can access help by running:
 
 	node util/generatetestdata -h
+
+Notes
+-----
+
+As of `3/14/2014`, the `mad` MSE server is running the latest Kestrel Weather server application, updated to commit a1874b7787c1f7d4eff74962968af688e1684d62.
+
+`mad` currently does not have any init scripts that ensure the server will run on demand; therefore, should the machine ever restart, the Kestrel Weather server will not be started (and it is likely that the mongo daemon will also not be ready).
+
+To start the server on `mad`, first ensure that the mongo daemon is ready by running:
+
+	mongo
+
+If the above lets you connect, move on to starting the Kestrel Weather server app, by manually invoking node on the wrapper as noted above. If the mongo daemon is not running, you will need to run:
+
+	sudo mongod
