@@ -37,7 +37,7 @@ public class ReportListFilter extends Filter {
 	 * Helper function to wrap filter(), as this is now a pseudo-filter.
 	 */
 	public void filter() {
-		super.filter("");
+		super.filter(mReportTitleConstraint);
 	}
 
 	/**

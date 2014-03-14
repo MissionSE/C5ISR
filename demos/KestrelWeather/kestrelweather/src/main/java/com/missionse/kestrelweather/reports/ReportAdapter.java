@@ -21,6 +21,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,7 +34,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHeadersAdapter {
 	private int mResource;
 	private DateTimeFormatter mDateFormatter;
-
+	private List<Report> mOrigReportList;
 	private ReportListFilter mReportListFilter;
 
 	/**
@@ -47,6 +49,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 		mResource = resource;
 
 		mReportListFilter = new ReportListFilter(this);
+		mOrigReportList = new LinkedList<Report>();
 	}
 
 	/**
@@ -77,11 +80,13 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 						int startOfFoundConstraint = reportTitleInLowerCase
 								.indexOf(mReportListFilter.getReportTitleConstraint().toString());
 						int endOfFoundConstraint = startOfFoundConstraint + mReportListFilter.getReportTitleConstraint().length();
-						spannableReportTitle.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), startOfFoundConstraint,
-								endOfFoundConstraint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-						spannableReportTitle.setSpan(
-								new ForegroundColorSpan(getContext().getResources().getColor(R.color.holo_blue_dark)),
-								startOfFoundConstraint, endOfFoundConstraint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						if (mReportListFilter.getReportTitleConstraint().length() > 0) {
+							spannableReportTitle.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), startOfFoundConstraint,
+									endOfFoundConstraint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+							spannableReportTitle.setSpan(
+									new ForegroundColorSpan(getContext().getResources().getColor(R.color.holo_blue_dark)),
+									startOfFoundConstraint, endOfFoundConstraint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
 					}
 				}
 				reportTitle.setText(spannableReportTitle);
@@ -153,11 +158,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	 * @return an array list of all reports
 	 */
 	public ArrayList<Report> getAllReports() {
-		ArrayList<Report> allReports = new ArrayList<Report>();
-		for (int index = 0; index < getCount(); index++) {
-			allReports.add(getItem(index));
-		}
-		return allReports;
+		return new ArrayList<Report>(mOrigReportList);
 	}
 
 	@Override
@@ -179,5 +180,11 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	@Override
 	public long getHeaderId(final int position) {
 		return getItem(position).getTitle().toUpperCase().charAt(0);
+	}
+
+	@Override
+	public void addAll(Collection<? extends Report> collection) {
+		super.addAll(collection);
+		mOrigReportList.addAll(collection);
 	}
 }

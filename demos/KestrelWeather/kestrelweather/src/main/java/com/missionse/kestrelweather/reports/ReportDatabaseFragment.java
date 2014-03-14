@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -155,7 +156,13 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 
 				@Override
 				public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-					mReportAdapter.setReportTitleConstraint(s);
+					String titleFilter = "";
+					if (mSearchField.getText() != null) {
+						if (mSearchField.getText().length() > 0) {
+							titleFilter = mSearchField.getText().toString().trim();
+						}
+					}
+					mReportAdapter.setReportTitleConstraint(titleFilter);
 					mReportAdapter.filter();
 				}
 			});
@@ -193,7 +200,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 							if (activity != null) {
 								DatabaseSync sync = new DatabaseSync(activity.getDatabaseAccessor(), activity);
 								sync.setSyncCompleteListener(ReportDatabaseFragment.this);
-								sync.execute(true, true, true);
+								sync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true, true, true);
 							}
 						} catch (ClassCastException e) {
 							Log.e(TAG, "Unable to cast activity.", e);

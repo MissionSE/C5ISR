@@ -61,7 +61,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 	private static final boolean LOG_DB = false;
 
 	private static final int MILLIS_PER_MIN = 1000 * 60;
-	private static final int MAX_REPORT_COUNT = 99;
+	private static final int MAX_REPORT_COUNT = 999;
 	private static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
 	private KestrelWeatherDrawerFactory mDrawerFactory;
@@ -300,7 +300,7 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 				int reportSize = mDatabaseManager.getSyncedCount() + mDatabaseManager.getUnSynedCount();
 				String printableCount = String.valueOf(reportSize);
 				if (reportSize > MAX_REPORT_COUNT) {
-					printableCount = "99+";
+					printableCount = "999+";
 				}
 
 				draftItem.setNumber(printableCount);
