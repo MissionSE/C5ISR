@@ -1,6 +1,7 @@
 package com.missionse.kestrelweather.preferences;
 
 import android.app.ActionBar;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -135,6 +136,18 @@ public class SettingsActivity extends PreferenceActivity {
 				iterator.remove();
 			}
 		}
+	}
+
+	@Override
+	public void startWithFragment(final String fragmentName, final Bundle args, final Fragment resultTo, final int resultRequestCode) {
+		super.startWithFragment(fragmentName, args, resultTo, resultRequestCode);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
+
+	@Override
+	public void startWithFragment(final String fragmentName, final Bundle args, final Fragment resultTo, final int resultRequestCode, final int titleRes, final int shortTitleRes) {
+		super.startWithFragment(fragmentName, args, resultTo, resultRequestCode, titleRes, shortTitleRes);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	@Override
