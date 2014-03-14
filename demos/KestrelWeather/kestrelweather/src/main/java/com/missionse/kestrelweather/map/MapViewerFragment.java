@@ -326,9 +326,19 @@ public class MapViewerFragment extends MapFragment implements
 		}
 		Location location = mActivity.getLastLocation();
 		if (location != null) {
-			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 5.0f));
+			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 5.0f),
+					new GoogleMap.CancelableCallback() {
+						@Override
+						public void onFinish() {
+							loadReports();
+						}
+
+						@Override
+						public void onCancel() {
+							loadReports();
+						}
+					});
 		}
-		loadReports();
 	}
 
 	@Override
