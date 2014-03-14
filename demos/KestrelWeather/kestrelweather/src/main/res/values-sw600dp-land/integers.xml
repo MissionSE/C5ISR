@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- Map paddings -->
-	<integer name="map_padding_report_pane_visible_x">-150</integer>
-	<integer name="map_padding_report_pane_visible_y">150</integer>
-	<integer name="map_padding_report_pane_gone_x">0</integer>
-	<integer name="map_padding_report_pane_gone_y">150</integer>
+	<integer name="map_padding_x">-225</integer>
+	<integer name="map_padding_y">150</integer>
 </resources>

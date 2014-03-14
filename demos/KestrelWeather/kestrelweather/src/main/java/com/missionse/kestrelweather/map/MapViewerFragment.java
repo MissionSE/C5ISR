@@ -130,15 +130,13 @@ public class MapViewerFragment extends MapFragment implements
 			@Override
 			public void onOpen() {
 				if (mCurrentMarker != null) {
-					centerMap(mCurrentMarker.getPosition(), true, null);
+					centerMap(mCurrentMarker.getPosition(), null);
 				}
 			}
 
 			@Override
 			public void onClose() {
-				if (mCurrentMarker != null) {
-					centerMap(mCurrentMarker.getPosition(), false, null);
-				}
+
 			}
 
 			@Override
@@ -226,16 +224,9 @@ public class MapViewerFragment extends MapFragment implements
 		}
 	}
 
-	private void centerMap(LatLng latLng, boolean reportPaneVisible, GoogleMap.CancelableCallback callback) {
-		int xPadding;
-		int yPadding;
-		if (reportPaneVisible) {
-			xPadding = getResources().getInteger(R.integer.map_padding_report_pane_visible_x);
-			yPadding = getResources().getInteger(R.integer.map_padding_report_pane_visible_y);
-		} else {
-			xPadding = getResources().getInteger(R.integer.map_padding_report_pane_gone_x);
-			yPadding = getResources().getInteger(R.integer.map_padding_report_pane_gone_y);
-		}
+	private void centerMap(LatLng latLng, GoogleMap.CancelableCallback callback) {
+		int xPadding = getResources().getInteger(R.integer.map_padding_x);
+		int yPadding = getResources().getInteger(R.integer.map_padding_y);
 
 		// calculate the new center of the map, taking into account optional
 		// padding
@@ -280,7 +271,7 @@ public class MapViewerFragment extends MapFragment implements
 	 */
 	public boolean onClusterItemClick(final Marker marker, final Report report) {
 		if (mCurrentMarker != null) {
-			centerMap(marker.getPosition(), true, null);
+			centerMap(marker.getPosition(), null);
 		}
 		mCurrentMarker = marker;
 		mReportAdapter.clear();
@@ -298,7 +289,7 @@ public class MapViewerFragment extends MapFragment implements
 	 */
 	public boolean onClusterClick(final Marker marker, final Cluster<Report> cluster) {
 		if (mCurrentMarker != null) {
-			centerMap(marker.getPosition(), true, null);
+			centerMap(marker.getPosition(), null);
 		}
 		mCurrentMarker = marker;
 		mReportAdapter.clear();

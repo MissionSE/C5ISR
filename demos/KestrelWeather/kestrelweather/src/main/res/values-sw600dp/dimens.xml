@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- Map layout dimensions -->
-	<dimen name="map_report_pane_size">350dp</dimen>
+	<dimen name="map_report_pane_size">380dp</dimen>
 	<dimen name="map_slidingLayer_margin">12dp</dimen>
 </resources>

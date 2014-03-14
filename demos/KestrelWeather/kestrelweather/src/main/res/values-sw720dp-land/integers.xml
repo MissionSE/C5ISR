@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- Map paddings -->
-	<integer name="map_padding_x">0</integer>
-	<integer name="map_padding_y">0</integer>
+	<integer name="map_padding_x">-300</integer>
 </resources>
