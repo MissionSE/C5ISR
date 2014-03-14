@@ -9,6 +9,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 
 import com.missionse.kestrelweather.R;
 
@@ -136,6 +137,15 @@ public class SettingsActivity extends PreferenceActivity {
 				iterator.remove();
 			}
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			onBackPressed();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
