@@ -1,6 +1,14 @@
 package com.missionse.kestrelweather.reports.photos;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +49,65 @@ public class PhotoAdapter extends SupplementAdapter {
 			setFileName(view, supplement.getFileName());
 			setFileSize(view, supplement.getSize());
 			setFileDateModified(view, supplement.getDate());
-			setThumbnail(view, supplement.getThumbnailUri());
+
+			Bitmap thumbnail = getLocalThumbnail(supplement);
+			if (thumbnail != null) {
+				setThumbnail(view, thumbnail);
+			} else {
+				setThumbnail(view, supplement.getThumbnailUri());
+			}
 		}
 		return view;
+	}
+
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	private Bitmap getLocalThumbnail(final Supplement supplement) {
+		Bitmap thumbnail = null;
+
+		String localUri = supplement.getUri();
+		if (localUri != null && localUri.length() > 0) {
+			Cursor cursor = getContext().getContentResolver()
+					.query(Uri.parse(localUri), null, null, null, null, null);
+			try {
+				if (cursor != null && cursor.moveToFirst()) {
+					long id = getUriId(cursor);
+					if (id != -1) {
+						thumbnail = MediaStore.Images.Thumbnails.getThumbnail(
+								getContext().getContentResolver(), id,
+								MediaStore.Images.Thumbnails.MICRO_KIND, null);
+					}
+				}
+			} finally {
+				if (cursor != null) {
+					cursor.close();
+				}
+			}
+		}
+
+		return thumbnail;
+	}
+
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	private long getUriId(final Cursor cursor) {
+		long uriId = -1;
+
+		int idIndex = cursor.getColumnIndex(DocumentsContract.Root.COLUMN_DOCUMENT_ID);
+		if (idIndex == -1) {
+			idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+		}
+		if (idIndex != -1) {
+			String uri = cursor.getString(idIndex);
+			if (uri != null) {
+				String[] uriSegments = uri.split(":");
+				try {
+					uriId = Long.parseLong(uriSegments[uriSegments.length - 1]);
+				} catch (NumberFormatException exception) {
+					Log.d(TAG, "Unable to get ID from URI: " + uri);
+				}
+			}
+		}
+
+		return uriId;
 	}
 
 	private void setThumbnail(final View view, final String thumbnailUri) {
@@ -59,6 +123,15 @@ public class PhotoAdapter extends SupplementAdapter {
 				} else {
 					thumbnailView.setImageResource(R.drawable.ic_action_picture_black);
 				}
+			}
+		}
+	}
+
+	private void setThumbnail(final View view, final Bitmap thumbnail) {
+		if (view != null) {
+			ImageView thumbnailView = (ImageView) view.findViewById(R.id.report_item_thumbnail);
+			if (thumbnailView != null) {
+				thumbnailView.setImageBitmap(thumbnail);
 			}
 		}
 	}

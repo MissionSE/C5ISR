@@ -20,15 +20,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.missionse.imageviewer.ImageFragmentFactory;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.SupplementType;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.Supplement;
+import com.missionse.kestrelweather.database.util.MediaResolver;
 import com.missionse.kestrelweather.reports.utils.ItemRemovedListener;
 import com.missionse.kestrelweather.reports.utils.SupplementMultiChoiceModeListener;
 import com.missionse.kestrelweather.util.ReportRemover;
 import com.missionse.kestrelweather.util.SupplementBuilder;
+
+import java.io.File;
 
 /**
  * A fragment used to manage the photos attached to a report.
@@ -112,17 +116,19 @@ public class PhotoOverviewFragment extends Fragment implements ItemRemovedListen
 				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
 					FragmentManager fragmentManager = getFragmentManager();
 					if (fragmentManager != null) {
-//						File image = new File(MediaResolver.getPath(mActivity, Uri.parse(mPhotoAdapter.getItem(position).getUri())));
-//						Fragment imageFragment = ImageFragmentFactory.createImageFragment(Uri.fromFile(image));
-//						fragmentManager.beginTransaction()
-//								.replace(R.id.content, imageFragment, "image_preview")
-//								.addToBackStack("image_preview")
-//								.commit();
-						Fragment imageFragment = PhotoPreviewFragment.newInstance(mPhotoAdapter.getItem(position).getRemoteUri());
-						if (imageFragment != null) {
+						Fragment photoPreviewFragment = null;
+						Supplement photo = mPhotoAdapter.getItem(position);
+						if (photo.getUri() != null && photo.getUri().length() > 0) {
+							File localPhoto = new File(MediaResolver.getPath(mActivity, Uri.parse(photo.getUri())));
+							photoPreviewFragment = ImageFragmentFactory.createImageFragment(Uri.fromFile(localPhoto));
+						} else if (photo.getRemoteUri() != null && photo.getRemoteUri().length() > 0) {
+							photoPreviewFragment = PhotoPreviewFragment.newInstance(photo.getRemoteUri());
+						}
+
+						if (photoPreviewFragment != null) {
 							fragmentManager.beginTransaction()
-									.replace(R.id.content, imageFragment, "image_preview")
-									.addToBackStack("image_preview")
+									.replace(R.id.content, photoPreviewFragment, "photo_preview")
+									.addToBackStack("photo_preview")
 									.commit();
 						}
 					}
