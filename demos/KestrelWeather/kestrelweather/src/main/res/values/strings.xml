@@ -101,15 +101,15 @@
 
 	<!-- Fragment: Kestrel Simulation New Request Alert -->
 	<string name="new_request_alert_title">Request Received!</string>
-	<string name="new_request_alert_content">Would you like to send the saved simulation data or use random values?</string>
-	<string name="new_request_use_random">Send Random Values</string>
+	<string name="new_request_alert_content">Would you like to send the saved simulation data or use current weather condition data?</string>
+	<string name="new_request_use_current">Send Current Conditions</string>
 	<string name="new_request_use_saved">Send Saved Values</string>
 
 	<!-- Fragment: Kestrel Simulation Mode Alert -->
 	<string name="sim_mode_alert_title">Simulation Mode Detected!</string>
 	<string name="sim_mode_alert_content">Would you like to send the saved simulation data or continue with the normal connection?</string>
 	<string name="sim_mode_use_saved">Send Saved Values</string>
-	<string name="sim_mode_connect_normally">Connect Normally</string>
+	<string name="sim_mode_use_current_conditions">Use Current Conditions</string>
 
 	<!-- Fragment: Bluetooth Device List -->
 	<string name="paired_devices">Paired Devices</string>

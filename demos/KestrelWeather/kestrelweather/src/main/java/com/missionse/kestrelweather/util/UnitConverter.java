@@ -12,8 +12,16 @@ public final class UnitConverter {
 	private UnitConverter() {
 	}
 
+	public static float kelvinToCelsius(float kelvin) {
+		return kelvin - 272.15f;
+	}
+
 	public static float celsiusToFahrenheit(float celsius) {
 		return 32.0F + 9.0F * celsius / 5.0F;
+	}
+
+	public static float pascalToKilopascal(float pascal) {
+		return pascal * 0.1f;
 	}
 
 	public static float kilopascalToMilibar(float kilopascal) {

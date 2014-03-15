@@ -38,7 +38,6 @@ import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
 import com.missionse.kestrelweather.database.model.tables.OpenWeather;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.reports.ReportDetailFragment;
-import com.missionse.kestrelweather.util.LocationHandler;
 import com.missionse.kestrelweather.util.OpenWeatherRequester;
 import com.missionse.kestrelweather.util.ReportBuilder;
 
@@ -52,12 +51,12 @@ public class KestrelConnectorFragment extends Fragment {
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static final int REQUEST_DEVICE_SELECTION = 2;
 
+	private KestrelWeatherActivity mActivity;
 	private Button mConnectToDeviceButton;
 	private Button mRequestReadingsButton;
 	private Button mContinueButton;
 	private ArrayAdapter<String> mReadingsAdapter;
 
-	private LocationHandler mLocationHandler;
 	private BluetoothConnector mBluetoothConnector;
 
 	private KestrelWeather mKestrelWeather;
@@ -67,19 +66,33 @@ public class KestrelConnectorFragment extends Fragment {
 	private String mConnectedDevice = "";
 
 	@Override
+	public void onAttach(final Activity activity) {
+		super.onAttach(activity);
+		try {
+			mActivity = (KestrelWeatherActivity) activity;
+		} catch (ClassCastException exception) {
+			Log.d(TAG, "Unable to cast activity.");
+		}
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mActivity = null;
+	}
+
+	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (getActivity() != null) {
-			mLocationHandler = new LocationHandler(getActivity());
-
+		if (mActivity != null) {
 			if (BluetoothAdapter.getDefaultAdapter() == null) {
-				Toast.makeText(getActivity(), R.string.error_bluetooth_not_available, Toast.LENGTH_SHORT).show();
-				getActivity().getFragmentManager().popBackStack();
+				Toast.makeText(mActivity, R.string.error_bluetooth_not_available, Toast.LENGTH_SHORT).show();
+				mActivity.getFragmentManager().popBackStack();
 				return;
 			}
 
-			mBluetoothConnector = new BluetoothConnector(getActivity());
+			mBluetoothConnector = new BluetoothConnector(mActivity);
 			mBluetoothConnector.onCreate(new BluetoothIntentListener() {
 				@Override
 				public void onDeviceFound(final BluetoothDevice device) {
@@ -108,10 +121,6 @@ public class KestrelConnectorFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 
-		if (mLocationHandler != null) {
-			mLocationHandler.onStart();
-		}
-
 		if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
@@ -127,15 +136,6 @@ public class KestrelConnectorFragment extends Fragment {
 	}
 
 	@Override
-	public void onStop() {
-		super.onStop();
-
-		if (mLocationHandler != null) {
-			mLocationHandler.onStop();
-		}
-	}
-
-	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		mBluetoothConnector.stopService();
@@ -147,9 +147,9 @@ public class KestrelConnectorFragment extends Fragment {
 			if (resultCode == Activity.RESULT_OK) {
 				createNetworkService();
 			} else {
-				if (getActivity() != null) {
-					Toast.makeText(getActivity(), R.string.error_bluetooth_not_enabled, Toast.LENGTH_SHORT).show();
-					getActivity().getFragmentManager().popBackStack();
+				if (mActivity != null) {
+					Toast.makeText(mActivity, R.string.error_bluetooth_not_enabled, Toast.LENGTH_SHORT).show();
+					mActivity.getFragmentManager().popBackStack();
 				}
 			}
 		} else if (requestCode == REQUEST_DEVICE_SELECTION) {
@@ -176,7 +176,7 @@ public class KestrelConnectorFragment extends Fragment {
 			mConnectToDeviceButton = (Button) contentView.findViewById(R.id.connect_to_device_btn);
 			mRequestReadingsButton = (Button) contentView.findViewById(R.id.request_readings_btn);
 			ListView receivedReadings = (ListView) contentView.findViewById(R.id.device_readings);
-			mReadingsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.fragment_kestrel_connector_reading_entry);
+			mReadingsAdapter = new ArrayAdapter<String>(mActivity, R.layout.fragment_kestrel_connector_reading_entry);
 			receivedReadings.setEmptyView(contentView.findViewById(R.id.no_readings_available));
 			receivedReadings.setAdapter(mReadingsAdapter);
 			mContinueButton = (Button) contentView.findViewById(R.id.continue_btn);
@@ -201,12 +201,10 @@ public class KestrelConnectorFragment extends Fragment {
 				if (mRequestReadingsButton.isEnabled()) {
 					mBluetoothConnector.disconnect();
 				} else {
-					if (getActivity() != null) {
-						SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+					if (mActivity != null) {
+						SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
 						if (preferences.getBoolean(getString(R.string.key_simulation_mode), false)) {
-							SimulationModeAlertDialogFragment simModeAlert = new SimulationModeAlertDialogFragment();
-							simModeAlert.setTargetRunnable(mUseSavedDataRunnable, mConnectNormallyRunnable);
-							simModeAlert.show(getActivity().getFragmentManager(), "simmodealert");
+							showSimulationModeAlert();
 						} else {
 							showBluetoothDialog();
 						}
@@ -221,8 +219,8 @@ public class KestrelConnectorFragment extends Fragment {
 			public void onClick(final View view) {
 				KestrelMessage requestMessage = new KestrelMessage(KestrelMessage.REQUEST);
 				if (!mBluetoothConnector.getService().write(requestMessage.toString().getBytes())) {
-					if (getActivity() != null) {
-						Toast.makeText(getActivity(), R.string.error_unable_to_request, Toast.LENGTH_SHORT).show();
+					if (mActivity != null) {
+						Toast.makeText(mActivity, R.string.error_unable_to_request, Toast.LENGTH_SHORT).show();
 					}
 				}
 			}
@@ -230,13 +228,12 @@ public class KestrelConnectorFragment extends Fragment {
 		mContinueButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View view) {
-				Activity activity = getActivity();
-				if (activity != null) {
+				if (mActivity != null) {
 					if (mKestrelWeather != null && mOpenWeather != null && mLocation != null) {
 						Report report = ReportBuilder.buildReport(getDatabaseAccessor(), mKestrelWeather, mOpenWeather,
 								mLocation.getLatitude(), mLocation.getLongitude());
 
-						activity.getFragmentManager().beginTransaction()
+						mActivity.getFragmentManager().beginTransaction()
 								.setCustomAnimations(
 										R.animator.fade_in, R.animator.fade_out,
 										R.animator.fade_in, R.animator.fade_out)
@@ -247,6 +244,12 @@ public class KestrelConnectorFragment extends Fragment {
 				}
 			}
 		});
+	}
+
+	private void showSimulationModeAlert() {
+		SimulationModeAlertDialogFragment simModeAlert = new SimulationModeAlertDialogFragment();
+		simModeAlert.setTargetRunnable(mUseSavedDataRunnable, mUseCurrentConditionsRunnable);
+		simModeAlert.show(mActivity.getFragmentManager(), "simmodealert");
 	}
 
 	private void showBluetoothDialog() {
@@ -265,21 +268,39 @@ public class KestrelConnectorFragment extends Fragment {
 	private final Runnable mUseSavedDataRunnable = new Runnable() {
 		@Override
 		public void run() {
-			if (getActivity() != null) {
-				mKestrelWeather = KestrelWeatherFactory.getSavedKestrelWeatherData(getActivity());
-
+			if (mActivity != null) {
+				mKestrelWeather = KestrelWeatherFactory.getSavedKestrelWeatherData(mActivity);
 				updateReadingsAdapter();
-
-				getLocation();
 				getOpenWeatherData();
 			}
 		}
 	};
 
-	private final Runnable mConnectNormallyRunnable = new Runnable() {
+	private final Runnable mUseCurrentConditionsRunnable = new Runnable() {
 		@Override
 		public void run() {
-			showBluetoothDialog();
+			queryOpenWeather(
+					new FutureCallback<JsonObject>() {
+						@Override
+						public void onCompleted(final Exception e, final JsonObject result) {
+							boolean requestSuccessful = false;
+							if (e == null && result != null) {
+								mKestrelWeather = KestrelWeatherFactory.getCurrentWeatherData(result);
+								mOpenWeather = OpenWeatherRequester.parseOpenWeatherResponse(result);
+								if (mKestrelWeather != null && mOpenWeather != null) {
+									updateReadingsAdapter();
+									mContinueButton.setEnabled(true);
+									requestSuccessful = true;
+								}
+							}
+
+							if (!requestSuccessful) {
+								Toast.makeText(mActivity, "Unable to fetch current conditions.", Toast.LENGTH_SHORT).show();
+								showSimulationModeAlert();
+							}
+						}
+					}
+			);
 		}
 	};
 
@@ -312,62 +333,69 @@ public class KestrelConnectorFragment extends Fragment {
 	private DatabaseAccessor getDatabaseAccessor() {
 		DatabaseAccessor databaseAccessor = null;
 
-		KestrelWeatherActivity activity = (KestrelWeatherActivity) getActivity();
-		if (activity != null) {
-			databaseAccessor = activity.getDatabaseAccessor();
+		if (mActivity != null) {
+			databaseAccessor = mActivity.getDatabaseAccessor();
 		}
 
 		return databaseAccessor;
 	}
 
 	private void getLocation() {
-		if (mLocationHandler != null) {
-			mLocation = mLocationHandler.getLocation();
-			updateReadingsAdapter();
-		}
-	}
-
-	private void getOpenWeatherData() {
-		final Activity activity = getActivity();
-		if (activity != null) {
+		if (mActivity != null) {
+			mLocation = mActivity.getLastLocation();
 			if (mLocation != null) {
-				OpenWeatherRequester.queryOpenWeather(
-						activity,
-						Double.toString(mLocation.getLatitude()),
-						Double.toString(mLocation.getLongitude()),
-						new FutureCallback<JsonObject>() {
-							@Override
-							public void onCompleted(final Exception e, final JsonObject result) {
-								if (e == null && result != null) {
-									mOpenWeather = OpenWeatherRequester.parseOpenWeatherResponse(result);
-									if (mOpenWeather != null) {
-										updateReadingsAdapter();
-
-										if (mKestrelWeather != null) {
-											mContinueButton.setEnabled(true);
-										} else {
-											showAlertDialog(activity);
-										}
-									} else {
-										showAlertDialog(activity);
-									}
-								} else {
-									Log.e(TAG, "Unable to retrieve open weather data.", e);
-									showAlertDialog(activity);
-								}
-							}
-						}
-				);
+				updateReadingsAdapter();
+			} else {
+				Toast.makeText(mActivity, "Unable to get current location.", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
 
-	private void showAlertDialog(final Activity activity) {
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+	private void queryOpenWeather(final FutureCallback<JsonObject> callback) {
+		if (mActivity != null) {
+			getLocation();
+			if (mLocation != null) {
+				OpenWeatherRequester.queryOpenWeather(
+						mActivity,
+						Double.toString(mLocation.getLatitude()),
+						Double.toString(mLocation.getLongitude()),
+						callback);
+			}
+		}
+	}
+
+	private void getOpenWeatherData() {
+		queryOpenWeather(
+				new FutureCallback<JsonObject>() {
+					@Override
+					public void onCompleted(final Exception e, final JsonObject result) {
+						boolean requestSuccessful = false;
+						if (e == null && result != null) {
+							mOpenWeather = OpenWeatherRequester.parseOpenWeatherResponse(result);
+							if (mOpenWeather != null) {
+								requestSuccessful = true;
+								updateReadingsAdapter();
+
+								if (mKestrelWeather != null) {
+									mContinueButton.setEnabled(true);
+								}
+							}
+						}
+
+						if (!requestSuccessful) {
+							showAlertDialog();
+						}
+					}
+				}
+		);
+	}
+
+	private void showAlertDialog() {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mActivity);
 		alertDialogBuilder.setTitle("Warning");
 		alertDialogBuilder.setIcon(R.drawable.ic_action_warning);
 		alertDialogBuilder
-				.setMessage("Unable to open weather data.  Try again?")
+				.setMessage("Unable to weather data.  Try again?")
 				.setCancelable(false)
 				.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -379,7 +407,7 @@ public class KestrelConnectorFragment extends Fragment {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
-						activity.onBackPressed();
+						mActivity.onBackPressed();
 					}
 				});
 		alertDialogBuilder.create().show();
@@ -429,7 +457,6 @@ public class KestrelConnectorFragment extends Fragment {
 							mKestrelWeather = kestrelMessage.getKestrelWeather();
 							updateReadingsAdapter();
 
-							getLocation();
 							getOpenWeatherData();
 						}
 					} catch (KestrelMessage.InvalidKestrelMessageException ex) {

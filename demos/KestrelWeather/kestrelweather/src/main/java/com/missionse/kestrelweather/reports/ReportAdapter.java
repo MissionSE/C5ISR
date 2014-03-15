@@ -190,8 +190,8 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 
 	@Override
 	public Object[] getSections() {
-		return new Object[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
-			"R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+		return new Object[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
+				"R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 	}
 
 	@Override

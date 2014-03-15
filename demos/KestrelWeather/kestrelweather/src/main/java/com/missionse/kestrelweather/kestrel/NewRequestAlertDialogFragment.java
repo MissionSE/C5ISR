@@ -40,7 +40,7 @@ public class NewRequestAlertDialogFragment extends DialogFragment {
 							mPositiveRunnable.run();
 						}
 					})
-					.setNeutralButton(R.string.new_request_use_random, new DialogInterface.OnClickListener() {
+					.setNeutralButton(R.string.new_request_use_current, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(final DialogInterface dialogInterface, final int i) {
 							mNeutralRunnable.run();

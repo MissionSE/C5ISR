@@ -40,7 +40,7 @@ public class SimulationModeAlertDialogFragment extends DialogFragment {
 							mPositiveRunnable.run();
 						}
 					})
-					.setNeutralButton(R.string.sim_mode_connect_normally, new DialogInterface.OnClickListener() {
+					.setNeutralButton(R.string.sim_mode_use_current_conditions, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(final DialogInterface dialogInterface, final int i) {
 							mNeutralRunnable.run();

@@ -1,21 +1,23 @@
 package com.missionse.kestrelweather.kestrel;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.location.Location;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
 import com.missionse.bluetooth.BluetoothConnector;
 import com.missionse.bluetooth.BluetoothIntentListener;
 import com.missionse.bluetooth.network.BluetoothNetworkService;
 import com.missionse.bluetooth.network.ServiceIdentifier;
+import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.communication.KestrelMessage;
 import com.missionse.kestrelweather.database.model.tables.KestrelWeather;
-
-import java.util.Random;
+import com.missionse.kestrelweather.util.OpenWeatherRequester;
 
 /**
  * This class generates KestrelMessages, simulating an external Kestrel device. It manages the Bluetooth Network Service,
@@ -23,14 +25,14 @@ import java.util.Random;
  */
 public class KestrelSimulator {
 
-	private Activity mActivity;
+	private KestrelWeatherActivity mActivity;
 	private BluetoothConnector mBluetoothConnector;
 
 	/**
 	 * Constructor.
 	 * @param activity the parent activity
 	 */
-	public KestrelSimulator(final Activity activity) {
+	public KestrelSimulator(final KestrelWeatherActivity activity) {
 		mActivity = activity;
 	}
 
@@ -106,7 +108,7 @@ public class KestrelSimulator {
 
 	private void handleRequestMessage() {
 		NewRequestAlertDialogFragment dialogFragment = new NewRequestAlertDialogFragment();
-		dialogFragment.setTargetRunnable(mSendSavedDataMessageRunnable, mSendRandomDataMessageRunnable);
+		dialogFragment.setTargetRunnable(mSendSavedDataMessageRunnable, mSendCurrentConditionDataMessageRunnable);
 		dialogFragment.show(mActivity.getFragmentManager(), "newrequestdialog");
 	}
 
@@ -122,26 +124,35 @@ public class KestrelSimulator {
 		}
 	};
 
-	private final Runnable mSendRandomDataMessageRunnable = new Runnable() {
+	private final Runnable mSendCurrentConditionDataMessageRunnable = new Runnable() {
 		@Override
 		public void run() {
-			Random random = new Random(System.currentTimeMillis());
+			if (mActivity != null) {
+				Location location = mActivity.getLastLocation();
+				if (location != null) {
+					OpenWeatherRequester.queryOpenWeather(
+							mActivity,
+							Double.toString(location.getLatitude()),
+							Double.toString((location.getLongitude())),
+							new FutureCallback<JsonObject>() {
+								@Override
+								public void onCompleted(final Exception e, final JsonObject result) {
+									if (e == null && result != null) {
+										KestrelWeather kestrelWeather =
+												KestrelWeatherFactory.getCurrentWeatherData(result);
+										KestrelMessage dataMessage = new KestrelMessage(KestrelMessage.DATA);
+										dataMessage.setKestrelWeather(kestrelWeather);
 
-			KestrelWeather kestrelWeather = new KestrelWeather();
-			kestrelWeather.setTemperature(random.nextFloat() * 200 - 100);
-			kestrelWeather.setHumidity(random.nextInt(100));
-			kestrelWeather.setPressure(random.nextFloat() * 2 + 29);
-			kestrelWeather.setPressureTrend(random.nextInt(1));
-			kestrelWeather.setHeatIndex(random.nextFloat() * kestrelWeather.getHumidity() / 10 + kestrelWeather.getTemperature());
-			kestrelWeather.setWindSpeed(random.nextFloat() * 30);
-			kestrelWeather.setWindDirection(random.nextInt(360));
-			kestrelWeather.setWindChill(random.nextFloat() * -1 * kestrelWeather.getWindSpeed() / 6);
-			kestrelWeather.setDewPoint(random.nextFloat() * 60);
-
-			KestrelMessage dataMessage = new KestrelMessage(KestrelMessage.DATA);
-			dataMessage.setKestrelWeather(kestrelWeather);
-
-			mBluetoothConnector.getService().write(dataMessage.toString().getBytes());
+										mBluetoothConnector.getService().write(dataMessage.toString().getBytes());
+									} else {
+										Toast.makeText(mActivity, "Unable to fetch current conditions.", Toast.LENGTH_SHORT).show();
+										handleRequestMessage();
+									}
+								}
+							}
+					);
+				}
+			}
 		}
 	};
 

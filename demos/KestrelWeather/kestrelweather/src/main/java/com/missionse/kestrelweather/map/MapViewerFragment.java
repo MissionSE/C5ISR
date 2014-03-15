@@ -328,7 +328,8 @@ public class MapViewerFragment extends MapFragment implements
 						public void onCancel() {
 							loadReports();
 						}
-					});
+					}
+			);
 		}
 	}
 
