@@ -33,6 +33,8 @@ public final class ReportRemover {
 		ReportTable reportTable = databaseAccessor.getReportTable();
 		Report report = reportTable.queryForId(reportId);
 		if (report != null) {
+			removeSupplements(databaseAccessor, reportId);
+
 			KestrelWeather kestrelWeather = report.getKestrelWeather();
 			if (kestrelWeather != null) {
 				KestrelWeatherTable kestrelWeatherTable = databaseAccessor.getKestrelWeatherTable();
@@ -47,8 +49,6 @@ public final class ReportRemover {
 
 			reportsRemoved = reportTable.delete(report);
 		}
-
-		removeSupplements(databaseAccessor, reportId);
 
 		return reportsRemoved;
 	}
@@ -76,7 +76,7 @@ public final class ReportRemover {
 		SupplementTable supplementTable = databaseAccessor.getSupplementTable();
 		List<Supplement> supplementList = supplementTable.queryForAll();
 		for (Supplement supplement : supplementList) {
-			if (supplement.getReport().getId() == reportId) {
+			if (supplement.getReport() == null || supplement.getReport().getId() == reportId) {
 				supplementsRemoved = supplementTable.delete(supplement);
 			}
 		}

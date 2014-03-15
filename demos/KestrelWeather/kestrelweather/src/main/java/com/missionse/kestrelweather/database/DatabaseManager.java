@@ -154,14 +154,15 @@ public class DatabaseManager implements DatabaseAccessor, DatabaseLifeCycle {
 
 	private List<Supplement> getFilteredSupplements(final int reportId, SupplementType type) {
 		List<Supplement> supplements = getSupplementTable().queryForAll();
-		List<Supplement> retList = new LinkedList<Supplement>();
-		for (Supplement supp : supplements) {
-			if (supp.getType() == type &&
-					supp.getReport().getId() == reportId) {
-				retList.add(supp);
+		List<Supplement> filteredSupplements = new LinkedList<Supplement>();
+		for (Supplement supplement : supplements) {
+			if (supplement.getType() == type
+					&& supplement.getReport() != null
+					&& supplement.getReport().getId() == reportId) {
+				filteredSupplements.add(supplement);
 			}
 		}
-		return retList;
+		return filteredSupplements;
 	}
 
 	@Override
