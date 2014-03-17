@@ -107,12 +107,21 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 		}
 	}
 
+	private ReportTable mReportTable;
+	private SupplementTable mSupplementTable;
+	private KestrelWeatherTable mKestrelWeatherTable;
+	private OpenWeatherTable mOpenWeatherTable;
+	private NoteTable mNoteTable;
+
 	/**
 	 * Getter.
 	 * @return Instance of ReportTable.
 	 */
 	public ReportTable getReportTable() {
-		return (ReportTable) getObjectDao(Report.class);
+		if (mReportTable == null)  {
+			mReportTable = (ReportTable) getObjectDao(Report.class);
+		}
+		return mReportTable;
 	}
 
 	/**
@@ -120,7 +129,10 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	 * @return Instance of SupplementTable.
 	 */
 	public SupplementTable getSupplementTable() {
-		return (SupplementTable) getObjectDao(Supplement.class);
+		if (mSupplementTable == null) {
+			mSupplementTable = (SupplementTable) getObjectDao(Supplement.class);
+		}
+		return mSupplementTable;
 	}
 
 	/**
@@ -128,7 +140,10 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	 * @return Instance of KestrelWeather.
 	 */
 	public KestrelWeatherTable getKestrelWeatherTable() {
-		return (KestrelWeatherTable) getObjectDao(KestrelWeather.class);
+		if (mKestrelWeatherTable == null) {
+			mKestrelWeatherTable = (KestrelWeatherTable) getObjectDao(KestrelWeather.class);
+		}
+		return mKestrelWeatherTable;
 	}
 
 	/**
@@ -136,7 +151,10 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	 * @return Instance of OpenWeatherTable.
 	 */
 	public OpenWeatherTable getOpenWeatherTable() {
-		return (OpenWeatherTable) getObjectDao(OpenWeather.class);
+		if (mOpenWeatherTable == null) {
+			mOpenWeatherTable = (OpenWeatherTable) getObjectDao(OpenWeather.class);
+		}
+		return mOpenWeatherTable;
 	}
 
 	/**
@@ -144,6 +162,9 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	 * @return Instance of NoteTable.
 	 */
 	public NoteTable getNoteTable() {
-		return (NoteTable) getObjectDao(Note.class);
+		if (mNoteTable == null) {
+			mNoteTable = (NoteTable) getObjectDao(Note.class);
+		}
+		return mNoteTable;
 	}
 }
