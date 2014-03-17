@@ -209,6 +209,8 @@ public class MapViewerFragment extends MapFragment implements
 	 * @param reportId The id of the report to display.
 	 */
 	public void showReportDetail(final int reportId) {
+		mCurrentMarker.hideInfoWindow();
+		mCurrentMarker = null;
 		FragmentManager fragmentManager = getFragmentManager();
 		if (fragmentManager != null) {
 			Fragment reportDetailFragment = ReportDetailFragment.newInstance(reportId);
