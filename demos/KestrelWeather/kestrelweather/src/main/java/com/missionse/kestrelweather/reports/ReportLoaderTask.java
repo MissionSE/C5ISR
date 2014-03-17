@@ -1,7 +1,6 @@
 package com.missionse.kestrelweather.reports;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -15,11 +14,10 @@ import java.util.List;
 
 /**
  * Provides a background task that loads reports into an adapter.
- * Execute takes two boolean parameters:
- * 1. Whether to only add drafts.
+ * Execute takes a boolean parameter: Whether to only add drafts.
  */
 public class ReportLoaderTask extends AsyncTask<Boolean, Void, Void> {
-	private final static String TAG = ReportLoaderTask.class.getSimpleName();
+	private static final String TAG = ReportLoaderTask.class.getSimpleName();
 	private DatabaseAccessor mDatabaseAccessor;
 	private ReportAdapter mReportAdapter;
 	private ProgressBar mProgressBar;
@@ -73,7 +71,6 @@ public class ReportLoaderTask extends AsyncTask<Boolean, Void, Void> {
 	@Override
 	protected void onPostExecute(final Void parameter) {
 		super.onPostExecute(parameter);
-		Log.d(TAG, "onPostExecute " + System.nanoTime());
 		mReportAdapter.clear();
 		mReportAdapter.addAll(mReportList);
 		mReportAdapter.notifyDataSetChanged();

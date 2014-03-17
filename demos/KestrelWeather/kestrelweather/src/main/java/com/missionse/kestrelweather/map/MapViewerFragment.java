@@ -3,6 +3,7 @@ package com.missionse.kestrelweather.map;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
@@ -27,9 +28,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.Cluster;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
-import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
 import com.missionse.kestrelweather.reports.ReportAdapter;
 import com.missionse.kestrelweather.reports.ReportDetailFragment;
 import com.slidinglayer.SlidingLayer;
@@ -37,7 +36,6 @@ import com.slidinglayer.SlidingLayer;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Provides a fragment that displays a google map.
@@ -46,12 +44,16 @@ public class MapViewerFragment extends MapFragment implements
 		GoogleMap.OnMapClickListener,
 		GoogleMap.OnMapLoadedCallback,
 		GoogleMap.OnCameraChangeListener {
-	private static final String TAG = MapViewerFragment.class.getSimpleName();
 	private static final int REFRESH_DELAY = 5000;
+	private static final float DEFAULT_ZOOM = 5.0f;
+
 	private GoogleMap mMap;
 	private MapLoadedListener mMapLoadedListener;
 	private OptionsMenuListener mOptionsMenuListener;
+
 	private ObservationCalloutMarkersAdapter mMarkersAdapter;
+	private MarkerLoaderTask mMarkerLoaderTask;
+
 	private SlidingLayer mSlidingLayer;
 	private ReportAdapter mReportAdapter;
 	private KestrelWeatherActivity mActivity;
@@ -109,52 +111,50 @@ public class MapViewerFragment extends MapFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View mapView = super.onCreateView(inflater, container, savedInstanceState);
+		View view = inflater.inflate(R.layout.fragment_map, container, false);
+		if (mapView != null && view != null) {
+			FrameLayout layout = (FrameLayout) view.findViewById(R.id.map_container);
 
-		View v = inflater.inflate(R.layout.fragment_map, container, false);
-		FrameLayout layout = (FrameLayout) v.findViewById(R.id.map_container);
+			ListView reportList = (ListView) view.findViewById(R.id.map_report_list);
+			if (reportList != null) {
+				reportList.setAdapter(mReportAdapter);
+				reportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
+						showReportDetail(mReportAdapter.getItem(position).getId());
+					}
+				});
+			}
 
-		ListView reportList = (ListView) v.findViewById(R.id.map_report_list);
-		if (reportList != null) {
-			reportList.setAdapter(mReportAdapter);
-			reportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			mSlidingLayer = (SlidingLayer) view.findViewById(R.id.map_slidingLayer);
+			mSlidingLayer.setSlidingEnabled(false);
+			mSlidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
 				@Override
-				public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-					showReportDetail(mReportAdapter.getItem(position).getId());
+				public void onOpen() {
+					if (mCurrentMarker != null) {
+						centerMap(mCurrentMarker.getPosition(), null);
+					}
+				}
+
+				@Override
+				public void onClose() {
+				}
+
+				@Override
+				public void onOpened() {
+				}
+
+				@Override
+				public void onClosed() {
 				}
 			});
+
+			layout.addView(mapView, 0);
+
+			setUpMapIfNeeded();
 		}
 
-		mSlidingLayer = (SlidingLayer) v.findViewById(R.id.map_slidingLayer);
-		mSlidingLayer.setSlidingEnabled(false);
-		mSlidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
-			@Override
-			public void onOpen() {
-				if (mCurrentMarker != null) {
-					centerMap(mCurrentMarker.getPosition(), null);
-				}
-			}
-
-			@Override
-			public void onClose() {
-
-			}
-
-			@Override
-			public void onOpened() {
-
-			}
-
-			@Override
-			public void onClosed() {
-
-			}
-		});
-
-		layout.addView(mapView, 0);
-
-		setUpMapIfNeeded();
-
-		return v;
+		return view;
 	}
 
 	@Override
@@ -303,10 +303,23 @@ public class MapViewerFragment extends MapFragment implements
 	}
 
 	private void loadReports() {
-		DatabaseAccessor databaseAccessor = mActivity.getDatabaseAccessor();
-		ReportTable reportTable = databaseAccessor.getReportTable();
-		List<Report> reports = reportTable.queryForAll();
-		mMarkersAdapter.setData(reports);
+		if (mMarkerLoaderTask != null) {
+			mMarkerLoaderTask.cancel(true);
+		}
+
+		mMarkerLoaderTask = new MarkerLoaderTask(
+				mActivity.getDatabaseAccessor(),
+				mMarkersAdapter,
+				mMap.getProjection().getVisibleRegion().latLngBounds);
+		mMarkerLoaderTask.execute();
+	}
+
+	@Override
+	public void onConfigurationChanged(final Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		if (mMarkerLoaderTask != null) {
+			mMarkerLoaderTask.cancel(true);
+		}
 	}
 
 	@Override
@@ -317,7 +330,9 @@ public class MapViewerFragment extends MapFragment implements
 		Location location = mActivity.getLastLocation();
 		if (location != null) {
 			mMap.setMyLocationEnabled(true);
-			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 5.0f),
+			mMap.animateCamera(
+					CameraUpdateFactory.newLatLngZoom(
+							new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM),
 					new GoogleMap.CancelableCallback() {
 						@Override
 						public void onFinish() {
@@ -335,6 +350,8 @@ public class MapViewerFragment extends MapFragment implements
 
 	@Override
 	public void onCameraChange(CameraPosition cameraPosition) {
+		loadReports();
+
 		// Don't close sliding layer if the map has just been panned/tilted/rotated.
 		CameraPosition position = mMap.getCameraPosition();
 		if (mPreviousCameraPosition != null && mPreviousCameraPosition.zoom == position.zoom) {

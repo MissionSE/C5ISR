@@ -43,7 +43,6 @@ public final class BitmapHelper {
 	}
 
 	private static Bitmap getScaledBitmap(Bitmap source, Rect src, int width, int height) {
-		System.gc();
 		Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
 		Paint paint = new Paint();
