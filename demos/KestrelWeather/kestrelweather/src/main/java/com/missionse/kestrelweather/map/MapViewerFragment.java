@@ -255,7 +255,7 @@ public class MapViewerFragment extends MapFragment implements
 	}
 
 	@Override
-	public void onMapClick(LatLng latLng) {
+	public void onMapClick(final LatLng latLng) {
 		mCurrentMarker = null;
 		if (mSlidingLayer.isOpened()) {
 			mSlidingLayer.closeLayer(true);
@@ -302,18 +302,6 @@ public class MapViewerFragment extends MapFragment implements
 		mSlidingLayer.openLayer(true);
 	}
 
-	private void loadReports() {
-		if (mMarkerLoaderTask != null) {
-			mMarkerLoaderTask.cancel(true);
-		}
-
-		mMarkerLoaderTask = new MarkerLoaderTask(
-				mActivity.getDatabaseAccessor(),
-				mMarkersAdapter,
-				mMap.getProjection().getVisibleRegion().latLngBounds);
-		mMarkerLoaderTask.execute();
-	}
-
 	@Override
 	public void onConfigurationChanged(final Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -336,22 +324,31 @@ public class MapViewerFragment extends MapFragment implements
 					new GoogleMap.CancelableCallback() {
 						@Override
 						public void onFinish() {
-							loadReports();
 						}
 
 						@Override
 						public void onCancel() {
-							loadReports();
 						}
 					}
 			);
 		}
+
+		loadReports();
+	}
+
+	private void loadReports() {
+		if (mMarkerLoaderTask != null) {
+			mMarkerLoaderTask.cancel(true);
+		}
+
+		mMarkerLoaderTask = new MarkerLoaderTask(
+				mActivity.getDatabaseAccessor(),
+				mMarkersAdapter);
+		mMarkerLoaderTask.execute();
 	}
 
 	@Override
 	public void onCameraChange(CameraPosition cameraPosition) {
-		loadReports();
-
 		// Don't close sliding layer if the map has just been panned/tilted/rotated.
 		CameraPosition position = mMap.getCameraPosition();
 		if (mPreviousCameraPosition != null && mPreviousCameraPosition.zoom == position.zoom) {
