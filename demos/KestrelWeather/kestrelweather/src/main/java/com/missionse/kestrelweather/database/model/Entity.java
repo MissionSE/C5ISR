@@ -1,7 +1,5 @@
 package com.missionse.kestrelweather.database.model;
 
-import android.util.Log;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
@@ -163,7 +161,7 @@ public class Entity {
 			try {
 				retValue = element.getAsInt();
 			} catch (NumberFormatException e) {
-				Log.d(TAG, "Id is not valid integer: " + element.toString());
+				// Id was not valid.
 			}
 		}
 		return retValue;

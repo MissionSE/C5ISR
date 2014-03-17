@@ -7,7 +7,6 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -55,7 +54,7 @@ public class SyncService extends Service implements SyncStatusListener {
 	public int onStartCommand(final Intent intent, final int flags, final int startId) {
 		DatabaseSync databaseSync = new DatabaseSync(mDatabaseAccessor, SyncService.this);
 		databaseSync.setSyncCompleteListener(SyncService.this);
-		databaseSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true, true, true);
+		databaseSync.execute(true, true, true);
 		if (intent != null && intent.getExtras() != null) {
 			Bundle bundle = intent.getExtras();
 			if (bundle.getString(STOP_REQUEST) != null) {
