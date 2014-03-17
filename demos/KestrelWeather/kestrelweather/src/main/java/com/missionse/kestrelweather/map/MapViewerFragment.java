@@ -194,7 +194,6 @@ public class MapViewerFragment extends MapFragment implements
 	}
 
 	private void setUpMap() {
-		mMap.setMyLocationEnabled(true);
 		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 		mMap.setOnMapLoadedCallback(this);
 		mMap.setOnMapClickListener(this);
@@ -317,6 +316,7 @@ public class MapViewerFragment extends MapFragment implements
 		}
 		Location location = mActivity.getLastLocation();
 		if (location != null) {
+			mMap.setMyLocationEnabled(true);
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 5.0f),
 					new GoogleMap.CancelableCallback() {
 						@Override
