@@ -216,8 +216,7 @@ public class MapViewerFragment extends MapFragment implements
 					.setCustomAnimations(
 							R.animator.fade_in, R.animator.fade_out,
 							R.animator.fade_in, R.animator.fade_out)
-					.add(R.id.content, reportDetailFragment, "report_detail")
-					.hide(this)
+					.replace(R.id.content, reportDetailFragment, "report_detail")
 					.addToBackStack("report_detail")
 					.commit();
 		}
