@@ -70,7 +70,7 @@ public final class UnitPrefs {
 		String key = context.getString(R.string.key_units_pressure);
 		String value = prefs.getString(key, context.getString(R.string.kilopascal));
 		if (value.equals(context.getString(R.string.milibars))) {
-			return UnitConverter.kilopascalToMilibar(kilopascal);
+			return UnitConverter.kilopascalToMillibar(kilopascal);
 		} else if (value.equals(context.getString(R.string.inches_of_mercury))) {
 			return UnitConverter.kilopascalToInchesOfMercury(kilopascal);
 		} else {

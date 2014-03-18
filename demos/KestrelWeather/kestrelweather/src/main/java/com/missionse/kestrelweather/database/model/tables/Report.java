@@ -182,7 +182,7 @@ public class Report extends Entity implements ClusterItem, Comparable<Object> {
 	public int hashCode() {
 		int result;
 		long temp;
-		//CHECKSTYLE: OFF
+		//Disable Checks: MagicNumber|AvoidInlineConditionals
 		result = mUserName != null ? mUserName.hashCode() : 0;
 		result = 31 * result + (mTitle != null ? mTitle.hashCode() : 0);
 		temp = Double.doubleToLongBits(mLatitude);
@@ -195,7 +195,7 @@ public class Report extends Entity implements ClusterItem, Comparable<Object> {
 		result = 31 * result + (mOpenWeather != null ? mOpenWeather.hashCode() : 0);
 		result = 31 * result + (mSupplements != null ? mSupplements.hashCode() : 0);
 		result = 31 * result + (mNotes != null ? mNotes.hashCode() : 0);
-		//CHECKSTYLE: ON
+		//Disable Checks: MagicNumber|AvoidInlineConditionals
 		return result;
 	}
 
