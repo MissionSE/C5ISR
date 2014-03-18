@@ -103,14 +103,17 @@ public final class KestrelWeatherFactory {
 
 		float temperatureInCelsius = kestrelWeather.getTemperature();
 		float windSpeedInKmph = UnitConverter.mpsToKmph(kestrelWeather.getWindSpeed());
-		double calculatedWindChill = 13.12 + (0.6215 * temperatureInCelsius) -
-				(11.37 * Math.pow(windSpeedInKmph, 0.16)) +
-				(0.3965 * temperatureInCelsius * Math.pow(windSpeedInKmph, 0.16));
+
+		//CHECKSTYLE: OFF
+		double calculatedWindChill = 13.12 + (0.6215 * temperatureInCelsius)
+				- (11.37 * Math.pow(windSpeedInKmph, 0.16))
+				+ (0.3965 * temperatureInCelsius * Math.pow(windSpeedInKmph, 0.16));
 
 		kestrelWeather.setWindChill((float) calculatedWindChill);
 		kestrelWeather.setPressureTrend((int) Math.floor((Math.random() * 2)));
 		kestrelWeather.setHeatIndex(temperatureInCelsius + (float) (Math.random() * 10));
 		kestrelWeather.setDewPoint(temperatureInCelsius - (float) (Math.random() * 10));
+		//CHECKSTYLE: ON
 
 		return kestrelWeather;
 	}

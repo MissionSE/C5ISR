@@ -32,6 +32,7 @@ import java.util.Collection;
  */
 public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report> {
 	private static final String TAG = ObservationCalloutMarkersAdapter.class.getSimpleName();
+	private static final int DRAWABLE_COUNT = 3;
 	private static final float CLUSTER_ITEM_SHAPE_INSET_MULTIPLIER = 5.0F;
 	private static final float CLUSTER_SHAPE_INSET_MULTIPLIER = 10.0F;
 	private static final float CLUSTER_TEXT_INSET_MULTIPLIER = 6.0F;
@@ -83,7 +84,7 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 
 		TextDrawable textDrawable = new TextDrawable(getContext().getResources(), Integer.toString(cluster.getSize()));
 
-		Drawable[] arrayOfDrawable = new Drawable[3];
+		Drawable[] arrayOfDrawable = new Drawable[DRAWABLE_COUNT];
 		arrayOfDrawable[0] = shadowDrawable;
 		arrayOfDrawable[1] = shapeDrawable;
 		arrayOfDrawable[2] = textDrawable;

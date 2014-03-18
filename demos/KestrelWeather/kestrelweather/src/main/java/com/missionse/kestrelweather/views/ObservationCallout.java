@@ -1,6 +1,7 @@
 package com.missionse.kestrelweather.views;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -17,6 +18,9 @@ import org.joda.time.Hours;
 import org.joda.time.Minutes;
 import org.joda.time.Seconds;
 
+/**
+ * Provides an info window to be used to represent a report on the map.
+ */
 public class ObservationCallout extends FrameLayout {
 	private static final String TAG = ObservationCallout.class.getSimpleName();
 	private static final int SECONDS_IN_MINUTE = 60;
@@ -24,15 +28,30 @@ public class ObservationCallout extends FrameLayout {
 	private static final int HOURS_IN_DAY = 24;
 	private Report mReport;
 
-	public ObservationCallout(Context context) {
+	/**
+	 * Constructor.
+	 * @param context The current context.
+	 */
+	public ObservationCallout(final Context context) {
 		super(context);
 	}
 
-	public ObservationCallout(Context context, AttributeSet attributeSet) {
+	/**
+	 * Constructor.
+	 * @param context The current context.
+	 * @param attributeSet The set of attributes used to define the layout.
+	 */
+	public ObservationCallout(final Context context, final AttributeSet attributeSet) {
 		super(context, attributeSet);
 	}
 
-	public ObservationCallout(Context context, AttributeSet attributeSet, int defStyle) {
+	/**
+	 * Constructor.
+	 * @param context The current context.
+	 * @param attributeSet The set of attributes used to define the layout.
+	 * @param defStyle The default style of the layout.
+	 */
+	public ObservationCallout(final Context context, final AttributeSet attributeSet, final int defStyle) {
 		super(context, attributeSet, defStyle);
 	}
 
@@ -184,8 +203,10 @@ public class ObservationCallout extends FrameLayout {
 	private void setWeatherIcon() {
 		View view = findViewById(R.id.observation_icon);
 		if (view != null && mReport.getOpenWeather() != null) {
-			view.getBackground().setLevel(mReport.getOpenWeather().getConditionCode());
+			Drawable background = view.getBackground();
+			if (background != null) {
+				background.setLevel(mReport.getOpenWeather().getConditionCode());
+			}
 		}
 	}
-
 }

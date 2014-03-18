@@ -121,8 +121,8 @@ public class KestrelWeatherActivity extends DrawerActivity implements
 
 	@Override
 	public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-		if (key.equals(getString(R.string.key_sync_frequency)) ||
-				key.equals(getString(R.string.key_sync_enabled))) {
+		if (key.equals(getString(R.string.key_sync_frequency))
+				|| key.equals(getString(R.string.key_sync_enabled))) {
 			startSyncService();
 		}
 

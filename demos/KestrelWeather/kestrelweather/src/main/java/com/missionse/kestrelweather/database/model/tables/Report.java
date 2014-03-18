@@ -1,6 +1,7 @@
 package com.missionse.kestrelweather.database.model.tables;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.maps.android.clustering.ClusterItem;
 import com.j256.ormlite.dao.ForeignCollection;
@@ -133,26 +134,46 @@ public class Report extends Entity implements ClusterItem, Comparable<Object> {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		Report report = (Report) o;
 
-		if (mDraft != report.mDraft) return false;
-		if (Double.compare(report.mLatitude, mLatitude) != 0) return false;
-		if (Double.compare(report.mLongitude, mLongitude) != 0) return false;
-		if (mRead != report.mRead) return false;
-		if (mKestrelWeather != null ? !mKestrelWeather.equals(report.mKestrelWeather) : report.mKestrelWeather != null)
+		if (mDraft != report.mDraft) {
 			return false;
-		if (mNotes != null ? !mNotes.equals(report.mNotes) : report.mNotes != null) return false;
-		if (mOpenWeather != null ? !mOpenWeather.equals(report.mOpenWeather) : report.mOpenWeather != null)
+		}
+		if (Double.compare(report.mLatitude, mLatitude) != 0) {
 			return false;
-		if (mSupplements != null ? !mSupplements.equals(report.mSupplements) : report.mSupplements != null)
+		}
+		if (Double.compare(report.mLongitude, mLongitude) != 0) {
 			return false;
-		if (mTitle != null ? !mTitle.equals(report.mTitle) : report.mTitle != null) return false;
-		if (mUserName != null ? !mUserName.equals(report.mUserName) : report.mUserName != null)
+		}
+		if (mRead != report.mRead) {
 			return false;
+		}
+		if (mKestrelWeather != null && !mKestrelWeather.equals(report.mKestrelWeather)) {
+			return false;
+		}
+		if (mNotes != null && !mNotes.equals(report.mNotes)) {
+			return false;
+		}
+		if (mOpenWeather != null && !mOpenWeather.equals(report.mOpenWeather)) {
+			return false;
+		}
+		if (mSupplements != null && !mSupplements.equals(report.mSupplements)) {
+			return false;
+		}
+		if (mTitle != null && !mTitle.equals(report.mTitle)) {
+			return false;
+		}
+		if (mUserName != null && !mUserName.equals(report.mUserName)) {
+			return false;
+		}
 
 		return true;
 	}
@@ -161,6 +182,7 @@ public class Report extends Entity implements ClusterItem, Comparable<Object> {
 	public int hashCode() {
 		int result;
 		long temp;
+		//CHECKSTYLE: OFF
 		result = mUserName != null ? mUserName.hashCode() : 0;
 		result = 31 * result + (mTitle != null ? mTitle.hashCode() : 0);
 		temp = Double.doubleToLongBits(mLatitude);
@@ -173,6 +195,7 @@ public class Report extends Entity implements ClusterItem, Comparable<Object> {
 		result = 31 * result + (mOpenWeather != null ? mOpenWeather.hashCode() : 0);
 		result = 31 * result + (mSupplements != null ? mSupplements.hashCode() : 0);
 		result = 31 * result + (mNotes != null ? mNotes.hashCode() : 0);
+		//CHECKSTYLE: ON
 		return result;
 	}
 
@@ -231,15 +254,47 @@ public class Report extends Entity implements ClusterItem, Comparable<Object> {
 	@Override
 	public void populate(JsonObject json) {
 		super.populate(json);
-		String uid = (json.get("userid") == null ? "" : json.get("userid").getAsString());
-		double lat = (json.get("latitude") == null ? 0 : json.get("latitude").getAsDouble());
-		double lng = (json.get("longitude") == null ? 0 : json.get("longitude").getAsDouble());
-		String title = (json.get("title") == null ? "" : json.get("title").getAsString());
 
-		setUserName(uid);
-		setLatitude(lat);
-		setLongitude(lng);
-		setTitle(title);
+		setUserName(json);
+		setLatitude(json);
+		setLongitude(json);
+		setTitle(json);
+	}
+
+	private void setTitle(final JsonObject json) {
+		JsonElement title = json.get("title");
+		if (title != null) {
+			setTitle(title.getAsString());
+		} else {
+			setTitle("");
+		}
+	}
+
+	private void setLongitude(final JsonObject json) {
+		JsonElement longitude = json.get("longitude");
+		if (longitude != null) {
+			setLongitude(longitude.getAsDouble());
+		} else {
+			setLongitude(0.0);
+		}
+	}
+
+	private void setLatitude(final JsonObject json) {
+		JsonElement latitude = json.get("latitude");
+		if (latitude != null) {
+			setLatitude(latitude.getAsDouble());
+		} else {
+			setLatitude(0.0);
+		}
+	}
+
+	private void setUserName(final JsonObject json) {
+		JsonElement userId = json.get("userid");
+		if (userId != null) {
+			setUserName(userId.getAsString());
+		} else {
+			setUserName("");
+		}
 	}
 
 	/**

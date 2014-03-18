@@ -1,7 +1,10 @@
 package com.missionse.kestrelweather.database.model;
 
+import android.util.Log;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
@@ -157,11 +160,14 @@ public class Entity {
 	 */
 	private int parseId(JsonElement element) {
 		int retValue = 0;
-		if (element != null) {
-			try {
-				retValue = element.getAsInt();
-			} catch (NumberFormatException e) {
-				// Id was not valid.
+		if (element != null && element.isJsonPrimitive()) {
+			JsonPrimitive id = element.getAsJsonPrimitive();
+			if (id != null && id.isNumber()) {
+				try {
+					retValue = element.getAsInt();
+				} catch (NumberFormatException e) {
+					Log.d(TAG, "Unable to parse id: " + id.toString());
+				}
 			}
 		}
 		return retValue;

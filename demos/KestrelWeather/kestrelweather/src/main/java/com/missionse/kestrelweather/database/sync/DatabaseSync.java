@@ -20,6 +20,7 @@ public class DatabaseSync extends AsyncTask<Boolean, Void, Void> implements Sync
 	private static final int PUSH_REPORT_IDX = 0;
 	private static final int PULL_REMOTE_IDX = 1;
 	private static final int PUSH_MEDIA_IDX = 2;
+	private static final int EXPECTED_ARGUMENTS = 3;
 	private DatabaseAccessor mAccessor;
 	private Context mContext;
 	private SyncStatusListener mListener;
@@ -42,7 +43,7 @@ public class DatabaseSync extends AsyncTask<Boolean, Void, Void> implements Sync
 
 	@Override
 	protected Void doInBackground(Boolean... params) {
-		if (params.length < 3) {
+		if (params.length < EXPECTED_ARGUMENTS) {
 			throw new IllegalArgumentException("Missing arguments...");
 		}
 		if (params[PUSH_REPORT_IDX]) {

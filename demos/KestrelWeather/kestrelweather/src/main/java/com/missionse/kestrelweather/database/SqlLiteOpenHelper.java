@@ -118,7 +118,7 @@ public abstract class SqlLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	 * @return Instance of ReportTable.
 	 */
 	public ReportTable getReportTable() {
-		if (mReportTable == null)  {
+		if (mReportTable == null) {
 			mReportTable = (ReportTable) getObjectDao(Report.class);
 		}
 		return mReportTable;

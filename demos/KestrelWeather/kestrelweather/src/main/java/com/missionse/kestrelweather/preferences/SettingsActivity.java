@@ -155,7 +155,8 @@ public class SettingsActivity extends PreferenceActivity {
 	}
 
 	@Override
-	public void startWithFragment(final String fragmentName, final Bundle args, final Fragment resultTo, final int resultRequestCode, final int titleRes, final int shortTitleRes) {
+	public void startWithFragment(final String fragmentName, final Bundle args, final Fragment resultTo, final int resultRequestCode,
+			final int titleRes, final int shortTitleRes) {
 		super.startWithFragment(fragmentName, args, resultTo, resultRequestCode, titleRes, shortTitleRes);
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}

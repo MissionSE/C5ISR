@@ -36,9 +36,9 @@ public final class DatabaseLogger {
 						+ note.getContent());
 			}
 			Log.d(TAG, "Listing Supplements:");
-			for (Supplement sup : report.getSupplements()) {
-				Log.d(TAG, "  (" + sup.getId() + ") Uri:" + sup.getUri() + "  RemoteUri: " +
-						sup.getRemoteUri() + "  Type:" + sup.getType());
+			for (Supplement supplement : report.getSupplements()) {
+				Log.d(TAG, "  (" + supplement.getId() + ") Uri:" + supplement.getUri() + "  RemoteUri: "
+						+ supplement.getRemoteUri() + "  Type:" + supplement.getType());
 			}
 		}
 	}

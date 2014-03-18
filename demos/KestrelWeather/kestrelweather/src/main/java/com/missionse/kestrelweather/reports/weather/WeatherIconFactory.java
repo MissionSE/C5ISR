@@ -11,6 +11,7 @@ public final class WeatherIconFactory {
 	private static TreeMap<Integer, Integer> mWeatherIcons;
 
 	static {
+		//CHECKSTYLE: OFF
 		mWeatherIcons = new TreeMap<Integer, Integer>();
 		mWeatherIcons.put(0, R.drawable.weather_pict_storm);
 		mWeatherIcons.put(300, R.drawable.weather_pict_light_rain);
@@ -28,6 +29,7 @@ public final class WeatherIconFactory {
 		mWeatherIcons.put(802, R.drawable.weather_pict_cloudy);
 		mWeatherIcons.put(804, R.drawable.weather_pict_overcast);
 		mWeatherIcons.put(904, R.drawable.weather_pict_hot);
+		//CHECKSTYLE: ON
 	}
 
 	private WeatherIconFactory() {

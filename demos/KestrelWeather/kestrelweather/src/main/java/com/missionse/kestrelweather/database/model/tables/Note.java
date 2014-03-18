@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather.database.model.tables;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -30,6 +31,7 @@ public class Note extends Entity {
 	public Note() {
 		mTitle = "";
 		mContent = "";
+		mSize = 0L;
 	}
 
 	/**
@@ -109,8 +111,35 @@ public class Note extends Entity {
 	@Override
 	public void populate(JsonObject json) {
 		super.populate(json);
-		setTitle((json.get("title") == null ? "" : json.get("title").getAsString()));
-		setContent((json.get("content") == null ? "" : json.get("content").getAsString()));
-		setSize((json.get("size") == null ? 0L : json.get("size").getAsLong()));
+		setTitle(json);
+		setContent(json);
+		setSize(json);
+	}
+
+	private void setTitle(final JsonObject json) {
+		JsonElement title = json.get("title");
+		if (title != null) {
+			setTitle(title.getAsString());
+		} else {
+			setTitle("");
+		}
+	}
+
+	private void setContent(final JsonObject json) {
+		JsonElement content = json.get("content");
+		if (content != null) {
+			setContent(content.getAsString());
+		} else {
+			setContent("");
+		}
+	}
+
+	private void setSize(final JsonObject json) {
+		JsonElement size = json.get("size");
+		if (size != null) {
+			setSize(size.getAsLong());
+		} else {
+			setSize(0L);
+		}
 	}
 }

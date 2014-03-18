@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather.database.model.tables;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -218,14 +219,96 @@ public class KestrelWeather extends Entity {
 	@Override
 	public void populate(JsonObject json) {
 		super.populate(json);
-		setTemperature((json.get("temperature") == null ? 0f : json.get("temperature").getAsFloat()));
-		setHumidity((json.get("humidity") == null ? 0 : json.get("humidity").getAsInt()));
-		setPressure((json.get("pressure") == null ? 0f : json.get("pressure").getAsFloat()));
-		setPressureTrend((json.get("pressuretrend") == null ? 0 : json.get("pressuretrend").getAsInt()));
-		setHeatIndex((json.get("heatindex") == null ? 0f : json.get("heatindex").getAsFloat()));
-		setWindSpeed((json.get("windspeed") == null ? 0f : json.get("windspeed").getAsFloat()));
-		setWindDirection((json.get("winddirection") == null ? 0 : json.get("winddirection").getAsInt()));
-		setWindChill((json.get("windchill") == null ? 0f : json.get("windchill").getAsFloat()));
-		setDewPoint((json.get("dewpoint") == null ? 0f : json.get("dewpoint").getAsFloat()));
+
+		setTemperature(json);
+		setHumidity(json);
+		setPressure(json);
+		setPressureTrend(json);
+		setHeatIndex(json);
+		setWindSpeed(json);
+		setWindDirection(json);
+		setWindChill(json);
+		setDewPoint(json);
+	}
+
+	private void setDewPoint(final JsonObject json) {
+		JsonElement dewPoint = json.get("dewpoint");
+		if (dewPoint != null) {
+			setDewPoint(dewPoint.getAsFloat());
+		} else {
+			setDewPoint(0.0f);
+		}
+	}
+
+	private void setWindChill(final JsonObject json) {
+		JsonElement windChill = json.get("windchill");
+		if (windChill != null) {
+			setWindChill(windChill.getAsFloat());
+		} else {
+			setWindChill(0.0f);
+		}
+	}
+
+	private void setWindDirection(final JsonObject json) {
+		JsonElement windDirection = json.get("winddirection");
+		if (windDirection != null) {
+			setWindDirection(windDirection.getAsInt());
+		} else {
+			setWindDirection(0);
+		}
+	}
+
+	private void setWindSpeed(final JsonObject json) {
+		JsonElement windSpeed = json.get("windspeed");
+		if (windSpeed != null) {
+			setWindSpeed(windSpeed.getAsFloat());
+		} else {
+			setWindSpeed(0.0f);
+		}
+	}
+
+	private void setHeatIndex(final JsonObject json) {
+		JsonElement heatIndex = json.get("heatindex");
+		if (heatIndex != null) {
+			setHeatIndex(heatIndex.getAsFloat());
+		} else {
+			setHeatIndex(0.0f);
+		}
+	}
+
+	private void setPressureTrend(final JsonObject json) {
+		JsonElement pressureTrend = json.get("pressuretrend");
+		if (pressureTrend != null) {
+			setPressureTrend(pressureTrend.getAsInt());
+		} else {
+			setPressureTrend(0);
+		}
+	}
+
+	private void setPressure(final JsonObject json) {
+		JsonElement pressure = json.get("pressure");
+		if (pressure != null) {
+			setPressure(pressure.getAsFloat());
+		} else {
+			setPressure(0.0f);
+		}
+	}
+
+	private void setHumidity(final JsonObject json) {
+		JsonElement humidity = json.get("humidity");
+		if (humidity != null) {
+			setHumidity(humidity.getAsInt());
+		} else {
+			setHumidity(0);
+		}
+	}
+
+	private void setTemperature(final JsonObject json) {
+		JsonElement temperature = json.get("temperature");
+		if (temperature != null) {
+			setTemperature(temperature.getAsFloat());
+		} else {
+			setTemperature(0.0f);
+		}
 	}
 }

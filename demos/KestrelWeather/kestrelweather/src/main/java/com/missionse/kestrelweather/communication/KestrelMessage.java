@@ -23,6 +23,8 @@ public class KestrelMessage {
 	public static final int WIND_CHILL = 8;
 	public static final int DEW_POINT = 9;
 
+	private static final int EXPECTED_LENGTH = 10;
+
 	private int mMessageType;
 	private KestrelWeather mKestrelWeather;
 
@@ -56,7 +58,7 @@ public class KestrelMessage {
 		String[] tokenizedMessage = rawMessage.split(TOKEN);
 		KestrelMessage translation = new KestrelMessage(Integer.valueOf(tokenizedMessage[MESSAGE_TYPE]));
 		if (translation.isData()) {
-			if (tokenizedMessage.length != 10) {
+			if (tokenizedMessage.length != EXPECTED_LENGTH) {
 				throw new InvalidKestrelMessageException();
 			}
 

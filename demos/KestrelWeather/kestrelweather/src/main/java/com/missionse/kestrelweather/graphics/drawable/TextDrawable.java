@@ -9,9 +9,13 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 
+/**
+ * Provides a drawable that displays a specified character sequence.
+ */
 public class TextDrawable extends Drawable {
 	private static final int DEFAULT_COLOR = Color.WHITE;
 	private static final int DEFAULT_TEXTSIZE = 18;
+	private static final float TEXT_PADDING = 0.5f;
 
 	private Paint mPaint;
 	private CharSequence mText;
@@ -26,7 +30,7 @@ public class TextDrawable extends Drawable {
 		float textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
 				DEFAULT_TEXTSIZE, res.getDisplayMetrics());
 		mPaint.setTextSize(textSize);
-		mIntrinsicWidth = (int) (mPaint.measureText(mText, 0, mText.length()) + .5);
+		mIntrinsicWidth = (int) (mPaint.measureText(mText, 0, mText.length()) + TEXT_PADDING);
 		mIntrinsicHeight = mPaint.getFontMetricsInt(null);
 	}
 

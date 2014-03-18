@@ -1,23 +1,56 @@
 package com.missionse.kestrelweather.util;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 
 import com.missionse.kestrelweather.R;
 
-public class ResourcesHelper {
+/**
+ * Provides utility functions to handle temperature resources.
+ */
+public final class ResourcesHelper {
+	private static final int MAX_COLOR_INDEX = 24;
+	private static final int TEMPERATURE_PADDING = 20;
+	private static final float RANGE_PER_TEMPERATURE_COLOR = 2.4f;
 
 	private ResourcesHelper() {
 	}
 
-	public static int getTemperatureColor(Context context, double temperature) {
+	/**
+	 * Gets the color of a temperature based on the celsius temperature value.
+	 * @param context The current context.
+	 * @param temperature The temperature in celsius.
+	 * @return The color of the temperature.
+	 */
+	public static int getTemperatureColor(final Context context, final double temperature) {
 		return getTemperatureColorByIndex(context, getTemperatureIndex(getTemperatureIndex(temperature)));
 	}
 
-	public static int getTemperatureColorByIndex(Context context, int index) {
-		return context.getResources().obtainTypedArray(R.array.temperature_colors).getColor(index, 0);
+	/**
+	 * Gets the color of a temperature based on the index in the color array.
+	 * @param context The current context.
+	 * @param index The index into the temperature color array.
+	 * @return The color of the temperature.
+	 */
+	public static int getTemperatureColorByIndex(final Context context, final int index) {
+		int color = 0;
+		TypedArray temperatureArray = context.getResources().obtainTypedArray(R.array.temperature_colors);
+		if (temperatureArray != null) {
+			color = temperatureArray.getColor(index, 0);
+		}
+
+		return color;
 	}
 
-	public static int getTemperatureIndex(double temperature) {
-		return Math.min(24, Math.max((int) Math.floor((temperature + 20) / 2.4), 0));
+	/**
+	 * Gets the index of a temperature color based on the temperature in celsius.
+	 * @param temperature The temperature in celsius.
+	 * @return The index of the temperature color.
+	 */
+	public static int getTemperatureIndex(final double temperature) {
+		return Math.min(MAX_COLOR_INDEX,
+				Math.max((int) Math.floor((temperature + TEMPERATURE_PADDING) / RANGE_PER_TEMPERATURE_COLOR),
+						0)
+		);
 	}
 }

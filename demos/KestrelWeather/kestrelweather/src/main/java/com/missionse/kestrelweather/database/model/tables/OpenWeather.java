@@ -1,5 +1,6 @@
 package com.missionse.kestrelweather.database.model.tables;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -112,9 +113,45 @@ public class OpenWeather extends Entity {
 	@Override
 	public void populate(JsonObject json) {
 		super.populate(json);
-		setConditionCode((json.get("conditioncode") == null ? 0 : json.get("conditioncode").getAsInt()));
-		setDescription((json.get("description") == null ? "" : json.get("description").getAsString()));
-		setName((json.get("name") == null ? "" : json.get("name").getAsString()));
-		setCountry((json.get("country") == null ? "" : json.get("country").getAsString()));
+		setName(json);
+		setCountry(json);
+		setDescription(json);
+		setConditionCode(json);
+	}
+
+	private void setName(final JsonObject json) {
+		JsonElement name = json.get("name");
+		if (name != null) {
+			setName(name.getAsString());
+		} else {
+			setName("");
+		}
+	}
+
+	private void setCountry(final JsonObject json) {
+		JsonElement country = json.get("country");
+		if (country != null) {
+			setCountry(country.getAsString());
+		} else {
+			setCountry("");
+		}
+	}
+
+	private void setDescription(final JsonObject json) {
+		JsonElement description = json.get("description");
+		if (description != null) {
+			setDescription(description.getAsString());
+		} else {
+			setDescription("");
+		}
+	}
+
+	private void setConditionCode(final JsonObject json) {
+		JsonElement conditionCode = json.get("conditioncode");
+		if (conditionCode != null) {
+			setConditionCode(conditionCode.getAsInt());
+		} else {
+			setConditionCode(0);
+		}
 	}
 }

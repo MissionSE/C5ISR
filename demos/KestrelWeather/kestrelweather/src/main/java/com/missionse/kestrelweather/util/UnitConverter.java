@@ -12,6 +12,7 @@ public final class UnitConverter {
 	private UnitConverter() {
 	}
 
+	//CHECKSTYLE: OFF
 	public static float kelvinToCelsius(float kelvin) {
 		return kelvin - 272.15f;
 	}
@@ -127,5 +128,5 @@ public final class UnitConverter {
 		}
 		return "";
 	}
-
+	//CHECKSTYLE: ON
 }

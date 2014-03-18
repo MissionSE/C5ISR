@@ -16,6 +16,7 @@ public interface SyncStatusListener {
 
 	/**
 	 * Called when a report has been synced.
+	 * @param reportId The id of the report that was synced.
 	 */
-	void onSyncedReport(int reportId);
+	void onSyncedReport(final int reportId);
 }

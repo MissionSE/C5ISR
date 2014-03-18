@@ -16,6 +16,7 @@ import com.missionse.kestrelweather.database.model.tables.Note;
  */
 public class NoteAdapter extends ArrayAdapter<Note> {
 	private static final int BYTES_IN_KILOBYTE = 1024;
+	private static final int CHARACTER_SIZE = 8;
 	private static int RESOURCE_LAYOUT_ID = R.layout.fragment_report_item_list_entry;
 
 	/**
@@ -39,7 +40,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 				setThumbnail(view);
 				setFileName(view, note.getTitle());
 				setFileDateModified(view, note.getUpdateAt().toString());
-				setFileSize(view, note.getContent().length() * 8);
+				setFileSize(view, note.getContent().length() * CHARACTER_SIZE);
 			}
 		}
 		return view;

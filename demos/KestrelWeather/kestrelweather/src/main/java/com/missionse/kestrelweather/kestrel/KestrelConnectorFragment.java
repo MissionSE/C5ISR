@@ -420,8 +420,8 @@ public class KestrelConnectorFragment extends Fragment {
 				case BluetoothNetworkService.MESSAGE_STATE_CHANGE:
 					switch (msg.arg1) {
 						case BluetoothNetworkService.STATE_CONNECTED:
-							mRequestReadingsButton.setText(getResources().getString(R.string.request_readings) +
-									" " + mConnectedDevice);
+							mRequestReadingsButton.setText(getResources().getString(R.string.request_readings)
+									+ " " + mConnectedDevice);
 							mRequestReadingsButton.setEnabled(true);
 
 							mConnectToDeviceButton.setText(getResources().getString(R.string.disconnect_from_device)
