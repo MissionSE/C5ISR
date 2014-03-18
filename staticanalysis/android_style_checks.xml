@@ -129,7 +129,8 @@
     <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="SuppressionCommentFilter">
-    <property name="offCommentFormat" value="CHECKSTYLE: OFF"/>
-    <property name="onCommentFormat" value="CHECKSTYLE: ON"/>
+    <property name="offCommentFormat" value="Disable Checks\: ([\w\|]+)"/>
+    <property name="onCommentFormat" value="Enable Checks\: ([\w\|]+)"/>
+    <property name="checkFormat" value="$1"/>
   </module>
 </module>
