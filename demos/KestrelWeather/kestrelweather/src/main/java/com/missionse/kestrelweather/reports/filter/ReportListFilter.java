@@ -104,12 +104,13 @@ public class ReportListFilter extends Filter {
 	protected void publishResults(final CharSequence charSequence, final FilterResults filterResults) {
 		@SuppressWarnings("unchecked")
 		ArrayList<Report> filteredReports = (ArrayList<Report>) filterResults.values;
-		mReportAdapter.notifyDataSetChanged();
 		mReportAdapter.clear();
 		if (filteredReports != null) {
 			for (final Report report : filteredReports) {
 				mReportAdapter.add(report);
 			}
+			mReportAdapter.notifyDataSetChanged();
+		} else {
 			mReportAdapter.notifyDataSetInvalidated();
 		}
 

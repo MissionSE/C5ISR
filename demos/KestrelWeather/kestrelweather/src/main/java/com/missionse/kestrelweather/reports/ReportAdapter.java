@@ -36,6 +36,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	private DateTimeFormatter mDateFormatter;
 	private List<Report> mOriginalReportList;
 	private ReportListFilter mReportListFilter;
+	private String[] sectionHeaders;
 
 	/**
 	 * Constructor.
@@ -189,6 +190,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 		clear();
 		addAll(collection);
 		setOriginalReportList(collection);
+		determineSectionHeaders();
 	}
 
 	private void setOriginalReportList(Collection<? extends Report> collection) {
@@ -196,33 +198,51 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 		mOriginalReportList.addAll(collection);
 	}
 
+	private void determineSectionHeaders() {
+		String sectionHeadersRaw = "";
+		for (int index = 0; index < getCount(); index++) {
+			String firstLetter = getItem(index).getTitle().toUpperCase().substring(0, 1);
+			if (!sectionHeadersRaw.contains(firstLetter)) {
+				sectionHeadersRaw += firstLetter + " ";
+			}
+		}
+		sectionHeadersRaw = sectionHeadersRaw.trim();
+
+		sectionHeaders = sectionHeadersRaw.split(" ");
+	}
+
 	@Override
 	public Object[] getSections() {
-		return new Object[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
-				"R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+		return sectionHeaders;
 	}
 
 	@Override
 	public int getPositionForSection(final int i) {
-		String firstLetter = (String) getSections()[i];
-
-		for (int index = 0; index < mOriginalReportList.size(); index++) {
-			if (mOriginalReportList.get(index).getTitle().toUpperCase().substring(0, 1).equals(firstLetter)) {
-				return index;
+		int sectionIndex = i;
+		while (true) {
+			String sectionFirstLetter = (String) getSections()[sectionIndex];
+			for (int index = 0; index < getCount(); index++) {
+				String reportTitleFirstLetter = getItem(index).getTitle().toUpperCase().substring(0, 1);
+				if (reportTitleFirstLetter.equals(sectionFirstLetter)) {
+					return index;
+				}
+			}
+			sectionIndex++;
+			if (sectionIndex >= getSections().length) {
+				return getCount() - 1;
 			}
 		}
-		return 0;
 	}
 
 	@Override
 	public int getSectionForPosition(final int i) {
-		String firstLetter = mOriginalReportList.get(i).getTitle().toUpperCase().substring(0, 1);
+		String firstLetter = getItem(i).getTitle().toUpperCase().substring(0, 1);
 		for (int index = 0; index < getSections().length; index++) {
 			String sectionString = (String) getSections()[index];
 			if (sectionString.equals(firstLetter)) {
 				return index;
 			}
 		}
-		return 0;
+		return getSections().length - 1;
 	}
 }
