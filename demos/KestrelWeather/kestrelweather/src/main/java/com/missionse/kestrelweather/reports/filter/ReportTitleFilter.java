@@ -25,7 +25,7 @@ public final class ReportTitleFilter {
 		if (constraint != null && constraint.toString().length() > 0) {
 			constraint = constraint.toString().toLowerCase(Locale.getDefault());
 
-			for (Report report : originals) {
+			for (final Report report : originals) {
 				if (report.getTitle().toLowerCase(Locale.getDefault()).contains(constraint)) {
 					filteredReports.add(report);
 				}

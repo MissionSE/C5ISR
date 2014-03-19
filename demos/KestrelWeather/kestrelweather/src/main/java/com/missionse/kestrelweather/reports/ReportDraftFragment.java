@@ -16,9 +16,6 @@ import android.widget.TextView;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
-import com.missionse.kestrelweather.database.model.tables.Report;
-
-import java.util.ArrayList;
 
 /**
  * Provides a fragment to show a list of reports.
@@ -65,8 +62,7 @@ public class ReportDraftFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 
 		if (mActivity != null) {
-			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
-					new ArrayList<Report>());
+			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header);
 		}
 	}
 

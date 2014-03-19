@@ -35,8 +35,6 @@ import com.slidinglayer.SlidingLayer;
 
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
-
 /**
  * Provides a fragment that displays a google map.
  */
@@ -97,8 +95,7 @@ public class MapViewerFragment extends MapFragment implements
 		setRetainInstance(true);
 
 		if (mActivity != null) {
-			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
-					new ArrayList<Report>());
+			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header);
 		}
 
 		if (mOptionsMenuListener != null) {

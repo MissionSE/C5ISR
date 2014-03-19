@@ -37,7 +37,7 @@ public class ReportListFilter extends Filter {
 	 * Helper function to wrap filter(), as this is now a pseudo-filter.
 	 */
 	public void filter() {
-		super.filter(mReportTitleConstraint);
+		super.filter("");
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ReportListFilter extends Filter {
 		FilterResults results = new FilterResults();
 
 		ArrayList<Report> originalReports = new ArrayList<Report>();
-		ArrayList<Report> allReports = mReportAdapter.getAllReports();
+		List<Report> allReports = mReportAdapter.getAllReports();
 		for (final Report report : allReports) {
 			if (!report.isDraft()) {
 				originalReports.add(report);

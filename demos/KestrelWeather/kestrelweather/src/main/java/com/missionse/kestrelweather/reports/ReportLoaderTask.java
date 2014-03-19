@@ -86,8 +86,7 @@ public class ReportLoaderTask extends AsyncTask<Boolean, Void, Void> {
 	@Override
 	protected void onPostExecute(final Void parameter) {
 		super.onPostExecute(parameter);
-		mReportAdapter.clear();
-		mReportAdapter.addAll(mReportList);
+		mReportAdapter.setData(mReportList);
 		mReportAdapter.notifyDataSetChanged();
 
 		if (mProgressBar != null) {

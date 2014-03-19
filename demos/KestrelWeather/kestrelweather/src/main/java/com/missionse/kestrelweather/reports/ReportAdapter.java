@@ -34,22 +34,21 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHeadersAdapter, SectionIndexer {
 	private int mResource;
 	private DateTimeFormatter mDateFormatter;
-	private List<Report> mOrigReportList;
+	private List<Report> mOriginalReportList;
 	private ReportListFilter mReportListFilter;
 
 	/**
 	 * Constructor.
 	 * @param context The current context.
 	 * @param resource The resource ID for a layout file containing a View to use when instantiating views.
-	 * @param objects The initial objects in the adapter.
 	 */
-	public ReportAdapter(final Context context, final int resource, final List<Report> objects) {
-		super(context, resource, objects);
+	public ReportAdapter(final Context context, final int resource) {
+		super(context, resource);
 		mDateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]");
 		mResource = resource;
 
 		mReportListFilter = new ReportListFilter(this);
-		mOrigReportList = new ArrayList<Report>();
+		mOriginalReportList = new ArrayList<Report>();
 	}
 
 	/**
@@ -157,8 +156,8 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	 * Retrieves all reports held by this adapter.
 	 * @return an array list of all reports
 	 */
-	public ArrayList<Report> getAllReports() {
-		return new ArrayList<Report>(mOrigReportList);
+	public List<Report> getAllReports() {
+		return mOriginalReportList;
 	}
 
 	@Override
@@ -182,10 +181,19 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 		return getItem(position).getTitle().toUpperCase().charAt(0);
 	}
 
-	@Override
-	public void addAll(Collection<? extends Report> collection) {
-		super.addAll(collection);
-		mOrigReportList.addAll(collection);
+	/**
+	 * Sets the back-end data to be utilized by the adapter.
+	 * @param collection the collection of data
+	 */
+	public void setData(Collection<? extends Report> collection) {
+		clear();
+		addAll(collection);
+		setOriginalReportList(collection);
+	}
+
+	private void setOriginalReportList(Collection<? extends Report> collection) {
+		mOriginalReportList.clear();
+		mOriginalReportList.addAll(collection);
 	}
 
 	@Override
@@ -198,8 +206,8 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	public int getPositionForSection(final int i) {
 		String firstLetter = (String) getSections()[i];
 
-		for (int index = 0; index < mOrigReportList.size(); index++) {
-			if (mOrigReportList.get(index).getTitle().toUpperCase().substring(0, 1).equals(firstLetter)) {
+		for (int index = 0; index < mOriginalReportList.size(); index++) {
+			if (mOriginalReportList.get(index).getTitle().toUpperCase().substring(0, 1).equals(firstLetter)) {
 				return index;
 			}
 		}
@@ -208,7 +216,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 
 	@Override
 	public int getSectionForPosition(final int i) {
-		String firstLetter = mOrigReportList.get(i).getTitle().toUpperCase().substring(0, 1);
+		String firstLetter = mOriginalReportList.get(i).getTitle().toUpperCase().substring(0, 1);
 		for (int index = 0; index < getSections().length; index++) {
 			String sectionString = (String) getSections()[index];
 			if (sectionString.equals(firstLetter)) {

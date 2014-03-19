@@ -30,12 +30,9 @@ import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.ReportListLoadedListener;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
-import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.sync.DatabaseSync;
 import com.missionse.kestrelweather.database.sync.SyncStatusListener;
 import com.missionse.kestrelweather.reports.filter.SyncStatusFilter;
-
-import java.util.ArrayList;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -87,8 +84,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		super.onCreate(savedInstanceState);
 
 		if (mActivity != null) {
-			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header,
-					new ArrayList<Report>());
+			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header);
 			mReportAdapter.addOnFilterRunnable(new Runnable() {
 				@Override
 				public void run() {
