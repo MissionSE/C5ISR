@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.ReportListLoadedListener;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.sync.DatabaseSync;
@@ -222,7 +223,13 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	}
 
 	private void updateReportList() {
-		mReportLoaderTask = new ReportLoaderTask(mDatabaseAccessor, mReportAdapter, mProgressBar);
+		mReportLoaderTask = new ReportLoaderTask(mDatabaseAccessor, mReportAdapter, mProgressBar,
+				new ReportListLoadedListener() {
+			@Override
+			public void reportListLoaded() {
+				mReportAdapter.filter();
+			}
+		});
 		mReportLoaderTask.execute(false);
 	}
 

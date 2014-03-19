@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.missionse.kestrelweather.ReportListLoadedListener;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.database.model.tables.manipulators.ReportTable;
@@ -21,6 +22,7 @@ public class ReportLoaderTask extends AsyncTask<Boolean, Void, Void> {
 	private DatabaseAccessor mDatabaseAccessor;
 	private ReportAdapter mReportAdapter;
 	private ProgressBar mProgressBar;
+	private ReportListLoadedListener mReportListLoadedListener;
 
 	private List<Report> mReportList;
 
@@ -32,9 +34,22 @@ public class ReportLoaderTask extends AsyncTask<Boolean, Void, Void> {
 	 */
 	public ReportLoaderTask(final DatabaseAccessor databaseAccessor, final ReportAdapter reportAdapter,
 			final ProgressBar progressBar) {
+		this(databaseAccessor, reportAdapter, progressBar, null);
+	}
+
+	/**
+	 * Constructor.
+	 * @param databaseAccessor An accessor to the database.
+	 * @param reportAdapter The report adapter to populate.
+	 * @param progressBar The progress bar used to display progress.
+	 * @param reportListLoadedListener The listener to be notified upon completion of the task.
+	 */
+	public ReportLoaderTask(final DatabaseAccessor databaseAccessor, final ReportAdapter reportAdapter,
+			final ProgressBar progressBar, final ReportListLoadedListener reportListLoadedListener) {
 		mDatabaseAccessor = databaseAccessor;
 		mReportAdapter = reportAdapter;
 		mProgressBar = progressBar;
+		mReportListLoadedListener = reportListLoadedListener;
 
 		mReportList = new ArrayList<Report>();
 	}
@@ -77,6 +92,10 @@ public class ReportLoaderTask extends AsyncTask<Boolean, Void, Void> {
 
 		if (mProgressBar != null) {
 			mProgressBar.setVisibility(View.GONE);
+		}
+
+		if (mReportListLoadedListener != null) {
+			mReportListLoadedListener.reportListLoaded();
 		}
 	}
 }
