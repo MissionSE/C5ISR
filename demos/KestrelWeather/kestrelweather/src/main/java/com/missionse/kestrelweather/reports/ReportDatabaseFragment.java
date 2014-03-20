@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
-import com.missionse.kestrelweather.ReportListLoadedListener;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.sync.DatabaseSync;
 import com.missionse.kestrelweather.database.sync.SyncStatusListener;
