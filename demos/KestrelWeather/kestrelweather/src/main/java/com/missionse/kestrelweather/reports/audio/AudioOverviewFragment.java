@@ -143,7 +143,6 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerListen
 						} else {
 							mMediaWrapper.setMediaSource(playPair.first);
 						}
-						onMediaPlayButtonPressed();
 					} else {
 						Log.d(TAG, "Unable to play supplement with id=" + mAudioAdapter.getItem(position).getId());
 					}
@@ -369,6 +368,7 @@ public class AudioOverviewFragment extends Fragment implements MediaPlayerListen
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
+		onMediaPlayButtonPressed();
 	}
 
 	@Override
