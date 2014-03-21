@@ -106,9 +106,7 @@ public class ReportDetailFragment extends Fragment {
 						ImageView reportSyncStatus = (ImageView) mView.findViewById(R.id.report_detail_sync_status_icon);
 						if (reportSyncStatus != null) {
 							if (report.isDirty()) {
-								reportSyncStatus.setImageResource(R.drawable.report_status_not_synced);
-							} else {
-								reportSyncStatus.setImageResource(R.drawable.report_status_synced);
+								reportSyncStatus.setVisibility(View.VISIBLE);
 							}
 						}
 

@@ -41,6 +41,7 @@
 		android:paddingLeft="10dp"
 		android:paddingRight="10dp"
 		android:visibility="gone"
-		android:src="@drawable/report_status_not_synced"
+		android:src="@drawable/ic_action_upload"
+		android:tint="@color/holo_red_dark"
 		android:contentDescription="@string/sync_status_description"/>
 </RelativeLayout>
