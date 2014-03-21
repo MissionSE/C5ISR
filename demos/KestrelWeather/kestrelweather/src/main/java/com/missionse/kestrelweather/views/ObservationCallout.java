@@ -144,7 +144,7 @@ public class ObservationCallout extends FrameLayout {
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_right_unit);
 		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_bottom_right_icon);
 
-		float temperature = UnitPrefs.getPreferredTemperature(getContext(), mReport.getKestrelWeather().getTemperature());
+		float temperature = UnitPrefs.getPreferredTemperature(getContext(), mReport.getKestrelWeather().getWindChill());
 		value.setText(Integer.toString((int) temperature));
 		unit.setText(UnitPrefs.getPreferredTemperatureUnitAbbr(getContext()));
 		icon.setImageResource(R.drawable.ic_wind_chill);
@@ -158,7 +158,7 @@ public class ObservationCallout extends FrameLayout {
 		TextView unit = (TextView) view.findViewById(R.id.observation_data_bottom_center_unit);
 		ImageView icon = (ImageView) view.findViewById(R.id.observation_data_bottom_center_icon);
 
-		float temperature = UnitPrefs.getPreferredTemperature(getContext(), mReport.getKestrelWeather().getTemperature());
+		float temperature = UnitPrefs.getPreferredTemperature(getContext(), mReport.getKestrelWeather().getDewPoint());
 		value.setText(Integer.toString((int) temperature));
 		unit.setText(UnitPrefs.getPreferredTemperatureUnitAbbr(getContext()));
 		icon.setImageResource(R.drawable.ic_dew_point);
