@@ -21,8 +21,7 @@
 			android:textSize="24sp"
 			android:textStyle="bold"
 			android:singleLine="true"
-			android:ellipsize="marquee"
-			android:marqueeRepeatLimit="marquee_forever"/>
+			android:ellipsize="end"/>
 
 		<TextView
 			android:id="@+id/report_detail_timestamp"

@@ -36,7 +36,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	private DateTimeFormatter mDateFormatter;
 	private List<Report> mOriginalReportList;
 	private ReportListFilter mReportListFilter;
-	private String[] sectionHeaders;
+	private String[] mSectionHeaders;
 
 	/**
 	 * Constructor.
@@ -89,7 +89,6 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 					}
 				}
 				reportTitle.setText(spannableReportTitle);
-				reportTitle.setSelected(true);
 			}
 
 			TextView reportTimestamp = (TextView) view.findViewById(R.id.report_detail_timestamp);
@@ -208,12 +207,12 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 		}
 		sectionHeadersRaw = sectionHeadersRaw.trim();
 
-		sectionHeaders = sectionHeadersRaw.split(" ");
+		mSectionHeaders = sectionHeadersRaw.split(" ");
 	}
 
 	@Override
 	public Object[] getSections() {
-		return sectionHeaders;
+		return mSectionHeaders;
 	}
 
 	@Override

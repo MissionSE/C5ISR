@@ -96,7 +96,6 @@ public class ReportDetailFragment extends Fragment {
 						TextView reportTitle = (TextView) mView.findViewById(R.id.report_detail_title);
 						if (reportTitle != null) {
 							reportTitle.setText(report.getTitle());
-							reportTitle.setSelected(true);
 						}
 
 						TextView reportTimestamp = (TextView) mView.findViewById(R.id.report_detail_timestamp);
