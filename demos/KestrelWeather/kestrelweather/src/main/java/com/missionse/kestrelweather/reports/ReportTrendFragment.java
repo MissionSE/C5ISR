@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
@@ -69,18 +66,6 @@ public class ReportTrendFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View contentView = inflater.inflate(R.layout.fragment_report_trend, container, false);
 		LinearLayout chartContainer = (LinearLayout) contentView.findViewById(R.id.chart_container);
-
-		GraphViewSeries exampleSeries = new GraphViewSeries(new GraphView.GraphViewData[] {
-			new GraphView.GraphViewData(1, 2.0d),
-			new GraphView.GraphViewData(2, 1.5d),
-			new GraphView.GraphViewData(3, 2.5d),
-			new GraphView.GraphViewData(4, 1.0d)
-		});
-
-		GraphView graphView = new LineGraphView(getActivity(), "GraphViewDemo");
-		graphView.addSeries(exampleSeries); // data
-
-		chartContainer.addView(graphView);
 
 		return contentView;
 	}
