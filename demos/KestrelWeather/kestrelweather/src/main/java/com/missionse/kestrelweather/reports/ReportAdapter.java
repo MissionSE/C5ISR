@@ -90,6 +90,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 					}
 				}
 				reportTitle.setText(spannableReportTitle);
+				reportTitle.setSelected(true);
 			}
 
 			TextView reportTimestamp = (TextView) view.findViewById(R.id.report_detail_timestamp);
