@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
@@ -31,6 +32,7 @@ import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.reports.ReportAdapter;
 import com.missionse.kestrelweather.reports.ReportDetailFragment;
+import com.missionse.kestrelweather.reports.ReportTrendFragment;
 import com.slidinglayer.SlidingLayer;
 
 import org.joda.time.DateTime;
@@ -119,6 +121,16 @@ public class MapViewerFragment extends MapFragment implements
 					@Override
 					public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
 						showReportDetail(mReportAdapter.getItem(position).getId());
+					}
+				});
+			}
+
+			Button trendsButton = (Button) view.findViewById(R.id.map_report_trends);
+			if (trendsButton != null) {
+				trendsButton.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(final View view) {
+						showReportTrends();
 					}
 				});
 			}
@@ -218,6 +230,22 @@ public class MapViewerFragment extends MapFragment implements
 					.replace(R.id.content, reportDetailFragment, "report_detail")
 					.addToBackStack("report_detail")
 					.commit();
+		}
+	}
+
+	private void showReportTrends() {
+		mCurrentMarker.hideInfoWindow();
+		mCurrentMarker = null;
+		FragmentManager fragmentManager = getFragmentManager();
+		if (fragmentManager != null) {
+			Fragment reportTrendsFragment = ReportTrendFragment.newInstance(mReportAdapter.getAllReports());
+			fragmentManager.beginTransaction()
+				.setCustomAnimations(
+					R.animator.fade_in, R.animator.fade_out,
+					R.animator.fade_in, R.animator.fade_out)
+				.replace(R.id.content, reportTrendsFragment, "report_trends")
+				.addToBackStack("report_trends")
+				.commit();
 		}
 	}
 

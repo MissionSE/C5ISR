@@ -23,6 +23,8 @@ dependencies {
 	compile 'com.makeramen:roundedimageview:1.2.4'
 	compile 'com.github.itsmechlark:android-sliding-layer-lib:1.0.1'
 	compile 'se.emilsjolander:stickylistheaders:2.1.+'
+
+	compile fileTree(dir: 'libs', include: '*.jar')
 }
 
 android {
