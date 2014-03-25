@@ -33,6 +33,7 @@ import java.util.Collection;
 public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report> {
 	private static final String TAG = ObservationCalloutMarkersAdapter.class.getSimpleName();
 	private static final int DRAWABLE_COUNT = 3;
+	private static final int MARKER_TRANSPARENCY = (int) (0.75F * 255);
 	private static final float CLUSTER_ITEM_SHAPE_INSET_MULTIPLIER = 5.0F;
 	private static final float CLUSTER_SHAPE_INSET_MULTIPLIER = 10.0F;
 	private static final float CLUSTER_TEXT_INSET_MULTIPLIER = 6.0F;
@@ -80,7 +81,9 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 		Drawable shadowDrawable = getContext().getResources().getDrawable(R.drawable.bg_cluster);
 
 		ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
-		shapeDrawable.getPaint().setColor(ResourcesHelper.getTemperatureColorByIndex(getContext(), index));
+		int iconColor = ResourcesHelper.getTemperatureColorByIndex(getContext(), index);
+		shapeDrawable.getPaint().setColor(iconColor);
+		shapeDrawable.setAlpha(MARKER_TRANSPARENCY);
 
 		TextDrawable textDrawable = new TextDrawable(getContext().getResources(), Integer.toString(cluster.getSize()));
 
@@ -89,6 +92,7 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 		arrayOfDrawable[1] = shapeDrawable;
 		arrayOfDrawable[2] = textDrawable;
 		LayerDrawable layerDrawable = new LayerDrawable(arrayOfDrawable);
+
 		float density = getContext().getResources().getDisplayMetrics().density;
 		int shapeInset = (int) (density * CLUSTER_SHAPE_INSET_MULTIPLIER);
 		layerDrawable.setLayerInset(1, shapeInset, shapeInset, shapeInset, shapeInset);
@@ -102,6 +106,7 @@ public class ObservationCalloutMarkersAdapter extends DataMarkersAdapter<Report>
 	public BitmapDescriptor createClusterItemIcon(int index) {
 		ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
 		shapeDrawable.getPaint().setColor(ResourcesHelper.getTemperatureColorByIndex(getContext(), index));
+		shapeDrawable.setAlpha(MARKER_TRANSPARENCY);
 		Drawable[] arrayOfDrawable = new Drawable[2];
 		arrayOfDrawable[0] = getContext().getResources().getDrawable(R.drawable.bg_marker);
 		arrayOfDrawable[1] = shapeDrawable;
