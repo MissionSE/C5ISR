@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
+<ListView
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content"
+	android:id="@+id/map_report_list"
+	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:orientation="vertical">
-	<Button
-		android:id="@+id/map_report_trends"
-		android:layout_width="match_parent"
-		android:layout_height="?android:listPreferredItemHeightSmall"
-		android:text="Trends"/>
-	<ListView
-		android:id="@+id/map_report_list"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="bottom"
-		android:clipToPadding="false"
-		android:scrollbarStyle="outsideOverlay"
-		android:background="#E0FFFFFF"
-		android:layout_margin="@dimen/map_slidingLayer_margin"/>
-</LinearLayout>
+	android:layout_gravity="bottom"
+	android:clipToPadding="false"
+	android:scrollbarStyle="outsideOverlay"
+	android:background="#E0FFFFFF"
+	android:layout_margin="@dimen/map_slidingLayer_margin"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="wrap_content"
 	android:layout_width="match_parent"
@@ -9,7 +9,8 @@
 
 	<LinearLayout
 		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
+		android:layout_weight="1"
 		android:orientation="vertical">
 
 		<TextView
@@ -37,12 +38,20 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true"
+		android:visibility="gone"
 		android:paddingLeft="10dp"
 		android:paddingRight="10dp"
-		android:visibility="gone"
 		android:src="@drawable/ic_action_upload"
 		android:tint="@color/holo_red_dark"
 		android:contentDescription="@string/sync_status_description"/>
-</RelativeLayout>
+
+	<TextView
+		android:id="@+id/report_detail_count"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:visibility="gone"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:textSize="18sp"/>
+</LinearLayout>

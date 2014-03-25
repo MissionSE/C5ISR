@@ -72,7 +72,6 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 
 			TextView reportTitle = (TextView) view.findViewById(R.id.report_detail_title);
 			if (reportTitle != null) {
-
 				String reportTitleInLowerCase = report.getTitle().toLowerCase(Locale.getDefault());
 				SpannableString spannableReportTitle = new SpannableString(report.getTitle());
 				if (isReportTitleBeingFiltered()) {
