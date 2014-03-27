@@ -596,11 +596,18 @@ public class LineGraph extends View {
 						mReusablePaint.setTextSize(POPUP_FONT_SIZE * getResources().getDisplayMetrics().scaledDensity);
 						mReusablePaint.setColor(Color.WHITE);
 						Rect fontRectangle = new Rect();
-						mReusablePaint.getTextBounds(printedValue, 0, 1, fontRectangle);
+
+						int height = 0;
+						for (char character : printedValue.toCharArray()) {
+							mReusablePaint.getTextBounds(String.valueOf(character), 0, 1, fontRectangle);
+							if (fontRectangle.height() > height) {
+								height = fontRectangle.height();
+							}
+						}
 
 						int boundLeft = (int) (xPointPosition - (mReusablePaint.measureText(printedValue) / 2)
 							- POPUP_SIDE_PADDING * getResources().getDisplayMetrics().density);
-						int boundTop = (int) ((yPointPosition - POPUP_BOTTOM_GAP) + (fontRectangle.top - fontRectangle.bottom)
+						int boundTop = (int) ((yPointPosition - POPUP_BOTTOM_GAP) - height
 							- POPUP_TOP_PADDING * getResources().getDisplayMetrics().density);
 						int boundRight = (int) (xPointPosition + (mReusablePaint.measureText(printedValue) / 2)
 							+ POPUP_SIDE_PADDING * getResources().getDisplayMetrics().density);
@@ -611,7 +618,7 @@ public class LineGraph extends View {
 						canvas.drawText(printedValue,
 							(int) (xPointPosition - (mReusablePaint.measureText(printedValue) / 2)),
 							(yPointPosition - POPUP_BOTTOM_GAP) - ((yPointPosition - POPUP_BOTTOM_GAP) - boundTop) / 2f
-								+ (float) Math.abs(fontRectangle.top - fontRectangle.bottom) / 2f * 0.7f,
+								+ (float) fontRectangle.height() / 2f * 0.7f,
 							mReusablePaint);
 					}
 				}
