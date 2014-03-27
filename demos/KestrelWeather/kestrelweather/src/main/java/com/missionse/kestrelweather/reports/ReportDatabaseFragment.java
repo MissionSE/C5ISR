@@ -194,6 +194,11 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 										.addToBackStack("report_detail").commit();
 							}
 						}
+						if (getActivity() != null) {
+							InputMethodManager inputMethodManager = (InputMethodManager) getActivity().
+								getSystemService(Context.INPUT_METHOD_SERVICE);
+							inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+						}
 					}
 				});
 
