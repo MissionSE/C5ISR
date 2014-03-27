@@ -17,14 +17,18 @@ import com.missionse.uiextensions.graph.Line;
 import com.missionse.uiextensions.graph.LineGraph;
 import com.missionse.uiextensions.graph.LinePoint;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.List;
 
 /**
  * Provides a fragment to show a visual representation of trending graph data.
  */
 public class TrendsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
-	private static final float X_PADDING = 0.20f;
-	private static final float Y_PADDING = 0.20f;
+	private static final float X_PADDING = 0.10f;
+	private static final float Y_PADDING = 0.10f;
 
 	private Activity mActivity;
 	private ReportGroup mReportGroup;
@@ -137,6 +141,7 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 					}
 					line.getPoints().get(mSelectedReport).setSelected(true);
 				}
+				mLineGraph.refresh();
 			}
 		}
 	}
@@ -178,13 +183,25 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 			if (xPadding == 0.0f) {
 				xPadding = 1f;
 			}
-			mLineGraph.setXRange(line.getLowerBoundX() - xPadding, line.getUpperBoundX() + xPadding);
+			float xLowerBound = line.getLowerBoundX() - xPadding;
+			float xUpperBound = line.getUpperBoundX() + xPadding;
+			mLineGraph.setXRange(xLowerBound, xUpperBound);
+
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("MMM dd");
+			mLineGraph.setXAxisBounds(
+					formatter.print(new DateTime((long) xLowerBound)),
+					formatter.print(new DateTime((long) xUpperBound)));
 
 			float yPadding = (line.getUpperBoundY() - line.getLowerBoundY()) * Y_PADDING;
 			if (yPadding == 0.0f) {
 				yPadding = 1f;
 			}
-			mLineGraph.setYRange(line.getLowerBoundY() - yPadding, line.getUpperBoundY() + yPadding);
+			float yLowerBound = line.getLowerBoundY() - yPadding;
+			float yUpperBound = line.getUpperBoundY() + yPadding;
+			mLineGraph.setYRange(yLowerBound, yUpperBound);
+			mLineGraph.setYAxisBounds(
+					Integer.toString((int) yLowerBound),
+					Integer.toString((int) yUpperBound));
 
 			for (LinePoint point : line.getPoints()) {
 				point.setSelected(false);

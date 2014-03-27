@@ -9,6 +9,7 @@
 		android:id="@+id/report_trends_spinner"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"/>
+
 	<com.missionse.uiextensions.graph.LineGraph
 		android:id="@+id/report_trends_graph"
 		android:layout_width="match_parent"
