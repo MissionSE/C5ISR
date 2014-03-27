@@ -1,4 +1,4 @@
-package com.missionse.kestrelweather.reports;
+package com.missionse.kestrelweather.reports.utils;
 
 /**
  * Provides functionality for a listener to be notified upon the report list being loaded.

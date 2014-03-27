@@ -1,6 +1,6 @@
 package com.missionse.kestrelweather.reports.filter;
 
-import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.reports.utils.ReportGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +20,14 @@ public final class ReportTitleFilter {
 	 * @param constraint the constraint by which to filter
 	 * @return a new list of filtered reports
 	 */
-	public static List<Report> performFiltering(final List<Report> originals, CharSequence constraint) {
-		ArrayList<Report> filteredReports = new ArrayList<Report>();
+	public static List<ReportGroup> performFiltering(final List<ReportGroup> originals, CharSequence constraint) {
+		ArrayList<ReportGroup> filteredReports = new ArrayList<ReportGroup>();
 		if (constraint != null && constraint.toString().length() > 0) {
 			constraint = constraint.toString().toLowerCase(Locale.getDefault());
 
-			for (final Report report : originals) {
-				if (report.getTitle().toLowerCase(Locale.getDefault()).contains(constraint)) {
-					filteredReports.add(report);
+			for (final ReportGroup reportGroup : originals) {
+				if (reportGroup.getTitle().toLowerCase(Locale.getDefault()).contains(constraint)) {
+					filteredReports.add(reportGroup);
 				}
 			}
 		} else {

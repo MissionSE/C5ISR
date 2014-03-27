@@ -1,4 +1,4 @@
-package com.missionse.kestrelweather.reports;
+package com.missionse.kestrelweather.reports.utils;
 
 import android.content.Context;
 import android.text.Spannable;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.reports.filter.ReportListFilter;
+import com.missionse.kestrelweather.reports.filter.ReportGroupFilter;
 import com.missionse.kestrelweather.reports.filter.SyncStatusFilter;
 
 import org.joda.time.format.DateTimeFormat;
@@ -29,13 +29,13 @@ import java.util.Locale;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
- * Provides an adapter for a list of photos.
+ * Provides an adapter for a list of report groups.
  */
-public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHeadersAdapter, SectionIndexer {
+public class ReportGroupAdapter extends ArrayAdapter<ReportGroup> implements StickyListHeadersAdapter, SectionIndexer {
 	private int mResource;
 	private DateTimeFormatter mDateFormatter;
-	private List<Report> mOriginalReportList;
-	private ReportListFilter mReportListFilter;
+	private List<ReportGroup> mOriginalReportGroupList;
+	private ReportGroupFilter mReportListFilter;
 	private String[] mSectionHeaders;
 
 	/**
@@ -43,13 +43,13 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	 * @param context The current context.
 	 * @param resource The resource ID for a layout file containing a View to use when instantiating views.
 	 */
-	public ReportAdapter(final Context context, final int resource) {
+	public ReportGroupAdapter(final Context context, final int resource) {
 		super(context, resource);
 		mDateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd [HH:mm:ss]");
 		mResource = resource;
 
-		mReportListFilter = new ReportListFilter(this);
-		mOriginalReportList = new ArrayList<Report>();
+		mReportListFilter = new ReportGroupFilter(this);
+		mOriginalReportGroupList = new ArrayList<ReportGroup>();
 	}
 
 	/**
@@ -68,7 +68,8 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 		}
 
 		if (view != null) {
-			Report report = getItem(position);
+			ReportGroup reportGroup = getItem(position);
+			Report report = reportGroup.getLatestReport();
 
 			TextView reportTitle = (TextView) view.findViewById(R.id.report_detail_title);
 			if (reportTitle != null) {
@@ -98,10 +99,21 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 
 			ImageView reportSyncStatus = (ImageView) view.findViewById(R.id.report_detail_sync_status_icon);
 			if (reportSyncStatus != null) {
-				if (report.isDirty()) {
+				if (reportGroup.isDirty()) {
 					reportSyncStatus.setVisibility(View.VISIBLE);
 				} else {
 					reportSyncStatus.setVisibility(View.GONE);
+				}
+			}
+
+			TextView reportGroupCount = (TextView) view.findViewById(R.id.report_detail_count);
+			if (reportGroupCount != null) {
+				int count = reportGroup.getCount();
+				if (count > 1) {
+					reportGroupCount.setVisibility(View.VISIBLE);
+					reportGroupCount.setText(Integer.toString(count));
+				} else {
+					reportGroupCount.setVisibility(View.GONE);
 				}
 			}
 		}
@@ -130,7 +142,7 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	 */
 	public void filter() {
 		if (mReportListFilter == null) {
-			mReportListFilter = new ReportListFilter(this);
+			mReportListFilter = new ReportGroupFilter(this);
 		}
 
 		mReportListFilter.filter();
@@ -156,8 +168,8 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	 * Retrieves all reports held by this adapter.
 	 * @return an array list of all reports
 	 */
-	public List<Report> getAllReports() {
-		return mOriginalReportList;
+	public List<ReportGroup> getAllReportGroups() {
+		return mOriginalReportGroupList;
 	}
 
 	@Override
@@ -185,16 +197,16 @@ public class ReportAdapter extends ArrayAdapter<Report> implements StickyListHea
 	 * Sets the back-end data to be utilized by the adapter.
 	 * @param collection the collection of data
 	 */
-	public void setData(Collection<? extends Report> collection) {
+	public void setData(Collection<? extends ReportGroup> collection) {
 		clear();
 		addAll(collection);
 		setOriginalReportList(collection);
 		determineSectionHeaders();
 	}
 
-	private void setOriginalReportList(Collection<? extends Report> collection) {
-		mOriginalReportList.clear();
-		mOriginalReportList.addAll(collection);
+	private void setOriginalReportList(Collection<? extends ReportGroup> collection) {
+		mOriginalReportGroupList.clear();
+		mOriginalReportGroupList.addAll(collection);
 	}
 
 	private void determineSectionHeaders() {

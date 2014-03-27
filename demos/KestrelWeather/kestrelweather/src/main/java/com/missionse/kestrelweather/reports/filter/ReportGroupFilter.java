@@ -2,8 +2,8 @@ package com.missionse.kestrelweather.reports.filter;
 
 import android.widget.Filter;
 
-import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.reports.ReportAdapter;
+import com.missionse.kestrelweather.reports.utils.ReportGroup;
+import com.missionse.kestrelweather.reports.utils.ReportGroupAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,19 +11,19 @@ import java.util.List;
 /**
  * Filter wrapper class, meant to filter on the Report Database by deferring the actual filtering to other classes.
  */
-public class ReportListFilter extends Filter {
+public class ReportGroupFilter extends Filter {
 
 	private List<Runnable> mOnFilterRunnables;
-	private ReportAdapter mReportAdapter;
+	private ReportGroupAdapter mReportAdapter;
 
 	private CharSequence mReportTitleConstraint;
 	private CharSequence mSyncStatusConstraint;
 
 	/**
-	 * Creates a new ReportListFilter.
+	 * Creates a new ReportGroupFilter.
 	 * @param adapter the adapter who owns the data set that will be filtered
 	 */
-	public ReportListFilter(final ReportAdapter adapter) {
+	public ReportGroupFilter(final ReportGroupAdapter adapter) {
 		super();
 
 		mReportAdapter = adapter;
@@ -84,15 +84,15 @@ public class ReportListFilter extends Filter {
 	protected FilterResults performFiltering(final CharSequence constraint) {
 		FilterResults results = new FilterResults();
 
-		ArrayList<Report> originalReports = new ArrayList<Report>();
-		List<Report> allReports = mReportAdapter.getAllReports();
-		for (final Report report : allReports) {
-			if (!report.isDraft()) {
-				originalReports.add(report);
+		ArrayList<ReportGroup> originalReportGroups = new ArrayList<ReportGroup>();
+		List<ReportGroup> allReportGroups = mReportAdapter.getAllReportGroups();
+		for (final ReportGroup reportGroup : allReportGroups) {
+			if (!reportGroup.getLatestReport().isDraft()) {
+				originalReportGroups.add(reportGroup);
 			}
 		}
 
-		List<Report> filteredReports = ReportTitleFilter.performFiltering(originalReports, mReportTitleConstraint);
+		List<ReportGroup> filteredReports = ReportTitleFilter.performFiltering(originalReportGroups, mReportTitleConstraint);
 		filteredReports = SyncStatusFilter.performFiltering(filteredReports, mSyncStatusConstraint);
 
 		results.count = filteredReports.size();
@@ -103,11 +103,11 @@ public class ReportListFilter extends Filter {
 	@Override
 	protected void publishResults(final CharSequence charSequence, final FilterResults filterResults) {
 		@SuppressWarnings("unchecked")
-		ArrayList<Report> filteredReports = (ArrayList<Report>) filterResults.values;
+		ArrayList<ReportGroup> filteredReports = (ArrayList<ReportGroup>) filterResults.values;
 		mReportAdapter.clear();
 		if (filteredReports != null) {
-			for (final Report report : filteredReports) {
-				mReportAdapter.add(report);
+			for (final ReportGroup reportGroup : filteredReports) {
+				mReportAdapter.add(reportGroup);
 			}
 			mReportAdapter.notifyDataSetChanged();
 		} else {

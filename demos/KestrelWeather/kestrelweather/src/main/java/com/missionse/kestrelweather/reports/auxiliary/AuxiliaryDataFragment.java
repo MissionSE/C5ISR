@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
+import com.missionse.kestrelweather.database.model.tables.Report;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class AuxiliaryDataFragment extends Fragment {
 	private KestrelWeatherActivity mActivity;
 	private int mReportId = INVALID_REPORT_ID;
 	private AuxiliaryDataAdapter mAuxiliaryDataAdapter;
+	private ListView mAuxiliaryDataList;
 
 	/**
 	 * Default constructor.
@@ -84,10 +86,10 @@ public class AuxiliaryDataFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_report_detail_auxiliary_data, container, false);
 		if (view != null) {
 			if (mAuxiliaryDataAdapter != null) {
-				ListView auxiliaryDataList = (ListView) view.findViewById(R.id.report_detail_auxiliary_data_list);
-				if (auxiliaryDataList != null) {
-					auxiliaryDataList.setAdapter(mAuxiliaryDataAdapter);
-					auxiliaryDataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				mAuxiliaryDataList = (ListView) view.findViewById(R.id.report_detail_auxiliary_data_list);
+				if (mAuxiliaryDataList != null) {
+					mAuxiliaryDataList.setAdapter(mAuxiliaryDataAdapter);
+					mAuxiliaryDataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 						@Override
 						public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
 							mAuxiliaryDataAdapter.getItem(position).onClick();
@@ -98,5 +100,22 @@ public class AuxiliaryDataFragment extends Fragment {
 		}
 
 		return view;
+	}
+
+	/**
+	 * Updates the report displayed by the fragment.
+	 * @param report The new report to display in the fragment.
+	 */
+	public void updateReport(final Report report) {
+		mReportId = report.getId();
+
+		if (mAuxiliaryDataList != null) {
+			List<AuxiliaryDataListItem> auxiliaryDataListItems = AuxiliaryDataListFactory.getListItems(
+					mActivity, mReportId);
+			mAuxiliaryDataAdapter = new AuxiliaryDataAdapter(
+					mActivity, R.layout.fragment_report_detail_auxiliary_data_list_entry, auxiliaryDataListItems);
+
+			mAuxiliaryDataList.setAdapter(mAuxiliaryDataAdapter);
+		}
 	}
 }

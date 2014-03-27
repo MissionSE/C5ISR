@@ -32,6 +32,10 @@ import com.missionse.kestrelweather.database.DatabaseAccessor;
 import com.missionse.kestrelweather.database.sync.DatabaseSync;
 import com.missionse.kestrelweather.database.sync.SyncStatusListener;
 import com.missionse.kestrelweather.reports.filter.SyncStatusFilter;
+import com.missionse.kestrelweather.reports.utils.ReportGroup;
+import com.missionse.kestrelweather.reports.utils.ReportGroupAdapter;
+import com.missionse.kestrelweather.reports.utils.ReportGroupLoaderTask;
+import com.missionse.kestrelweather.reports.utils.ReportListLoadedListener;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -42,13 +46,13 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	private static final String TAG = ReportDatabaseFragment.class.getSimpleName();
 	private Activity mActivity;
 	private DatabaseAccessor mDatabaseAccessor;
-	private ReportAdapter mReportAdapter;
+	private ReportGroupAdapter mReportGroupAdapter;
 	private TextView mReportCountView;
 	private ProgressBar mProgressBar;
 	private EditText mSearchField;
 	private MenuItem mShowSynced;
 	private MenuItem mShowUnsynced;
-	private ReportLoaderTask mReportLoaderTask;
+	private ReportGroupLoaderTask mReportGroupLoaderTask;
 
 	/**
 	 * Default constructor.
@@ -83,8 +87,8 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		super.onCreate(savedInstanceState);
 
 		if (mActivity != null) {
-			mReportAdapter = new ReportAdapter(mActivity, R.layout.fragment_report_detail_header);
-			mReportAdapter.addOnFilterRunnable(new Runnable() {
+			mReportGroupAdapter = new ReportGroupAdapter(mActivity, R.layout.fragment_report_detail_header);
+			mReportGroupAdapter.addOnFilterRunnable(new Runnable() {
 				@Override
 				public void run() {
 					updateReportCount();
@@ -115,8 +119,8 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		}
 		constraint = constraint.trim();
 		constraint = constraint.replace(" ", ",");
-		mReportAdapter.setSyncStatusConstraint(constraint);
-		mReportAdapter.filter();
+		mReportGroupAdapter.setSyncStatusConstraint(constraint);
+		mReportGroupAdapter.filter();
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -158,25 +162,37 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 							titleFilter = mSearchField.getText().toString().trim();
 						}
 					}
-					mReportAdapter.setReportTitleConstraint(titleFilter);
-					mReportAdapter.filter();
+					mReportGroupAdapter.setReportTitleConstraint(titleFilter);
+					mReportGroupAdapter.filter();
 				}
 			});
 
 			StickyListHeadersListView reportList = (StickyListHeadersListView) contentView.findViewById(R.id.fragment_report_database_list);
 			if (reportList != null) {
-				reportList.setAdapter(mReportAdapter);
+				reportList.setAdapter(mReportGroupAdapter);
 				reportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
 					public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
 						FragmentManager fragmentManager = getFragmentManager();
 						if (fragmentManager != null) {
-							Fragment reportDetailFragment = ReportDetailFragment.newInstance(mReportAdapter.getItem(position).getId());
-							fragmentManager.beginTransaction()
-									.setCustomAnimations(R.animator.fade_in, R.animator.fade_out,
-											R.animator.fade_in, R.animator.fade_out)
-									.replace(R.id.content, reportDetailFragment, "report_detail")
-									.addToBackStack("report_detail").commit();
+							ReportGroup reportGroup = mReportGroupAdapter.getItem(position);
+							if (reportGroup.getCount() > 1) {
+								Fragment reportDetailFragment = ReportGroupDetailFragment.newInstance(reportGroup);
+								fragmentManager.beginTransaction()
+										.setCustomAnimations(
+												R.animator.fade_in, R.animator.fade_out,
+												R.animator.fade_in, R.animator.fade_out)
+										.replace(R.id.content, reportDetailFragment, "report_detail")
+										.addToBackStack("report_detail").commit();
+							} else {
+								Fragment reportDetailFragment = ReportDetailFragment.newInstance(reportGroup.getLatestReport().getId());
+								fragmentManager.beginTransaction()
+										.setCustomAnimations(
+												R.animator.fade_in, R.animator.fade_out,
+												R.animator.fade_in, R.animator.fade_out)
+										.replace(R.id.content, reportDetailFragment, "report_detail")
+										.addToBackStack("report_detail").commit();
+							}
 						}
 					}
 				});
@@ -212,27 +228,27 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	@Override
 	public void onConfigurationChanged(final Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		if (mReportLoaderTask != null) {
-			mReportLoaderTask.cancel(true);
+		if (mReportGroupLoaderTask != null) {
+			mReportGroupLoaderTask.cancel(true);
 		}
 	}
 
 	private void updateReportList() {
-		mReportLoaderTask = new ReportLoaderTask(mDatabaseAccessor, mReportAdapter, mProgressBar,
+		mReportGroupLoaderTask = new ReportGroupLoaderTask(mDatabaseAccessor, mReportGroupAdapter, mProgressBar,
 				new ReportListLoadedListener() {
 			@Override
 			public void reportListLoaded() {
-				mReportAdapter.filter();
+				mReportGroupAdapter.filter();
 			}
 		});
-		mReportLoaderTask.execute(false);
+		mReportGroupLoaderTask.execute();
 	}
 
 	private void updateReportCount() {
 		if (mReportCountView != null && mDatabaseAccessor != null) {
 			int totalReports = mDatabaseAccessor.getSyncedCount() + mDatabaseAccessor.getUnSynedCount();
-			if (mReportAdapter.isReportTitleBeingFiltered() || mReportAdapter.isSyncStatusBeingFiltered()) {
-				mReportCountView.setText(mReportAdapter.getCount() + "/" + totalReports);
+			if (mReportGroupAdapter.isReportTitleBeingFiltered() || mReportGroupAdapter.isSyncStatusBeingFiltered()) {
+				mReportCountView.setText(mReportGroupAdapter.getCount() + "/" + totalReports);
 			} else {
 				mReportCountView.setText("" + totalReports);
 			}
@@ -256,11 +272,11 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 			@Override
 			public void run() {
 				mSearchField.setText("");
-				mReportAdapter.setReportTitleConstraint("");
+				mReportGroupAdapter.setReportTitleConstraint("");
 				mShowSynced.setChecked(true);
 				mShowUnsynced.setChecked(true);
-				mReportAdapter.setSyncStatusConstraint(SyncStatusFilter.DEFAULT);
-				mReportAdapter.filter();
+				mReportGroupAdapter.setSyncStatusConstraint(SyncStatusFilter.DEFAULT);
+				mReportGroupAdapter.filter();
 			}
 		});
 	}

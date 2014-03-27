@@ -25,6 +25,7 @@ public class WeatherOverviewFragment extends Fragment {
 	private static final int INVALID_REPORT_ID = -1;
 
 	private Activity mActivity;
+	private View mView;
 	private int mReportId = INVALID_REPORT_ID;
 
 	/**
@@ -70,57 +71,72 @@ public class WeatherOverviewFragment extends Fragment {
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		View contentView = inflater.inflate(R.layout.fragment_report_detail_weather, container, false);
-		if (contentView != null) {
+		mView = inflater.inflate(R.layout.fragment_report_detail_weather, container, false);
+		if (mView != null) {
 			if (mActivity != null) {
 				DatabaseAccessor databaseAccessor = ((KestrelWeatherActivity) mActivity).getDatabaseAccessor();
 				if (databaseAccessor != null) {
 					Report report = databaseAccessor.getReportById(mReportId);
 					if (report != null) {
-						if (report.getKestrelWeather() != null) {
-							TextView temperatureView = (TextView) contentView.findViewById(R.id.report_detail_temperature);
-							if (temperatureView != null) {
-								float temperature = UnitPrefs.getPreferredTemperature(mActivity,
-										report.getKestrelWeather().getTemperature());
-								Formatter formatter = new Formatter();
-								temperatureView.setText(formatter.format("%.1f", temperature).toString());
-							}
-
-							TextView temperatureUnitsView = (TextView) contentView.findViewById(R.id.report_detail_temperature_units);
-							if (temperatureUnitsView != null) {
-								temperatureUnitsView.setText(UnitPrefs.getPreferredTemperatureUnit(mActivity));
-							}
-						}
-
-						if (report.getOpenWeather() != null) {
-							TextView weatherConditionView = (TextView) contentView.findViewById(R.id.report_detail_weather_condition);
-							if (weatherConditionView != null) {
-								weatherConditionView.setText(report.getOpenWeather().getDescription());
-							}
-
-							ImageView weatherIconView = (ImageView) contentView.findViewById(R.id.report_detail_weather_icon);
-							if (weatherIconView != null) {
-								weatherIconView.setImageResource(
-										WeatherIconFactory.getWeatherIcon(
-												report.getOpenWeather().getConditionCode())
-								);
-							}
-						}
-
-						TextView latitudeView = (TextView) contentView.findViewById(R.id.report_detail_latitude);
-						if (latitudeView != null) {
-							latitudeView.setText(Double.toString(report.getLatitude()));
-						}
-
-						TextView longitudeView = (TextView) contentView.findViewById(R.id.report_detail_longitude);
-						if (longitudeView != null) {
-							longitudeView.setText(Double.toString(report.getLongitude()));
-						}
+						updateView(report);
 					}
 				}
 			}
 		}
 
-		return contentView;
+		return mView;
+	}
+
+	/**
+	 * Updates the report displayed by the fragment.
+	 * @param report The new report to display in the fragment.
+	 */
+	public void updateReport(final Report report) {
+		mReportId = report.getId();
+		updateView(report);
+	}
+
+	private void updateView(final Report report) {
+		if (mView != null) {
+			if (report.getKestrelWeather() != null) {
+				TextView temperatureView = (TextView) mView.findViewById(R.id.report_detail_temperature);
+				if (temperatureView != null) {
+					float temperature = UnitPrefs.getPreferredTemperature(mActivity,
+							report.getKestrelWeather().getTemperature());
+					Formatter formatter = new Formatter();
+					temperatureView.setText(formatter.format("%.1f", temperature).toString());
+				}
+
+				TextView temperatureUnitsView = (TextView) mView.findViewById(R.id.report_detail_temperature_units);
+				if (temperatureUnitsView != null) {
+					temperatureUnitsView.setText(UnitPrefs.getPreferredTemperatureUnit(mActivity));
+				}
+			}
+
+			if (report.getOpenWeather() != null) {
+				TextView weatherConditionView = (TextView) mView.findViewById(R.id.report_detail_weather_condition);
+				if (weatherConditionView != null) {
+					weatherConditionView.setText(report.getOpenWeather().getDescription());
+				}
+
+				ImageView weatherIconView = (ImageView) mView.findViewById(R.id.report_detail_weather_icon);
+				if (weatherIconView != null) {
+					weatherIconView.setImageResource(
+							WeatherIconFactory.getWeatherIcon(
+									report.getOpenWeather().getConditionCode())
+					);
+				}
+			}
+
+			TextView latitudeView = (TextView) mView.findViewById(R.id.report_detail_latitude);
+			if (latitudeView != null) {
+				latitudeView.setText(Double.toString(report.getLatitude()));
+			}
+
+			TextView longitudeView = (TextView) mView.findViewById(R.id.report_detail_longitude);
+			if (longitudeView != null) {
+				longitudeView.setText(Double.toString(report.getLongitude()));
+			}
+		}
 	}
 }

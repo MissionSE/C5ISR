@@ -25,6 +25,7 @@ public class ReadingsFragment extends Fragment {
 	private Activity mActivity;
 	private int mReportId;
 	private ReadingsAdapter mReadingsAdapter;
+	private ListView mReadingsList;
 
 	/**
 	 * Default constructor.
@@ -80,17 +81,30 @@ public class ReadingsFragment extends Fragment {
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_report_detail_readings, container, false);
 		if (view != null) {
-			ListView readingsList = (ListView) view.findViewById(R.id.report_detail_readings_list);
-			if (readingsList != null) {
-				readingsList.setAdapter(mReadingsAdapter);
+			mReadingsList = (ListView) view.findViewById(R.id.report_detail_readings_list);
+			if (mReadingsList != null) {
+				mReadingsList.setAdapter(mReadingsAdapter);
 
 				TextView emptyView = (TextView) view.findViewById(R.id.report_detail_readings_list_empty);
 				if (emptyView != null) {
-					readingsList.setEmptyView(emptyView);
+					mReadingsList.setEmptyView(emptyView);
 				}
 			}
 		}
 
 		return view;
+	}
+
+	/**
+	 * Updates the report displayed by the fragment.
+	 * @param report The new report to display in the fragment.
+	 */
+	public void updateReport(final Report report) {
+		mReportId = report.getId();
+		if (mReadingsList != null) {
+			List<ReadingsListItem> readingsListItems = ReadingsListFactory.getListItems(mActivity, report);
+			mReadingsAdapter = new ReadingsAdapter(mActivity, R.layout.fragment_report_detail_readings_list_entry, readingsListItems);
+			mReadingsList.setAdapter(mReadingsAdapter);
+		}
 	}
 }

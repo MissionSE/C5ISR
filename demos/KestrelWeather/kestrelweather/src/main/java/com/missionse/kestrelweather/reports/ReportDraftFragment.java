@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.DatabaseAccessor;
+import com.missionse.kestrelweather.reports.utils.ReportAdapter;
+import com.missionse.kestrelweather.reports.utils.ReportLoaderTask;
 
 /**
  * Provides a fragment to show a list of reports.

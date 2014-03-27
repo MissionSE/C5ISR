@@ -1,4 +1,4 @@
-package com.missionse.kestrelweather.reports;
+package com.missionse.kestrelweather.reports.utils;
 
 import android.os.AsyncTask;
 import android.view.View;
@@ -85,7 +85,8 @@ public class ReportLoaderTask extends AsyncTask<Boolean, Void, Void> {
 	@Override
 	protected void onPostExecute(final Void parameter) {
 		super.onPostExecute(parameter);
-		mReportAdapter.setData(mReportList);
+		mReportAdapter.clear();
+		mReportAdapter.addAll(mReportList);
 		mReportAdapter.notifyDataSetChanged();
 
 		if (mProgressBar != null) {
