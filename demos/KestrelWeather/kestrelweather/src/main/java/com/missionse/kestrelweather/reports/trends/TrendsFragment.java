@@ -77,9 +77,10 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mTrendsAdapter = ArrayAdapter.createFromResource(mActivity,
-				R.array.report_trend_types, android.R.layout.simple_spinner_dropdown_item);
-		mTrendsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mTrendsAdapter = new TrendsAdapter(
+				mActivity,
+				R.layout.fragment_report_trends_title_entry,
+				getResources().getTextArray(R.array.report_trend_types));
 
 		mTemperatureTrend = getString(R.string.kestrel_simulation_temperature);
 		mPressureTrend = getString(R.string.kestrel_simulation_pressure);
