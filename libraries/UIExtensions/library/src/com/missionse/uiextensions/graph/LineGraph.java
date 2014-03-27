@@ -34,9 +34,7 @@ public class LineGraph extends View {
 		void onClick(Line line, LinePoint linePoint);
 	}
 
-	private static final int DEFAULT_PADDING = 10;
-
-	private static final int TRANSPARENT = 50;
+	private static final int TRANSPARENT = 100;
 	private static final int OPAQUE = 255;
 
 	private static final int DEFAULT_FILL_STROKE_WIDTH = 3;
@@ -44,11 +42,15 @@ public class LineGraph extends View {
 	private static final int DEFAULT_FILL_SPACING = 20;
 	private static final int DEFAULT_FILL_STAGGER = 4;
 
-	private static final int POINT_COLLISION_RADIUS = 30;
+	private static final int POINT_COLLISION_RADIUS = 60;
 	private static final int POPUP_FONT_SIZE = 24;
 	private static final int POPUP_SIDE_PADDING = 10;
 	private static final int POPUP_TOP_PADDING = 18;
-	private static final int POPUP_BOTTOM_GAP = 30;
+	private static final int POPUP_BOTTOM_GAP = 50;
+
+	private static final int AXES_PADDING = 80;
+	private static final int AXES_FONT_SIZE = 14;
+	private static final int AXES_TEXT_PADDING = 6;
 
 	private List<Line> mLines = new ArrayList<Line>();
 
@@ -60,10 +62,9 @@ public class LineGraph extends View {
 	private Bitmap mRenderedLineGraph = null;
 	private boolean mShouldUpdate = false;
 
-	private int mPadding = DEFAULT_PADDING;
-
 	private boolean mUserSetXBound = false, mUserSetYBound = false;
 	private float mLowerBoundX = 0, mLowerBoundY = 0, mUpperBoundX = 0, mUpperBoundY = 0;
+	private String mLowerBoundXPrintable, mLowerBoundYPrintable, mUpperBoundXPrintable, mUpperBoundYPrintable;
 
 	/**
 	 * Constructor.
@@ -126,6 +127,10 @@ public class LineGraph extends View {
 		postInvalidate();
 	}
 
+	/**
+	 * Removes the specified line from this line graph.
+	 * @param line the line to remove
+	 */
 	public void removeLine(final Line line) {
 		mLines.remove(line);
 		mShouldUpdate = true;
@@ -144,6 +149,26 @@ public class LineGraph extends View {
 		mLowerBoundX = lower;
 		mUpperBoundX = upper;
 		mUserSetXBound = true;
+	}
+
+	/**
+	 * Sets the values to be printed for the x axis.
+	 * @param lowerPrintable the value to be printed for the lower bound of the x axis
+	 * @param upperPrintable the value to be printed for the upper bound of the x axis
+	 */
+	public void setXAxisBounds(final String lowerPrintable, final String upperPrintable) {
+		mLowerBoundXPrintable = lowerPrintable;
+		mUpperBoundXPrintable = upperPrintable;
+	}
+
+	/**
+	 * Sets the values to be printed for the y axis.
+	 * @param lowerPrintable the value to be printed for the lower bound of the y axis
+	 * @param upperPrintable the value to be printed for the upper bound of the y axis
+	 */
+	public void setYAxisBounds(final String lowerPrintable, final String upperPrintable) {
+		mLowerBoundYPrintable = lowerPrintable;
+		mUpperBoundYPrintable = upperPrintable;
 	}
 
 	/**
@@ -180,9 +205,10 @@ public class LineGraph extends View {
 	 *  1. Correcting upper and lower bounds.
 	 *  2. Setting staggered line fills on each line to be filled.
 	 *  3. Rendering the line fills.
-	 *  4. Rendering the line strokes (the lines themselves).
-	 *  5. Rendering the points on the lines.
-	 *  6. Rendering any popups for selected points.
+	 *  4. Rendering the axes.
+	 *  5. Rendering the line strokes (the lines themselves).
+	 *  6. Rendering the points on the lines.
+	 *  7. Rendering any popups for selected points.
 	 * @param bitmap the bitmap to render into
 	 * @return a bitmap into which the line graph has been rendered
 	 */
@@ -191,9 +217,10 @@ public class LineGraph extends View {
 		validateAndCorrectUpperAndLowerBounds();
 		reconcileLineFills(mLines);
 		renderLineFills(bitmapRendererCanvas);
+		renderAxes(bitmapRendererCanvas);
 		renderLineStrokes(bitmapRendererCanvas);
 		renderLinePoints(bitmapRendererCanvas);
-		renderValuePopups(bitmapRendererCanvas);
+		renderTitlePopups(bitmapRendererCanvas);
 		return bitmap;
 	}
 
@@ -256,18 +283,18 @@ public class LineGraph extends View {
 	 * Renders all line fills, by:
 	 *  1. Rendering the line fills over the entire drawable graph space.
 	 *  2. Rendering CLEAR to occlude the fill where it should not show.
-	 *  3. Rendering CLEAR for the padding on the edges of the graph.
+	 *  3. Rendering CLEAR for the axes padding on the edges of the graph.
 	 *  4. After each line fill is rendered separately in its own bitmap, each bitmap is overlaid on the same space.
-	 * @param bitmapRendererCanvas the canvas to use to render
+	 * @param canvas the canvas to use to render
 	 */
-	private void renderLineFills(final Canvas bitmapRendererCanvas) {
+	private void renderLineFills(final Canvas canvas) {
 		List<Bitmap> lineFillBitmaps = new ArrayList<Bitmap>();
 		for (final Line line : mLines) {
 			if (line.isFilled()) {
 				Bitmap lineFill = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
 				renderInitialLineFills(line, lineFill);
 				renderLineFillOcclusions(line, lineFill);
-				renderPaddingFillOcclusions(lineFill);
+				renderAxesPaddingFillOcclusions(lineFill);
 				lineFillBitmaps.add(lineFill);
 			}
 		}
@@ -275,7 +302,7 @@ public class LineGraph extends View {
 		for (Bitmap bitmap : lineFillBitmaps) {
 			mReusablePaint.reset();
 			mReusablePaint.setAntiAlias(true);
-			bitmapRendererCanvas.drawBitmap(bitmap, 0, 0, mReusablePaint);
+			canvas.drawBitmap(bitmap, 0, 0, mReusablePaint);
 		}
 	}
 
@@ -316,12 +343,8 @@ public class LineGraph extends View {
 	private void renderLineFillOcclusions(final Line line, final Bitmap bitmap) {
 		Canvas canvas = new Canvas(bitmap);
 
-		float bottomPadding = mPadding;
-		float topPadding = mPadding;
-		float sidePadding = mPadding;
-
-		float usableHeight = getHeight() - bottomPadding - topPadding;
-		float usableWidth = getWidth() - (2 * sidePadding);
+		float usableHeight = getHeight() - (2 * AXES_PADDING);
+		float usableWidth = getWidth() - (2 * AXES_PADDING);
 
 		mReusablePaint.reset();
 		mReusablePaint.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.CLEAR));
@@ -334,8 +357,8 @@ public class LineGraph extends View {
 			xRelativePositionRatio = (line.getPoints().get(0).getX() - mLowerBoundX) / (mUpperBoundX - mLowerBoundX);
 			yRelativePositionRatio = (line.getPoints().get(0).getY() - mLowerBoundY) / (mUpperBoundY - mLowerBoundY);
 
-			lastXPosition = sidePadding + (xRelativePositionRatio * usableWidth);
-			lastYPosition = getHeight() - bottomPadding - (usableHeight * yRelativePositionRatio);
+			lastXPosition = AXES_PADDING + (xRelativePositionRatio * usableWidth);
+			lastYPosition = getHeight() - AXES_PADDING - (usableHeight * yRelativePositionRatio);
 
 			//Clear before the first point, from top to bottom.
 			mReusablePath.moveTo(0, getHeight());
@@ -356,8 +379,8 @@ public class LineGraph extends View {
 				xRelativePositionRatio = (point.getX() - mLowerBoundX) / (mUpperBoundX - mLowerBoundX);
 				yRelativePositionRatio = (point.getY() - mLowerBoundY) / (mUpperBoundY - mLowerBoundY);
 
-				newXPosition = sidePadding + (xRelativePositionRatio * usableWidth);
-				newYPosition = getHeight() - bottomPadding - (usableHeight * yRelativePositionRatio);
+				newXPosition = AXES_PADDING + (xRelativePositionRatio * usableWidth);
+				newYPosition = getHeight() - AXES_PADDING - (usableHeight * yRelativePositionRatio);
 				mReusablePath.lineTo(newXPosition, newYPosition);
 				Path aboveLineEnclosure = new Path();
 				aboveLineEnclosure.moveTo(lastXPosition, lastYPosition);
@@ -381,46 +404,103 @@ public class LineGraph extends View {
 		}
 	}
 
-	private void renderPaddingFillOcclusions(final Bitmap bitmap) {
+	private void renderAxesPaddingFillOcclusions(final Bitmap bitmap) {
 		Canvas canvas = new Canvas(bitmap);
 
-		float sidePadding = mPadding;
-
-		mReusablePath.reset();
 		mReusablePaint.reset();
 		mReusablePaint.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.CLEAR));
 
+		mReusablePath.reset();
 		mReusablePath.moveTo(0, getHeight());
-		mReusablePath.lineTo(sidePadding, getHeight());
-		mReusablePath.lineTo(sidePadding, 0);
+		mReusablePath.lineTo(AXES_PADDING, getHeight());
+		mReusablePath.lineTo(AXES_PADDING, 0);
 		mReusablePath.lineTo(0, 0);
 		mReusablePath.close();
 		canvas.drawPath(mReusablePath, mReusablePaint);
 
 		mReusablePath.reset();
-
-		mReusablePath.moveTo(getWidth(), getHeight());
-		mReusablePath.lineTo(getWidth() - sidePadding, getHeight());
-		mReusablePath.lineTo(getWidth() - sidePadding, 0);
-		mReusablePath.lineTo(getWidth(), 0);
+		mReusablePath.moveTo(0, getHeight());
+		mReusablePath.lineTo(getWidth(), getHeight());
+		mReusablePath.lineTo(getWidth(), getHeight() - AXES_PADDING);
+		mReusablePath.lineTo(0, getHeight() - AXES_PADDING);
 		mReusablePath.close();
 		canvas.drawPath(mReusablePath, mReusablePaint);
 	}
 
-	private void renderLineStrokes(final Canvas bitmapRendererCanvas) {
-		float bottomPadding = mPadding;
-		float topPadding = mPadding;
-		float sidePadding = mPadding;
+	private void renderAxes(final Canvas canvas) {
+		mReusablePaint.reset();
+		mReusablePaint.setColor(Color.BLACK);
+		mReusablePaint.setAlpha(TRANSPARENT);
+		mReusablePaint.setAntiAlias(true);
+		canvas.drawLine(AXES_PADDING, getHeight() - AXES_PADDING, getWidth() - AXES_PADDING, getHeight() - AXES_PADDING, mReusablePaint);
+		canvas.drawLine(AXES_PADDING, AXES_PADDING, AXES_PADDING, getHeight() - AXES_PADDING, mReusablePaint);
 
-		float usableHeight = getHeight() - bottomPadding - topPadding;
-		float usableWidth = getWidth() - (2 * sidePadding);
+		String xLowerBound = mLowerBoundXPrintable;
+		if (xLowerBound == null) {
+			xLowerBound = String.valueOf(mLowerBoundX);
+		}
 
-		//mReusablePaint.setColor(Color.BLACK);
-		//mReusablePaint.setAlpha(TRANSPARENT);
-		//mReusablePaint.setAntiAlias(true);
-		//bitmapRendererCanvas.drawLine(sidePadding, getHeight() - bottomPadding,
-		//getWidth() - sidePadding, getHeight() - bottomPadding, mReusablePaint);
-		//mReusablePaint.setAlpha(OPAQUE);
+		String xUpperBound = mUpperBoundXPrintable;
+		if (xUpperBound == null) {
+			xUpperBound = String.valueOf(mUpperBoundX);
+		}
+
+		String yLowerBound = mLowerBoundYPrintable;
+		if (yLowerBound == null) {
+			yLowerBound = String.valueOf(mLowerBoundY);
+		}
+
+		String yUpperBound = mUpperBoundYPrintable;
+		if (yUpperBound == null) {
+			yUpperBound = String.valueOf(mUpperBoundY);
+		}
+
+		mReusablePaint.reset();
+		mReusablePaint.setAntiAlias(true);
+		if (getResources() != null) {
+			mReusablePaint.setTextSize(AXES_FONT_SIZE * getResources().getDisplayMetrics().scaledDensity);
+		} else {
+			mReusablePaint.setTextSize(AXES_FONT_SIZE);
+		}
+
+		mReusablePaint.setColor(Color.BLACK);
+		mReusablePaint.setAlpha(TRANSPARENT);
+		mReusablePaint.setAntiAlias(true);
+		Rect fontRectangle = new Rect();
+
+		//Render lower bound X.
+		mReusablePaint.getTextBounds(xLowerBound, 0, 1, fontRectangle);
+		canvas.drawText(xLowerBound,
+			(int) (AXES_PADDING - (mReusablePaint.measureText(xLowerBound) / 2)),
+			(getHeight() - AXES_TEXT_PADDING - fontRectangle.height() / 2),
+			mReusablePaint);
+
+		//Render upper bound X.
+		mReusablePaint.getTextBounds(xUpperBound, 0, 1, fontRectangle);
+		canvas.drawText(xUpperBound,
+			(int) (getWidth() - AXES_PADDING - (mReusablePaint.measureText(xUpperBound) / 2)),
+			(getHeight() - AXES_TEXT_PADDING - fontRectangle.height() / 2),
+			mReusablePaint);
+
+		//Render lower bound Y.
+		mReusablePaint.getTextBounds(yLowerBound, 0, 1, fontRectangle);
+		canvas.drawText(yLowerBound,
+			(AXES_TEXT_PADDING),
+			(getHeight() - AXES_PADDING + fontRectangle.height() / 2),
+			mReusablePaint);
+
+		//Render upper bound Y.
+		mReusablePaint.getTextBounds(yUpperBound, 0, 1, fontRectangle);
+		canvas.drawText(yUpperBound,
+			(AXES_TEXT_PADDING),
+			(AXES_PADDING + fontRectangle.height() / 2),
+			mReusablePaint);
+	}
+
+	private void renderLineStrokes(final Canvas canvas) {
+
+		float usableHeight = getHeight() - (2 * AXES_PADDING);
+		float usableWidth = getWidth() - (2 * AXES_PADDING);
 
 		for (final Line line : mLines) {
 			mReusablePaint.reset();
@@ -435,8 +515,8 @@ public class LineGraph extends View {
 				xRelativePositionRatio = (line.getPoints().get(0).getX() - mLowerBoundX) / (mUpperBoundX - mLowerBoundX);
 				yRelativePositionRatio = (line.getPoints().get(0).getY() - mLowerBoundY) / (mUpperBoundY - mLowerBoundY);
 
-				float lastXPixels = sidePadding + (xRelativePositionRatio * usableWidth);
-				float lastYPixels = getHeight() - bottomPadding - (usableHeight * yRelativePositionRatio);
+				float lastXPixels = AXES_PADDING + (xRelativePositionRatio * usableWidth);
+				float lastYPixels = getHeight() - AXES_PADDING - (usableHeight * yRelativePositionRatio);
 				float newXPixels, newYPixels;
 
 				for (final LinePoint point : line.getPoints()) {
@@ -445,9 +525,9 @@ public class LineGraph extends View {
 					} else {
 						xRelativePositionRatio = (point.getX() - mLowerBoundX) / (mUpperBoundX - mLowerBoundX);
 						yRelativePositionRatio = (point.getY() - mLowerBoundY) / (mUpperBoundY - mLowerBoundY);
-						newXPixels = sidePadding + (xRelativePositionRatio * usableWidth);
-						newYPixels = getHeight() - bottomPadding - (usableHeight * yRelativePositionRatio);
-						bitmapRendererCanvas.drawLine(lastXPixels, lastYPixels, newXPixels, newYPixels, mReusablePaint);
+						newXPixels = AXES_PADDING + (xRelativePositionRatio * usableWidth);
+						newYPixels = getHeight() - AXES_PADDING - (usableHeight * yRelativePositionRatio);
+						canvas.drawLine(lastXPixels, lastYPixels, newXPixels, newYPixels, mReusablePaint);
 						lastXPixels = newXPixels;
 						lastYPixels = newYPixels;
 					}
@@ -456,13 +536,9 @@ public class LineGraph extends View {
 		}
 	}
 
-	private void renderLinePoints(final Canvas bitmapRendererCanvas) {
-		float bottomPadding = mPadding;
-		float topPadding = mPadding;
-		float sidePadding = mPadding;
-
-		float usableHeight = getHeight() - bottomPadding - topPadding;
-		float usableWidth = getWidth() - (2 * sidePadding);
+	private void renderLinePoints(final Canvas canvas) {
+		float usableHeight = getHeight() - (2 * AXES_PADDING);
+		float usableWidth = getWidth() - (2 * AXES_PADDING);
 
 		for (final Line line : mLines) {
 			mReusablePaint.reset();
@@ -474,8 +550,8 @@ public class LineGraph extends View {
 				float yRelativePositionRatio = (point.getY() - mLowerBoundY) / (mUpperBoundY - mLowerBoundY);
 				float xRelativePositionRatio = (point.getX() - mLowerBoundX) / (mUpperBoundX - mLowerBoundX);
 
-				float xPointPosition = sidePadding + (xRelativePositionRatio * usableWidth);
-				float yPointPosition = getHeight() - bottomPadding - (usableHeight * yRelativePositionRatio);
+				float xPointPosition = AXES_PADDING + (xRelativePositionRatio * usableWidth);
+				float yPointPosition = getHeight() - AXES_PADDING - (usableHeight * yRelativePositionRatio);
 
 				int outerRadius = getPixelForDip(line.getStrokeWidth());
 				int innerRadius = outerRadius / 2;
@@ -485,9 +561,9 @@ public class LineGraph extends View {
 				}
 
 				mReusablePaint.setColor(line.getColor());
-				bitmapRendererCanvas.drawCircle(xPointPosition, yPointPosition, outerRadius, mReusablePaint);
+				canvas.drawCircle(xPointPosition, yPointPosition, outerRadius, mReusablePaint);
 				mReusablePaint.setColor(Color.WHITE);
-				bitmapRendererCanvas.drawCircle(xPointPosition, yPointPosition, innerRadius, mReusablePaint);
+				canvas.drawCircle(xPointPosition, yPointPosition, innerRadius, mReusablePaint);
 
 				Path pointPath = new Path();
 				pointPath.addCircle(xPointPosition, yPointPosition, POINT_COLLISION_RADIUS, Path.Direction.CW);
@@ -498,26 +574,22 @@ public class LineGraph extends View {
 		}
 	}
 
-	private void renderValuePopups(final Canvas bitmapRendererCanvas) {
-		float bottomPadding = mPadding;
-		float topPadding = mPadding;
-		float sidePadding = mPadding;
-
-		float usableHeight = getHeight() - bottomPadding - topPadding;
-		float usableWidth = getWidth() - (2 * sidePadding);
+	private void renderTitlePopups(final Canvas canvas) {
+		float usableHeight = getHeight() - (2 * AXES_PADDING);
+		float usableWidth = getWidth() - (2 * AXES_PADDING);
 
 		for (final Line line : mLines) {
 			for (LinePoint point : line.getPoints()) {
 				float yRelativePositionRatio = (point.getY() - mLowerBoundY) / (mUpperBoundY - mLowerBoundY);
 				float xRelativePositionRatio = (point.getX() - mLowerBoundX) / (mUpperBoundX - mLowerBoundX);
 
-				float xPointPosition = sidePadding + (xRelativePositionRatio * usableWidth);
-				float yPointPosition = getHeight() - bottomPadding - (usableHeight * yRelativePositionRatio);
+				float xPointPosition = AXES_PADDING + (xRelativePositionRatio * usableWidth);
+				float yPointPosition = getHeight() - AXES_PADDING - (usableHeight * yRelativePositionRatio);
 
 				if (point.isSelected() && getResources() != null) {
 					NinePatchDrawable popup = (NinePatchDrawable) getResources().getDrawable(R.drawable.popup_black);
 					if (popup != null) {
-						String printedValue = String.valueOf(point.getY());
+						String printedValue = point.toString();
 
 						mReusablePaint.reset();
 						mReusablePaint.setAntiAlias(true);
@@ -534,9 +606,9 @@ public class LineGraph extends View {
 							+ POPUP_SIDE_PADDING * getResources().getDisplayMetrics().density);
 
 						popup.setBounds(boundLeft, boundTop, boundRight, (int) (yPointPosition - POPUP_BOTTOM_GAP));
-						popup.draw(bitmapRendererCanvas);
+						popup.draw(canvas);
 
-						bitmapRendererCanvas.drawText(printedValue,
+						canvas.drawText(printedValue,
 							(int) (xPointPosition - (mReusablePaint.measureText(printedValue) / 2)),
 							(yPointPosition - POPUP_BOTTOM_GAP) - ((yPointPosition - POPUP_BOTTOM_GAP) - boundTop) / 2f
 								+ (float) Math.abs(fontRectangle.top - fontRectangle.bottom) / 2f * 0.7f,
@@ -554,6 +626,7 @@ public class LineGraph extends View {
 	@Override
 	public boolean onTouchEvent(final MotionEvent event) {
 		Point eventPoint = new Point((int) event.getX(), (int) event.getY());
+		mShouldUpdate = false;
 
 		Region pointRegion = new Region();
 		for (final Line line : mLines) {
@@ -561,9 +634,15 @@ public class LineGraph extends View {
 				pointRegion.setPath(point.getPath(), point.getRegion());
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					if (pointRegion.contains(eventPoint.x, eventPoint.y)) {
-						point.setSelected(true);
+						if (!point.isSelected()) {
+							point.setSelected(true);
+							mShouldUpdate = true;
+						}
 					} else {
-						point.setSelected(false);
+						if (point.isSelected()) {
+							point.setSelected(false);
+							mShouldUpdate = true;
+						}
 					}
 				} else if (event.getAction() == MotionEvent.ACTION_UP) {
 					if (pointRegion.contains(eventPoint.x, eventPoint.y) && mOnPointClickedListener != null) {
@@ -573,11 +652,9 @@ public class LineGraph extends View {
 			}
 		}
 
-		if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP) {
-			mShouldUpdate = true;
+		if (mShouldUpdate) {
 			postInvalidate();
 		}
-
 		return true;
 	}
 
@@ -587,5 +664,13 @@ public class LineGraph extends View {
 	 */
 	public void setOnPointClickedListener(final OnPointClickedListener listener) {
 		mOnPointClickedListener = listener;
+	}
+
+	/**
+	 * Forces the line graph to be re-renderered.
+	 */
+	public void refresh() {
+		mShouldUpdate = true;
+		postInvalidate();
 	}
 }

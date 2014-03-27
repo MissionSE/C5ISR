@@ -13,6 +13,7 @@ public class LinePoint {
 	private Path mPath;
 	private Region mRegion;
 	private boolean mIsSelected;
+	private String mTitle;
 
 	/**
 	 * Constructor.
@@ -64,7 +65,7 @@ public class LinePoint {
 	 * @param y the y value
 	 */
 	public void setY(final float y) {
-		this.mY = y;
+		mY = y;
 	}
 
 	/**
@@ -113,6 +114,19 @@ public class LinePoint {
 	 */
 	public void setSelected(final boolean isSelected) {
 		mIsSelected = isSelected;
+	}
+
+
+	public void setTitle(final String title) {
+		mTitle = title;
+	}
+
+	@Override
+	public String toString() {
+		if (mTitle == null) {
+			return String.valueOf(mY);
+		}
+		return mTitle;
 	}
 }
 

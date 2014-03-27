@@ -31,7 +31,6 @@ public class Line {
 	private ArrayList<LinePoint> mPoints;
 
 	private int mColor;
-	private boolean mShowPoints;
 	private int mStrokeWidth;
 
 	private boolean mFill;
@@ -45,7 +44,6 @@ public class Line {
 		mPoints = new ArrayList<LinePoint>();
 
 		mColor = Color.BLACK;
-		mShowPoints = true;
 		mStrokeWidth = DEFAULT_STROKE_WIDTH;
 
 		mFill = false;
