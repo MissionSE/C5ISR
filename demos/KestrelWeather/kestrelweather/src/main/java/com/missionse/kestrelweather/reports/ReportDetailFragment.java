@@ -38,6 +38,9 @@ public class ReportDetailFragment extends Fragment {
 	private static final String REPORT_ID = "report_id";
 	private static final int INVALID_REPORT_ID = -1;
 	private static final int SAVE_TRANSITION_DURATION = 500;
+	private static final int WEATHER_OVERVIEW_INDEX = 0;
+	private static final int READINGS_INDEX = 1;
+	private static final int AUXILIARY_DATA_INDEX = 2;
 
 	private Activity mActivity;
 	private View mView;
@@ -150,9 +153,12 @@ public class ReportDetailFragment extends Fragment {
 				FragmentManager fragmentManager = getChildFragmentManager();
 				if (fragmentManager != null) {
 					SectionFragmentPagerAdapter pagerAdapter = new SectionFragmentPagerAdapter(fragmentManager);
-					pagerAdapter.setPage(0, getString(R.string.weather), WeatherOverviewFragment.newInstance(mReportId));
-					pagerAdapter.setPage(1, getString(R.string.kestrel_readings), ReadingsFragment.newInstance(mReportId));
-					pagerAdapter.setPage(2, getString(R.string.auxiliary_data), AuxiliaryDataFragment.newInstance(mReportId));
+					pagerAdapter.setPage(WEATHER_OVERVIEW_INDEX, getString(R.string.weather),
+							WeatherOverviewFragment.newInstance(mReportId));
+					pagerAdapter.setPage(READINGS_INDEX, getString(R.string.kestrel_readings),
+							ReadingsFragment.newInstance(mReportId));
+					pagerAdapter.setPage(AUXILIARY_DATA_INDEX, getString(R.string.auxiliary_data),
+							AuxiliaryDataFragment.newInstance(mReportId));
 
 					viewPager.setAdapter(pagerAdapter);
 				}

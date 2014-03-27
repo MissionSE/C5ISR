@@ -5,11 +5,15 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
-	<LinearLayout
-		android:id="@+id/chart_container"
-		android:orientation="horizontal"
+	<Spinner
+		android:id="@+id/report_trends_spinner"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+	<ImageView
+		android:id="@+id/report_trends_chart"
 		android:layout_width="match_parent"
 		android:layout_height="0dip"
-		android:layout_weight="1"/>
-
+		android:layout_weight="1"
+		android:src="@drawable/ic_pressure_trend"
+		android:contentDescription="@string/unknown"/>
 </LinearLayout>

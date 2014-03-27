@@ -14,6 +14,7 @@ import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Report;
 import com.missionse.kestrelweather.reports.auxiliary.AuxiliaryDataFragment;
 import com.missionse.kestrelweather.reports.readings.ReadingsFragment;
+import com.missionse.kestrelweather.reports.trends.TrendsFragment;
 import com.missionse.kestrelweather.reports.utils.ReportAdapter;
 import com.missionse.kestrelweather.reports.utils.ReportGroup;
 import com.missionse.kestrelweather.reports.weather.WeatherOverviewFragment;
@@ -23,12 +24,18 @@ import com.missionse.uiextensions.viewpager.SectionFragmentPagerAdapter;
  * Provides a fragment to show the details of a report group.
  */
 public class ReportGroupDetailFragment extends Fragment {
+	private static final int WEATHER_OVERVIEW_INDEX = 0;
+	private static final int READINGS_INDEX = 1;
+	private static final int AUXILIARY_DATA_INDEX = 2;
+	private static final int TRENDS_INDEX = 3;
+
 	private ReportAdapter mReportAdapter;
 	private ReportGroup mReportGroup;
 	private Report mCurrentReport;
 	private WeatherOverviewFragment mWeatherOverviewFragment;
 	private ReadingsFragment mReadingsFragment;
 	private AuxiliaryDataFragment mAuxiliaryDataFragment;
+	private TrendsFragment mTrendsFragment;
 
 	/**
 	 * A factory method used to create a new instance of this fragment.
@@ -72,11 +79,13 @@ public class ReportGroupDetailFragment extends Fragment {
 					mWeatherOverviewFragment = WeatherOverviewFragment.newInstance(mCurrentReport.getId());
 					mReadingsFragment = ReadingsFragment.newInstance(mCurrentReport.getId());
 					mAuxiliaryDataFragment = AuxiliaryDataFragment.newInstance(mCurrentReport.getId());
+					mTrendsFragment = TrendsFragment.newInstance(mReportGroup);
 
 					SectionFragmentPagerAdapter pagerAdapter = new SectionFragmentPagerAdapter(fragmentManager);
-					pagerAdapter.setPage(0, getString(R.string.weather), mWeatherOverviewFragment);
-					pagerAdapter.setPage(1, getString(R.string.kestrel_readings), mReadingsFragment);
-					pagerAdapter.setPage(2, getString(R.string.auxiliary_data), mAuxiliaryDataFragment);
+					pagerAdapter.setPage(WEATHER_OVERVIEW_INDEX, getString(R.string.weather), mWeatherOverviewFragment);
+					pagerAdapter.setPage(READINGS_INDEX, getString(R.string.kestrel_readings), mReadingsFragment);
+					pagerAdapter.setPage(AUXILIARY_DATA_INDEX, getString(R.string.auxiliary_data), mAuxiliaryDataFragment);
+					pagerAdapter.setPage(TRENDS_INDEX, getString(R.string.trends), mTrendsFragment);
 					viewPager.setAdapter(pagerAdapter);
 				}
 			}

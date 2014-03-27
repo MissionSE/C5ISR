@@ -147,6 +147,7 @@
 	<string name="weather">Weather Overview</string>
 	<string name="kestrel_readings">Kestrel Readings</string>
 	<string name="auxiliary_data">Auxiliary Data</string>
+	<string name="trends">Trends</string>
 	<string name="weather_status_description">The icon for the weather status.</string>
 	<string name="icon_description">The icon for a list item.</string>
 	<string name="sync_status_description">The icon representing the current sync status.</string>
