@@ -88,6 +88,7 @@ public final class DrawerSimpleNumberedItem extends DrawerItem {
 	 * Creates a new DrawerSimpleItem.
 	 * @param id the id of the new SimpleItem
 	 * @param label the label to display
+	 * @param number the number to display
 	 * @param iconResource the icon, if available, to display. Use 0 for no icon
 	 * @param updateActionBarTitle whether or not this item should update the ActionBar title when selected
 	 * @return a new DrawerSimpleItem
