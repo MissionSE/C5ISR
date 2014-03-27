@@ -12,6 +12,9 @@ import android.widget.Spinner;
 
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.reports.utils.ReportGroup;
+import com.missionse.uiextensions.graph.Line;
+import com.missionse.uiextensions.graph.LineGraph;
+import com.missionse.uiextensions.graph.LinePoint;
 
 /**
  * Provides a fragment to show a visual representation of trending graph data.
@@ -22,6 +25,7 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 	private ArrayAdapter<CharSequence> mTrendsAdapter;
 	private CharSequence mTemperatureTrend;
 	private CharSequence mPressureTrend;
+	private LineGraph mLineGraph;
 
 	/**
 	 * Default constructor.
@@ -77,6 +81,8 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 				trendSpinner.setAdapter(mTrendsAdapter);
 				trendSpinner.setOnItemSelectedListener(this);
 			}
+
+			mLineGraph = (LineGraph) contentView.findViewById(R.id.report_trends_graph);
 		}
 
 		return contentView;
@@ -97,10 +103,34 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 	}
 
 	private void showTemperatureTrend() {
+		if (mLineGraph != null) {
+			Line line = new Line();
+			line.addPoint(new LinePoint(1, 1));
+			line.addPoint(new LinePoint(2, 2));
+			line.addPoint(new LinePoint(3, 3));
+			line.setColor(mActivity.getResources().getColor(R.color.holo_blue_dark));
+			line.setFill(true);
 
+			mLineGraph.removeAllLines();
+			mLineGraph.addLine(line);
+			mLineGraph.setXRange(0, 4);
+			mLineGraph.setYRange(0, 4);
+		}
 	}
 
 	private void showPressureTrend() {
+		if (mLineGraph != null) {
+			Line line = new Line();
+			line.addPoint(new LinePoint(1, 3));
+			line.addPoint(new LinePoint(2, 2));
+			line.addPoint(new LinePoint(3, 1));
+			line.setColor(mActivity.getResources().getColor(R.color.holo_green_dark));
+			line.setFill(true);
 
+			mLineGraph.removeAllLines();
+			mLineGraph.addLine(line);
+			mLineGraph.setXRange(0, 4);
+			mLineGraph.setYRange(0, 4);
+		}
 	}
 }

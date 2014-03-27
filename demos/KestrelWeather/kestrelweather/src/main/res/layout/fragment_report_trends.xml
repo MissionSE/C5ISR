@@ -9,11 +9,9 @@
 		android:id="@+id/report_trends_spinner"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"/>
-	<ImageView
-		android:id="@+id/report_trends_chart"
+	<com.missionse.uiextensions.graph.LineGraph
+		android:id="@+id/report_trends_graph"
 		android:layout_width="match_parent"
 		android:layout_height="0dip"
-		android:layout_weight="1"
-		android:src="@drawable/ic_pressure_trend"
-		android:contentDescription="@string/unknown"/>
+		android:layout_weight="1"/>
 </LinearLayout>
