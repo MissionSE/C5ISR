@@ -79,7 +79,8 @@ public class ReportGroupDetailFragment extends Fragment {
 					mWeatherOverviewFragment = WeatherOverviewFragment.newInstance(mCurrentReport.getId());
 					mReadingsFragment = ReadingsFragment.newInstance(mCurrentReport.getId());
 					mAuxiliaryDataFragment = AuxiliaryDataFragment.newInstance(mCurrentReport.getId());
-					mTrendsFragment = TrendsFragment.newInstance(mReportGroup);
+					mTrendsFragment = TrendsFragment.newInstance(mReportGroup,
+							mReportGroup.getReports().indexOf(mCurrentReport));
 
 					SectionFragmentPagerAdapter pagerAdapter = new SectionFragmentPagerAdapter(fragmentManager);
 					pagerAdapter.setPage(WEATHER_OVERVIEW_INDEX, getString(R.string.weather), mWeatherOverviewFragment);
@@ -100,6 +101,7 @@ public class ReportGroupDetailFragment extends Fragment {
 						mWeatherOverviewFragment.updateReport(mCurrentReport);
 						mReadingsFragment.updateReport(mCurrentReport);
 						mAuxiliaryDataFragment.updateReport(mCurrentReport);
+						mTrendsFragment.setSelectedReport(position);
 					}
 
 					@Override
