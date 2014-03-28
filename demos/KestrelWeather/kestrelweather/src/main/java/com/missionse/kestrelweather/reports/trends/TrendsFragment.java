@@ -155,11 +155,10 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 
 		List<Report> reportList = mReportGroup.getReports();
 		for (Report report : reportList) {
-			mTemperatureLine.addPoint(
-					new LinePoint(
-							report.getCreatedAt().getMillis(),
-							UnitPrefs.getPreferredTemperature(mActivity, report.getKestrelWeather().getTemperature()))
-			);
+			float temperature = UnitPrefs.getPreferredTemperature(mActivity, report.getKestrelWeather().getTemperature());
+			LinePoint point = new LinePoint(report.getCreatedAt().getMillis(), temperature);
+			point.setTitle(String.format("%.1f", temperature));
+			mTemperatureLine.addPoint(point);
 		}
 	}
 
@@ -170,11 +169,10 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 
 		List<Report> reportList = mReportGroup.getReports();
 		for (Report report : reportList) {
-			mPressureLine.addPoint(
-					new LinePoint(
-							report.getCreatedAt().getMillis(),
-							UnitPrefs.getPreferredPressure(mActivity, report.getKestrelWeather().getPressure()))
-			);
+			float pressure = UnitPrefs.getPreferredPressure(mActivity, report.getKestrelWeather().getPressure());
+			LinePoint point = new LinePoint(report.getCreatedAt().getMillis(), pressure);
+			point.setTitle(String.format("%.1f", pressure));
+			mPressureLine.addPoint(point);
 		}
 	}
 
