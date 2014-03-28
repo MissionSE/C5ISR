@@ -23,6 +23,8 @@ dependencies {
 	compile 'com.makeramen:roundedimageview:1.2.4'
 	compile 'com.github.itsmechlark:android-sliding-layer-lib:1.0.1'
 	compile 'se.emilsjolander:stickylistheaders:2.1.+'
+	compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
+	compile 'com.github.castorflex.smoothprogressbar:library:0.2.0'
 
 	compile fileTree(dir: 'libs', include: '*.jar')
 }

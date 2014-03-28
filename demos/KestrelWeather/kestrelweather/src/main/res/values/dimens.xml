@@ -14,4 +14,7 @@
 	<!-- Map layout dimensions -->
 	<dimen name="map_report_pane_size">200dp</dimen>
 	<dimen name="map_slidingLayer_margin">8dp</dimen>
+
+	<!-- Indeterminate progress bad in Database View -->
+	<dimen name="ptr_progress_bar_stroke_width">4dp</dimen>
 </resources>

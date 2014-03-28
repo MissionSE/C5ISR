@@ -20,11 +20,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
@@ -37,13 +35,21 @@ import com.missionse.kestrelweather.reports.utils.ReportGroupAdapter;
 import com.missionse.kestrelweather.reports.utils.ReportGroupLoaderTask;
 import com.missionse.kestrelweather.reports.utils.ReportListLoadedListener;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 /**
  * Provides a fragment to show a list of reports.
  */
-public class ReportDatabaseFragment extends Fragment implements SyncStatusListener {
+public class ReportDatabaseFragment extends Fragment implements SyncStatusListener, ViewDelegate {
 	private static final String TAG = ReportDatabaseFragment.class.getSimpleName();
+	private static final float PULL_TO_REFRESH_RATIO = 0.5f;
+
 	private Activity mActivity;
 	private DatabaseAccessor mDatabaseAccessor;
 	private ReportGroupAdapter mReportGroupAdapter;
@@ -53,6 +59,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	private MenuItem mShowSynced;
 	private MenuItem mShowUnsynced;
 	private ReportGroupLoaderTask mReportGroupLoaderTask;
+	private PullToRefreshLayout mPullToRefreshLayout;
 
 	/**
 	 * Default constructor.
@@ -167,6 +174,31 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 				}
 			});
 
+			mPullToRefreshLayout =
+				(PullToRefreshLayout) contentView.findViewById(R.id.fragment_report_database_pull_to_refresh);
+			ActionBarPullToRefresh.from(getActivity())
+				.options(Options.create()
+					.scrollDistance(PULL_TO_REFRESH_RATIO)
+					.build())
+				.allChildrenArePullable()
+				.listener(new OnRefreshListener() {
+					@Override
+					public void onRefreshStarted(final View view) {
+						try {
+							KestrelWeatherActivity activity = (KestrelWeatherActivity) mActivity;
+							if (activity != null) {
+								DatabaseSync sync = new DatabaseSync(activity.getDatabaseAccessor(), activity);
+								sync.setSyncCompleteListener(ReportDatabaseFragment.this);
+								sync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true, true, true);
+							}
+						} catch (ClassCastException e) {
+							Log.e(TAG, "Unable to cast activity.", e);
+						}
+					}
+				})
+				.useViewDelegate(StickyListHeadersListView.class, this)
+				.setup(mPullToRefreshLayout);
+
 			StickyListHeadersListView reportList = (StickyListHeadersListView) contentView.findViewById(R.id.fragment_report_database_list);
 			if (reportList != null) {
 				reportList.setAdapter(mReportGroupAdapter);
@@ -211,24 +243,8 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 					reportList.setEmptyView(emptyView);
 				}
 
-				mProgressBar = (ProgressBar) contentView.findViewById(R.id.fragment_report_database_progress_bar);
-				Button syncButton = (Button) contentView.findViewById(R.id.sync_btn);
-				syncButton.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(final View view) {
-						try {
-							KestrelWeatherActivity activity = (KestrelWeatherActivity) mActivity;
-							if (activity != null) {
-								DatabaseSync sync = new DatabaseSync(activity.getDatabaseAccessor(), activity);
-								sync.setSyncCompleteListener(ReportDatabaseFragment.this);
-								sync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true, true, true);
-							}
-						} catch (ClassCastException e) {
-							Log.e(TAG, "Unable to cast activity.", e);
-						}
-					}
-				});
-				updateReportList();
+				mProgressBar = (SmoothProgressBar) contentView.findViewById(R.id.fragment_report_database_progress_bar);
+				updateReportList(true);
 			}
 		}
 		return contentView;
@@ -242,12 +258,17 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		}
 	}
 
-	private void updateReportList() {
-		mReportGroupLoaderTask = new ReportGroupLoaderTask(mDatabaseAccessor, mReportGroupAdapter, mProgressBar,
+	private void updateReportList(final boolean showProgressBar) {
+		ProgressBar progressBar = null;
+		if (showProgressBar) {
+			progressBar = mProgressBar;
+		}
+		mReportGroupLoaderTask = new ReportGroupLoaderTask(mDatabaseAccessor, mReportGroupAdapter, progressBar,
 				new ReportListLoadedListener() {
 					@Override
 					public void reportListLoaded() {
 						mReportGroupAdapter.filter();
+						mPullToRefreshLayout.setRefreshComplete();
 					}
 				}
 		);
@@ -270,11 +291,15 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				updateReportList();
-				Toast.makeText(mActivity, getResources().getString(R.string.sync_ended), Toast.LENGTH_SHORT).show();
+				updateReportList(false);
 			}
 		});
 		clearFilters();
+	}
+
+	@Override
+	public void onSyncStarted() {
+		//Nothing to do.
 	}
 
 	private void clearFilters() {
@@ -292,16 +317,6 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	}
 
 	@Override
-	public void onSyncStarted() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				Toast.makeText(mActivity, getResources().getString(R.string.sync_started), Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
-
-	@Override
 	public void onSyncedReport(int reportId) {
 	}
 
@@ -309,5 +324,12 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 		if (mActivity != null) {
 			mActivity.runOnUiThread(runnable);
 		}
+	}
+
+	@Override
+	public boolean isReadyForPull(final View view, final float v, final float v2) {
+		StickyListHeadersListView stickyListHeadersListView = (StickyListHeadersListView) view;
+		int firstVisiblePosition = stickyListHeadersListView.getFirstVisiblePosition();
+		return (firstVisiblePosition == 0);
 	}
 }

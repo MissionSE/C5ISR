@@ -4,6 +4,14 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical">
+	<fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+		android:id="@+id/fragment_report_database_progress_bar"
+		style="@style/Widget.ProgressBar.PullToRefresh"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="top"
+		android:indeterminate="true"
+		android:visibility="gone"/>
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -42,15 +50,20 @@
 		android:layout_height="0dip"
 		android:layout_weight="1">
 
-		<se.emilsjolander.stickylistheaders.StickyListHeadersListView
-			android:id="@+id/fragment_report_database_list"
+		<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+			android:id="@+id/fragment_report_database_pull_to_refresh"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:clipToPadding="false"
-			android:fastScrollEnabled="true"
-			android:fastScrollAlwaysVisible="true"
-			android:scrollbarStyle="outsideOverlay"
-			android:paddingBottom="?android:listPreferredItemHeight"/>
+			android:layout_height="match_parent">
+			<se.emilsjolander.stickylistheaders.StickyListHeadersListView
+				android:id="@+id/fragment_report_database_list"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:clipToPadding="false"
+				android:fastScrollEnabled="true"
+				android:fastScrollAlwaysVisible="true"
+				android:scrollbarStyle="outsideOverlay"
+				android:paddingBottom="?android:listPreferredItemHeight"/>
+		</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
 		<TextView
 			android:id="@+id/fragment_report_database_list_empty"
@@ -61,27 +74,5 @@
 			android:textSize="22sp"
 			android:textColor="@color/gray_medium"
 			android:visibility="gone"/>
-
-		<ProgressBar
-			android:id="@+id/fragment_report_database_progress_bar"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:indeterminate="true"
-			android:visibility="gone"/>
-
-		<Button
-			android:id="@+id/sync_btn"
-			android:text="@string/sync"
-			style="?android:attr/borderlessButtonStyle"
-			android:background="@drawable/fragment_sync_button_selector"
-			android:textColor="@color/white"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom"
-			android:layout_marginLeft="10dp"
-			android:layout_marginRight="10dp"
-			android:layout_marginBottom="10dp"/>
 	</FrameLayout>
-
 </LinearLayout>

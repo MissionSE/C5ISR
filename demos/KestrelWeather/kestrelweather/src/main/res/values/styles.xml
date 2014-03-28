@@ -40,4 +40,8 @@
 		<item name="android:textAppearance">?android:attr/textAppearanceSmallInverse</item>
 	</style>
 
+	<style name="Widget.ProgressBar.PullToRefresh" parent="SmoothProgressBar">
+		<item name="android:minHeight">@dimen/ptr_progress_bar_stroke_width</item>
+	</style>
+
 </resources>
