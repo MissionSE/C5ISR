@@ -194,10 +194,14 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 										.addToBackStack("report_detail").commit();
 							}
 						}
-						if (getActivity() != null) {
-							InputMethodManager inputMethodManager = (InputMethodManager) getActivity().
-								getSystemService(Context.INPUT_METHOD_SERVICE);
-							inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+						if (mActivity != null) {
+							InputMethodManager inputMethodManager = (InputMethodManager) mActivity.
+									getSystemService(Context.INPUT_METHOD_SERVICE);
+							View currentFocus = mActivity.getCurrentFocus();
+							if (currentFocus != null) {
+								inputMethodManager.hideSoftInputFromWindow(
+										currentFocus.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+							}
 						}
 					}
 				});
@@ -213,7 +217,7 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 					@Override
 					public void onClick(final View view) {
 						try {
-							KestrelWeatherActivity activity = (KestrelWeatherActivity) getActivity();
+							KestrelWeatherActivity activity = (KestrelWeatherActivity) mActivity;
 							if (activity != null) {
 								DatabaseSync sync = new DatabaseSync(activity.getDatabaseAccessor(), activity);
 								sync.setSyncCompleteListener(ReportDatabaseFragment.this);
@@ -241,11 +245,12 @@ public class ReportDatabaseFragment extends Fragment implements SyncStatusListen
 	private void updateReportList() {
 		mReportGroupLoaderTask = new ReportGroupLoaderTask(mDatabaseAccessor, mReportGroupAdapter, mProgressBar,
 				new ReportListLoadedListener() {
-			@Override
-			public void reportListLoaded() {
-				mReportGroupAdapter.filter();
-			}
-		});
+					@Override
+					public void reportListLoaded() {
+						mReportGroupAdapter.filter();
+					}
+				}
+		);
 		mReportGroupLoaderTask.execute();
 	}
 

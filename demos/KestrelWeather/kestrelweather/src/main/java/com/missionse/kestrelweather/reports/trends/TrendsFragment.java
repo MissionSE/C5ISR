@@ -12,6 +12,7 @@ import android.widget.Spinner;
 
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Report;
+import com.missionse.kestrelweather.preferences.UnitPrefs;
 import com.missionse.kestrelweather.reports.utils.ReportGroup;
 import com.missionse.uiextensions.graph.Line;
 import com.missionse.uiextensions.graph.LineGraph;
@@ -28,7 +29,7 @@ import java.util.List;
  */
 public class TrendsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 	private static final float X_PADDING = 0.10f;
-	private static final float Y_PADDING = 0.10f;
+	private static final float Y_PADDING = 0.20f;
 
 	private Activity mActivity;
 	private ReportGroup mReportGroup;
@@ -157,7 +158,8 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 			mTemperatureLine.addPoint(
 					new LinePoint(
 							report.getCreatedAt().getMillis(),
-							report.getKestrelWeather().getTemperature()));
+							UnitPrefs.getPreferredTemperature(mActivity, report.getKestrelWeather().getTemperature()))
+			);
 		}
 	}
 
@@ -171,7 +173,8 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 			mPressureLine.addPoint(
 					new LinePoint(
 							report.getCreatedAt().getMillis(),
-							report.getKestrelWeather().getPressure()));
+							UnitPrefs.getPreferredPressure(mActivity, report.getKestrelWeather().getPressure()))
+			);
 		}
 	}
 
@@ -193,12 +196,23 @@ public class TrendsFragment extends Fragment implements AdapterView.OnItemSelect
 					formatter.print(new DateTime((long) xLowerBound)),
 					formatter.print(new DateTime((long) xUpperBound)));
 
-			float yPadding = (line.getUpperBoundY() - line.getLowerBoundY()) * Y_PADDING;
-			if (yPadding == 0.0f) {
-				yPadding = 1f;
+			float yLowerBound = line.getLowerBoundY();
+			if (yLowerBound >= 0.0f) {
+				yLowerBound = 0.0f;
+			} else {
+				yLowerBound += yLowerBound * Y_PADDING;
 			}
-			float yLowerBound = line.getLowerBoundY() - yPadding;
-			float yUpperBound = line.getUpperBoundY() + yPadding;
+
+			float yUpperBound = line.getUpperBoundY();
+			if (yUpperBound >= 0) {
+				yUpperBound += yUpperBound * Y_PADDING;
+			} else {
+				yUpperBound = 0.0f;
+			}
+
+			if (yLowerBound == yUpperBound) {
+				yUpperBound += 1.0f;
+			}
 			mLineGraph.setYRange(yLowerBound, yUpperBound);
 			mLineGraph.setYAxisBounds(
 					Integer.toString((int) yLowerBound),

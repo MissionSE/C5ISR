@@ -29,8 +29,8 @@ import com.google.maps.android.clustering.Cluster;
 import com.missionse.kestrelweather.KestrelWeatherActivity;
 import com.missionse.kestrelweather.R;
 import com.missionse.kestrelweather.database.model.tables.Report;
-import com.missionse.kestrelweather.reports.utils.ReportAdapter;
 import com.missionse.kestrelweather.reports.ReportDetailFragment;
+import com.missionse.kestrelweather.reports.utils.ReportAdapter;
 import com.slidinglayer.SlidingLayer;
 
 import org.joda.time.DateTime;
