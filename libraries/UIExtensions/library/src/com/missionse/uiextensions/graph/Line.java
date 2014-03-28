@@ -128,22 +128,42 @@ public class Line {
 		mFillColor = color;
 	}
 
+	/**
+	 * Retrieves the fill color.
+	 * @return the fill color
+	 */
 	public int getFillColor() {
 		return mFillColor;
 	}
 
-	public void setFillType(LineGraphFillType fillType) {
+	/**
+	 * Sets the fill type.
+	 * @param fillType the fill type
+	 */
+	public void setFillType(final LineGraphFillType fillType) {
 		mFillType = fillType;
 	}
 
+	/**
+	 * Retrieves the fill type.
+	 * @return the fill type
+	 */
 	public LineGraphFillType getFillType() {
 		return mFillType;
 	}
 
+	/**
+	 * Sets the fill offset to be used when drawing the fill.
+	 * @param offset the offset
+	 */
 	public void setFillOffset(int offset) {
 		mFillOffset = offset;
 	}
 
+	/**
+	 * Retrieves the fill offset to be used when drawing the fill.
+	 * @return the fill offset
+	 */
 	public int getFillOffset() {
 		return mFillOffset;
 	}
@@ -183,18 +203,34 @@ public class Line {
 		mFill = shouldFill;
 	}
 
+	/**
+	 * Retrieves the calculated lower bound of the x value.
+	 * @return the lower bound of the x value
+	 */
 	public float getLowerBoundX() {
 		return mLowerBoundX;
 	}
 
+	/**
+	 * Retrieves the calculated upper bound of the x value.
+	 * @return the upper bound of the x value
+	 */
 	public float getUpperBoundX() {
 		return mUpperBoundX;
 	}
 
+	/**
+	 * Retrieves the calculated lower bound of the y value.
+	 * @return the lower bound of the y value
+	 */
 	public float getLowerBoundY() {
 		return mLowerBoundY;
 	}
 
+	/**
+	 * Retrieves the calculated upper bound of the y value.
+	 * @return the upper bound of the y value
+	 */
 	public float getUpperBoundY() {
 		return mUpperBoundY;
 	}

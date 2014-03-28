@@ -3,6 +3,9 @@ package com.missionse.uiextensions.graph;
 import android.graphics.Path;
 import android.graphics.Region;
 
+/**
+ * Describes a bar on a bar graph.
+ */
 public class Bar {
 	private int mColor;
 	private String mName = null;
@@ -10,28 +13,61 @@ public class Bar {
 	private String mValueString = null;
 	private Path mPath = null;
 	private Region mRegion = null;
+	private boolean mIsSelected = false;
 
+	/**
+	 * Retrieves the color of this bar.
+	 * @return the color
+	 */
 	public int getColor() {
 		return mColor;
 	}
-	public void setColor(int color) {
-		this.mColor = color;
+
+	/**
+	 * Sets the color of this bar.
+	 * @param color the color
+	 */
+	public void setColor(final int color) {
+		mColor = color;
 	}
+
+	/**
+	 * Retrieves the name of this bar.
+	 * @return the name
+	 */
 	public String getName() {
 		return mName;
 	}
-	public void setName(String name) {
-		this.mName = name;
+
+	/**
+	 * Sets the name of this bar.
+	 * @param name the name
+	 */
+	public void setName(final String name) {
+		mName = name;
 	}
+
+	/**
+	 * Gets the value of this bar.
+	 * @return the value
+	 */
 	public float getValue() {
 		return mValue;
 	}
-	public void setValue(float value) {
-		this.mValue = value;
+
+	/**
+	 * Sets the value of this bar.
+	 * @param value the value
+	 */
+	public void setValue(final float value) {
+		mValue = value;
 	}
 
-	public String getValueString()
-	{
+	/**
+	 * Gets the string to be printed to represent the value. Will default to the value if not explicitly set.
+	 * @return the string to be printed to represent the value of this bar
+	 */
+	public String getValueString() {
 		if (mValueString != null) {
 			return mValueString;
 		} else {
@@ -39,23 +75,60 @@ public class Bar {
 		}
 	}
 
-	public void setValueString(final String valueString)
-	{
+	/**
+	 * Sets the string to be printed to represent the value.
+	 * @param valueString the string to be printed to represent the value of this bar
+	 */
+	public void setValueString(final String valueString) {
 		mValueString = valueString;
 	}
 
+	/**
+	 * Retrieves the path of this bar.
+	 * @return the path
+	 */
 	public Path getPath() {
 		return mPath;
 	}
-	public void setPath(Path path) {
-		this.mPath = path;
+
+	/**
+	 * Sets the path of this bar.
+	 * @param path the path
+	 */
+	public void setPath(final Path path) {
+		mPath = path;
 	}
+
+	/**
+	 * Retrieves the region of this bar.
+	 * @return the region
+	 */
 	public Region getRegion() {
 		return mRegion;
 	}
-	public void setRegion(Region region) {
-		this.mRegion = region;
+
+	/**
+	 * Sets the region of this bar.
+	 * @param region the region
+	 */
+	public void setRegion(final Region region) {
+		mRegion = region;
 	}
 
+	/**
+	 * Retrieves the selected status of this bar.
+	 * @return whether or not this bar is selected
+	 */
+	public boolean isSelected() {
+		return mIsSelected;
+	}
+
+	/**
+	 * Sets the selected status of this bar.
+	 * @param isSelected whether or not this bar is selected
+	 */
+	public void setSelected(final boolean isSelected) {
+		mIsSelected = isSelected;
+	}
 }
 

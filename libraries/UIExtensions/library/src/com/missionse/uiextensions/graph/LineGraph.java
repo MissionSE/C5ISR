@@ -47,6 +47,7 @@ public class LineGraph extends View {
 	private static final int POPUP_SIDE_PADDING = 10;
 	private static final int POPUP_TOP_PADDING = 18;
 	private static final int POPUP_BOTTOM_GAP = 50;
+	private static final float POPUP_TEXT_PADDING_RATIO = 0.7f;
 
 	private static final int AXES_PADDING = 80;
 	private static final int AXES_FONT_SIZE = 14;
@@ -618,7 +619,7 @@ public class LineGraph extends View {
 						canvas.drawText(printedValue,
 							(int) (xPointPosition - (mReusablePaint.measureText(printedValue) / 2)),
 							(yPointPosition - POPUP_BOTTOM_GAP) - ((yPointPosition - POPUP_BOTTOM_GAP) - boundTop) / 2f
-								+ (float) fontRectangle.height() / 2f * 0.7f,
+								+ (float) fontRectangle.height() / 2f * POPUP_TEXT_PADDING_RATIO,
 							mReusablePaint);
 					}
 				}
@@ -679,5 +680,13 @@ public class LineGraph extends View {
 	public void refresh() {
 		mShouldUpdate = true;
 		postInvalidate();
+	}
+
+	@Override
+	protected void onDetachedFromWindow() {
+		if (mRenderedLineGraph != null) {
+			mRenderedLineGraph.recycle();
+		}
+		super.onDetachedFromWindow();
 	}
 }

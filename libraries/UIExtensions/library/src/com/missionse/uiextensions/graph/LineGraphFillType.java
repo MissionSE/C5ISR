@@ -1,5 +1,8 @@
 package com.missionse.uiextensions.graph;
 
+/**
+ * Describes the fill type of a line.
+ */
 public enum LineGraphFillType {
 	BACKSLASH, FORWARDSLASH, HORIZONTAL, VERTICAL;
 
