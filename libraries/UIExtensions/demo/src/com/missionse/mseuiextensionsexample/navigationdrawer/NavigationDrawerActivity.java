@@ -16,6 +16,9 @@ import com.missionse.uiextensions.navigationdrawer.entry.DrawerSimpleItem;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Exercises and demonstrates the API for the Navigation Drawer features of the UI Extensions library.
+ */
 public class NavigationDrawerActivity extends DrawerActivity {
 
 	private static final int BASIC_ITEM = 101;

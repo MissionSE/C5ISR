@@ -18,7 +18,7 @@ public class DummySectionFragment extends Fragment {
 	public static final String ARG_SECTION_NUMBER = "section_number";
 
 	/**
-	 * Creates a new DummySectionFragment.
+	 * Constructor.
 	 */
 	public DummySectionFragment() {
 	}
@@ -26,10 +26,12 @@ public class DummySectionFragment extends Fragment {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		View contentView = inflater.inflate(R.layout.fragment_view_pager_dummy, container, false);
-
-		TextView text = (TextView) contentView.findViewById(R.id.section_label);
-		text.setText(CONTENT + Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)) + ".");
-
+		if (contentView != null) {
+			TextView text = (TextView) contentView.findViewById(R.id.section_label);
+			if (getArguments() != null) {
+				text.setText(CONTENT + Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)) + ".");
+			}
+		}
 		return contentView;
 	}
 }

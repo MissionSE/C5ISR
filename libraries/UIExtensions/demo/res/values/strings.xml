@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Application name -->
-    <string name="app_name">MSE UI Extensions Example</string>
-    
-    <!-- Example Launcher setting entries -->
-    <string name="action_settings">Settings</string>
+    <string name="app_name">UI Extensions Demo</string>
     
     <!-- Main Launcher list items -->
-    <string name="general">General</string>
+    <string name="examples">Examples</string>
     
     <!-- General Section headers -->
     <string name="view_pager">View Pager</string>
     <string name="view_pager_summary">This starts an activity demonstrating a basic View Pager.</string>
     <string name="navigation_drawer">Navigation Drawer</string>
     <string name="navigation_drawer_summary">This starts an activity demonstrating use of the Navigation Drawer wrapper.</string>
+	<string name="graphing">Graph Library</string>
+	<string name="graphing_summary">This starts an activity demonstrating use of the the graphing library.</string>
 
     <!-- Navigation Drawer content -->
     <string name="navigation_drawer_content">This is some basic content.</string>
@@ -31,5 +29,4 @@
     <!-- Content Description -->
     <string name="right_arrow">Right arrow</string>
     <string name="send_button">Send button</string>
-
 </resources>

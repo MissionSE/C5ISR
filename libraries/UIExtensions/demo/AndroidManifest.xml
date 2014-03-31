@@ -35,5 +35,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+		<activity
+			android:name="com.missionse.mseuiextensionsexample.graph.GraphActivity" >
+			<intent-filter>
+				<action android:name=".graph.GraphActivity" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
     </application>
 </manifest>

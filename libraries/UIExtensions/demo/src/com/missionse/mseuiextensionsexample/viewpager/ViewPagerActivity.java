@@ -1,8 +1,5 @@
 package com.missionse.mseuiextensionsexample.viewpager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -12,20 +9,16 @@ import com.missionse.uiextensions.viewpager.DrawerSafeViewPager;
 import com.missionse.uiextensions.viewpager.SectionFragmentPagerAdapter;
 
 /**
- * Acts as the entry point to the ViewPager demonstration.
+ * Demonstrates the usage of the SectionFragmentPagerAdapter and the DrawerSafeViewPager.
  */
 public class ViewPagerActivity extends Activity {
-
-	private SectionFragmentPagerAdapter mPagerAdapter;
-	private DrawerSafeViewPager mViewPager;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_pager);
 
-		final List<String> menuItems = new ArrayList<String>();
-		mPagerAdapter = new SectionFragmentPagerAdapter(getFragmentManager());
+		SectionFragmentPagerAdapter pagerAdapter = new SectionFragmentPagerAdapter(getFragmentManager());
 
 		for (int pageCount = 0; pageCount <= 2; ++pageCount) {
 			Bundle arguments = new Bundle();
@@ -35,12 +28,11 @@ public class ViewPagerActivity extends Activity {
 
 			String title = "Section " + (pageCount + 1);
 
-			mPagerAdapter.setPage(pageCount, title, section);
-			menuItems.add(title);
+			pagerAdapter.setPage(pageCount, title, section);
 		}
 
-		mViewPager = (DrawerSafeViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mPagerAdapter);
-		mViewPager.setPageTransformer(true, new DepthPageTransformer());
+		DrawerSafeViewPager drawerSafeViewPager = (DrawerSafeViewPager) findViewById(R.id.pager);
+		drawerSafeViewPager.setAdapter(pagerAdapter);
+		drawerSafeViewPager.setPageTransformer(true, new DepthPageTransformer());
 	}
 }

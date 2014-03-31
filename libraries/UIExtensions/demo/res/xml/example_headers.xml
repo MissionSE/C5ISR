@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/general">
+    <PreferenceCategory android:title="@string/examples">
         <PreferenceScreen 
             android:title="@string/view_pager"
             android:summary="@string/view_pager_summary" >
@@ -11,6 +11,11 @@
                 android:summary="@string/navigation_drawer_summary" >
             <intent android:action=".navigationdrawer.NavigationDrawerActivity" />
         </PreferenceScreen>
+		<PreferenceScreen
+			android:title="@string/graphing"
+			android:summary="@string/graphing_summary" >
+			<intent android:action=".graph.GraphActivity" />
+		</PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>
     
