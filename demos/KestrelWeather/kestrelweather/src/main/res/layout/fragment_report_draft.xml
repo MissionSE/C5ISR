@@ -4,6 +4,16 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical">
+	<fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		app:spb_color="@color/holo_green_light"
+		style="@style/Widget.ProgressBar.PullToRefresh"
+		android:id="@+id/fragment_report_draft_progress_bar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="top"
+		android:indeterminate="true"
+		android:visibility="gone"/>
 
 	<TextView
 		android:id="@+id/fragment_report_draft_count"
@@ -38,14 +48,6 @@
 			android:text="@string/report_draft_list_empty"
 			android:textSize="22sp"
 			android:textColor="@color/gray_medium"
-			android:visibility="gone"/>
-
-		<ProgressBar
-			android:id="@+id/fragment_report_draft_progress_bar"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:indeterminate="true"
 			android:visibility="gone"/>
 	</FrameLayout>
 </LinearLayout>
